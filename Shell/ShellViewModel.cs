@@ -10,8 +10,8 @@ using System.Windows.Controls;
 
 namespace Shell
 {
-    [Export(typeof(MainWindowViewModel))]
-    public class MainWindowViewModel : Conductor<IScreen>.Collection.OneActive, IConductor, IHandle<ModelEvents>
+    [Export(typeof(ShellViewModel))]
+    public class ShellViewModel : Conductor<IScreen>.Collection.OneActive, IConductor, IHandle<ModelEvents>
     {
         #region Bindable Properties       
         private string statusText = string.Empty;
@@ -28,7 +28,7 @@ namespace Shell
         private readonly IEventAggregator events;
 
         [ImportingConstructor]
-        public MainWindowViewModel([ImportMany] IEnumerable<IScreen> screens, IEventAggregator events)
+        public ShellViewModel([ImportMany] IEnumerable<IScreen> screens, IEventAggregator events)
         {
             this.screens = screens;
             this.events = events;

@@ -54,8 +54,8 @@ namespace Shell
         }
 
         protected override void OnStartup(object sender, StartupEventArgs e)
-        {            
-            DisplayRootViewForAsync<MainWindowViewModel>();
+        {                        
+            DisplayRootViewForAsync<ShellViewModel>().Wait();
         }
     }
 }
