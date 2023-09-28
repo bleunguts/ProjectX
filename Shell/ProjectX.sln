@@ -5,7 +5,7 @@ VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shell", "Shell\Shell.csproj", "{2FBEC176-1612-478A-ACBD-38E6053C3B94}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Core", "ProjectX.Core\ProjectX.Core.csproj", "{0ADB4D37-F0ED-4296-9A25-28228B942E2A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.Core", "ProjectX.Core\ProjectX.Core.csproj", "{0ADB4D37-F0ED-4296-9A25-28228B942E2A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
