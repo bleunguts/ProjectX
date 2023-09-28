@@ -1,2 +1,2 @@
-# ProjectX
+# ProjectX finance app
  
