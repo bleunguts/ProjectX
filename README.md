@@ -3,10 +3,12 @@ ProjectX App that does technical analysis to shoot two birds one for GitHub one 
 **Market Signals Analytics  (MSA)**
 * MSA monitors market prices, capture pricing signals, and implementing trading strategies.  
 * MSA provides backtesting of said trading strategies by pulling in historical price data and running a simulation against the strategy
+
+  
 **Quant Model Pricing (QMP)** 		
 * QMP implements pricing models for FX products, Options Pricing, Bonds Pricing, CDS Pricing
 
-Market data sources:
+_Market data sources:_
 * Rapid API (https://rapidapi.com/blog/best-stock-api/)
 * Free Finance Data Api
 * Twelve Data
