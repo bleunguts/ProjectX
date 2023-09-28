@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\trading-banner.png" />
     <None Remove="stock.ico" />
   </ItemGroup>
 
@@ -24,12 +25,9 @@
     <Content Include="Images\stock.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Images\trading-banner.png">
+    <Content Include="Images\trading-banner.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
   </ItemGroup>
 
 </Project>
