@@ -1,4 +1,4 @@
-﻿namespace ProjectX.Core.Analytics;
+﻿namespace ProjectX.Core;
 
 public enum GreekTypeEnum
 {

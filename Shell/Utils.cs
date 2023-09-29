@@ -1,5 +1,4 @@
-﻿using ProjectX.Core.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -8,9 +7,9 @@ using System.Threading.Tasks;
 using System.Windows.Media.Media3D;
 
 using TargetPoint3D = System.Windows.Media.Media3D.Point3D;
-using ProjectXPoint3D = ProjectX.Core.Services.Point3D;
+using ProjectXPoint3D = ProjectX.Core.Point3D;
 using System.Windows.Media;
-using ProjectX.Core.Analytics;
+using ProjectX.Core;
 
 namespace Shell
 {

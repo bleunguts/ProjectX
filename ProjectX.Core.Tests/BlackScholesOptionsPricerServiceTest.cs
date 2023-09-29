@@ -1,5 +1,4 @@
-﻿using ProjectX.Core.Analytics;
-using ProjectX.Core.Services;
+﻿using ProjectX.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;

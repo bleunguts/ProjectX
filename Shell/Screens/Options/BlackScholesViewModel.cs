@@ -1,6 +1,6 @@
 ﻿using Caliburn.Micro;
 using Chart3DControl;
-using ProjectX.Core.Analytics;
+using ProjectX.Core;
 using ProjectX.Core.Services;
 using System;
 using System.Collections.Generic;
