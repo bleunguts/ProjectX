@@ -32,32 +32,34 @@
                 <Button Content="Subscribe" x:Name="Subscribe" Width="70" Margin="0 0 0 4"/>
                 <Button Content="Unsubscribe" x:Name="Unsubscribe" Width="80" Margin="0 0 0 4"/>
             </StackPanel>
-            <Label Grid.Row="2" Grid.Column="0" Content="Status:" VerticalAlignment="Top" />
-            <TextBox Grid.Row="2" Grid.Column="1" MinHeight="50" MinWidth="120" x:Name="Status" IsReadOnly="True" Grid.ColumnSpan="2"/>
             <Label Grid.Row="3" Grid.Column="0" Content="Latest Price:" FontWeight="ExtraBold"/>
             <Label Grid.Row="3" Grid.Column="1" x:Name="LatestPrice" FontWeight="ExtraBold" MinWidth="50"/>
             <Label Grid.Row="4" Grid.Column="0" Content="Quantity:"/>
             <TextBox Grid.Row="4" Grid.Column="1" Height="27" TextAlignment="Center" x:Name="Notional" Width="120" VerticalAlignment="Top" />
             <StackPanel Grid.Row="4" Grid.Column="2" Orientation="Vertical" HorizontalAlignment="Left">
-                    <Button Content="Buy" Height="26" x:Name="BuyTrade" Width="30" Margin="0 0 0 4"/>
-                    <Button Content="Sell" Height="26" x:Name="SellTrade" Width="30" Margin="0 0 0 4"/>
+                <Button Content="Buy" Height="26" x:Name="BuyTrade" Width="30" Margin="0 0 0 4"/>
+                <Button Content="Sell" Height="26" x:Name="SellTrade" Width="30" Margin="0 0 0 4"/>
             </StackPanel>
-            
+
         </Grid>
-        <Grid Grid.Column="1" Margin="80 0 0 0">
+        <Grid Grid.Column="1" Margin="40 0 0 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <DockPanel >
-                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
-                    <Label Content="Price stream:"/>
-                    <Label Name="PriceStream" MinWidth="50" FontWeight="ExtraBlack"/>
-                </StackPanel>
-                <Button x:Name="ClearHistory" Content="Clear History" DockPanel.Dock="Right" Width="100" HorizontalAlignment="Right"/>
-            </DockPanel>
-            <ListView Grid.Row="1" x:Name="Prices" MinHeight="480" MinWidth="450" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.RowSpan="2"/>
+            <Label Grid.Row="0" Grid.Column="0" Content="Status:"/>
+            <TextBox Grid.Row="1" Grid.Column="0" MinHeight="50" MinWidth="200" x:Name="Status" IsReadOnly="True" />
+            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                <Label  Content ="PriceStream: "/>
+                <Label  x:Name="PriceStream" MinWidth="30" FontWeight="ExtraBlack"/>
+            </StackPanel>
+            <ListView Grid.Row="1" Grid.Column="1" x:Name="Prices" MinHeight="380" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+            <Button Grid.Column="2" Grid.Row="2" x:Name="ClearHistory" Content="Clear History" Width="80" HorizontalAlignment="Right"/>
         </Grid>
     </Grid>
 </UserControl>
