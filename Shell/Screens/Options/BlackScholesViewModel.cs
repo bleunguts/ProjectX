@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using Chart3DControl;
+using ProjectX.Core.Analytics;
 using ProjectX.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Media.Media3D;
 
 namespace Shell.Screens.Options
 {
@@ -16,13 +18,13 @@ namespace Shell.Screens.Options
     public class BlackScholesViewModel : Screen
     {
         private readonly IEventAggregator events;
-        private readonly BlackScholesOptionsPricerService optionPricerService;
+        private readonly BlackScholesOptionsPricerService _blackScholesPricerService;
 
         [ImportingConstructor]
         public BlackScholesViewModel(IEventAggregator events)
         {
             this.events = events;
-            this.optionPricerService = new BlackScholesOptionsPricerService();
+            this._blackScholesPricerService = new BlackScholesOptionsPricerService();
             DisplayName = "Black-Scholes (Options)";
            
             OptionTable.Columns.AddRange(new[]
@@ -89,18 +91,7 @@ namespace Shell.Screens.Options
             set { zTick = value; NotifyOfPropertyChange(() => ZTick); }
         }
         #endregion
-
-        //private (OptionType optionType, double spot, double strike, double rate, double carry, double vol) FromUI()
-        //{
-        //    OptionType optionType = optionInputTable.Rows[0]["Value"].ToString() == "Call" ? OptionType.Call : OptionType.Put;
-        //    double spot = Convert.ToDouble(OptionInputTable.Rows[1]["Value"]);
-        //    double strike = Convert.ToDouble(OptionInputTable.Rows[2]["Value"]);
-        //    double rate = Convert.ToDouble(OptionInputTable.Rows[3]["Value"]);
-        //    double carry = Convert.ToDouble(OptionInputTable.Rows[4]["Value"]);
-        //    double vol = Convert.ToDouble(OptionInputTable.Rows[5]["Value"]);
-        //    return (optionType, spot, strike, rate, carry, vol);
-        //}
-
+     
         public void CalculatePrice()
         {
             string? optionType = OptionInputTable.Rows[0]["Value"].ToString();
@@ -109,7 +100,7 @@ namespace Shell.Screens.Options
             double rate = Convert.ToDouble(OptionInputTable.Rows[3]["Value"]);
             double carry = Convert.ToDouble(OptionInputTable.Rows[4]["Value"]);
             double vol = Convert.ToDouble(OptionInputTable.Rows[5]["Value"]);        
-            var results = optionPricerService.PriceForXTimeSlices(10, optionType, spot, strike, rate, carry, vol);
+            var results = _blackScholesPricerService.PriceFor(10, optionType.ToOptionType(), spot, strike, rate, carry, vol);
 
             OptionTable.Clear();
             foreach (var(maturity, riskResult) in results) 
@@ -117,8 +108,6 @@ namespace Shell.Screens.Options
                 OptionTable.Rows.Add(maturity, riskResult.price, riskResult.delta, riskResult.gamma, riskResult.theta, riskResult.rho, riskResult.vega); 
             }
         }
-
-        /*       
         public void PlotPrice() => Plot(GreekTypeEnum.Price, "Price", 1, 1);
         public void PlotDelta() => Plot(GreekTypeEnum.Delta, "Delta", 1, 1);
         public void PlotGamma() => Plot(GreekTypeEnum.Gamma, "Gamma", 2, 3);
@@ -126,18 +115,32 @@ namespace Shell.Screens.Options
         public void PlotRho() => Plot(GreekTypeEnum.Rho, "Rho", 0, 0);
         public void PlotVega() => Plot(GreekTypeEnum.Vega, "Vega", 0, 0);
         private void Plot(GreekTypeEnum greekType, string zLabel, int zDecimalPlaces, int zTickDecimalPlaces)
-        {
+        {            
             ZLabel = zLabel;
-            (OptionType optionType, double spot, double strike, double rate, double carry, double vol) = FromUI();
+
+            string? optionType = OptionInputTable.Rows[0]["Value"].ToString();            
+            double spot = Convert.ToDouble(OptionInputTable.Rows[1]["Value"]);
+            double strike = Convert.ToDouble(OptionInputTable.Rows[2]["Value"]);
+            double rate = Convert.ToDouble(OptionInputTable.Rows[3]["Value"]);
+            double carry = Convert.ToDouble(OptionInputTable.Rows[4]["Value"]);
+            double vol = Convert.ToDouble(OptionInputTable.Rows[5]["Value"]);
+            var plotResult = _blackScholesPricerService.PlotGreeks(greekType, optionType.ToOptionType(), strike, rate, carry, vol);
+
+            Zmin = Math.Round(plotResult.zmin, zDecimalPlaces);
+            Zmax = Math.Round(plotResult.zmax, zDecimalPlaces);
+            ZTick = Math.Round((plotResult.zmax - plotResult.zmin) / 5.0, zTickDecimalPlaces);
             DataCollection.Clear();
-            DataSeries3D ds = new DataSeries3D() { LineColor = Brushes.Black };
-            double[] z = OptionPlotHelper.PlotGreeks(ds, greekType, optionType, strike, rate, carry, vol);
-            Zmin = Math.Round(z[0], zDecimalPlaces);
-            Zmax = Math.Round(z[1], zDecimalPlaces);
-            ZTick = Math.Round((z[1] - z[0]) / 5.0, zTickDecimalPlaces);
-            DataCollection.Add(ds);
-        }      
-        
-         */
+            DataCollection.Add(new DataSeries3D() 
+            { 
+                LineColor = Brushes.Black,
+                PointArray = plotResult.PointArray.ToChartablePointArray(),
+                XLimitMin = plotResult.XLimitMin,
+                YLimitMin = plotResult.YLimitMin, 
+                XSpacing = plotResult.XSpacing,
+                YSpacing = plotResult.YSpacing,
+                XNumber = plotResult.XNumber,
+                YNumber = plotResult.YNumber
+            });
+        }
     }
 }
