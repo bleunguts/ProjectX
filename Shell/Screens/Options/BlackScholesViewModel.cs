@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using Chart3DControl;
+using ProjectX.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -15,11 +16,13 @@ namespace Shell.Screens.Options
     public class BlackScholesViewModel : Screen
     {
         private readonly IEventAggregator events;
+        private readonly BlackScholesOptionsPricerService optionPricerService;
 
         [ImportingConstructor]
         public BlackScholesViewModel(IEventAggregator events)
         {
             this.events = events;
+            this.optionPricerService = new BlackScholesOptionsPricerService();
             DisplayName = "Black-Scholes (Options)";
            
             OptionTable.Columns.AddRange(new[]
@@ -87,28 +90,35 @@ namespace Shell.Screens.Options
         }
         #endregion
 
-        /*
+        //private (OptionType optionType, double spot, double strike, double rate, double carry, double vol) FromUI()
+        //{
+        //    OptionType optionType = optionInputTable.Rows[0]["Value"].ToString() == "Call" ? OptionType.Call : OptionType.Put;
+        //    double spot = Convert.ToDouble(OptionInputTable.Rows[1]["Value"]);
+        //    double strike = Convert.ToDouble(OptionInputTable.Rows[2]["Value"]);
+        //    double rate = Convert.ToDouble(OptionInputTable.Rows[3]["Value"]);
+        //    double carry = Convert.ToDouble(OptionInputTable.Rows[4]["Value"]);
+        //    double vol = Convert.ToDouble(OptionInputTable.Rows[5]["Value"]);
+        //    return (optionType, spot, strike, rate, carry, vol);
+        //}
+
         public void CalculatePrice()
         {
-            (OptionType optionType, double spot, double strike, double rate, double carry, double vol) = FromUI();
-            OptionTable.Clear();
-            for (int i = 0; i < 10; i++)
-            {
-                // break out into 10 time slices until maturity
-                double maturity = (i + 1.0) / 10.0;
+            string? optionType = OptionInputTable.Rows[0]["Value"].ToString();
+            double spot = Convert.ToDouble(OptionInputTable.Rows[1]["Value"]);
+            double strike = Convert.ToDouble(OptionInputTable.Rows[2]["Value"]);
+            double rate = Convert.ToDouble(OptionInputTable.Rows[3]["Value"]);
+            double carry = Convert.ToDouble(OptionInputTable.Rows[4]["Value"]);
+            double vol = Convert.ToDouble(OptionInputTable.Rows[5]["Value"]);        
+            var results = optionPricerService.PriceForXTimeSlices(10, optionType, spot, strike, rate, carry, vol);
 
-                //price & greeks
-                _ = OptionTable.Rows.Add(
-                    maturity,
-                    OptionHelper.BlackScholes(optionType, spot, strike, rate, carry, maturity, vol),
-                    OptionHelper.BlackScholes_Delta(optionType, spot, strike, rate, carry, maturity, vol),
-                    OptionHelper.BlackScholes_Gamma(spot, strike, rate, carry, maturity, vol),
-                    OptionHelper.BlackScholes_Theta(optionType, spot, strike, rate, carry, maturity, vol),
-                    OptionHelper.BlackScholes_Rho(optionType, spot, strike, rate, carry, maturity, vol),
-                    OptionHelper.BlackScholes_Vega(spot, strike, rate, carry, maturity, vol));
+            OptionTable.Clear();
+            foreach (var(maturity, riskResult) in results) 
+            {
+                OptionTable.Rows.Add(maturity, riskResult.price, riskResult.delta, riskResult.gamma, riskResult.theta, riskResult.rho, riskResult.vega); 
             }
         }
 
+        /*       
         public void PlotPrice() => Plot(GreekTypeEnum.Price, "Price", 1, 1);
         public void PlotDelta() => Plot(GreekTypeEnum.Delta, "Delta", 1, 1);
         public void PlotGamma() => Plot(GreekTypeEnum.Gamma, "Gamma", 2, 3);
@@ -126,18 +136,7 @@ namespace Shell.Screens.Options
             Zmax = Math.Round(z[1], zDecimalPlaces);
             ZTick = Math.Round((z[1] - z[0]) / 5.0, zTickDecimalPlaces);
             DataCollection.Add(ds);
-        }
-
-        private (OptionType optionType, double spot, double strike, double rate, double carry, double vol) FromUI()
-        {
-            OptionType optionType = optionInputTable.Rows[0]["Value"].ToString() == "Call" ? OptionType.Call : OptionType.Put;
-            double spot = Convert.ToDouble(OptionInputTable.Rows[1]["Value"]);
-            double strike = Convert.ToDouble(OptionInputTable.Rows[2]["Value"]);
-            double rate = Convert.ToDouble(OptionInputTable.Rows[3]["Value"]);
-            double carry = Convert.ToDouble(OptionInputTable.Rows[4]["Value"]);
-            double vol = Convert.ToDouble(OptionInputTable.Rows[5]["Value"]);
-            return (optionType, spot, strike, rate, carry, vol);
-        }
+        }      
         
          */
     }
