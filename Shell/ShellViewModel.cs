@@ -16,13 +16,32 @@ namespace Shell
     {
         #region Bindable Properties       
         private string statusText = "Ready.";
+        private int progressMin = 0;
+        private int progressMax = 1;
+        private int progressValue;
 
         public string StatusText
         {
             get { return statusText; }
             set { statusText = value; NotifyOfPropertyChange(() => StatusText); }
+        }        
+
+        public int ProgressMin
+        {
+            get { return progressMin; }
+            set { progressMin = value; NotifyOfPropertyChange(() => ProgressMin); }
         }
 
+        public int ProgressMax
+        {
+            get { return progressMax; }
+            set { progressMax = value; NotifyOfPropertyChange(() => ProgressMax); }
+        }        
+        public int ProgressValue
+        {
+            get { return progressValue; }
+            set { progressValue = value; }
+        }
         #endregion
 
         private readonly IEnumerable<IScreen> screens;
@@ -34,33 +53,23 @@ namespace Shell
             this.screens = screens;
             this.events = events;
             Items.Clear();
-            this.events.SubscribeOnPublishedThread(this);
+            this.events.Subscribe(this);
             DisplayName = "ProjectX";
-        }
-        public Task HandleAsync(ModelEvents message, CancellationToken cancellationToken)
-        {
-            return Task.Run(() =>
-            {
-                var events = message.EventList;
-                StatusText = events.First().ToString();
-            }, cancellationToken);
-        }
+        }   
         public void OnClick(object sender)
         {
-            Button btn = sender as Button;
-            int num = Convert.ToInt16(btn.Content.ToString().Split(' ')[1]);
-            string ch = "Ch";
-            if (num < 10)
-                ch += "0" + num.ToString();
-            else
-                ch += num.ToString();
-
+            Button? btn = sender as Button;
+            var selectedScreen = btn!.Content.ToString();
+           
             Items.Clear();
-            var sc = from q in screens where q.ToString().Contains(ch) orderby q.DisplayName select q;
-            Items.AddRange(sc);
+            var selectedScreens = screens
+                                    .Where(s => s.ToString().Contains($"Screens.{selectedScreen}"))
+                                    .OrderBy(s => s.DisplayName)
+                                    .Select(s => s);            
+            Items.AddRange(selectedScreens);
 
             var view = this.GetView() as ShellView;
-            foreach (Button b in view.buttonPanel.Children)
+            foreach (Button b in view!.buttonPanel.Children)
             {
                 b.Background = Brushes.Transparent;
                 b.Foreground = Brushes.Black;
@@ -68,6 +77,12 @@ namespace Shell
 
             btn.Background = Brushes.Black;
             btn.Foreground = Brushes.White;
+        }
+
+        public void Handle(ModelEvents message)
+        {
+            var events = message.EventList;
+            StatusText = events.First().ToString();
         }
     }
 }

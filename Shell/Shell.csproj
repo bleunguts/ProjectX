@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Caliburn.Micro" Version="4.0.212" />
+    <PackageReference Include="Caliburn.Micro" Version="2.0.2" />
     <PackageReference Include="System.ComponentModel.Composition" Version="7.0.0" />
   </ItemGroup>
 
@@ -28,6 +28,15 @@
     <Content Include="Images\trading-banner.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Chart3DControl">
+      <HintPath>..\3rdParty\Chart3DControl.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Interactivity">
+      <HintPath>..\3rdParty\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
