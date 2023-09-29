@@ -65,6 +65,7 @@
                     </ScrollViewer.Background>
                     <StackPanel x:Name="buttonPanel" Margin="0 10 0 0">
                         <Button Content="Options" Margin="5,0,5,0" cal:Message.Attach="[Event Click]=[Action OnClick($source)]"/>
+                        <Button Content="FX" Margin="5,0,5,0" cal:Message.Attach="[Event Click]=[Action OnClick($source)]"/>
                     </StackPanel>
                 </ScrollViewer>
                 <TabControl Grid.Column="1" x:Name="Items"/>

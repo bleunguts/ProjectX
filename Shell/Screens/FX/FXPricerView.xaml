@@ -1,0 +1,78 @@
+﻿<UserControl x:Class="Shell.Screens.FX.FXPricerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Shell.Screens.FX"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <!-- Column 0-->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                    <Label Content="ClientName:"/>
+                    <TextBox Text="ProjectX Trader" Width="120"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <Label Content="Currency:"/>
+                    <ComboBox x:Name="Currencies" Width="120" IsEnabled="False" SelectedIndex="0"/>
+                    <Button Content="Subscribe" x:Name="Subscribe" Margin="15,0,15,0" />
+                    <Button Content="Unsubscribe" x:Name="Unsubscribe"/>
+                </StackPanel>
+            </Grid>
+            <!-- Column 1 -->
+            <DockPanel Grid.Column ="1">
+                <Label Content="Status:" VerticalAlignment="Top" />
+                <TextBox MinHeight="100" MinWidth="200" x:Name="Status" IsReadOnly="True"/>
+            </DockPanel>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <DockPanel>
+                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                        <Label Content="Price stream:"/>
+                        <Label Name="PriceStream" MinWidth="50" />
+                    </StackPanel>
+                </DockPanel>
+                <ListView Grid.Row="1" x:Name="Prices" MinHeight="50" MinWidth="500" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                </ListView>
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="3">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Right" Orientation="Horizontal">
+                        <Label Content="Latest Price:"/>
+                        <Label x:Name="LatestPrice" FontWeight="ExtraBold" MinWidth="50"/>
+                    </StackPanel>
+                    <Label Content="Quantity:"/>
+                    <TextBox Height="27" VerticalAlignment="Center" TextAlignment="Center" x:Name="Notional" Width="120" />
+                    <Button Content="Buy" Height="26" x:Name="BuyTrade" Width="50"/>
+                    <Button Content="Sell" Height="26" x:Name="SellTrade" Width="50"/>
+                    <Button x:Name="ClearHistory" Content="Clear History"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</UserControl>
