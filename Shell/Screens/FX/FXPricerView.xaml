@@ -6,73 +6,63 @@
              xmlns:local="clr-namespace:Shell.Screens.FX"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <!-- Column 0-->
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Vertical" >
                 <StackPanel Grid.Row="0" Orientation="Horizontal">
                     <Label Content="ClientName:"/>
-                    <TextBox Text="ProjectX Trader" Width="120"/>
+                    <TextBox Text="ProjectX Trader" IsEnabled="False" Width="120"/>
                 </StackPanel>
                 <StackPanel Grid.Row="1" Orientation="Horizontal">
                     <Label Content="Currency:"/>
-                    <ComboBox x:Name="Currencies" Width="120" IsEnabled="False" SelectedIndex="0"/>
-                    <Button Content="Subscribe" x:Name="Subscribe" Margin="15,0,15,0" />
-                    <Button Content="Unsubscribe" x:Name="Unsubscribe"/>
+                    <ComboBox x:Name="Currencies" Width="120" IsEnabled="True" SelectedIndex="0"/>
                 </StackPanel>
-            </Grid>
-            <!-- Column 1 -->
-            <DockPanel Grid.Column ="1">
-                <Label Content="Status:" VerticalAlignment="Top" />
-                <TextBox MinHeight="100" MinWidth="200" x:Name="Status" IsReadOnly="True"/>
-            </DockPanel>
-        </Grid>
-        <Grid Grid.Row="2">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-                <DockPanel>
-                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
-                        <Label Content="Price stream:"/>
-                        <Label Name="PriceStream" MinWidth="50" />
-                    </StackPanel>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Right">
+                    <Button Content="Subscribe" x:Name="Subscribe" Width="70" Margin="0 0 0 4"/>
+                    <Button Content="Unsubscribe" x:Name="Unsubscribe" Width="80" Margin="0 0 0 4"/>
+                </StackPanel>
+                <DockPanel Grid.Column ="1">
+                    <Label Content="Status:" VerticalAlignment="Top" />
+                    <TextBox MinHeight="50" MinWidth="200" x:Name="Status" IsReadOnly="True"/>
                 </DockPanel>
-                <ListView Grid.Row="1" x:Name="Prices" MinHeight="50" MinWidth="500" ScrollViewer.VerticalScrollBarVisibility="Auto">
-                </ListView>
-            </Grid>
-        </Grid>
-        <Grid Grid.Row="3">
-            <StackPanel Orientation="Horizontal">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                    <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Right" Orientation="Horizontal">
-                        <Label Content="Latest Price:"/>
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Latest Price:" FontWeight="ExtraBold"/>
                         <Label x:Name="LatestPrice" FontWeight="ExtraBold" MinWidth="50"/>
                     </StackPanel>
-                    <Label Content="Quantity:"/>
-                    <TextBox Height="27" VerticalAlignment="Center" TextAlignment="Center" x:Name="Notional" Width="120" />
-                    <Button Content="Buy" Height="26" x:Name="BuyTrade" Width="50"/>
-                    <Button Content="Sell" Height="26" x:Name="SellTrade" Width="50"/>
-                    <Button x:Name="ClearHistory" Content="Clear History"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Quantity:"/>
+                        <TextBox Height="27" TextAlignment="Center" x:Name="Notional" Width="120" />
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Right">
+                        <Button Content="Buy" Height="26" x:Name="BuyTrade" Width="50" Margin="0 0 0 4"/>
+                        <Button Content="Sell" Height="26" x:Name="SellTrade" Width="50" Margin="0 0 0 4"/>
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
+        </Grid>
+        <Grid Grid.Column="1" Margin="80 0 0 0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <DockPanel >
+                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                    <Label Content="Price stream:"/>
+                    <Label Name="PriceStream" MinWidth="50" Content="N/A" FontWeight="ExtraBlack"/>
+                </StackPanel>
+                <Button x:Name="ClearHistory" Content="Clear History" DockPanel.Dock="Right" Width="100" HorizontalAlignment="Right"/>
+            </DockPanel>
+            <ListView Grid.Row="1" x:Name="Prices" MinHeight="480" MinWidth="450" ScrollViewer.VerticalScrollBarVisibility="Auto" Grid.RowSpan="2"/>
         </Grid>
     </Grid>
 </UserControl>
