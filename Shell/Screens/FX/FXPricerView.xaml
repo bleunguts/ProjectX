@@ -24,7 +24,7 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Label Grid.Row="0" Grid.Column="0"  Content="ClientName:"/>
+            <Label Grid.Row="0" Grid.Column="0" Content="ClientName:"/>
             <TextBox Grid.Row="0" Grid.Column="1" Text="ProjectX Trader" IsEnabled="False" Width="120" HorizontalAlignment="Left"/>
             <Label Grid.Row="1" Grid.Column="0" Content="Currency:"/>
             <ComboBox Grid.Row="1" Grid.Column="1" x:Name="Currencies" Width="120" Height="20" IsEnabled="True" SelectedIndex="0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -53,7 +53,7 @@
             <DockPanel >
                 <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
                     <Label Content="Price stream:"/>
-                    <Label Name="PriceStream" MinWidth="50" Content="N/A" FontWeight="ExtraBlack"/>
+                    <Label Name="PriceStream" MinWidth="50" FontWeight="ExtraBlack"/>
                 </StackPanel>
                 <Button x:Name="ClearHistory" Content="Clear History" DockPanel.Dock="Right" Width="100" HorizontalAlignment="Right"/>
             </DockPanel>
