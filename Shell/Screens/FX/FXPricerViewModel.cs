@@ -36,45 +36,38 @@ namespace Shell.Screens.FX
         public IEnumerable<string> Currencies
         {
             get { return _currencies; }
-            set { _currencies = value; }
+            set { _currencies = value; NotifyOfPropertyChange(() => Currencies); }
         }
        
         public string Status
         {
             get { return _status; }
-            set { _status = value; }
+            set { _status = value; NotifyOfPropertyChange(() => Status); }
         }
 
         public string PriceStream
         {
             get { return _priceStream; }
-            set { _priceStream = value; }
+            set { _priceStream = value; NotifyOfPropertyChange(() => PriceStream); }
         }
-
-        
 
         public IEnumerable<double> Prices
         {
             get { return _prices; }
-            set { _prices = value; }
+            set { _prices = value; NotifyOfPropertyChange(() => Prices); }
         }
-
-        
 
         public string LatestPrice
         {
             get { return _latestPrice; }
-            set { _latestPrice = value; }
+            set { _latestPrice = value; NotifyOfPropertyChange(() => LatestPrice); }
         }
-
 
         public int Notional
         {
             get { return _notional; }
-            set { _notional = value; }
+            set { _notional = value; NotifyOfPropertyChange(() => Notional); }
         }
-
-
         #endregion
 
         public void BuyTrade()
