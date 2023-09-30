@@ -34,14 +34,9 @@ namespace ProjectX.Core.MarketData
                 return null;
             }
             return disposable;
-        }
+        }       
 
         [ImportingConstructor]
-        public FXMarketService(ILogger<FXMarketService> logger) : this(logger, new RandomFXSpotPriceStream(2, 100), new FXSpotPricer())
-        {
-
-        }
-
         public FXMarketService(ILogger<FXMarketService> logger, IFXSpotPriceStream spotPriceGenerator, IFXSpotPricer fXPricer)
         {
             _logger = logger;
