@@ -24,7 +24,7 @@ namespace ProjectX.Core.MarketData
         private readonly IFXPricer _fxPricer;
         private readonly IDictionary<string, IDisposable> _spotPriceStreams = new ConcurrentDictionary<string, IDisposable>();
 
-        public IDisposable?SpotPriceStreamsFor(string currencyPair)
+        public IDisposable? SpotPriceStreamsFor(string currencyPair)
         {
             if(!_spotPriceStreams.TryGetValue(currencyPair, out var disposable)) {
                 return null;
@@ -54,7 +54,7 @@ namespace ProjectX.Core.MarketData
             {
                 _logger.LogWarning($"Tried to add {request.CurrencyPair} observable stream to internal dictionary but failed");
             };
-            
+                        
             return spotPriceResponseStream;
         }
 
