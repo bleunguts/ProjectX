@@ -13,20 +13,27 @@ using System.Threading.Tasks;
 using System.Windows.Threading;
 using System.Windows;
 using System.Collections.ObjectModel;
+using System.Runtime.Serialization;
+using static ProjectX.Core.Services.eFXTrader;
+using ProjectX.Core.Services;
 
 namespace Shell.Screens.FX
 {
     [Export(typeof(IScreen)), PartCreationPolicy(CreationPolicy.NonShared)]
-    public class FXPricerViewModel : Screen
+    public partial class FXPricerViewModel : Screen
     {
         private readonly IEventAggregator _events;
         private readonly IFXMarketService _fXMarketService;
+        private readonly ISpotPriceFormatter _spotPriceFormatter;
+        private readonly IFXTrader _fxTrader;
 
         [ImportingConstructor]
-        public FXPricerViewModel(IEventAggregator events, IFXMarketService fXMarketService)
+        public FXPricerViewModel(IEventAggregator events, IFXMarketService fXMarketService, ISpotPriceFormatter spotPriceFormatter, IFXTrader fxTrader)
         {
             _events = events;
             _fXMarketService = fXMarketService;
+            _spotPriceFormatter = spotPriceFormatter;
+            _fxTrader = fxTrader;
             DisplayName = "FXPricer (FX)"; 
         }
 
@@ -99,15 +106,21 @@ namespace Shell.Screens.FX
 
         #endregion
 
-        public void BuyTrade()
-        {
-            throw new NotImplementedException();
-        }
+        public void BuyTrade() => MakeTrade(BuySell.Buy);
 
-        public void SellTrade()
+        public void SellTrade() => MakeTrade(BuySell.Sell);
+
+        private void MakeTrade(BuySell buySell)
         {
-            throw new NotImplementedException();
-        }
+            var timestamped = DateTimeOffset.Parse(LatestPriceTimeStamp);
+            var currentPrice = _spotPriceFormatter.ToSpotPrice(Prices.First());
+            var quantity = Notional;
+            var clientName = ClientName;
+            var request = new TradeRequest(FXProductType.Spot, currentPrice, quantity, buySell, clientName, timestamped);
+
+            var response = _fxTrader.ExecuteTrade(request);
+            AppendStatus($"Trade exeecuted @ {response.BuySell} {response.Quantity} x {response.TransactionPrice}/unit totalling=${response.TotalPrice.ToString("0.0")}");
+        }       
 
         public void ClearHistory() => ClearPricesList();
 
@@ -119,37 +132,39 @@ namespace Shell.Screens.FX
             }
             var selectedCurrency = SelectedCurrency ?? throw new ArgumentNullException(nameof(SelectedCurrency));
             _currentDisposableStream = _fXMarketService.StreamSpotPricesFor(new ProjectX.Core.SpotPriceRequest(selectedCurrency, ClientName))
-                .                                        Subscribe(priceResponse => UpdatePrice(priceResponse));                   
+                .                                        Subscribe(priceResponse => UpdatePrice(priceResponse));
+            AppendStatus($"subscribed to price stream {selectedCurrency} successfully.");
         }
 
         void UpdatePrice(Timestamped<SpotPriceResponse> response)
         {
             try
             {
-                var latestPrice = FormatPrice(response.Value.SpotPrice);
+                var latestPrice = _spotPriceFormatter.PrettifySpotPrice(response.Value.SpotPrice);
                 LatestPrice = latestPrice;
                 LatestPriceTimeStamp = response.Timestamp.ToLocalTime().ToString();
                 PriceStream = response.Value.SpotPrice.CurrencyPair;
 
                 App.Current.Dispatcher.Invoke((System.Action)delegate
                 {
-                    AddPriceToPricesList(latestPrice);                
+                    AddPriceToPricesList(latestPrice);
                 });
-
-                Status = $"[{DateTime.Now.ToLocalTime()}] New Spot Price arrived at {response.Timestamp.ToLocalTime()} for {response.Value.SpotPrice.CurrencyPair}." + Environment.NewLine + Status;
+                
+                //AppendStatus($"[{DateTime.Now.ToLocalTime()}] New Spot Price arrived at {response.Timestamp.ToLocalTime()} for {response.Value.SpotPrice.CurrencyPair}.");
             }
             catch (Exception exp)
             {
                 MessageBox.Show(string.Format("Cannot interpret PriceResponse, Reason:'{0}'", exp.Message, "Error"));
-            }
-
-            string FormatPrice(SpotPrice price) => $"{price.BidPrice.ToString("#.00000")}/{price.AskPrice.ToString("#.00000")}";
+            }            
         }
+
+        private void AppendStatus(string message) => Status = $"[{DateTime.Now.ToLocalTime()}] {message}" + Environment.NewLine + Status;
 
         private void ClearPricesList()
         {
             _prices.Clear();
             NotifyOfPropertyChange(() => Prices);
+            AppendStatus("Price history cleared.");
         }
         private void AddPriceToPricesList(string price)
         {
@@ -164,9 +179,11 @@ namespace Shell.Screens.FX
             {
                 _currentDisposableStream.Dispose();
                 _currentDisposableStream = null;
-            }            
+            }
+            AppendStatus($"Stream unsubscribed to {SelectedCurrency}.");
         }
 
         private IDisposable? _currentDisposableStream;
     }
+ 
 }

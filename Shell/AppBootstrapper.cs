@@ -35,6 +35,7 @@ namespace Shell
             batch.AddExportedValue<IEventAggregator>(new EventAggregator());
             batch.AddExportedValue(container);
             batch.AddExportedValue<ILogger<FXMarketService>>(new NullLogger<FXMarketService>());
+            batch.AddExportedValue<ILogger<eFXTrader>>(new NullLogger<eFXTrader>());
             batch.AddExportedValue<IFXSpotPriceStream>(new RandomFXSpotPriceStream(2, 500));
 
             container.Compose(batch);                        
