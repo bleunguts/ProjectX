@@ -13,7 +13,7 @@ namespace ProjectX.Core.Tests
      
         [Test]
         public void WhenPlottingGreeksZValuesAreValid()
-        {            
+        {                        
             var result = _sut.PlotGreeks(OptionGreeks.Price, OptionType.Call, 100, 0.1, 0.04, 0.3);
             AssertZValue(result.zmin, result.zmax, rounding: 1);
         }

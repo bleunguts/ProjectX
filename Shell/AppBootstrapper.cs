@@ -1,4 +1,7 @@
 ﻿using Caliburn.Micro;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using ProjectX.Core.MarketData;
 using ProjectX.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -30,7 +33,8 @@ namespace Shell
             var batch = new CompositionBatch();
             batch.AddExportedValue<IWindowManager>(new WindowManager());
             batch.AddExportedValue<IEventAggregator>(new EventAggregator());
-            batch.AddExportedValue(container);           
+            batch.AddExportedValue(container);
+            batch.AddExportedValue<ILogger<FXMarketService>>(new NullLogger<FXMarketService>());
 
             container.Compose(batch);                        
         }

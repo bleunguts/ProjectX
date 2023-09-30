@@ -61,7 +61,7 @@ namespace ProjectX.Core.Tests
             Assert.That(_sut.SpotPriceStreamsFor("EURUSD"), Is.Not.Null);
 
             // act
-            _sut.Unsubscribe("EURUSD");
+            _sut.UnStream("EURUSD");
 
             // assert
             Assert.That(_sut.SpotPriceStreamsFor("EURUSD"), Is.Null);
