@@ -1,4 +1,4 @@
-﻿namespace ProjectX.Core;
+﻿namespace ProjectX.Core.Services;
 
 public enum GreekTypeEnum
 {
