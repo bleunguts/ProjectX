@@ -6,27 +6,21 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectX.Core.MarketData
+namespace ProjectX.Core
 {
-    public enum ProductType
+    public enum FXProductType
     {
         Spot
         // Outright
         // Swap
         // Options
     }
-    public enum BuySell
-    {     
-        Buy,     
-        Sell
-    }
-
     public record SpotPriceRequest(string CurrencyPair, string ClientName)
     {
-        public ProductType ProductType { private set; get; } = ProductType.Spot;
+        public FXProductType ProductType { private set; get; } = FXProductType.Spot;
     }
     public record SpotPriceResponse(SpotPrice SpotPrice, string ClientName);
-
+    public record SpreadedSpotPriceResponse(SpotPrice SpotPrice, string ClientName, int SpreadInPips) : SpotPriceResponse(SpotPrice, ClientName);
     public record struct SpotPrice(decimal BidPrice, decimal AskPrice, string CurrencyPair, Guid PriceId)
     {
         public SpotPrice(string currencyPair, decimal bidPrice, decimal askPrice) : this(bidPrice, askPrice, currencyPair, Guid.NewGuid())
@@ -41,6 +35,4 @@ namespace ProjectX.Core.MarketData
             return string.Format("ccyPair={0}, Price={1}/{2}, PriceId={3}", CurrencyPair, BidPrice.ToString("#.00000"), AskPrice.ToString("#.00000"), PriceId);
         }
     }
-
-    public record SpreadedPriceResponse(SpotPrice SpotPrice, string ClientName, int SpreadInPips) : SpotPriceResponse(SpotPrice, ClientName);
 }

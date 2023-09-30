@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Reactive.Testing;
+using ProjectX.Core.Analytics;
 using ProjectX.Core.MarketData;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace ProjectX.Core.Tests
     {
         private static ILogger<FXMarketService> _logger;
         private static decimal RawSpreadInPips = 2.0M;
-        readonly IFXSpotPriceGenerator _priceGenerator = new RandomFXSpotPriceGenerator(RawSpreadInPips, 100);
+        readonly IFXSpotPriceStream _priceGenerator = new RandomFXSpotPriceStream(RawSpreadInPips, 100);
         readonly IFXPricer _fxPricer = new FXSpotPricer();
 
         [SetUp]

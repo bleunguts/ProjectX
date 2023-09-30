@@ -11,16 +11,16 @@ namespace ProjectX.Core.Services
 {
     public interface IBlackScholesOptionsPricerService
     {
-        PlotResults PlotGreeks(GreekTypeEnum greekType, OptionType optionType, double strike, double rate, double carry, double vol);
-        IEnumerable<(double maturity, OptionPriceResult optionPriceResult)> PriceFor(int timeSlices, OptionType optionType, double spot, double strike, double rate, double carry, double vol);
+        PlotResults PlotGreeks(OptionGreeks greekType, OptionType optionType, double strike, double rate, double carry, double vol);
+        IEnumerable<(double maturity, OptionPricerResult optionPriceResult)> PriceFor(int timeSlices, OptionType optionType, double spot, double strike, double rate, double carry, double vol);
     }
 
     [Export(typeof(IBlackScholesOptionsPricerService)), PartCreationPolicy(CreationPolicy.NonShared)]    
     public class BlackScholesOptionsPricerService : IBlackScholesOptionsPricerService
     {
-        public IEnumerable<(double maturity, OptionPriceResult optionPriceResult)> PriceFor(int timeSlices, OptionType optionType, double spot, double strike, double rate, double carry, double vol)
+        public IEnumerable<(double maturity, OptionPricerResult optionPriceResult)> PriceFor(int timeSlices, OptionType optionType, double spot, double strike, double rate, double carry, double vol)
         {
-            var results = new List<(double maturity, OptionPriceResult optionPriceResult)>();
+            var results = new List<(double maturity, OptionPricerResult optionPriceResult)>();
             for (int i = 0; i < 10; i++)
             {
                 // break out into 10 time slices until maturity
@@ -30,7 +30,7 @@ namespace ProjectX.Core.Services
                 results.Add(
                 (
                     maturity,
-                    new OptionPriceResult(
+                    new OptionPricerResult(
                         OptionHelper.BlackScholes(optionType, spot, strike, rate, carry, maturity, vol),
                         OptionHelper.BlackScholes_Delta(optionType, spot, strike, rate, carry, maturity, vol),
                         OptionHelper.BlackScholes_Gamma(spot, strike, rate, carry, maturity, vol),
@@ -43,7 +43,7 @@ namespace ProjectX.Core.Services
             return results;
         }
 
-        public PlotResults PlotGreeks(GreekTypeEnum greekType, OptionType optionType, double strike, double rate, double carry, double vol)
+        public PlotResults PlotGreeks(OptionGreeks greekType, OptionType optionType, double strike, double rate, double carry, double vol)
         {
             double xmin = 0.1;
             double xmax = 3.0;
@@ -70,22 +70,22 @@ namespace ProjectX.Core.Services
                     var maturity = x;
                     switch (greekType)
                     {
-                        case GreekTypeEnum.Delta:
+                        case OptionGreeks.Delta:
                             z = OptionHelper.BlackScholes_Delta(optionType, spot, strike, rate, carry, maturity, vol);
                             break;
-                        case GreekTypeEnum.Gamma:
+                        case OptionGreeks.Gamma:
                             z = OptionHelper.BlackScholes_Gamma(spot, strike, rate, carry, maturity, vol);
                             break;
-                        case GreekTypeEnum.Theta:
+                        case OptionGreeks.Theta:
                             z = OptionHelper.BlackScholes_Theta(optionType, spot, strike, rate, carry, maturity, vol);
                             break;
-                        case GreekTypeEnum.Rho:
+                        case OptionGreeks.Rho:
                             z = OptionHelper.BlackScholes_Rho(optionType, spot, strike, rate, carry, maturity, vol);
                             break;
-                        case GreekTypeEnum.Vega:
+                        case OptionGreeks.Vega:
                             z = OptionHelper.BlackScholes_Vega(spot, strike, rate, carry, maturity, vol);
                             break;
-                        case GreekTypeEnum.Price:
+                        case OptionGreeks.Price:
                             z = OptionHelper.BlackScholes(optionType, spot, strike, rate, carry, maturity, vol);
                             break;
                     }

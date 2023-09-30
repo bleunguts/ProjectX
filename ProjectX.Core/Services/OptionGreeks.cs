@@ -1,6 +1,6 @@
 ﻿namespace ProjectX.Core.Services;
 
-public enum GreekTypeEnum
+public enum OptionGreeks
 {
     Delta = 0,
     Gamma = 1,

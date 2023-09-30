@@ -4,13 +4,13 @@ using System.Reactive.Subjects;
 
 namespace ProjectX.Core.MarketData
 {
-    public class RandomFXSpotPriceGenerator : IFXSpotPriceGenerator
+    public class RandomFXSpotPriceStream : IFXSpotPriceStream
     {
-        private readonly decimal _rawSpreadInPips;
-        private readonly int _intervalBetweenSends;
+        private readonly decimal _rawSpreadInPips = 2;
+        private readonly int _intervalBetweenSends = 1000;
         private Random _random = new Random();
 
-        public RandomFXSpotPriceGenerator(decimal rawSpreadInPips, int intervalBetweenSends)
+        public RandomFXSpotPriceStream(decimal rawSpreadInPips, int intervalBetweenSends)
         {
             this._rawSpreadInPips = rawSpreadInPips;
             this._intervalBetweenSends = intervalBetweenSends;

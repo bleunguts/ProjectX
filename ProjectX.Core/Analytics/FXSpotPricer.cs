@@ -1,4 +1,4 @@
-﻿namespace ProjectX.Core.MarketData
+﻿namespace ProjectX.Core.Analytics
 {
     public interface IFXPricer
     {

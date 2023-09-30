@@ -2,7 +2,7 @@
 
 namespace ProjectX.Core.MarketData
 {
-    public interface IFXSpotPriceGenerator
+    public interface IFXSpotPriceStream
     {
         IConnectableObservable<SpotPrice> SpotPriceEventsFor(string currencyPair);
     }

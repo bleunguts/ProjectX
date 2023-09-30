@@ -107,13 +107,13 @@ namespace Shell.Screens.Options
                 OptionTable.Rows.Add(maturity, riskResult.price, riskResult.delta, riskResult.gamma, riskResult.theta, riskResult.rho, riskResult.vega); 
             }
         }
-        public void PlotPrice() => Plot(GreekTypeEnum.Price, "Price", 1, 1);
-        public void PlotDelta() => Plot(GreekTypeEnum.Delta, "Delta", 1, 1);
-        public void PlotGamma() => Plot(GreekTypeEnum.Gamma, "Gamma", 2, 3);
-        public void PlotTheta() => Plot(GreekTypeEnum.Theta, "Theta", 0, 0);
-        public void PlotRho() => Plot(GreekTypeEnum.Rho, "Rho", 0, 0);
-        public void PlotVega() => Plot(GreekTypeEnum.Vega, "Vega", 0, 0);
-        private void Plot(GreekTypeEnum greekType, string zLabel, int zDecimalPlaces, int zTickDecimalPlaces)
+        public void PlotPrice() => Plot(OptionGreeks.Price, "Price", 1, 1);
+        public void PlotDelta() => Plot(OptionGreeks.Delta, "Delta", 1, 1);
+        public void PlotGamma() => Plot(OptionGreeks.Gamma, "Gamma", 2, 3);
+        public void PlotTheta() => Plot(OptionGreeks.Theta, "Theta", 0, 0);
+        public void PlotRho() => Plot(OptionGreeks.Rho, "Rho", 0, 0);
+        public void PlotVega() => Plot(OptionGreeks.Vega, "Vega", 0, 0);
+        private void Plot(OptionGreeks greekType, string zLabel, int zDecimalPlaces, int zTickDecimalPlaces)
         {            
             ZLabel = zLabel;
 

@@ -13,6 +13,7 @@ using System.Collections.Concurrent;
 using System.Reactive.Linq;
 using System.Diagnostics;
 using System.Reactive;
+using ProjectX.Core.Analytics;
 
 namespace ProjectX.Core.MarketData
 {
@@ -20,7 +21,7 @@ namespace ProjectX.Core.MarketData
     {
         private readonly int RawSpreadInPips = 2;
         private readonly ILogger<FXMarketService> _logger;
-        private readonly IFXSpotPriceGenerator _spotPriceGenerator;        
+        private readonly IFXSpotPriceStream _spotPriceGenerator;        
         private readonly IFXPricer _fxPricer;
         private readonly IDictionary<string, IDisposable> _spotPriceStreams = new ConcurrentDictionary<string, IDisposable>();
 
@@ -32,7 +33,7 @@ namespace ProjectX.Core.MarketData
             return disposable;
         }
 
-        public FXMarketService(ILogger<FXMarketService> logger, IFXSpotPriceGenerator spotPriceGenerator, IFXPricer fXPricer) 
+        public FXMarketService(ILogger<FXMarketService> logger, IFXSpotPriceStream spotPriceGenerator, IFXPricer fXPricer) 
         {
             _logger = logger;
             _spotPriceGenerator = spotPriceGenerator;            
@@ -78,7 +79,7 @@ namespace ProjectX.Core.MarketData
             _logger.LogInformation($"Pricing Request {request.CurrencyPair}, {spotPrice}, {spreadInPips}");
             
             var price = _fxPricer.Price(request.CurrencyPair, spotPrice, spreadInPips);
-            return new SpreadedPriceResponse(price, request.ClientName, spreadInPips);
+            return new SpreadedSpotPriceResponse(price, request.ClientName, spreadInPips);
         }
 
         public void Dispose()
