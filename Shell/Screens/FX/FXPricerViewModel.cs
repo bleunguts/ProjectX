@@ -11,13 +11,12 @@ namespace Shell.Screens.FX
     [Export(typeof(IScreen)), PartCreationPolicy(CreationPolicy.NonShared)]
     public class FXPricerViewModel : Screen
     {
-        private readonly IEventAggregator events;
-        private IEnumerable<string> currencies;
+        private readonly IEventAggregator _events;        
 
         [ImportingConstructor]
         public FXPricerViewModel(IEventAggregator events)
         {
-            this.events = events;
+            _events = events;
             DisplayName = "FXPricer (FX)"; 
         }
 

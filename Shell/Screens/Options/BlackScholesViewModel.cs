@@ -17,14 +17,14 @@ namespace Shell.Screens.Options
     [Export(typeof(IScreen)), PartCreationPolicy(CreationPolicy.NonShared)]
     public class BlackScholesViewModel : Screen
     {
-        private readonly IEventAggregator events;
-        private readonly BlackScholesOptionsPricerService _blackScholesPricerService;
+        private readonly IEventAggregator _events;
+        private readonly IBlackScholesOptionsPricerService _blackScholesPricerService;
 
         [ImportingConstructor]
-        public BlackScholesViewModel(IEventAggregator events)
+        public BlackScholesViewModel(IEventAggregator events, IBlackScholesOptionsPricerService blackScholesOptionsPricerService)
         {
-            this.events = events;
-            this._blackScholesPricerService = new BlackScholesOptionsPricerService();
+            this._events = events;
+            this._blackScholesPricerService = blackScholesOptionsPricerService;
             DisplayName = "Black-Scholes (Options)";
            
             OptionTable.Columns.AddRange(new[]

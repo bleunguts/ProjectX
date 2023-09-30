@@ -1,12 +1,11 @@
 ﻿using Caliburn.Micro;
+using ProjectX.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace Shell
@@ -21,15 +20,19 @@ namespace Shell
         }
 
         protected override void Configure()
-        {
-            var catalog = new AggregateCatalog(AssemblySource.Instance.Select(x => new AssemblyCatalog(x)).OfType<ComposablePartCatalog>());
+        {            
+            List<ComposablePartCatalog> catalogues = new List<ComposablePartCatalog>();
+            catalogues.Add(new DirectoryCatalog(".", "ProjectX*.Dll"));
+            catalogues.AddRange(AssemblySource.Instance.Select(x => new AssemblyCatalog(x)).OfType<ComposablePartCatalog>());
+            var catalog = new AggregateCatalog(catalogues);
+
             container = new CompositionContainer(catalog);
             var batch = new CompositionBatch();
             batch.AddExportedValue<IWindowManager>(new WindowManager());
             batch.AddExportedValue<IEventAggregator>(new EventAggregator());
-            batch.AddExportedValue(container);
+            batch.AddExportedValue(container);           
 
-            container.Compose(batch);
+            container.Compose(batch);                        
         }
 
         protected override object GetInstance(Type serviceType, string key)

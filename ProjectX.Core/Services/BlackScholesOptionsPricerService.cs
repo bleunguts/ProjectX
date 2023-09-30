@@ -1,6 +1,7 @@
 ﻿using ProjectX.Core.Analytics;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Runtime.InteropServices.Marshalling;
 using System.Text;
@@ -8,7 +9,14 @@ using System.Threading.Tasks;
 
 namespace ProjectX.Core.Services
 {
-    public class BlackScholesOptionsPricerService
+    public interface IBlackScholesOptionsPricerService
+    {
+        PlotResults PlotGreeks(GreekTypeEnum greekType, OptionType optionType, double strike, double rate, double carry, double vol);
+        IEnumerable<(double maturity, OptionPriceResult optionPriceResult)> PriceFor(int timeSlices, OptionType optionType, double spot, double strike, double rate, double carry, double vol);
+    }
+
+    [Export(typeof(IBlackScholesOptionsPricerService)), PartCreationPolicy(CreationPolicy.NonShared)]    
+    public class BlackScholesOptionsPricerService : IBlackScholesOptionsPricerService
     {
         public IEnumerable<(double maturity, OptionPriceResult optionPriceResult)> PriceFor(int timeSlices, OptionType optionType, double spot, double strike, double rate, double carry, double vol)
         {
@@ -22,7 +30,7 @@ namespace ProjectX.Core.Services
                 results.Add(
                 (
                     maturity,
-                    new OptionPriceResult(                    
+                    new OptionPriceResult(
                         OptionHelper.BlackScholes(optionType, spot, strike, rate, carry, maturity, vol),
                         OptionHelper.BlackScholes_Delta(optionType, spot, strike, rate, carry, maturity, vol),
                         OptionHelper.BlackScholes_Gamma(spot, strike, rate, carry, maturity, vol),
@@ -36,7 +44,7 @@ namespace ProjectX.Core.Services
         }
 
         public PlotResults PlotGreeks(GreekTypeEnum greekType, OptionType optionType, double strike, double rate, double carry, double vol)
-        {          
+        {
             double xmin = 0.1;
             double xmax = 3.0;
             double ymin = 10;
@@ -101,6 +109,6 @@ namespace ProjectX.Core.Services
                 XNumber = XNumber,
                 YNumber = YNumber,
             };
-        }        
+        }
     }
 }
