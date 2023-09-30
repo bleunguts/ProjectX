@@ -55,7 +55,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Label Grid.Row="0" Grid.Column="2" Content="Status:"/>
+            <Label Grid.Row="0" Grid.Column="2" Content="Tail:"/>
             <TextBox Grid.Row="1" Grid.Column="2" MinHeight="700" MaxHeight="700" MinWidth="200" x:Name="Status" IsReadOnly="True" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
             
             <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
