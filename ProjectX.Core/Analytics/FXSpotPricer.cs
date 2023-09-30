@@ -1,10 +1,6 @@
 ﻿namespace ProjectX.Core.Analytics
 {
-    public interface IFXPricer
-    {
-        SpotPrice Price(string ccyPair, SpotPrice spotPrice, int spreadInPips);
-    }
-    public class FXSpotPricer : IFXPricer
+    public class FXSpotPricer : IFXSpotPricer
     {
         // potential complex calculations go here... 
         // this may be a long running operation and may need to talk to external services, run on grids, or use lots of threads.

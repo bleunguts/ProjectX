@@ -19,7 +19,7 @@ namespace ProjectX.Core.Tests
         private static ILogger<FXMarketService> _logger;
         private static decimal RawSpreadInPips = 2.0M;
         readonly IFXSpotPriceStream _priceGenerator = new RandomFXSpotPriceStream(RawSpreadInPips, 100);
-        readonly IFXPricer _fxPricer = new FXSpotPricer();
+        readonly IFXSpotPricer _fxPricer = new FXSpotPricer();
 
         [SetUp]
         public void SetUp()

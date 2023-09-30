@@ -24,7 +24,7 @@ namespace ProjectX.Core.MarketData
         private readonly int RawSpreadInPips = 2;
         private readonly ILogger<FXMarketService> _logger;
         private readonly IFXSpotPriceStream _spotPriceGenerator;
-        private readonly IFXPricer _fxPricer;
+        private readonly IFXSpotPricer _fxPricer;
         private readonly IDictionary<string, IDisposable> _spotPriceStreams = new ConcurrentDictionary<string, IDisposable>();
 
         public IDisposable? SpotPriceStreamsFor(string currencyPair)
@@ -42,7 +42,7 @@ namespace ProjectX.Core.MarketData
 
         }
 
-        public FXMarketService(ILogger<FXMarketService> logger, IFXSpotPriceStream spotPriceGenerator, IFXPricer fXPricer)
+        public FXMarketService(ILogger<FXMarketService> logger, IFXSpotPriceStream spotPriceGenerator, IFXSpotPricer fXPricer)
         {
             _logger = logger;
             _spotPriceGenerator = spotPriceGenerator;
@@ -50,11 +50,10 @@ namespace ProjectX.Core.MarketData
         }
         public IObservable<Timestamped<SpotPriceResponse>> StreamSpotPricesFor(SpotPriceRequest request)
         {
-            var spotPriceResponseStream = _spotPriceGenerator.SpotPriceEventsFor(request.CurrencyPair)
-                                    //.ObserveOn(NewThreadScheduler.Default)
-                                    .AutoConnect(1)
-                                    .Select(spotPrice => Price(request, spotPrice, RawSpreadInPips))
-                                    .Timestamp();
+            var spotPriceResponseStream = _spotPriceGenerator.SpotPriceEventsFor(request.CurrencyPair)                                    
+                                                                .AutoConnect(1)
+                                                                .Select(spotPrice => Price(request, spotPrice, RawSpreadInPips))
+                                                                .Timestamp();
 
             var disposable = spotPriceResponseStream
                                     .Subscribe(priceResponse => PriceUpdated(priceResponse),

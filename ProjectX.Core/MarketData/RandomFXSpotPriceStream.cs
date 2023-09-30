@@ -7,7 +7,7 @@ namespace ProjectX.Core.MarketData
     public class RandomFXSpotPriceStream : IFXSpotPriceStream
     {
         private readonly decimal _rawSpreadInPips = 2;
-        private readonly int _intervalBetweenSends = 1000;
+        private readonly int _intervalBetweenSends = 2000;
         private Random _random = new Random();
 
         public RandomFXSpotPriceStream(decimal rawSpreadInPips, int intervalBetweenSends)
@@ -16,14 +16,10 @@ namespace ProjectX.Core.MarketData
             this._intervalBetweenSends = intervalBetweenSends;
         }
 
-        public IConnectableObservable<SpotPrice> SpotPriceEventsFor(string currencyPair)
-        {
-            var spotPriceEvents = Observable.Interval(TimeSpan.FromMilliseconds(_intervalBetweenSends))
-                                    //.ObserveOn(NewThreadScheduler.Default)
-                                    .Select<long, SpotPrice>(l => GenerateSpotPrice(currencyPair))
-                                    .Publish();
-            return spotPriceEvents;
-        }
+        public IConnectableObservable<SpotPrice> SpotPriceEventsFor(string currencyPair) =>
+                                    Observable.Interval(TimeSpan.FromMilliseconds(_intervalBetweenSends))
+                                                .Select<long, SpotPrice>(l => GenerateSpotPrice(currencyPair))
+                                                .Publish();
 
         internal SpotPrice GenerateSpotPrice(string currencyPair)
         {
