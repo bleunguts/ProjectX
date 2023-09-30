@@ -22,7 +22,15 @@ namespace ProjectX.Core.MarketData
         private readonly ILogger<FXMarketService> _logger;
         private readonly IFXSpotPriceGenerator _spotPriceGenerator;        
         private readonly IFXPricer _fxPricer;
-        private readonly IDictionary<string, IDisposable> _spotPriceStreams = new ConcurrentDictionary<string, IDisposable>();        
+        private readonly IDictionary<string, IDisposable> _spotPriceStreams = new ConcurrentDictionary<string, IDisposable>();
+
+        public IDisposable?SpotPriceStreamsFor(string currencyPair)
+        {
+            if(!_spotPriceStreams.TryGetValue(currencyPair, out var disposable)) {
+                return null;
+            }
+            return disposable;
+        }
 
         public FXMarketService(ILogger<FXMarketService> logger, IFXSpotPriceGenerator spotPriceGenerator, IFXPricer fXPricer) 
         {
@@ -55,7 +63,8 @@ namespace ProjectX.Core.MarketData
             if (_spotPriceStreams.TryGetValue(currencyPair, out var disposable))
             {
                 disposable.Dispose();
-            }            
+            }                   
+            _spotPriceStreams.Remove(currencyPair);
         }
 
         private void PriceUpdated(Timestamped<SpotPriceResponse> priceResponse)

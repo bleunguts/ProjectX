@@ -48,7 +48,23 @@ namespace ProjectX.Core.Tests
 
             // assert
             Assert.That(recieved, Has.Count.GreaterThanOrEqualTo(9), $"Responses: {string.Join(Environment.NewLine, recieved)}  ");
-            Assert.That(errors, Has.Count.EqualTo(0), $"Errors occured: {string.Join(Environment.NewLine, errors)} ");            
+            Assert.That(errors, Has.Count.EqualTo(0), $"Errors occured: {string.Join(Environment.NewLine, errors)} ");                                    
+        }
+
+        [Test]  
+        public void WhenUnsubscribingFromPriceStreamShouldRemoveFromInternalDictionary()        
+        {
+            // arrange
+            FXMarketService _sut = new FXMarketService(_logger, _priceGenerator, _fxPricer);
+            _sut.StreamSpotPricesFor(new SpotPriceRequest("EURUSD", "tests"));
+            Assert.That(_sut.SpotPriceStreamsFor("EURUSD"), Is.Not.Null);
+
+            // act
+            _sut.Unsubscribe("EURUSD");
+
+            // assert
+            Assert.That(_sut.SpotPriceStreamsFor("EURUSD"), Is.Null);
+
         }
     }
 }
