@@ -45,8 +45,8 @@
             </StackPanel>
 
             <StackPanel  Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3"  >
+                <Button Content="Show Positions" x:Name="ShowPositions" Width="80" HorizontalAlignment="Left"/>
                 <DataGrid CanUserAddRows="False" ItemsSource="{Binding PositionsTable}"/>
-                <Button Content="Show Positions" x:Name="ShowPositions" Width="80"/>
             </StackPanel>
         </Grid>
         <Grid Grid.Column="1">

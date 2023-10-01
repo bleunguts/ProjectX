@@ -205,7 +205,7 @@ namespace Shell.Screens.FX
                 var row = PositionsTable.NewRow();
                 row["CcyPair"] = ccypair.Key;
                 row["Notional"] = ccypair.Value.netQuantity;
-                row["PnL"] = ccypair.Value.PnL;
+                row["PnL"] = ccypair.Value.PnL.ToString("0.0");
                 row["Breakdown"] = ccypair.Value.debug;
                 PositionsTable.Rows.Add(row);
             }                                  
