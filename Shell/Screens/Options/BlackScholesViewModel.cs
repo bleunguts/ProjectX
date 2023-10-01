@@ -1,15 +1,11 @@
 ﻿using Caliburn.Micro;
 using Chart3DControl;
+using ProjectX.Core;
 using ProjectX.Core.Services;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
-using System.Windows.Media.Media3D;
 
 namespace Shell.Screens.Options
 {

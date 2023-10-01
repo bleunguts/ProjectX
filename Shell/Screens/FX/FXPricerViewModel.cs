@@ -14,7 +14,7 @@ using System.Windows.Threading;
 using System.Windows;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
-using static ProjectX.Core.Services.eFXTrader;
+using static ProjectX.Core.Services.eFXTradeExecutionService;
 using ProjectX.Core.Services;
 using System.Data;
 using System.Windows.Documents;
@@ -27,10 +27,10 @@ namespace Shell.Screens.FX
         private readonly IEventAggregator _events;
         private readonly IFXMarketService _fXMarketService;
         private readonly ISpotPriceFormatter _spotPriceFormatter;
-        private readonly IFXTrader _fxTrader;
+        private readonly IFXTradeExecutionService _fxTrader;
 
         [ImportingConstructor]
-        public FXPricerViewModel(IEventAggregator events, IFXMarketService fXMarketService, ISpotPriceFormatter spotPriceFormatter, IFXTrader fxTrader)
+        public FXPricerViewModel(IEventAggregator events, IFXMarketService fXMarketService, ISpotPriceFormatter spotPriceFormatter, IFXTradeExecutionService fxTrader)
         {
             _events = events;
             _fXMarketService = fXMarketService;

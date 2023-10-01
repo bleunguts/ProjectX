@@ -6,22 +6,22 @@ using System.Text;
 
 namespace ProjectX.Core.Services;
 
-public interface IFXTrader
+public interface IFXTradeExecutionService
 {
-    eFXTrader.TradeResponse ExecuteTrade(eFXTrader.TradeRequest request);
+    eFXTradeExecutionService.TradeResponse ExecuteTrade(eFXTradeExecutionService.TradeRequest request);
     Dictionary<string, (int netQuantity, int totalTrades, decimal PnL, string debug)> PositionsFor(string clientName);
     (decimal purchasePrice, decimal totalPrice) PriceTrade(FXProductType productType, BuySell buySell, int notional, SpotPrice price);
 }
 
-[Export(typeof(IFXTrader)), PartCreationPolicy(CreationPolicy.Shared)]
+[Export(typeof(IFXTradeExecutionService)), PartCreationPolicy(CreationPolicy.Shared)]
 
-public class eFXTrader : IFXTrader
+public class eFXTradeExecutionService : IFXTradeExecutionService
 {
-    private readonly ILogger<eFXTrader> _logger;
+    private readonly ILogger<eFXTradeExecutionService> _logger;
     private readonly List<Trade> _tradeStore = new List<Trade>();
 
     [ImportingConstructor]
-    public eFXTrader(ILogger<eFXTrader> logger)
+    public eFXTradeExecutionService(ILogger<eFXTradeExecutionService> logger)
     {
         _logger = logger;
     }
@@ -29,7 +29,7 @@ public class eFXTrader : IFXTrader
     {
         Guid priceId = request.Price.PriceId;
         string currencyPair = request.Price.CurrencyPair;
-        _logger.LogInformation($"TradeExecuteRequest @ PriceId={priceId} ");
+        _logger.LogInformation($"TradeExecuteRequest @ PriceId={priceId}");
 
         // this could be a long operation
         (decimal purchasePrice, decimal totalPrice) = PriceTrade(request.ProductType, request.BuySell, request.Quantity, request.Price);
