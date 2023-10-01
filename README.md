@@ -7,6 +7,7 @@ ProjectX App that does technical analysis to shoot two birds with one stone for 
 
 **Quant Model Pricing (QMP)** 		
 * QMP implements pricing models for FX products (commisions), Options Pricing, Bonds Pricing, CDS Pricing
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 _Roadmap_
 * React web front end capturing Market Signals Analytics which shows back testing results
