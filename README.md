@@ -1,5 +1,4 @@
-ProjectX🌊
-ProjectX App that does technical analysis to shoot two birds with one stone for personal investment management
+ProjectX🌊 App that does technical analysis to shoot two birds with one stone for personal investment management
 
 **Market Signals Analytics (MSA)**
 * MSA monitors market prices, capture pricing signals,
