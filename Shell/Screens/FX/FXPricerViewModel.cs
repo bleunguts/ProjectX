@@ -41,6 +41,7 @@ namespace Shell.Screens.FX
             {
                 new DataColumn("CcyPair", typeof(string)),
                 new DataColumn("Notional", typeof(int)),
+                new DataColumn("PnL", typeof(string)),
                 new DataColumn("Breakdown", typeof(string)),
             });           
         }    
@@ -196,7 +197,7 @@ namespace Shell.Screens.FX
 
         public void ShowPositions()
         {
-            Dictionary<string, (int netQuantity, int totalTrades, string debug)> positions = _fxTrader.PositionsFor(ClientName);
+            Dictionary<string, (int netQuantity, int totalTrades, decimal PnL, string debug)> positions = _fxTrader.PositionsFor(ClientName);
             PositionsTable.Clear();
             
             foreach (var ccypair in positions)
@@ -204,6 +205,7 @@ namespace Shell.Screens.FX
                 var row = PositionsTable.NewRow();
                 row["CcyPair"] = ccypair.Key;
                 row["Notional"] = ccypair.Value.netQuantity;
+                row["PnL"] = ccypair.Value.PnL;
                 row["Breakdown"] = ccypair.Value.debug;
                 PositionsTable.Rows.Add(row);
             }                                  
