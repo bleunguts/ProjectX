@@ -2,13 +2,14 @@
 using ProjectX.Core;
 using System;
 using System.ComponentModel.Composition;
+using System.Text;
 
 namespace ProjectX.Core.Services;
 
 public interface IFXTrader
 {
     eFXTrader.TradeResponse ExecuteTrade(eFXTrader.TradeRequest request);
-    Dictionary<string, int> PositionsFor(string clientName);
+    Dictionary<string, (int netQuantity, int totalTrades, string debug)> PositionsFor(string clientName);
     (decimal purchasePrice, decimal totalPrice) PriceTrade(FXProductType productType, BuySell buySell, int notional, SpotPrice price);
 }
 
@@ -39,9 +40,30 @@ public class eFXTrader : IFXTrader
         return response;
     }
 
-    public Dictionary<string, int> PositionsFor(string clientName)
+    public Dictionary<string, (int netQuantity, int totalTrades, string debug)> PositionsFor(string clientName)
     {
-        throw new NotImplementedException();
+        var byCurrencyPair = _tradeStore.Where(t => t.clientName == clientName)
+                                        .GroupBy(t => t.currencyPair);
+
+        Dictionary<string, (int, int, string)> positions = new Dictionary<string, (int, int, string)>();
+
+        foreach(var group in byCurrencyPair)
+        {
+            var currencyPair = group.Key;
+            int netQuantity = 0;
+            int totalTrades = 0;
+            var debug = new StringBuilder();            
+            foreach(var pair in group)
+            {
+                var quantity = pair.buySell == BuySell.Buy ? pair.quantity : -pair.quantity;
+                netQuantity += quantity;
+                totalTrades++;
+                debug.Append($"({totalTrades}):{pair.quantity},{pair.transactionPrice},{pair.totalPrice};");                    
+            }
+            positions[currencyPair] = (netQuantity, totalTrades, debug.ToString());
+        }
+
+        return positions;
     }
 
     public (decimal purchasePrice, decimal totalPrice) PriceTrade(FXProductType productType, BuySell buySell, int quantity, SpotPrice price)

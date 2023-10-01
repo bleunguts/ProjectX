@@ -18,12 +18,24 @@ namespace ProjectX.Core.Tests
         public void WhenFetchingPositionsFromTradeManagerShouldReturnCorrectPositionsPerCurrencyPairTraded()
         {           
             // act
-            _sut.ExecuteTrade(TradeRequestFor(BuySell.Buy, "EURUSD", 100, 1.5M, 1.2M));            
-            Dictionary<string, int> positions = _sut.PositionsFor(_clientName);
+            _sut.ExecuteTrade(TradeRequestFor(BuySell.Buy, "EURUSD", 100, 1.5M, 1.2M));
+          
+            // assert            
+            Assert.That(_sut.PositionsFor(_clientName).TryGetValue("EURUSD", out (int netQuantity, int totalTrades, string debug) v1), Is.True);            
+            Assert.That(v1.netQuantity, Is.EqualTo(100));
+            Assert.That(v1.totalTrades, Is.EqualTo(1));            
 
-            // assert
-            Assert.That(positions.ContainsKey("EURUSD"), Is.True);
-            Assert.That(positions["EURUSD"], Is.EqualTo(100));
+            _sut.ExecuteTrade(TradeRequestFor(BuySell.Buy, "EURUSD", 200, 2.5M, 0.2M));
+            Assert.That(_sut.PositionsFor(_clientName).TryGetValue("EURUSD", out (int netQuantity, int totalTrades, string debug) v2), Is.True);
+            Assert.That(v2.netQuantity, Is.EqualTo(300));
+            Assert.That(v2.totalTrades, Is.EqualTo(2));
+
+            _sut.ExecuteTrade(TradeRequestFor(BuySell.Sell, "EURUSD", 125, 9.5M, 5.2M));
+            Assert.That(_sut.PositionsFor(_clientName).TryGetValue("EURUSD", out (int netQuantity, int totalTrades, string debug) v3), Is.True);
+            Assert.That(v3.netQuantity, Is.EqualTo(175));
+            Assert.That(v3.totalTrades, Is.EqualTo(3));
+            Assert.That(v3.debug, Is.EqualTo("stick"));
+
         }
 
         private static TradeRequest TradeRequestFor(BuySell buySell, string currencyPair, int quantity, decimal bidPrice, decimal askPrice) => new TradeRequest(FXProductType.Spot, new SpotPrice(currencyPair, bidPrice, askPrice), quantity, buySell, _clientName, new DateTimeOffset(DateTime.Now));
