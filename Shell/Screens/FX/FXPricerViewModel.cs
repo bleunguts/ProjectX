@@ -205,10 +205,21 @@ namespace Shell.Screens.FX
                 var row = PositionsTable.NewRow();
                 row["CcyPair"] = ccypair.Key;
                 row["Notional"] = ccypair.Value.netQuantity;
-                row["PnL"] = ccypair.Value.PnL.ToString("0.0");
+                row["PnL"] = ccypair.Value.PnL.ToString("#,#0");
                 row["Breakdown"] = ccypair.Value.debug;
                 PositionsTable.Rows.Add(row);
-            }                                  
+            }
+           
+            decimal totalPnl = 0.0M;
+            foreach(DataRow row in PositionsTable.Rows)
+            {
+                var value = Decimal.Parse(row["PnL"].ToString());
+                totalPnl += value;
+            }
+            var lastRow = PositionsTable.NewRow();
+            lastRow["CcyPair"] = "total";
+            lastRow["Pnl"] = totalPnl.ToString("#,#0");
+            PositionsTable.Rows.Add(lastRow);
         }
 
         private IDisposable? _currentDisposableStream;

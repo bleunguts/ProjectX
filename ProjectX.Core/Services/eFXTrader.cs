@@ -77,10 +77,7 @@ public class eFXTrader : IFXTrader
         var purchasePrice = buySell == BuySell.Buy ? price.AskPrice : price.BidPrice;
         var totalPrice = purchasePrice * quantity;
         return (purchasePrice, totalPrice);
-    }
-
-    
-
+    }   
     public record Trade(string clientName, int quantity, decimal totalPrice, BuySell buySell, FXProductType productType, string currencyPair, Guid transactionPriceId, decimal transactionPrice);
     public record TradeRequest(FXProductType ProductType, SpotPrice Price, int Quantity, BuySell BuySell, string ClientName, DateTimeOffset PriceTimestamp);
     public record TradeResponse(string ClientName, BuySell BuySell, string currencyPair, int Quantity, decimal TransactionPrice, Guid TransactionPriceId, decimal TotalPrice, DateTimeOffset PriceTimestamp);
