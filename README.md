@@ -8,6 +8,13 @@ ProjectX App that does technical analysis to shoot two birds with one stone for 
 **Quant Model Pricing (QMP)** 		
 * QMP implements pricing models for FX products (commisions), Options Pricing, Bonds Pricing, CDS Pricing
 
+** Roadmap ideas **
+* React web front end capturing Market Signals Analytics which shows back testing results
+* A way to rapid develop trading strategies and using back testing to validate it
+* Show live FX prices from FX market data source as an additional column 'Reference Price'
+* All pricing model calcs are Azure-enabled (using AspNetCore BackgroundServices)
+* Enhanced eTrader trade management screen shows PnL helps facilitate demo trading
+  
 _Market data sources:_
 * Rapid API (https://rapidapi.com/blog/best-stock-api/)
 * Free Finance Data Api
