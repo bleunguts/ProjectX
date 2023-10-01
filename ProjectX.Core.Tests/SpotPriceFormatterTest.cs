@@ -21,7 +21,7 @@ namespace ProjectX.Core.Tests
         [Test]
         public void WhenConvertingBidAskSpotPriceBackToSpotPriceObjectItShouldCaptureAllKeyElements()
         {
-            var actualPrice = _sut.ToSpotPrice("1.60200/1.83430");
+            var actualPrice = _sut.ToSpotPrice("1.60200/1.83430", "N/A");
 
             Assert.That(actualPrice.BidPrice, Is.EqualTo(1.60200));
             Assert.That(actualPrice.AskPrice, Is.EqualTo(1.83430));

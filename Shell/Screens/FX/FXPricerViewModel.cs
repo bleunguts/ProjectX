@@ -16,6 +16,8 @@ using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using static ProjectX.Core.Services.eFXTrader;
 using ProjectX.Core.Services;
+using System.Data;
+using System.Windows.Documents;
 
 namespace Shell.Screens.FX
 {
@@ -34,8 +36,14 @@ namespace Shell.Screens.FX
             _fXMarketService = fXMarketService;
             _spotPriceFormatter = spotPriceFormatter;
             _fxTrader = fxTrader;
-            DisplayName = "FXPricer (FX)"; 
-        }
+            DisplayName = "FXPricer (FX)";
+            _positionsTable.Columns.AddRange(new[]
+            {
+                new DataColumn("CcyPair", typeof(string)),
+                new DataColumn("Notional", typeof(int)),
+                new DataColumn("Breakdown", typeof(string)),
+            });           
+        }    
 
         #region Bindable Properties 
         private string _status = "Ready.";
@@ -51,6 +59,7 @@ namespace Shell.Screens.FX
         private string selectedCurrency = "EURUSD";
         private string clientName = "ProjectX Trader";      
         private string _latestPriceTimeStamp = "---";
+        private DataTable _positionsTable = new DataTable();
 
         public IEnumerable<string> Currency
         {
@@ -102,7 +111,14 @@ namespace Shell.Screens.FX
         {
             get { return clientName; }
             set { clientName = value; NotifyOfPropertyChange(() => ClientName); }
+        }        
+
+        public DataTable PositionsTable
+        {
+            get { return _positionsTable; }
+            set { _positionsTable = value; NotifyOfPropertyChange(() => PositionsTable); }
         }
+
 
         #endregion
 
@@ -113,7 +129,7 @@ namespace Shell.Screens.FX
         private void MakeTrade(BuySell buySell)
         {
             var timestamped = DateTimeOffset.Parse(LatestPriceTimeStamp);
-            var currentPrice = _spotPriceFormatter.ToSpotPrice(Prices.First());
+            var currentPrice = _spotPriceFormatter.ToSpotPrice(Prices.First(), SelectedCurrency);
             var quantity = Notional;
             var clientName = ClientName;
             var request = new TradeRequest(FXProductType.Spot, currentPrice, quantity, buySell, clientName, timestamped);
@@ -162,15 +178,10 @@ namespace Shell.Screens.FX
 
         private void ClearPricesList()
         {
-            _prices.Clear();
-            NotifyOfPropertyChange(() => Prices);
+            _prices.Clear();            
             AppendStatus("Price history cleared.");
         }
-        private void AddPriceToPricesList(string price)
-        {
-            _prices.Insert(0, price);            
-            NotifyOfPropertyChange(() => Prices);
-        }
+        private void AddPriceToPricesList(string price) => _prices.Insert(0, price);
 
         public void Unsubscribe() 
         {
@@ -181,6 +192,21 @@ namespace Shell.Screens.FX
                 _currentDisposableStream = null;
             }
             AppendStatus($"Stream unsubscribed to {SelectedCurrency}.");
+        }
+
+        public void ShowPositions()
+        {
+            Dictionary<string, (int netQuantity, int totalTrades, string debug)> positions = _fxTrader.PositionsFor(ClientName);
+            PositionsTable.Clear();
+            
+            foreach (var ccypair in positions)
+            {
+                var row = PositionsTable.NewRow();
+                row["CcyPair"] = ccypair.Key;
+                row["Notional"] = ccypair.Value.netQuantity;
+                row["Breakdown"] = ccypair.Value.debug;
+                PositionsTable.Rows.Add(row);
+            }                                  
         }
 
         private IDisposable? _currentDisposableStream;

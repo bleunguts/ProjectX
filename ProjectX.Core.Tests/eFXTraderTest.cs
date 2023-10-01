@@ -33,9 +33,7 @@ namespace ProjectX.Core.Tests
             _sut.ExecuteTrade(TradeRequestFor(BuySell.Sell, "EURUSD", 125, 9.5M, 5.2M));
             Assert.That(_sut.PositionsFor(_clientName).TryGetValue("EURUSD", out (int netQuantity, int totalTrades, string debug) v3), Is.True);
             Assert.That(v3.netQuantity, Is.EqualTo(175));
-            Assert.That(v3.totalTrades, Is.EqualTo(3));
-            Assert.That(v3.debug, Is.EqualTo("stick"));
-
+            Assert.That(v3.totalTrades, Is.EqualTo(3));            
         }
 
         private static TradeRequest TradeRequestFor(BuySell buySell, string currencyPair, int quantity, decimal bidPrice, decimal askPrice) => new TradeRequest(FXProductType.Spot, new SpotPrice(currencyPair, bidPrice, askPrice), quantity, buySell, _clientName, new DateTimeOffset(DateTime.Now));

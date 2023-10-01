@@ -27,13 +27,15 @@ public class eFXTrader : IFXTrader
     }
     public TradeResponse ExecuteTrade(TradeRequest request)
     {
-        _logger.LogInformation($"TradeExecuteRequest @ PriceId={request.Price.PriceId} ");
+        Guid priceId = request.Price.PriceId;
+        string currencyPair = request.Price.CurrencyPair;
+        _logger.LogInformation($"TradeExecuteRequest @ PriceId={priceId} ");
 
         // this could be a long operation
-        (decimal purchasePrice, decimal totalPrice) = PriceTrade(request.ProductType, request.BuySell, request.Quantity, request.Price);        
+        (decimal purchasePrice, decimal totalPrice) = PriceTrade(request.ProductType, request.BuySell, request.Quantity, request.Price);
 
-        var response = new TradeResponse(request.ClientName, request.BuySell, request.Quantity, purchasePrice, request.Price.PriceId, totalPrice, request.PriceTimestamp);
-        _tradeStore.Add(new Trade(request.ClientName, response.Quantity, response.TotalPrice, request.BuySell, request.ProductType, request.Price.CurrencyPair, response.TransactionPriceId, response.TransactionPrice));
+        var response = new TradeResponse(request.ClientName, request.BuySell, currencyPair, request.Quantity, purchasePrice, priceId, totalPrice, request.PriceTimestamp);
+        _tradeStore.Add(new Trade(request.ClientName, response.Quantity, response.TotalPrice, request.BuySell, request.ProductType, currencyPair, response.TransactionPriceId, response.TransactionPrice));
         _logger.LogInformation("Trade executed and captured into trade store.");
 
         _logger.LogInformation($"TradeExecuteResponse @ Price={response.TransactionPrice} PriceId={response.TransactionPriceId} BuySell:{response.BuySell} Quantity:{response.Quantity} TotalPrice:{response.TotalPrice}");
@@ -58,7 +60,8 @@ public class eFXTrader : IFXTrader
                 var quantity = pair.buySell == BuySell.Buy ? pair.quantity : -pair.quantity;
                 netQuantity += quantity;
                 totalTrades++;
-                debug.Append($"({totalTrades}):{pair.quantity},{pair.transactionPrice},{pair.totalPrice};");                    
+                debug.Append($"({totalTrades}):{pair.quantity},{pair.transactionPrice},{pair.totalPrice};");
+                debug.AppendLine();
             }
             positions[currencyPair] = (netQuantity, totalTrades, debug.ToString());
         }
@@ -74,5 +77,5 @@ public class eFXTrader : IFXTrader
     }
     public record Trade(string clientName, int quantity, decimal totalPrice, BuySell buySell, FXProductType productType, string currencyPair, Guid transactionPriceId, decimal transactionPrice);
     public record TradeRequest(FXProductType ProductType, SpotPrice Price, int Quantity, BuySell BuySell, string ClientName, DateTimeOffset PriceTimestamp);
-    public record TradeResponse(string ClientName, BuySell BuySell, int Quantity, decimal TransactionPrice, Guid TransactionPriceId, decimal TotalPrice, DateTimeOffset PriceTimestamp);
+    public record TradeResponse(string ClientName, BuySell BuySell, string currencyPair, int Quantity, decimal TransactionPrice, Guid TransactionPriceId, decimal TotalPrice, DateTimeOffset PriceTimestamp);
 }
