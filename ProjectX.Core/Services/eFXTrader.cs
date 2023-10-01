@@ -8,6 +8,7 @@ namespace ProjectX.Core.Services;
 public interface IFXTrader
 {
     eFXTrader.TradeResponse ExecuteTrade(eFXTrader.TradeRequest request);
+    Dictionary<string, int> PositionsFor(string clientName);
     (decimal purchasePrice, decimal totalPrice) PriceTrade(FXProductType productType, BuySell buySell, int notional, SpotPrice price);
 }
 
@@ -37,6 +38,12 @@ public class eFXTrader : IFXTrader
         _logger.LogInformation($"TradeExecuteResponse @ Price={response.TransactionPrice} PriceId={response.TransactionPriceId} BuySell:{response.BuySell} Quantity:{response.Quantity} TotalPrice:{response.TotalPrice}");
         return response;
     }
+
+    public Dictionary<string, int> PositionsFor(string clientName)
+    {
+        throw new NotImplementedException();
+    }
+
     public (decimal purchasePrice, decimal totalPrice) PriceTrade(FXProductType productType, BuySell buySell, int quantity, SpotPrice price)
     {
         var purchasePrice = buySell == BuySell.Buy ? price.AskPrice : price.BidPrice;
