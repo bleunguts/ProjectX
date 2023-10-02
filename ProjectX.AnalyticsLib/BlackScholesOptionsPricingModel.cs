@@ -1,4 +1,5 @@
 ﻿using ProjectX.Core.Analytics;
+using ProjectX.Core.Requests;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -9,19 +10,24 @@ using System.Threading.Tasks;
 
 namespace ProjectX.Core.Services
 {
-    public interface IBlackScholesOptionsPricerService
+    public interface IBlackScholesOptionsPricingModel
     {
         PlotResults PlotGreeks(OptionGreeks greekType, OptionType optionType, double strike, double rate, double carry, double vol);
         IEnumerable<(double maturity, OptionPricerResult optionPriceResult)> PriceFor(int timeSlices, OptionType optionType, double spot, double strike, double rate, double carry, double vol);
     }
 
-    [Export(typeof(IBlackScholesOptionsPricerService)), PartCreationPolicy(CreationPolicy.NonShared)]    
-    public class BlackScholesOptionsPricerService : IBlackScholesOptionsPricerService
+    [Export(typeof(IBlackScholesOptionsPricingModel)), PartCreationPolicy(CreationPolicy.NonShared)]    
+    public class BlackScholesOptionsPricingModel : IBlackScholesOptionsPricingModel
     {
+        public IEnumerable<(double maturity, OptionPricerResult optionPriceResult)> PriceFor(MultipleTimeslicesOptionsPricingRequest request)
+        {
+            return PriceFor(request.timeSlices, request.optionType, request.spot, request.strike, request.rate, request.carry, request.vol);
+        }
+
         public IEnumerable<(double maturity, OptionPricerResult optionPriceResult)> PriceFor(int timeSlices, OptionType optionType, double spot, double strike, double rate, double carry, double vol)
         {
             var results = new List<(double maturity, OptionPricerResult optionPriceResult)>();
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < timeSlices; i++)
             {
                 // break out into 10 time slices until maturity
                 double maturity = (i + 1.0) / 10.0;
@@ -113,6 +119,6 @@ namespace ProjectX.Core.Services
                 XNumber = XNumber,
                 YNumber = YNumber,
             };
-        }
+        }   
     }
 }

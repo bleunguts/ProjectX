@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using ProjectX.Core.Requests;
 
 namespace ProjectX.GatewayAPI.Controllers
 {
@@ -18,5 +19,14 @@ namespace ProjectX.GatewayAPI.Controllers
         {
             return "Hello World";
         }
+
+        [HttpPost]
+        public void BlackScholesPricingRequestAsync(MultipleTimeslicesOptionsPricingRequest request)
+        {
+            _logger.LogInformation($"Pricing Request recived: {request}");
+
+            _logger.LogInformation($"Sending pricing request to the Background Service");
+
+        }        
     }
 }
