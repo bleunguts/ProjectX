@@ -14,12 +14,12 @@ namespace ProjectX.Core.Tests
             var request = new MultipleTimeslicesOptionsPricingRequest(10, OptionType.Call, 100.0, 150.0, 1.0, 1.0, 0.3);
             
             Console.WriteLine($"JSON={JsonConvert.SerializeObject(request)}");
-            var actual = await _sut.Price(request);
+            var actual = _sut.Price(request);
             Assert.That(actual, Is.Not.Null);
             var r = actual.ToList();
             Assert.That(r, Has.Count.EqualTo(10));
             Assert.That(r.First().maturity, Is.EqualTo(0.1));
-            Assert.That(r.First().optionPriceResult.price, Is.Not.EqualTo(0));           
+            Assert.That(r.First().optionGreeks.price, Is.Not.EqualTo(0));           
         }
 
         [Test]

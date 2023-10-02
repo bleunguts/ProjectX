@@ -10,7 +10,7 @@ public enum OptionGreeks
     Vega = 4,
     Price = 5,
 };
-public record OptionPricerResult(double price, double delta, double gamma, double theta, double rho, double vega);
+public record OptionGreeksResult(double price, double delta, double gamma, double theta, double rho, double vega);
 public class PlotResults
 {
     public Point3D[,] PointArray { get; set; }

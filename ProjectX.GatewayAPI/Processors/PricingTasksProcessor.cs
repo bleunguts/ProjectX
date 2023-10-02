@@ -17,7 +17,7 @@ namespace ProjectX.GatewayAPI.Processors
         {
             _logger.LogInformation("Invoking quant libraries to price request");
             
-            var result = await _pricingModel.Price(request);
+            var result = _pricingModel.Price(request);
 
             // what do I do here with the result
             // 

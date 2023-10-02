@@ -12,18 +12,18 @@ namespace ProjectX.Core.Services
 {   
     public interface IBlackScholesOptionsPricingModel
     {
-        PlotResults PlotGreeks(OptionGreeks greekType, OptionType optionType, double strike, double rate, double carry, double vol);        
-        Task<IEnumerable<(double maturity, OptionPricerResult optionPriceResult)>> Price(MultipleTimeslicesOptionsPricingRequest request);
+        PlotResults PlotGreeks(OptionGreeks greekType, OptionType optionType, double strike, double rate, double carry, double vol);
+        IEnumerable<(double maturity, OptionGreeksResult optionGreeks)> Price(MultipleTimeslicesOptionsPricingRequest request);
     }
 
     [Export(typeof(IBlackScholesOptionsPricingModel)), PartCreationPolicy(CreationPolicy.NonShared)]    
     public class BlackScholesOptionsPricingModel : IBlackScholesOptionsPricingModel
     {
-        public async Task<IEnumerable<(double maturity, OptionPricerResult optionPriceResult)>> Price(MultipleTimeslicesOptionsPricingRequest request)
+        public IEnumerable<(double maturity, OptionGreeksResult optionGreeks)> Price(MultipleTimeslicesOptionsPricingRequest request)
         {
             (int timeSlices, OptionType optionType, double spot, double strike, double rate, double carry, double vol) = request;
 
-            var results = new List<(double maturity, OptionPricerResult optionPriceResult)>();
+            var results = new List<(double maturity, OptionGreeksResult optionGreeks)>();
             for (int i = 0; i < timeSlices; i++)
             {
                 // break out into 10 time slices until maturity
@@ -38,7 +38,7 @@ namespace ProjectX.Core.Services
                 double vega = OptionHelper.BlackScholes_Vega(spot, strike, rate, carry, maturity, vol);
 
                 // return price & greeks
-                var greeks = new OptionPricerResult(
+                var greeks = new OptionGreeksResult(
                     price,
                     delta,
                     gamma,
