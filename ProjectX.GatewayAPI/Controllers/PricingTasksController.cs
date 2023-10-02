@@ -17,7 +17,7 @@ namespace ProjectX.GatewayAPI.Controllers
         [HttpGet]
         public string Get()
         {
-            return "Hello World";
+            return "Hello from the Pricing module";
         }
 
         [HttpPost]
