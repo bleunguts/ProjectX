@@ -15,6 +15,8 @@ _Roadmap_
 * Show live FX prices from FX market data source as an additional column 'Reference Price'
 * All pricing model calcs are Azure-enabled (using AspNetCore BackgroundServices)
 * Enhanced eTrader trade management screen shows PnL helps facilitate demo trading
+
+_Tech Stack: C# 11, .NET 7, WPF, Caliburn.Micro, System.ComponentModel.Composition.Hosting.CompositionContainer (IoC), Reactive 6,_
   
 _Market data sources:_
 * Rapid API (https://rapidapi.com/blog/best-stock-api/)
