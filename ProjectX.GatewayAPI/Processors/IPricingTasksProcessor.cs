@@ -1,7 +1,9 @@
-﻿namespace ProjectX.GatewayAPI.Processors
+﻿using ProjectX.Core.Requests;
+
+namespace ProjectX.GatewayAPI.Processors
 {
     public interface IPricingTasksProcessor
-    {
-        Task Process(string message);
+    {        
+        Task Process(MultipleTimeslicesOptionsPricingRequest multipleTimeslicesOptionsPricingRequest);
     }
 }

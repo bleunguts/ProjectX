@@ -9,23 +9,20 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ProjectX.Core.Services
-{
+{   
     public interface IBlackScholesOptionsPricingModel
     {
-        PlotResults PlotGreeks(OptionGreeks greekType, OptionType optionType, double strike, double rate, double carry, double vol);
-        IEnumerable<(double maturity, OptionPricerResult optionPriceResult)> PriceFor(int timeSlices, OptionType optionType, double spot, double strike, double rate, double carry, double vol);
+        PlotResults PlotGreeks(OptionGreeks greekType, OptionType optionType, double strike, double rate, double carry, double vol);        
+        Task<IEnumerable<(double maturity, OptionPricerResult optionPriceResult)>> Price(MultipleTimeslicesOptionsPricingRequest request);
     }
 
     [Export(typeof(IBlackScholesOptionsPricingModel)), PartCreationPolicy(CreationPolicy.NonShared)]    
     public class BlackScholesOptionsPricingModel : IBlackScholesOptionsPricingModel
     {
-        public IEnumerable<(double maturity, OptionPricerResult optionPriceResult)> PriceFor(MultipleTimeslicesOptionsPricingRequest request)
+        public async Task<IEnumerable<(double maturity, OptionPricerResult optionPriceResult)>> Price(MultipleTimeslicesOptionsPricingRequest request)
         {
-            return PriceFor(request.timeSlices, request.optionType, request.spot, request.strike, request.rate, request.carry, request.vol);
-        }
+            (int timeSlices, OptionType optionType, double spot, double strike, double rate, double carry, double vol) = request;
 
-        public IEnumerable<(double maturity, OptionPricerResult optionPriceResult)> PriceFor(int timeSlices, OptionType optionType, double spot, double strike, double rate, double carry, double vol)
-        {
             var results = new List<(double maturity, OptionPricerResult optionPriceResult)>();
             for (int i = 0; i < timeSlices; i++)
             {
@@ -47,8 +44,8 @@ namespace ProjectX.Core.Services
                     gamma,
                     theta,
                     rho,
-                    vega);                
-                results.Add((maturity,greeks));
+                    vega);
+                results.Add((maturity, greeks));
             }
             return results;
         }

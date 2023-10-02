@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ProjectX.GatewayAPI.Processors;
-using System.Threading.Channels;
 
 namespace ProjectX.GatewayAPI.BackgroundServices;
 
@@ -27,16 +26,17 @@ public class PricingTasksService : BackgroundService
     {
         try
         {
-            await foreach (var message in _pricingTasksChannel.Reader.ReadAllAsync().WithCancellation(stoppingToken))
+            await foreach (var request in _pricingTasksChannel.Reader.ReadAllAsync()
+                                                                        .WithCancellation(stoppingToken))
             {
-                _logger.LogInformation("Read message {Id} to process from channel.", message);
+                _logger.LogInformation("Read message {Id} to process from channel.", request);
 
                 using var scope = _serviceProvider.CreateScope();
                 var processor = scope.ServiceProvider.GetRequiredService<IPricingTasksProcessor>();
 
-                await processor.Process(message);
+                await processor.Process(request);
 
-                _logger.LogInformation("finished processing message {Id} from channel.", message);
+                _logger.LogInformation("finished processing message {Id} from channel.", request);
             }
         }
         catch (OperationCanceledException)
@@ -52,22 +52,4 @@ public class PricingTasksService : BackgroundService
             _hostApplicationLifetime.StopApplication();
         }
     }
-}
-
-public class PricingTasksChannel
-{
-    private readonly ILogger<PricingTasksChannel> _logger;
-    private Channel<string> _channel;    
-
-    public PricingTasksChannel(ILogger<PricingTasksChannel> logger)
-    {
-        _logger = logger;
-        _channel = Channel.CreateBounded<string>(new BoundedChannelOptions(2000)
-        {
-            SingleWriter = true,
-            SingleReader = true,
-        });
-    }
-
-    public ChannelReader<string> Reader => _channel.Reader;
 }
