@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProjectX.Core.Services;
 
 namespace ProjectX.GatewayAPI.Controllers
 {
@@ -20,9 +21,9 @@ namespace ProjectX.GatewayAPI.Controllers
         }
 
         [HttpPost]
-        public void PricingResultsTaskCompleted()
+        public void PricingResultsTaskCompleted(OptionsPricingResults results)
         {
-            _logger.LogInformation($"PricingResults Task completed.");
+            _logger.LogInformation($"PricingResults TaskCompleted for RequestId:{results.RequestId}, {results.Count} sets of option results");
         }
     }
 }

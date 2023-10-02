@@ -1,5 +1,6 @@
 ﻿using ProjectX.Core.Requests;
 using ProjectX.Core.Services;
+using ProjectX.GatewayAPI.ExternalServices;
 using System.Collections.Concurrent;
 
 namespace ProjectX.GatewayAPI.Processors
@@ -8,12 +9,16 @@ namespace ProjectX.GatewayAPI.Processors
     {
         private readonly ILogger<PricingTasksProcessor> _logger;
         private readonly IBlackScholesOptionsPricingModel _pricingModel;
+        private readonly IPricingResultsApiClient _pricingResultsApiClient;
         private readonly ConcurrentDictionary<Guid, OptionsPricingResults> _responses = new ConcurrentDictionary<Guid, OptionsPricingResults>();
 
-        public PricingTasksProcessor(ILogger<PricingTasksProcessor> logger, IBlackScholesOptionsPricingModel pricingModel)
+        public PricingTasksProcessor(ILogger<PricingTasksProcessor> logger, 
+            IBlackScholesOptionsPricingModel pricingModel,
+            IPricingResultsApiClient pricingResultsApiClient)
         {
             this._logger = logger;
             this._pricingModel = pricingModel;
+            this._pricingResultsApiClient = pricingResultsApiClient;
         }
         public Task Process(MultipleTimeslicesOptionsPricingRequest pricingRequest)
         {
@@ -30,8 +35,8 @@ namespace ProjectX.GatewayAPI.Processors
             pricingTask.ContinueWith((results) =>
             {
                 var pricingResult = results.Result;
-
-                _logger.LogInformation($"Continuation from results... {pricingResult.ToString()}");
+                _logger.LogInformation($"Posting Pricing Results to Endpoint ... {pricingResult.ToString()}");
+                _pricingResultsApiClient.PostResultAsync( pricingResult );  
             });
             return pricingTask;
         }

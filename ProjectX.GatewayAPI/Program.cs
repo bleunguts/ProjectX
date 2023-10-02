@@ -15,12 +15,14 @@ builder.Services.TryAddScoped<IPricingTasksProcessor, PricingTasksProcessor>();
 builder.Services.TryAddScoped<IBlackScholesOptionsPricingModel, BlackScholesOptionsPricingModel>();
 builder.Services.AddSingleton<PricingTasksChannel>();
 
-builder.Services.AddHttpClient<IPricingResultsApiClient, PricingResultsApiClient>();
 builder.Services.AddOptions();
+IConfiguration config = builder.Configuration;
+builder.Services.Configure<ProjectXApiClientOptions>(options => options.BaseAddress = config.GetSection("ExternalServices")["ProjectXUrl"]);
+//builder.Services.Configure<ProjectXApiClientOptions>(options => options.BaseAddress = "https://localhost:7029");
+
+builder.Services.AddHttpClient<IPricingResultsApiClient, PricingResultsApiClient>();
 builder.Services.AddHostedService<PricingTasksService>();
 
-IConfiguration config = builder.Configuration;
-builder.Services.Configure<ProjectXApiClientOptions>(options => options.BaseAddress = config.GetSection("ExternalServices:TennisPlayersApi")["Url"]);
 
 var app = builder.Build();
 

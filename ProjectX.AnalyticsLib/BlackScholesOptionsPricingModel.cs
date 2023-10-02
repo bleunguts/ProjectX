@@ -23,7 +23,7 @@ namespace ProjectX.Core.Services
         {
             (int timeSlices, OptionType optionType, double spot, double strike, double rate, double carry, double vol) = request;
 
-            var results = new OptionsPricingResults();
+            var results = new OptionsPricingResults(request);
             for (int i = 0; i < timeSlices; i++)
             {
                 // break out into 10 time slices until maturity

@@ -6,8 +6,27 @@ using System.Threading.Tasks;
 
 namespace ProjectX.Core.Requests
 {
-    public record MultipleTimeslicesOptionsPricingRequest(int timeSlices, OptionType optionType, double spot, double strike, double rate, double carry, double vol)
-    { 
-        public Guid Id { get; } = Guid.NewGuid();   
+    public class MultipleTimeslicesOptionsPricingRequest : IRequest
+    {
+        public Guid Id { get; }
+        public int TimeSlices { get; }
+        public OptionType OptionType { get; }
+        public double Spot { get; }
+        public double Strike { get; }
+        public double Rate { get; }
+        public double Carry { get; }
+        public double Vol { get; }
+
+        public MultipleTimeslicesOptionsPricingRequest(int timeSlices, OptionType optionType, double spot, double strike, double rate, double carry, double vol)
+        {
+            TimeSlices = timeSlices;
+            OptionType = optionType;
+            Spot = spot;
+            Strike = strike;
+            Rate = rate;
+            Carry = carry;
+            Vol = vol;
+            Id = Guid.NewGuid();
+        }
     }
 }

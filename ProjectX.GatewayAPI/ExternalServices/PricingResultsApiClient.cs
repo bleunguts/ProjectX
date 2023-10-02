@@ -11,7 +11,9 @@ public class PricingResultsApiClient : IPricingResultsApiClient
     private readonly HttpClient _httpClient;
     private readonly ILogger<PricingResultsApiClient> _logger;
 
-    public PricingResultsApiClient(HttpClient httpClient, ILogger<PricingResultsApiClient> logger, IOptions<ProjectXApiClientOptions> options)
+    public PricingResultsApiClient(HttpClient httpClient, 
+        ILogger<PricingResultsApiClient> logger, 
+        IOptions<ProjectXApiClientOptions> options)
     {
         this._httpClient = httpClient;
         this._logger = logger;

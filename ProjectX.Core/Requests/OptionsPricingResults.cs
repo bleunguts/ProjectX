@@ -1,19 +1,30 @@
-﻿using System.Collections;
+﻿using ProjectX.Core.Requests;
+using System.Collections;
 using System.Linq;
 
 namespace ProjectX.Core.Services
 {
     public class OptionsPricingResults: IEnumerable<(double maturity, OptionGreeksResult optionsGreeks)>
     {
-        private readonly Dictionary<double, OptionGreeksResult> _greeksPerMaturity = new Dictionary<double, OptionGreeksResult>();
-        public void AddResult(double maturity, OptionGreeksResult greeks) => _greeksPerMaturity.TryAdd(maturity, greeks);
+        private readonly MultipleTimeslicesOptionsPricingRequest _originalRequest;
+        private readonly Dictionary<double, OptionGreeksResult> _greeksPerMaturity;
 
-        public IEnumerator<(double maturity, OptionGreeksResult optionsGreeks)> GetEnumerator()
+        public Guid RequestId => _originalRequest.Id;
+
+        public OptionsPricingResults(MultipleTimeslicesOptionsPricingRequest request)
         {
-            return ConvertToTargetOutput().GetEnumerator();
+            this._originalRequest = request;
+            _greeksPerMaturity = new Dictionary<double, OptionGreeksResult>();
         }
 
+        public void AddResult(double maturity, OptionGreeksResult greeks) => _greeksPerMaturity.TryAdd(maturity, greeks);
+
+        #region make it enumerable
+
+        public IEnumerator<(double maturity, OptionGreeksResult optionsGreeks)> GetEnumerator() => ConvertToTargetOutput().GetEnumerator();
+
         IEnumerator IEnumerable.GetEnumerator() => _greeksPerMaturity.Select(x => (x.Key, x.Value)).GetEnumerator();
+        #endregion
 
         public int Count => _greeksPerMaturity.Count;
 
