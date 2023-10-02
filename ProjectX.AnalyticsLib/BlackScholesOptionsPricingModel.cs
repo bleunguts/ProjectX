@@ -9,21 +9,21 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ProjectX.Core.Services
-{   
+{
     public interface IBlackScholesOptionsPricingModel
     {
         PlotResults PlotGreeks(OptionGreeks greekType, OptionType optionType, double strike, double rate, double carry, double vol);
-        IEnumerable<(double maturity, OptionGreeksResult optionGreeks)> Price(MultipleTimeslicesOptionsPricingRequest request);
+        OptionsPricingResults Price(MultipleTimeslicesOptionsPricingRequest request);
     }
 
     [Export(typeof(IBlackScholesOptionsPricingModel)), PartCreationPolicy(CreationPolicy.NonShared)]    
     public class BlackScholesOptionsPricingModel : IBlackScholesOptionsPricingModel
     {
-        public IEnumerable<(double maturity, OptionGreeksResult optionGreeks)> Price(MultipleTimeslicesOptionsPricingRequest request)
+        public OptionsPricingResults Price(MultipleTimeslicesOptionsPricingRequest request)
         {
             (int timeSlices, OptionType optionType, double spot, double strike, double rate, double carry, double vol) = request;
 
-            var results = new List<(double maturity, OptionGreeksResult optionGreeks)>();
+            var results = new OptionsPricingResults();
             for (int i = 0; i < timeSlices; i++)
             {
                 // break out into 10 time slices until maturity
@@ -45,7 +45,7 @@ namespace ProjectX.Core.Services
                     theta,
                     rho,
                     vega);
-                results.Add((maturity, greeks));
+                results.AddResult(maturity, greeks);
             }
             return results;
         }

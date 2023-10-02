@@ -32,8 +32,10 @@ namespace ProjectX.GatewayAPI.Controllers
 
             try
             {
-                await _pricingTasksChannel.SendRequestAsync(request);
-                _logger.LogInformation("Request sent successfully.");
+                if (await _pricingTasksChannel.SendRequestAsync(request))
+                {
+                    _logger.LogInformation("Request sent successfully.");
+                };                
             }
             catch (Exception ex)
             {

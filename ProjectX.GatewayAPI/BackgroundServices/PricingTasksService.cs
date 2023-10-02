@@ -24,12 +24,13 @@ public class PricingTasksService : BackgroundService
     }
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        await Task.Yield();
+
         try
         {
-            await foreach (var request in _pricingTasksChannel.Reader.ReadAllAsync()
-                                                                        .WithCancellation(stoppingToken))
+            await foreach (var request in _pricingTasksChannel.ReadAllAsync())
             {
-                _logger.LogInformation("Read message {Id} to process from channel.", request);
+                _logger.LogInformation($"Read message {request.Id} to process from channel. Request={request}");
 
                 using var scope = _serviceProvider.CreateScope();
                 var processor = scope.ServiceProvider.GetRequiredService<IPricingTasksProcessor>();

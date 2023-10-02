@@ -15,11 +15,10 @@ namespace ProjectX.Core.Tests
             
             Console.WriteLine($"JSON={JsonConvert.SerializeObject(request)}");
             var actual = _sut.Price(request);
-            Assert.That(actual, Is.Not.Null);
-            var r = actual.ToList();
-            Assert.That(r, Has.Count.EqualTo(10));
-            Assert.That(r.First().maturity, Is.EqualTo(0.1));
-            Assert.That(r.First().optionGreeks.price, Is.Not.EqualTo(0));           
+            Assert.That(actual, Is.Not.Null);            
+            Assert.That(actual.Count, Is.EqualTo(10));
+            Assert.That(actual.First().maturity, Is.EqualTo(0.1));
+            Assert.That(actual.First().optionsGreeks.price, Is.Not.EqualTo(0));           
         }
 
         [Test]
