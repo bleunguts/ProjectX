@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Core", "ProjectX.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectX.Core.Tests", "ProjectX.Core.Tests\ProjectX.Core.Tests.csproj", "{4359A992-AA5D-401A-A6E9-E3A0D479485E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.GatewayAPI", "ProjectX.GatewayAPI\ProjectX.GatewayAPI.csproj", "{535AE113-E834-4704-BAEF-E0DC0013532B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{4359A992-AA5D-401A-A6E9-E3A0D479485E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4359A992-AA5D-401A-A6E9-E3A0D479485E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4359A992-AA5D-401A-A6E9-E3A0D479485E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{535AE113-E834-4704-BAEF-E0DC0013532B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{535AE113-E834-4704-BAEF-E0DC0013532B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{535AE113-E834-4704-BAEF-E0DC0013532B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{535AE113-E834-4704-BAEF-E0DC0013532B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
