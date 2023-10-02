@@ -4,32 +4,21 @@ using System.Linq;
 
 namespace ProjectX.Core.Services
 {
-    public class OptionsPricingResults: IEnumerable<(double maturity, OptionGreeksResult optionsGreeks)>
+    public class OptionsPricingResults
     {
-        private readonly MultipleTimeslicesOptionsPricingRequest _originalRequest;
-        private readonly Dictionary<double, OptionGreeksResult> _greeksPerMaturity;
-
-        public Guid RequestId => _originalRequest.Id;
-
-        public OptionsPricingResults(MultipleTimeslicesOptionsPricingRequest request)
+        private readonly List<(double maturities, OptionGreeksResult optionGreeks)> _results = new List<(double maturities, OptionGreeksResult optionGreeks)>();
+        public List<(double maturities, OptionGreeksResult optionGreeks)> Results => _results;
+        public Guid RequestId { get; }
+        public int ResultsCount { get; }
+        public (double maturities, OptionGreeksResult optionGreeks) this[int index] => (_results[index]);
+        public OptionsPricingResults(Guid requestId, List<(double maturities, OptionGreeksResult optionGreeks)> results)
         {
-            this._originalRequest = request;
-            _greeksPerMaturity = new Dictionary<double, OptionGreeksResult>();
+            RequestId = requestId;
+            ResultsCount = results.Count();
+            _results = results;
         }
-
-        public void AddResult(double maturity, OptionGreeksResult greeks) => _greeksPerMaturity.TryAdd(maturity, greeks);
-
-        #region make it enumerable
-
-        public IEnumerator<(double maturity, OptionGreeksResult optionsGreeks)> GetEnumerator() => ConvertToTargetOutput().GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() => _greeksPerMaturity.Select(x => (x.Key, x.Value)).GetEnumerator();
-        #endregion
-
-        public int Count => _greeksPerMaturity.Count;
-
-        public override string ToString() => $"{Count} results, maturties: {string.Join(',',ConvertToTargetOutput().Select(x=>x.Key))}, prices: {string.Join(',', ConvertToTargetOutput().Select(x => x.Value.price))}";
-
-        private IEnumerable<(double Key, OptionGreeksResult Value)> ConvertToTargetOutput() => _greeksPerMaturity.Select(x => (x.Key, x.Value));
+        public string Maturities() => string.Join(',', _results.Select(x => x.maturities));
+        public string Prices() => string.Join(',', _results.Select(x => x.optionGreeks.price));
+        public override string ToString() => $"{ResultsCount} results, maturties: {Maturities()}, prices: {Prices()}";
     } 
 }

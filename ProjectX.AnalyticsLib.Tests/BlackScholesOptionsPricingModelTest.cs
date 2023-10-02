@@ -16,9 +16,9 @@ namespace ProjectX.Core.Tests
             Console.WriteLine($"JSON={JsonConvert.SerializeObject(request)}");
             var actual = _sut.Price(request);
             Assert.That(actual, Is.Not.Null);            
-            Assert.That(actual.Count, Is.EqualTo(10));
-            Assert.That(actual.First().maturity, Is.EqualTo(0.1));
-            Assert.That(actual.First().optionsGreeks.price, Is.Not.EqualTo(0));           
+            Assert.That(actual.ResultsCount, Is.EqualTo(10));
+            Assert.That(actual[0].maturities, Is.EqualTo(0.1));
+            Assert.That(actual[0].optionGreeks.price, Is.Not.EqualTo(0));           
         }
 
         [Test]

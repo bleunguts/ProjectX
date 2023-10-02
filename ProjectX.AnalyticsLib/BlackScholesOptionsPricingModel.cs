@@ -23,7 +23,7 @@ namespace ProjectX.Core.Services
         {
             (int timeSlices, OptionType optionType, double spot, double strike, double rate, double carry, double vol) = request;
 
-            var results = new OptionsPricingResults(request);
+            var builder = new OptionsPricingResultsBuilder(request);
             for (int i = 0; i < timeSlices; i++)
             {
                 // break out into 10 time slices until maturity
@@ -45,9 +45,9 @@ namespace ProjectX.Core.Services
                     theta,
                     rho,
                     vega);
-                results.AddResult(maturity, greeks);
+                builder.AddResult(maturity, greeks);
             }
-            return results;
+            return builder.Build();
         }
 
         public PlotResults PlotGreeks(OptionGreeks greekType, OptionType optionType, double strike, double rate, double carry, double vol)

@@ -28,5 +28,15 @@ namespace ProjectX.Core.Requests
             Vol = vol;
             Id = Guid.NewGuid();
         }
+        public void Deconstruct(out int timeSlices, out OptionType optionType, out double spot, out double strike, out double rate, out double carry, out double vol)
+        {
+            timeSlices = TimeSlices;
+            optionType = OptionType;
+            spot = Spot;
+            strike = Strike;
+            rate = Rate;
+            carry = Carry;
+            vol = Vol;
+        }
     }
 }

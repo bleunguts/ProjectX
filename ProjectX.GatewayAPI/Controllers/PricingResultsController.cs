@@ -23,7 +23,7 @@ namespace ProjectX.GatewayAPI.Controllers
         [HttpPost]
         public void PricingResultsTaskCompleted(OptionsPricingResults results)
         {
-            _logger.LogInformation($"PricingResults TaskCompleted for RequestId:{results.RequestId}, {results.Count} sets of option results");
+            _logger.LogInformation($"PricingResults TaskCompleted for RequestId:{results.RequestId}, {results.ResultsCount} sets of option results");
         }
     }
 }
