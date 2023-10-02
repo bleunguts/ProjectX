@@ -26,19 +26,23 @@ namespace ProjectX.Core.Services
                 // break out into 10 time slices until maturity
                 double maturity = (i + 1.0) / 10.0;
 
-                //price & greeks
-                results.Add(
-                (
-                    maturity,
-                    new OptionPricerResult(
-                        OptionHelper.BlackScholes(optionType, spot, strike, rate, carry, maturity, vol),
-                        OptionHelper.BlackScholes_Delta(optionType, spot, strike, rate, carry, maturity, vol),
-                        OptionHelper.BlackScholes_Gamma(spot, strike, rate, carry, maturity, vol),
-                        OptionHelper.BlackScholes_Theta(optionType, spot, strike, rate, carry, maturity, vol),
-                        OptionHelper.BlackScholes_Rho(optionType, spot, strike, rate, carry, maturity, vol),
-                        OptionHelper.BlackScholes_Vega(spot, strike, rate, carry, maturity, vol))
-                    )
-                );
+                // price option
+                double price = OptionHelper.BlackScholes(optionType, spot, strike, rate, carry, maturity, vol);
+                double delta = OptionHelper.BlackScholes_Delta(optionType, spot, strike, rate, carry, maturity, vol);
+                double gamma = OptionHelper.BlackScholes_Gamma(spot, strike, rate, carry, maturity, vol);
+                double theta = OptionHelper.BlackScholes_Theta(optionType, spot, strike, rate, carry, maturity, vol);
+                double rho = OptionHelper.BlackScholes_Rho(optionType, spot, strike, rate, carry, maturity, vol);
+                double vega = OptionHelper.BlackScholes_Vega(spot, strike, rate, carry, maturity, vol);
+
+                // return price & greeks
+                var greeks = new OptionPricerResult(
+                    price,
+                    delta,
+                    gamma,
+                    theta,
+                    rho,
+                    vega);                
+                results.Add((maturity,greeks));
             }
             return results;
         }
