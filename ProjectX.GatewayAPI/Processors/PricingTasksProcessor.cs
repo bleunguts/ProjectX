@@ -17,15 +17,23 @@ namespace ProjectX.GatewayAPI.Processors
         }
         public Task Process(MultipleTimeslicesOptionsPricingRequest pricingRequest)
         {
-            _logger.LogInformation($"Spin off calculator to price RequestId=[{pricingRequest.Id}]");            
-                       
-            // TODO: spin up in a separate thread Task.Run 
-            // TODO: return guid
-            // TODO: callback controller api end point to tell it task completed
-            var pricingResult = _pricingModel.Price(pricingRequest);
-            _logger.LogInformation($"Priced successfully {pricingResult.ToString()}");
-            
-            return Task.CompletedTask;
+            _logger.LogInformation($"Spin off calculator to price RequestId=[{pricingRequest.Id}]");
+
+            var pricingTask = new Task<OptionsPricingResults>(() =>
+            {
+                var pricingResult = _pricingModel.Price(pricingRequest);
+                _logger.LogInformation($"Priced successfully {pricingResult.ToString()}");
+                return pricingResult;
+            });
+
+            pricingTask.Start();
+            pricingTask.ContinueWith((results) =>
+            {
+                var pricingResult = results.Result;
+
+                _logger.LogInformation($"Continuation from results... {pricingResult.ToString()}");
+            });
+            return pricingTask;
         }
     }
 }
