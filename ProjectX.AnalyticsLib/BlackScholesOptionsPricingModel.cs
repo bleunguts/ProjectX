@@ -109,7 +109,7 @@ namespace ProjectX.Core.Services
                         zmax = Math.Max(zmax, z);
                     }
                 }
-            }
+            }            
             var plotResults = new PlotResults
             {
                 PointArray = pts,

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using ProjectX.Core.Services;
 using System;
@@ -48,9 +49,9 @@ namespace Shell
         {
             return new HubConnectionBuilder()
                 .WithUrl(new Uri(baseUri))
+                .AddMessagePackProtocol()
                 .WithAutomaticReconnect()
                 .Build();
-            
         }
 
         public async Task Stop()

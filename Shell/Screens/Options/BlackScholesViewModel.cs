@@ -98,44 +98,45 @@ namespace Shell.Screens.Options
 
             await _gatewayApiClient.StartHubAsync();
             _gatewayApiClient.HubConnection.On<OptionsPricingByMaturityResults>("PricingResults", pricingResult =>
-            {                
+            {
                 Console.WriteLine($"Received Pricing Result: {pricingResult.ResultsCount} results, requestId: {pricingResult.RequestId}");
                 App.Current.Dispatcher.Invoke((System.Action)delegate
-                {                   
+                {
                     OptionTable.Clear();
                     foreach (var (maturity, riskResult) in pricingResult.Results)
                     {
                         OptionTable.Rows.Add(maturity, riskResult.price, riskResult.delta, riskResult.gamma, riskResult.theta, riskResult.rho, riskResult.vega);
                     }
-                });                
-            });
+                });
+            });           
 
             _gatewayApiClient.HubConnection.On<PlotOptionsPricingResult>("PlotResults", plotPricingResult =>
             {
-                var plotResults = plotPricingResult.PlotResults;
+                var temp = plotPricingResult;
+                //var plotResults = plotPricingResult.PlotResults;
 
-                Console.WriteLine($"Received Pricing 3D Plot Result: {plotResults.PointArray.Length} coordinates, requestId: {plotPricingResult.RequestId}");
+                //Console.WriteLine($"Received Pricing 3D Plot Result: {plotResults.PointArray.Length} coordinates, requestId: {plotPricingResult.RequestId}");
 
-                App.Current.Dispatcher.Invoke((System.Action)delegate
-                {
-                    DataCollection.Clear();
-                    //ZLabel = zLabel;
-                    //Zmin = Math.Round(plotResult.zmin, zDecimalPlaces);
-                    //Zmax = Math.Round(plotResult.zmax, zDecimalPlaces);
-                    //ZTick = Math.Round((plotResult.zmax - plotResult.zmin) / 5.0, zTickDecimalPlaces);            
+                //App.Current.Dispatcher.Invoke((System.Action)delegate
+                //{
+                //    DataCollection.Clear();
+                //    //ZLabel = zLabel;
+                //    //Zmin = Math.Round(plotResult.zmin, zDecimalPlaces);
+                //    //Zmax = Math.Round(plotResult.zmax, zDecimalPlaces);
+                //    //ZTick = Math.Round((plotResult.zmax - plotResult.zmin) / 5.0, zTickDecimalPlaces);            
 
-                    DataCollection.Add(new DataSeries3D()
-                    {
-                        LineColor = Brushes.Black,
-                        PointArray = plotResults.PointArray.ToChartablePointArray(),
-                        XLimitMin = plotResults.XLimitMin,
-                        YLimitMin = plotResults.YLimitMin,
-                        XSpacing = plotResults.XSpacing,
-                        YSpacing = plotResults.YSpacing,
-                        XNumber = plotResults.XNumber,
-                        YNumber = plotResults.YNumber
-                    });
-                });
+                //    DataCollection.Add(new DataSeries3D()
+                //    {
+                //        LineColor = Brushes.Black,
+                //        PointArray = plotResults.PointArray.ToChartablePointArray(),
+                //        XLimitMin = plotResults.XLimitMin,
+                //        YLimitMin = plotResults.YLimitMin,
+                //        XSpacing = plotResults.XSpacing,
+                //        YSpacing = plotResults.YSpacing,
+                //        XNumber = plotResults.XNumber,
+                //        YNumber = plotResults.YNumber
+                //    });
+                //});
             });
                     
             base.OnActivate();

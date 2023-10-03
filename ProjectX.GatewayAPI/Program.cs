@@ -32,10 +32,11 @@ builder.Services.Configure<ApiClientOptions>(options => options.BaseAddress = co
 builder.Services.AddHttpClient<IPricingResultsApiClient, PricingResultsApiClient>();
 builder.Services.AddHostedService<PricingTasksService>();
 builder.Services.AddSignalR(config => config.EnableDetailedErrors = true)
-                .AddJsonProtocol(options =>
-                {
-                    options.PayloadSerializerOptions.Converters.Add(new Array2DConverter());
-                });
+                .AddMessagePackProtocol();
+                //.AddJsonProtocol(options =>
+                //{
+                //    options.PayloadSerializerOptions.Converters.Add(new Array2DConverter());
+                //});
 
 
 var app = builder.Build();

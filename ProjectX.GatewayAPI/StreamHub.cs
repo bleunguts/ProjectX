@@ -3,8 +3,8 @@ using ProjectX.Core.Requests;
 
 public interface IStreamHub
 {
-    Task PricingResults(OptionsPricingByMaturityResults results);    
-    Task PlotResults(PlotOptionsPricingResult results);    
+    Task PricingResults(OptionsPricingByMaturityResults results);
+    Task PlotResults(PlotOptionsPricingResult results);        
 }
 
 public class StreamHub : Hub<IStreamHub>
