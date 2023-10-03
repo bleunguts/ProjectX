@@ -5,12 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ProjectX.Core.Tests
 {
     public class RoundTripTests
     {
+        private Random _random = new Random();
         [Test]
         public void WhenOptionsPricingResultsIsBeingSerializedAndDeserialiezedThenItShouldNotBlowUp()
         {
@@ -27,8 +29,14 @@ namespace ProjectX.Core.Tests
         }
 
         [Test]
-        public void CanJsonSerializeAndDeserializePlotResults()
+        public void CanJsonSerializeAndDeserializePlotResultsUsingMicrosoftJsonSerializer()
         {
+            Point3D[,] point3Ds = new Point3D[,]
+            {
+                        { new Point3D(1, 3, 4) }, { new Point3D(1, 3, 4) },
+                        { new Point3D(1, 3, 4) }, { new Point3D(1, 3, 4) },   { new Point3D(1, 3, 4) },
+                        { new Point3D(1, 3, 4) }, { new Point3D(1, 3, 5) },
+            };          
             var obj = new PlotOptionsPricingResult(Guid.NewGuid(),
                 new PlotResults()
                 {
@@ -40,16 +48,12 @@ namespace ProjectX.Core.Tests
                     YSpacing = 6,
                     zmax = 7,
                     zmin = 8,
-                    PointArray = new Point3D[,] 
-                    {
-                        { new Point3D(1, 3, 4) }, { new Point3D(1, 3, 4) },
-                        { new Point3D(1, 3, 4) }, { new Point3D(1, 3, 4) },   { new Point3D(1, 3, 4) },
-                        { new Point3D(1, 3, 4) }, { new Point3D(1, 3, 5) },
-                    }
+                    PointArray = point3Ds
                 });
-            var serialized = JsonConvert.SerializeObject(obj);
+           
+            var serialized = System.Text.Json.JsonSerializer.Serialize<PlotOptionsPricingResult>(obj, obj.JsonOptions());
             Console.WriteLine($"Json: {serialized}");
-            var deserialized = JsonConvert.DeserializeObject<PlotOptionsPricingResult>(serialized);
+            var deserialized = System.Text.Json.JsonSerializer.Deserialize<PlotOptionsPricingResult>(serialized, serialized.JsonOptions());
             Console.WriteLine($"ConvertBack: {deserialized}");
         }
     }

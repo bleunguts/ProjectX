@@ -37,9 +37,10 @@ public class PricingResultsApiClient : IPricingResultsApiClient
 
     private async Task<HttpResponseMessage> PostResult<T>(T result, string endpoint, CancellationToken cancellationToken)
     {
+        string content = JsonSerializer.Serialize<T>(result, this.JsonOptions());
         var request = new HttpRequestMessage(HttpMethod.Post, endpoint)
         {
-            Content = new StringContent(JsonSerializer.Serialize<T>(result), Encoding.UTF8, "application/json")
+            Content = new StringContent(content, Encoding.UTF8, "application/json")
         };
         var response = await _httpClient.SendAsync(request, cancellationToken);
 
