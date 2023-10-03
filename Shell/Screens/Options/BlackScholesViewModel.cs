@@ -203,7 +203,10 @@ namespace Shell.Screens.Options
             DataCollection.Clear();
             var ds = new DataSeries3D();
             ds.LineColor = Brushes.Black;
-            ChartFunctions.Peak3D(ds);            
+            ChartFunctions.Peak3D(ds);
+            Zmin = -8;
+            Zmax = 8;
+            ZTick = 4;            
             DataCollection.Add(ds);
         }
     }

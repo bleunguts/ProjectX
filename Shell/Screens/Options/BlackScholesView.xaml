@@ -37,7 +37,7 @@
                 </StackPanel>
             </StackPanel>
             <local:Chart3D Grid.Row="1" DataCollection="{Binding DataCollection}"
-                        Xmin="0.1" Xmax="3" XTick="0.5" Ymin="10" Ymax="190" YTick="20"
+                        Xmin="0.1" Xmax="3" XTick="0.5" Ymin="10" Ymax="190" YTick="20"                           
                         Zmin="{Binding Zmin}" Zmax="{Binding Zmax}" ZTick="{Binding ZTick}" XLabel="t" YLabel="Spot" ZLabel="{Binding ZLabel}" 
                         GridlinePattern="Dot" GridlineColor="Green" 
                         GridLineThickness="1" Elevation="40" Azimuth="-50" 
