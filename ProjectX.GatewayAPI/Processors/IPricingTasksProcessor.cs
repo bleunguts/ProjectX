@@ -4,6 +4,6 @@ namespace ProjectX.GatewayAPI.Processors
 {
     public interface IPricingTasksProcessor
     {        
-        Task Process(MultipleTimeslicesOptionsPricingRequest multipleTimeslicesOptionsPricingRequest);
+        Task Process(MultipleTimeslicesOptionsPricingRequest multipleTimeslicesOptionsPricingRequest, CancellationToken cancellationToken);
     }
 }

@@ -28,14 +28,14 @@ public class PricingTasksService : BackgroundService
 
         try
         {
-            await foreach (var request in _pricingTasksChannel.ReadAllAsync())
+            await foreach (var request in _pricingTasksChannel.ReadAllAsync(stoppingToken))
             {
                 _logger.LogInformation($"Read message {request.Id} to process from channel. Request={request}");
 
                 using var scope = _serviceProvider.CreateScope();
                 var processor = scope.ServiceProvider.GetRequiredService<IPricingTasksProcessor>();
 
-                await processor.Process(request);
+                await processor.Process(request, stoppingToken);
 
                 _logger.LogInformation("finished processing message {Id} from channel.", request);
             }

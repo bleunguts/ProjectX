@@ -20,7 +20,7 @@ namespace ProjectX.GatewayAPI.Processors
             this._pricingModel = pricingModel;
             this._pricingResultsApiClient = pricingResultsApiClient;
         }
-        public Task Process(MultipleTimeslicesOptionsPricingRequest pricingRequest)
+        public Task Process(MultipleTimeslicesOptionsPricingRequest pricingRequest, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Spin off calculator to price RequestId=[{pricingRequest.Id}]");
 
@@ -34,7 +34,7 @@ namespace ProjectX.GatewayAPI.Processors
                 var pricingResult = p.Result;
                 _logger.LogInformation($"Posting Pricing Results to Endpoint ... RequestId:{pricingResult.RequestId} ResultsCount:{pricingResult.ResultsCount}, maturities: {pricingResult.Maturities()}, prices: {pricingResult.Prices()}");
                 _pricingResultsApiClient.PostResultAsync(pricingResult);
-            });
+            }, cancellationToken);
         }
     }
 }

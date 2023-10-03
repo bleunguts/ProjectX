@@ -26,12 +26,10 @@ namespace ProjectX.GatewayAPI.Controllers
         [HttpPost]
         public async Task BlackScholesPricingRequestAsync(MultipleTimeslicesOptionsPricingRequest request)
         {
-            _logger.LogInformation($"Pricing Request recived: {request}");
-
-            _logger.LogInformation($"Sending pricing request down the Pricing channel for the background service to pick up and process...");
-
+            _logger.LogInformation($"Pricing Request recieved: {request}");            
             try
             {
+                _logger.LogInformation($"Sending pricing request down the Pricing channel for the background service to pick up and process...");
                 if (await _pricingTasksChannel.SendRequestAsync(request))
                 {
                     _logger.LogInformation("Request sent successfully.");

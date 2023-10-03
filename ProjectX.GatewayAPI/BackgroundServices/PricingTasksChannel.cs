@@ -8,14 +8,12 @@ public class PricingTasksChannel
     private const int MaxMessagesInChannel = 200;
     private readonly ILogger<PricingTasksChannel> _logger;
     private Channel<MultipleTimeslicesOptionsPricingRequest> _channel;    
-
-
     public PricingTasksChannel(ILogger<PricingTasksChannel> logger)
     {
         _logger = logger;
         _channel = Channel.CreateBounded<MultipleTimeslicesOptionsPricingRequest>(new BoundedChannelOptions(MaxMessagesInChannel)
         {
-            SingleWriter = false,
+            SingleWriter = true,
             SingleReader = true
         });
     }

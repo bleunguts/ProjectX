@@ -26,7 +26,7 @@ namespace ProjectX.GatewayAPI.Controllers
         [HttpPost]
         public void PricingResultsTaskCompletedAsync(OptionsPricingResults results)
         {
-            _logger.LogInformation($"PricingResults TaskCompleted for RequestId:{results.RequestId}, {results.ResultsCount} sets of option results");
+            _logger.LogInformation($"OptionsPricingResults TaskCompleted. RequestId:{results.RequestId}, There  are {results.ResultsCount} option results and maturity pairs");
             _hubContext.Clients.All.PricingResults(results);
         }
     }

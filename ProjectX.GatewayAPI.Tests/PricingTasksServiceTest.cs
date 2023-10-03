@@ -47,7 +47,7 @@ namespace ProjectX.GatewayAPI.Tests
         {
             public int ExecutionCount { get; set; } = 0;
 
-            public Task Process(MultipleTimeslicesOptionsPricingRequest multipleTimeslicesOptionsPricingRequest)
+            public Task Process(MultipleTimeslicesOptionsPricingRequest multipleTimeslicesOptionsPricingRequest, CancellationToken cancellationToken = default)
             {
                 ExecutionCount++;
                 return Task.CompletedTask;

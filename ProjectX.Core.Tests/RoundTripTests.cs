@@ -14,7 +14,7 @@ namespace ProjectX.Core.Tests
         public void WhenOptionsPricingResultsIsBeingSerializedAndDeserialiezedThenItShouldNotBlowUp()
         {
             var obj = new OptionsPricingResults(Guid.NewGuid(), 
-                new List<OptionGreeksPerMaturityResult> 
+                new List<MaturityAndOptionGreeksResultPair> 
                 { 
                     new (1.0, new OptionGreeksResult(1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
                     new (3.0, new OptionGreeksResult(5.0, 1.0, 1.0, 1.0, 1.0, 5.0)) 
