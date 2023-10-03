@@ -33,7 +33,7 @@
                     <Button x:Name="PlotTheta" Content="Plot Theta" Width="80" Margin="10 0 0 0"/>
                     <Button x:Name="PlotRho" Content="Plot Rho" Width="80" Margin="10 0 0 0"/>
                     <Button x:Name="PlotVega" Content="Plot Vega" Width="80" Margin="10 0 0 0"/>
-                    <Button x:Name="AddDummyChart" Content="Dummy Chart" Width="80" Margin="10 0 0 0"/>
+                    <Button x:Name="PlotExperimental" Content="Plot Experimental" Width="120" Margin="10 0 0 0"/>
                 </StackPanel>
             </StackPanel>
             <local:Chart3D Grid.Row="1" DataCollection="{Binding DataCollection}"

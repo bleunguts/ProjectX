@@ -129,6 +129,8 @@ namespace Shell.Screens.FX
 
         private void MakeTrade(BuySell buySell)
         {
+            if (!Prices.Any()) return; 
+
             var timestamped = DateTimeOffset.Parse(LatestPriceTimeStamp);
             var currentPrice = _spotPriceFormatter.ToSpotPrice(Prices.First(), SelectedCurrency);
             var quantity = Notional;
@@ -137,6 +139,8 @@ namespace Shell.Screens.FX
 
             var response = _fxTrader.ExecuteTrade(request);
             AppendStatus($"Trade exeecuted @ {response.BuySell} {response.Quantity} x {response.TransactionPrice}/unit totalling=${response.TotalPrice.ToString("0.0")}");
+
+            ShowPositions();
         }       
 
         public void ClearHistory() => ClearPricesList();

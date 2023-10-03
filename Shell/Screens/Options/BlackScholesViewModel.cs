@@ -198,7 +198,7 @@ namespace Shell.Screens.Options
             }                        
         }
 
-        public void AddDummyChart()
+        public void PlotExperimental()
         {
             DataCollection.Clear();
             var ds = new DataSeries3D();
