@@ -37,7 +37,7 @@ namespace ProjectX.Core.Tests
                         { new MyPoint3D(1, 3, 4) }, { new MyPoint3D(1, 3, 4) },   { new MyPoint3D(1, 3, 4) },
                         { new MyPoint3D(1, 3, 4) }, { new MyPoint3D(1, 3, 5) },
             };          
-            var obj = new PlotOptionsPricingResult(Guid.NewGuid(),
+            var obj = new PlotOptionsPricingResult(new PlotOptionsPricingRequest(OptionGreeks.Delta, OptionType.Call, 30, 0.6,0.5,0.3),
                 new PlotResults()
                 {
                     XLimitMin = 1,

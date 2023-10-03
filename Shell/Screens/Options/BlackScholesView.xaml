@@ -37,17 +37,38 @@
                 </StackPanel>
             </StackPanel>
             <!--<local:Chart3D Grid.Row="1" DataCollection="{Binding DataCollection}"
-                            Xmin="0.1" Xmax="3" XTick="0.5" Ymin="10" Ymax="190" YTick="20" Zmin="{Binding Zmin}" Zmax="{Binding Zmax}" ZTick="{Binding ZTick}"
-                            XLabel="t" YLabel="Spot" ZLabel="{Binding ZLabel}" GridlinePattern="Dot" GridlineColor="Green" GridLineThickness="1" Elevation="40"
-                            Azimuth="-50" IsColorbar="False" Chart3DType="Surface" ColormapType="Jet" IsHiddenLine="False" IsColormap="True"/>-->
+                        Xmin="0.1" Xmax="3" XTick="0.5" Ymin="10" Ymax="190" YTick="20"
+                        Zmin="{Binding Zmin}" Zmax="{Binding Zmax}" ZTick="{Binding ZTick}" XLabel="t" YLabel="Spot" ZLabel="{Binding ZLabel}" 
+                        GridlinePattern="Dot" GridlineColor="Green" 
+                        GridLineThickness="1" Elevation="40" Azimuth="-50" 
+                        IsHiddenLine="False" 
+                        IsColorbar="False" 
+                        Chart3DType="Surface" 
+                        ColormapType="Jet" 
+                        IsColormap="True"/>-->
+            
+            
             <local:Chart3D Grid.Row="1" DataCollection="{Binding DataCollection}"
+                       Xmin="-3" Xmax="3" XTick="1" Ymin="-3" Ymax="3" YTick="1" 
+                       Zmin="-8" Zmax="8" ZTick="4" XLabel="t" YLabel="Spot" ZLabel="Z"
+                       GridlinePattern="Dot" GridlineColor="Green" 
+                       GridLineThickness="1" Elevation="40" Azimuth="-50" 
+                       IsColorbar="False"                       
+                       IsHiddenLine="False"
+                       Chart3DType="Surface" 
+                       ColormapType="Jet" 
+                       IsColormap="True"/>
+
+
+            <!--<local:Chart3D Grid.Row="1" DataCollection="{Binding DataCollection}"
                        Xmin="-3" Xmax="3" XTick="1" Ymin="-3" Ymax="3" YTick="1" 
                        Zmin="-8" Zmax="8" ZTick="4" XLabel="X" YLabel="Y" ZLabel="Z"
                        GridlinePattern="Dot" GridlineColor="Green" 
                        GridLineThickness="1" Elevation="30" Azimuth="-37" 
                        IsColorbar="True"
                        NumberInterp="3" 
-                       IsHiddenLine="False"/>
+                       IsHiddenLine="False"/>-->
+
         </Grid>
     </Grid>
 </UserControl>
