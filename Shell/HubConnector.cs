@@ -21,32 +21,42 @@ namespace Shell
     [Export(typeof(IHubConnector)), PartCreationPolicy(CreationPolicy.NonShared)]
     public class HubConnector : IHubConnector
     {
-        private readonly HubConnection _connection;
+        private readonly string _baseUriString;
+        private HubConnection _connection;
 
         public HubConnection Connection => _connection;
 
         [ImportingConstructor]
         public HubConnector(IOptions<GatewayApiClientOptions> options)
         {
-            _connection = new HubConnectionBuilder()
-                .WithUrl(new Uri($"{options.Value.BaseUrl}/streamHub"))
-                .WithAutomaticReconnect()
-                .Build();
+            _baseUriString = $"{options.Value.BaseUrl}/streamHub";
+            _connection = Connect(_baseUriString);
         }
 
         public async Task Start()
-        {
-            if (_connection.State != HubConnectionState.Connected)
-            {                
+        {            
+            // starts connetion back up
+            if (_connection != null && _connection.State != HubConnectionState.Connected)
+            {
+                _connection = Connect(_baseUriString);
+
                 await _connection.StartAsync();
             }
+        }     
+
+        private HubConnection Connect(string baseUri)
+        {
+            return new HubConnectionBuilder()
+                .WithUrl(new Uri(baseUri))
+                .WithAutomaticReconnect()
+                .Build();
+            
         }
 
         public async Task Stop()
         {
-            // dont dispose connection each time the page loads
-            // rather think about disposing when application finishes
-            //await _connection.DisposeAsync();
+            // disposes each time page loads
+            await _connection.DisposeAsync();
         }
     }
 }
