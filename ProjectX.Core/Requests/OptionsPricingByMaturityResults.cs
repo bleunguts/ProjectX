@@ -17,14 +17,13 @@ namespace ProjectX.Core.Requests
                 return Results.Count;
             }
         }
-        public MaturityAndOptionGreeksResultPair this[int index] => Results[index];
-        public OptionsPricingByMaturityResults(Guid requestId, List<MaturityAndOptionGreeksResultPair> results) : base(requestId)
+        public MaturityAndOptionGreeksResultPair this[int index] => Results[index];        
+    
+        public OptionsPricingByMaturityResults(Guid RequestId, List<MaturityAndOptionGreeksResultPair> maturityAndOptionGreeksResultPairs) : base(RequestId)
         {
-            Results = results;
+            Results = maturityAndOptionGreeksResultPairs;
         }
-        public override string ToString() => $"{ResultsCount} results, maturties: {Maturities()}, prices: {Prices()}";
-        public string Dump() => $"{ResultsCount} results, maturties: {Maturities()}, prices: {Prices()}";        
-        string Maturities() => string.Join(',', Results.Select(x => x.Maturity));
-        string Prices() => string.Join(',', Results.Select(x => x.OptionGreeks.price));
+
+        public override string ToString() => $"{ResultsCount} results";       
     }
 }
