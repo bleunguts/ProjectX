@@ -1,15 +1,18 @@
 ﻿using Caliburn.Micro;
 using Chart3DControl;
+using Microsoft.AspNetCore.SignalR.Client;
 using ProjectX.Core;
 using ProjectX.Core.Requests;
 using ProjectX.Core.Services;
 using System;
 using System.ComponentModel.Composition;
 using System.Data;
+using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace Shell.Screens.Options
 {
@@ -48,7 +51,7 @@ namespace Shell.Screens.Options
             OptionInputTable.Rows.Add("Strike", 100, "Strike price");
             OptionInputTable.Rows.Add("Rate", 0.1, "Interest rate");
             OptionInputTable.Rows.Add("Carry", 0.04, "Cost of carry");
-            OptionInputTable.Rows.Add("Vol", 0.3, "Volatility");
+            OptionInputTable.Rows.Add("Vol", 0.3, "Volatility");          
         }
 
         #region Bindable Properties
@@ -90,11 +93,52 @@ namespace Shell.Screens.Options
             set { zTick = value; NotifyOfPropertyChange(() => ZTick); }
         }
         #endregion
+        protected override async void OnActivate()
+        {
+            base.OnActivate();
 
+            await _gatewayApiClient.StartHubAsync();
+            _gatewayApiClient.HubConnection.On<int>("PricingResults", r =>
+            {
+                Console.WriteLine($"Received Pricing Result: {r} results");
+
+                App.Current.Dispatcher.Invoke((System.Action)delegate
+                {
+                    OptionTable.Clear();
+                    OptionTable.Rows.Add(r, 0, 0, 0, 0, 0, 0);
+                });
+
+                //var channel = await _gatewayApiClient.HubConnection.StreamAsChannelAsync<OptionsPricingResults>("StreamResults", CancellationToken.None);
+                //while (await channel.WaitToReadAsync() && !cancellationToken.IsCancellationRequested)
+                //{
+                //    while (channel.TryRead(out var pricingResult))
+                //    {
+                //        Console.WriteLine($"Received Pricing Result: {pricingResult.ResultsCount} results, requestId: {pricingResult.RequestId}");
+                //        OptionTable.Clear();
+                //        foreach (var (maturity, riskResult) in pricingResult.Results)
+                //        {
+                //            OptionTable.Rows.Add(maturity, riskResult.price, riskResult.delta, riskResult.gamma, riskResult.theta, riskResult.rho, riskResult.vega);
+                //        }
+                //    }
+                //}
+
+                //await foreach(var pricingResult in _gatewayApiClient.HubConnection.StreamAsync<OptionsPricingResults>("PricingResults", cancellationToken))
+                //{
+                //    Console.WriteLine($"Received Pricing Result: {pricingResult.ResultsCount} results, requestId: {pricingResult.RequestId}");                    
+                //    OptionTable.Clear();
+                //    foreach (var (maturity, riskResult) in pricingResult.Results)
+                //    {
+                //        OptionTable.Rows.Add(maturity, riskResult.price, riskResult.delta, riskResult.gamma, riskResult.theta, riskResult.rho, riskResult.vega);
+                //    }
+                //}
+            });            
+        }
+      
         public async Task CalculatePrice()
         {
+            var cancellationToken = new CancellationToken();
             try
-            {
+            {              
                 string? optionType = OptionInputTable.Rows[0]["Value"].ToString();
                 double spot = Convert.ToDouble(OptionInputTable.Rows[1]["Value"]);
                 double strike = Convert.ToDouble(OptionInputTable.Rows[2]["Value"]);
@@ -102,19 +146,12 @@ namespace Shell.Screens.Options
                 double carry = Convert.ToDouble(OptionInputTable.Rows[4]["Value"]);
                 double vol = Convert.ToDouble(OptionInputTable.Rows[5]["Value"]);
                 var request = new MultipleTimeslicesOptionsPricingRequest(10, optionType.ToOptionType(), spot, strike, rate, carry, vol);
-
-                var cancellationToken = new CancellationToken();
-                await _gatewayApiClient.PricingRequestAsync(request, cancellationToken);
+                await _gatewayApiClient.PricingRequestAsync(request, cancellationToken);                                            
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Failed to send pricing request to backend to price\nReason:'{ex.Message}", "Calulate Price issue");
-            }
-            //OptionTable.Clear();
-            //foreach (var (maturity, riskResult) in results)
-            //{
-            //    OptionTable.Rows.Add(maturity, riskResult.price, riskResult.delta, riskResult.gamma, riskResult.theta, riskResult.rho, riskResult.vega);
-            //}
+            }            
         }
         public void PlotPrice() => Plot(OptionGreeks.Price, "Price", 1, 1);
         public void PlotDelta() => Plot(OptionGreeks.Delta, "Delta", 1, 1);

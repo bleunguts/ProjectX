@@ -15,7 +15,7 @@ namespace ProjectX.Core.Services
         {
             RequestId = requestId;
             ResultsCount = results == null ? 0 : results.Count();
-            _results = results;
+            _results = results ?? new List<(double maturities, OptionGreeksResult optionGreeks)>();
         }
         public string Maturities() => string.Join(',', _results.Select(x => x.maturities));
         public string Prices() => string.Join(',', _results.Select(x => x.optionGreeks.price));

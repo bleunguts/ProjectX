@@ -35,8 +35,6 @@ app.MapControllers();
 
 app.UseRouting();
 
-app.UseEndpoints(endpoints =>
-    endpoints.MapHub<StreamHub>("/streamHub")
-);
+app.UseEndpoints(endpoints => endpoints.MapHub<StreamHub>("/streamHub"));
 
 app.Run();

@@ -24,10 +24,10 @@ namespace ProjectX.GatewayAPI.Controllers
         }
 
         [HttpPost]
-        public void PricingResultsTaskCompleted(OptionsPricingResults results)
+        public async Task PricingResultsTaskCompletedAsync(OptionsPricingResults results)
         {
             _logger.LogInformation($"PricingResults TaskCompleted for RequestId:{results.RequestId}, {results.ResultsCount} sets of option results");
-            _hubContext.Clients.All.SendAsync("PricingResults", results);
+            await _hubContext.Clients.All.SendAsync("PricingResults", results.ResultsCount);                                
         }
     }
 }

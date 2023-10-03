@@ -20,7 +20,7 @@ namespace Shell
     {
         HubConnection HubConnection { get; }
         Task PricingRequestAsync(MultipleTimeslicesOptionsPricingRequest pricingRequest, CancellationToken cancellationToken);
-        void StartHub();
+        Task StartHubAsync();
     }
 
     [Export(typeof(IGatewayApiClient)), PartCreationPolicy(CreationPolicy.NonShared)]
@@ -47,10 +47,14 @@ namespace Shell
 
             _httpClient.BaseAddress = new Uri(endpointAddress);
         }
+        public HubConnection HubConnection => _hubConnector.Connection;
 
-        public void StartHub()
+        public async Task StartHubAsync()
         {
-            _hubConnector.Start();
+            if(_hubConnector.Connection.State != HubConnectionState.Connected)
+            {
+                await _hubConnector.Start();
+            }
         }
 
         public async Task PricingRequestAsync(MultipleTimeslicesOptionsPricingRequest pricingRequest, CancellationToken cancellationToken)
@@ -70,6 +74,5 @@ namespace Shell
             }
         }
 
-        public HubConnection HubConnection => _hubConnector.Connection;
     }
 }

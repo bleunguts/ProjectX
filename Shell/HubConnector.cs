@@ -30,12 +30,7 @@ namespace Shell
 
         public async Task Start()
         {
-            await _connection.StartAsync();
-
-            await foreach(var pricingResult in _connection.StreamAsync<OptionsPricingResults>("PricingResults"))
-            {
-                Console.WriteLine($"Received Pricing Result: {pricingResult.ResultsCount} results, requestId: {pricingResult.RequestId}");
-            }            
+            await _connection.StartAsync();                    
         }        
     }
 }
