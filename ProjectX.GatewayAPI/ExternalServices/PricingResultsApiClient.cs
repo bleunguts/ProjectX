@@ -3,11 +3,12 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Builder.Extensions;
 using ProjectX.Core.Requests;
+using ProjectX.Core;
 
 namespace ProjectX.GatewayAPI.ExternalServices;
 
 public class PricingResultsApiClient : IPricingResultsApiClient
-{
+{    
     private readonly HttpClient _httpClient;
     private readonly ILogger<PricingResultsApiClient> _logger;
 
@@ -27,16 +28,28 @@ public class PricingResultsApiClient : IPricingResultsApiClient
 
     public async Task PostResultAsync(OptionsPricingByMaturityResults result, CancellationToken cancellationToken = default)
     {
-        var request = new HttpRequestMessage(HttpMethod.Post, "PricingResults")
-        {
-            Content = new StringContent(JsonSerializer.Serialize(result), Encoding.UTF8, "application/json")
-        };
+        using HttpResponseMessage response = await PostResult<OptionsPricingByMaturityResults>(result, Endpoints.ResultsPriceOptionBS, cancellationToken);
+    }
+    public async Task PostResultAsync(PlotOptionsPricingResult result, CancellationToken cancellationToken = default)
+    {
+        using HttpResponseMessage response = await PostResult<PlotOptionsPricingResult>(result, Endpoints.ResultsPlotOptionBS, cancellationToken);
+    }
 
-        using var response = await _httpClient.SendAsync(request, cancellationToken);
+    private async Task<HttpResponseMessage> PostResult<T>(T result, string endpoint, CancellationToken cancellationToken)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Post, endpoint)
+        {
+            Content = new StringContent(JsonSerializer.Serialize<T>(result), Encoding.UTF8, "application/json")
+        };
+        var response = await _httpClient.SendAsync(request, cancellationToken);
 
         if (!response.IsSuccessStatusCode)
         {
             _logger.LogWarning("Failed to send match result.");
         }
+
+        return response;
     }
+
+    
 }

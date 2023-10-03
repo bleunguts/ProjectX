@@ -11,8 +11,8 @@ using System.Threading.Tasks;
 namespace ProjectX.Core.Services
 {
     public interface IBlackScholesOptionsPricingModel
-    {
-        PlotResults PlotGreeks(OptionGreeks greekType, OptionType optionType, double strike, double rate, double carry, double vol);
+    {        
+        PlotResults PlotGreeks(PlotOptionsPricingRequest pricingRequest);
         OptionsPricingByMaturityResults Price(OptionsPricingByMaturitiesRequest request);
     }
 
@@ -50,8 +50,9 @@ namespace ProjectX.Core.Services
             return builder.Build();
         }
 
-        public PlotResults PlotGreeks(OptionGreeks greekType, OptionType optionType, double strike, double rate, double carry, double vol)
+        public PlotResults PlotGreeks(PlotOptionsPricingRequest pricingRequest)
         {
+            (OptionGreeks greekType, OptionType optionType, double strike, double rate, double carry, double vol) = pricingRequest;
             double xmin = 0.1;
             double xmax = 3.0;
             double ymin = 10;
@@ -116,6 +117,8 @@ namespace ProjectX.Core.Services
                 XNumber = XNumber,
                 YNumber = YNumber,
             };
-        }   
+        }
+
+    
     }
 }

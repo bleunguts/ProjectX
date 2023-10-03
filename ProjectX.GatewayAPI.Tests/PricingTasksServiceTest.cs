@@ -45,9 +45,9 @@ namespace ProjectX.GatewayAPI.Tests
 
         private class FakeProcessor : IPricingTasksProcessor
         {
-            public int ExecutionCount { get; set; } = 0;
+            public int ExecutionCount { get; set; } = 0;            
 
-            public Task Process(OptionsPricingByMaturitiesRequest multipleTimeslicesOptionsPricingRequest, CancellationToken cancellationToken = default)
+            public Task Process(IRequest request, CancellationToken cancellationToken)
             {
                 ExecutionCount++;
                 return Task.CompletedTask;

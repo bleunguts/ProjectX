@@ -23,11 +23,19 @@ namespace ProjectX.GatewayAPI.Controllers
             return "Hello from Pricing Results";
         }
 
-        [HttpPost]
+        [HttpPost("bsPrice")]
         public void PricingResultsTaskCompletedAsync(OptionsPricingByMaturityResults results)
         {
-            _logger.LogInformation($"OptionsPricingResults TaskCompleted. RequestId:{results.RequestId}, There  are {results.ResultsCount} option results and maturity pairs");
+            _logger.LogInformation($"OptionsPricingResults bsPrice TaskCompleted. RequestId:{results.RequestId}, There  are {results.ResultsCount} option results and maturity pairs");
             _hubContext.Clients.All.PricingResults(results);
         }
+
+        [HttpPost("bsPlot")]
+        public void PricingResultsPlotTaskCompletedAsync(PlotOptionsPricingResult results)
+        {
+            _logger.LogInformation($"OptionsPricingResults bsPlot TaskCompleted. RequestId:{results.RequestId}");
+            _hubContext.Clients.All.PricingResults(results);
+        }
+
     }
 }

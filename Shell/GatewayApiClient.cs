@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using ProjectX.Core;
 using ProjectX.Core.MarketData;
 using ProjectX.Core.Requests;
 using System;
@@ -53,11 +54,11 @@ namespace Shell
         public async Task StopHubAsync() => await _hubConnector.Stop();
         public async Task SubmitPlotRequest(PlotOptionsPricingRequest pricingRequest, CancellationToken token)
         {            
-            await Submit<PlotOptionsPricingRequest>(pricingRequest, "PricingTasks/blackScholesPlotParameters", token);
+            await Submit<PlotOptionsPricingRequest>(pricingRequest, Endpoints.RequestsPlotOptionBS, token);
         }
         public async Task SubmitPricingRequest(OptionsPricingByMaturitiesRequest optionsPricingByMaturitiesRequest, CancellationToken cancellationToken)
         {            
-            await Submit<OptionsPricingByMaturitiesRequest>(optionsPricingByMaturitiesRequest, "PricingTasks/blackScholesPricer", cancellationToken);
+            await Submit<OptionsPricingByMaturitiesRequest>(optionsPricingByMaturitiesRequest, Endpoints.RequestsPriceOptionBS, cancellationToken);
         }
         private async Task<object> Submit<T>(T pricingRequest, string endPoint, CancellationToken cancellationToken)
         {

@@ -23,8 +23,7 @@ namespace ProjectX.GatewayAPI.Controllers
             return "Hello from the Pricing module";
         }
 
-        [HttpPost]
-        [Route("blackScholesPricer")]
+        [HttpPost("bsPrice")]        
         public async Task BlackScholesPricingRequestAsync(OptionsPricingByMaturitiesRequest request)
         {
             _logger.LogInformation($"Pricing Request recieved: {request}");            
@@ -42,18 +41,17 @@ namespace ProjectX.GatewayAPI.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("blackScholesPlotParameters")]
+        [HttpPost("bsPlot")]        
         public async Task BlackScholesPlotRequestAsync(PlotOptionsPricingRequest request)
         {
             _logger.LogInformation($"Pricing Request recieved: {request}");
             try
             {
                 _logger.LogInformation($"Sending pricing request down the Pricing channel for the background service to pick up and process...");
-                //if (await _pricingTasksChannel.SendRequestAsync(request))
-                //{
-                //    _logger.LogInformation("Request sent successfully.");
-                //};
+                if (await _pricingTasksChannel.SendRequestAsync(request))
+                {
+                    _logger.LogInformation("Request sent successfully.");
+                };
             }
             catch (Exception ex)
             {

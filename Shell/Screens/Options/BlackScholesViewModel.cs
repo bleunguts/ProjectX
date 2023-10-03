@@ -153,16 +153,16 @@ namespace Shell.Screens.Options
                 double rate = Convert.ToDouble(OptionInputTable.Rows[3]["Value"]);
                 double carry = Convert.ToDouble(OptionInputTable.Rows[4]["Value"]);
                 double vol = Convert.ToDouble(OptionInputTable.Rows[5]["Value"]);
-                var request = new PlotOptionsPricingRequest(optionType!.ToOptionType(), strike, rate, carry, vol);
+                var request = new PlotOptionsPricingRequest(greekType, optionType!.ToOptionType(), strike, rate, carry, vol);
+                request.ZLabel = zLabel;
+                request.ZDecimalPlaces = zDecimalPlaces;
+                request.ZTickDecimalPlaces = zTickDecimalPlaces;
                 await _gatewayApiClient.SubmitPlotRequest(request, _cts.Token);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Failed to send plot request to backend to price\nReason:'{ex.Message}", "Calulate Plot parameters issue");
-            }
-
-
-            //var plotResult = _blackScholesPricerService.PlotGreeks(greekType, optionType.ToOptionType(), strike, rate, carry, vol);
+            }            
 
             //ZLabel = zLabel;
             //Zmin = Math.Round(plotResult.zmin, zDecimalPlaces);

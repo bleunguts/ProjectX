@@ -20,20 +20,34 @@ namespace ProjectX.GatewayAPI.Processors
             this._pricingModel = pricingModel;
             this._pricingResultsApiClient = pricingResultsApiClient;
         }
-        public Task Process(OptionsPricingByMaturitiesRequest pricingRequest, CancellationToken cancellationToken)
+        public Task Process(IRequest pricingRequest, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Spin off calculator to price RequestId=[{pricingRequest.Id}]");
 
-            return Task.Run<OptionsPricingByMaturityResults>(() =>
+            return Task.Run<object>(() =>
             {
-                var pricingResult = _pricingModel.Price(pricingRequest);
-                _logger.LogInformation($"Priced successfully RequestId:{pricingResult.RequestId} ResultsCount:{pricingResult.ResultsCount}");
-                return pricingResult;
-            }).ContinueWith(p =>
+                if (pricingRequest is OptionsPricingByMaturitiesRequest)
+                {
+                    return _pricingModel.Price((OptionsPricingByMaturitiesRequest) pricingRequest);
+                }
+                if (pricingRequest is PlotOptionsPricingRequest)
+                {
+                    return _pricingModel.PlotGreeks((PlotOptionsPricingRequest)pricingRequest);
+                }                          
+                
+                throw new NotSupportedException($"type {pricingRequest.GetType()} is not supported.");
+            }).ContinueWith(r =>
             {
-                var pricingResult = p.Result;
-                _logger.LogInformation($"Posting Pricing Results to Endpoint ... RequestId:{pricingResult.RequestId} {pricingResult.Dump()}");
-                _pricingResultsApiClient.PostResultAsync(pricingResult);
+                var pricingResult = r.Result;
+                if(pricingResult is OptionsPricingByMaturityResults)
+                {
+                    return _pricingResultsApiClient.PostResultAsync((OptionsPricingByMaturityResults)pricingResult);
+                }
+                if(pricingResult is PlotOptionsPricingResult)
+                {
+                    return _pricingResultsApiClient.PostResultAsync((PlotOptionsPricingResult)pricingResult);
+                }
+                throw new NotSupportedException($"type {pricingResult.GetType()} is not supported.");
             }, cancellationToken);
         }
     }
