@@ -24,19 +24,17 @@ namespace ProjectX.GatewayAPI.Processors
         {
             _logger.LogInformation($"Spin off calculator to price RequestId=[{pricingRequest.Id}]");
 
-            var allTasks = Task.Run<OptionsPricingResults>(() =>
+            return Task.Run<OptionsPricingResults>(() =>
             {
                 var pricingResult = _pricingModel.Price(pricingRequest);
                 _logger.LogInformation($"Priced successfully RequestId:{pricingResult.RequestId} ResultsCount:{pricingResult.ResultsCount}");
                 return pricingResult;
-            }).ContinueWith(p => 
+            }).ContinueWith(p =>
             {
                 var pricingResult = p.Result;
                 _logger.LogInformation($"Posting Pricing Results to Endpoint ... RequestId:{pricingResult.RequestId} ResultsCount:{pricingResult.ResultsCount}, maturities: {pricingResult.Maturities()}, prices: {pricingResult.Prices()}");
                 _pricingResultsApiClient.PostResultAsync(pricingResult);
-            });           
-
-            return allTasks;
+            });
         }
     }
 }
