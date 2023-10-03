@@ -18,11 +18,10 @@ builder.Services.AddSingleton<PricingTasksChannel>();
 builder.Services.AddOptions();
 IConfiguration config = builder.Configuration;
 builder.Services.Configure<ProjectXApiClientOptions>(options => options.BaseAddress = config.GetSection("ExternalServices")["ProjectXUrl"]);
-//builder.Services.Configure<ProjectXApiClientOptions>(options => options.BaseAddress = "https://localhost:7029");
 
 builder.Services.AddHttpClient<IPricingResultsApiClient, PricingResultsApiClient>();
 builder.Services.AddHostedService<PricingTasksService>();
-
+builder.Services.AddSignalR(config => config.EnableDetailedErrors = true);
 
 var app = builder.Build();
 
@@ -33,5 +32,11 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseRouting();
+
+app.UseEndpoints(endpoints =>
+    endpoints.MapHub<StreamHub>("/streamHub")
+);
 
 app.Run();

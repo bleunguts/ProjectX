@@ -9,6 +9,7 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
 using System.Linq;
+using System.Net.Http;
 using System.Windows;
 
 namespace Shell
@@ -34,9 +35,13 @@ namespace Shell
             batch.AddExportedValue<IWindowManager>(new WindowManager());
             batch.AddExportedValue<IEventAggregator>(new EventAggregator());
             batch.AddExportedValue(container);
+            
             batch.AddExportedValue<ILogger<FXMarketService>>(new NullLogger<FXMarketService>());
             batch.AddExportedValue<ILogger<eFXTradeExecutionService>>(new NullLogger<eFXTradeExecutionService>());
-            batch.AddExportedValue<IFXSpotPriceStream>(new RandomFXSpotPriceStream(2, 500));
+            batch.AddExportedValue<ILogger<GatewayApiClient>>(new NullLogger<GatewayApiClient>());            
+
+            batch.AddExportedValue<IHubConnector>(new HubConnector("https://localhost:7029"));
+            batch.AddExportedValue<IFXSpotPriceStream>(new RandomFXSpotPriceStream(2, 500));            
 
             container.Compose(batch);                        
         }
