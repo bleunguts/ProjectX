@@ -30,7 +30,7 @@ namespace Shell
 
         public async Task Start()
         {
-            await _connection.StartAsync();                    
+            await _connection.StartAsync();                                           
         }        
     }
 }

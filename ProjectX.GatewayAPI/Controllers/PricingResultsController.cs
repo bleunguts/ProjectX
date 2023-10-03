@@ -9,9 +9,9 @@ namespace ProjectX.GatewayAPI.Controllers
     public class PricingResultsController
     {
         private readonly ILogger<PricingResultsController> _logger;
-        private readonly IHubContext<StreamHub> _hubContext;
+        private readonly IHubContext<StreamHub, IStreamHub> _hubContext;
 
-        public PricingResultsController(ILogger<PricingResultsController> logger, IHubContext<StreamHub> hubContext)
+        public PricingResultsController(ILogger<PricingResultsController> logger, IHubContext<StreamHub, IStreamHub> hubContext)
         {
             _logger = logger;
             _hubContext = hubContext;
@@ -24,10 +24,10 @@ namespace ProjectX.GatewayAPI.Controllers
         }
 
         [HttpPost]
-        public async Task PricingResultsTaskCompletedAsync(OptionsPricingResults results)
+        public void PricingResultsTaskCompletedAsync(OptionsPricingResults results)
         {
-            _logger.LogInformation($"PricingResults TaskCompleted for RequestId:{results.RequestId}, {results.ResultsCount} sets of option results");            
-            await _hubContext.Clients.All.SendAsync("PricingResults", results);                                
+            _logger.LogInformation($"PricingResults TaskCompleted for RequestId:{results.RequestId}, {results.ResultsCount} sets of option results");
+            _hubContext.Clients.All.PricingResults(results);
         }
     }
 }

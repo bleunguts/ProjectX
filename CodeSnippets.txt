@@ -1,0 +1,14 @@
+#region other streaming options
+//var channel = await _gatewayApiClient.HubConnection.StreamAsChannelAsync<OptionsPricingResults>("StreamResults", CancellationToken.None);
+//while (await channel.WaitToReadAsync() && !cancellationToken.IsCancellationRequested)
+//{
+//    while (channel.TryRead(out var pricingResult))
+//    {
+//    }
+//}
+
+//await foreach(var pricingResult in _gatewayApiClient.HubConnection.StreamAsync<OptionsPricingResults>("PricingResults", cancellationToken))
+//{
+//    Console.WriteLine($"Received Pricing Result: {pricingResult.ResultsCount} results, requestId: {pricingResult.RequestId}");                    
+//} 
+#endregion

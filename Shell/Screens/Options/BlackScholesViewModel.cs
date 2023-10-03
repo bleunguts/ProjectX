@@ -105,23 +105,17 @@ namespace Shell.Screens.Options
                     {
                         OptionTable.Rows.Add(maturity, riskResult.price, riskResult.delta, riskResult.gamma, riskResult.theta, riskResult.rho, riskResult.vega);
                     }
-                });
-
-                //var channel = await _gatewayApiClient.HubConnection.StreamAsChannelAsync<OptionsPricingResults>("StreamResults", CancellationToken.None);
-                //while (await channel.WaitToReadAsync() && !cancellationToken.IsCancellationRequested)
-                //{
-                //    while (channel.TryRead(out var pricingResult))
-                //    {
-                //    }
-                //}
-
-                //await foreach(var pricingResult in _gatewayApiClient.HubConnection.StreamAsync<OptionsPricingResults>("PricingResults", cancellationToken))
-                //{
-                //    Console.WriteLine($"Received Pricing Result: {pricingResult.ResultsCount} results, requestId: {pricingResult.RequestId}");                    
-                //}
+                });                
             });            
         }
-      
+
+        protected override async void OnDeactivate(bool close)
+        {
+            base.OnDeactivate(close);
+
+            await _gatewayApiClient.StopHubAsync();
+        }
+
         public async Task CalculatePrice()
         {
             var cancellationToken = new CancellationToken();
@@ -134,7 +128,7 @@ namespace Shell.Screens.Options
                 double carry = Convert.ToDouble(OptionInputTable.Rows[4]["Value"]);
                 double vol = Convert.ToDouble(OptionInputTable.Rows[5]["Value"]);
                 var request = new MultipleTimeslicesOptionsPricingRequest(10, optionType.ToOptionType(), spot, strike, rate, carry, vol);
-                await _gatewayApiClient.PricingRequestAsync(request, cancellationToken);                                            
+                await _gatewayApiClient.SubmitPricingRequest(request, cancellationToken);                                            
             }
             catch (Exception ex)
             {
