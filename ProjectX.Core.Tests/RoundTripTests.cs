@@ -31,11 +31,11 @@ namespace ProjectX.Core.Tests
         [Test]
         public void CanJsonSerializeAndDeserializePlotResultsUsingMicrosoftJsonSerializer()
         {
-            Point3D[,] point3Ds = new Point3D[,]
+            MyPoint3D[,] point3Ds = new MyPoint3D[,]
             {
-                        { new Point3D(1, 3, 4) }, { new Point3D(1, 3, 4) },
-                        { new Point3D(1, 3, 4) }, { new Point3D(1, 3, 4) },   { new Point3D(1, 3, 4) },
-                        { new Point3D(1, 3, 4) }, { new Point3D(1, 3, 5) },
+                        { new MyPoint3D(1, 3, 4) }, { new MyPoint3D(1, 3, 4) },
+                        { new MyPoint3D(1, 3, 4) }, { new MyPoint3D(1, 3, 4) },   { new MyPoint3D(1, 3, 4) },
+                        { new MyPoint3D(1, 3, 4) }, { new MyPoint3D(1, 3, 5) },
             };          
             var obj = new PlotOptionsPricingResult(Guid.NewGuid(),
                 new PlotResults()

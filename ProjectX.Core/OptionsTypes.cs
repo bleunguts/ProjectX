@@ -13,7 +13,7 @@ public enum OptionGreeks
 public record OptionGreeksResult(double price, double delta, double gamma, double theta, double rho, double vega);
 public class PlotResults
 {
-    public Point3D[,] PointArray { get; set; }
+    public MyPoint3D[,] PointArray { get; set; }
     public double zmin { get; set; }
     public double zmax { get; set; }
     public double XLimitMin { get; set; }

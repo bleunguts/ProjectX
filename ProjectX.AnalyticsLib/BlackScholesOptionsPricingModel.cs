@@ -69,7 +69,7 @@ namespace ProjectX.Core.Services
             var XNumber = Convert.ToInt16((xmax - xmin) / XSpacing) + 1;
             var YNumber = Convert.ToInt16((ymax - ymin) / YSpacing) + 1;
 
-            Point3D[,] pts = new Point3D[XNumber, YNumber];
+            MyPoint3D[,] pts = new MyPoint3D[XNumber, YNumber];
             double zmin = 10_000;
             double zmax = -10_000;
             for (int i = 0; i < XNumber; i++)
@@ -104,7 +104,7 @@ namespace ProjectX.Core.Services
                     }
                     if (!double.IsNaN(z))
                     {
-                        pts[i, j] = new Point3D(x, y, z);
+                        pts[i, j] = new MyPoint3D(x, y, z);
                         zmin = Math.Min(zmin, z);
                         zmax = Math.Max(zmax, z);
                     }

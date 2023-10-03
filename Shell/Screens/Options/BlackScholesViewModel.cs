@@ -60,7 +60,8 @@ namespace Shell.Screens.Options
         private double zTick = 0;
         private CancellationTokenSource _cts = new();
 
-        public BindableCollection<DataSeries3D> DataCollection { get; set; } = new BindableCollection<DataSeries3D>();
+        public BindableCollection<DataSeries3D> DataCollection { get; set; } = new BindableCollection<DataSeries3D>();        
+        
         public DataTable OptionInputTable
         {
             get { return optionInputTable; }
@@ -93,7 +94,7 @@ namespace Shell.Screens.Options
         }
         #endregion
         protected override async void OnActivate()
-        {            
+        {
             _cts = new CancellationTokenSource();
 
             await _gatewayApiClient.StartHubAsync();
@@ -108,37 +109,36 @@ namespace Shell.Screens.Options
                         OptionTable.Rows.Add(maturity, riskResult.price, riskResult.delta, riskResult.gamma, riskResult.theta, riskResult.rho, riskResult.vega);
                     }
                 });
-            });           
+            });
 
             _gatewayApiClient.HubConnection.On<PlotOptionsPricingResult>("PlotResults", plotPricingResult =>
             {
-                var temp = plotPricingResult;
-                //var plotResults = plotPricingResult.PlotResults;
+                var plotResults = plotPricingResult.PlotResults;
 
-                //Console.WriteLine($"Received Pricing 3D Plot Result: {plotResults.PointArray.Length} coordinates, requestId: {plotPricingResult.RequestId}");
+                Console.WriteLine($"Received Pricing 3D Plot Result: {plotResults.PointArray.Length} coordinates, requestId: {plotPricingResult.RequestId}");
 
-                //App.Current.Dispatcher.Invoke((System.Action)delegate
-                //{
-                //    DataCollection.Clear();
-                //    //ZLabel = zLabel;
-                //    //Zmin = Math.Round(plotResult.zmin, zDecimalPlaces);
-                //    //Zmax = Math.Round(plotResult.zmax, zDecimalPlaces);
-                //    //ZTick = Math.Round((plotResult.zmax - plotResult.zmin) / 5.0, zTickDecimalPlaces);            
+                App.Current.Dispatcher.Invoke((System.Action)delegate
+                {
+                    DataCollection.Clear();
+                    //ZLabel = zLabel;
+                    //Zmin = Math.Round(plotResult.zmin, zDecimalPlaces);
+                    //Zmax = Math.Round(plotResult.zmax, zDecimalPlaces);
+                    //ZTick = Math.Round((plotResult.zmax - plotResult.zmin) / 5.0, zTickDecimalPlaces);            
 
-                //    DataCollection.Add(new DataSeries3D()
-                //    {
-                //        LineColor = Brushes.Black,
-                //        PointArray = plotResults.PointArray.ToChartablePointArray(),
-                //        XLimitMin = plotResults.XLimitMin,
-                //        YLimitMin = plotResults.YLimitMin,
-                //        XSpacing = plotResults.XSpacing,
-                //        YSpacing = plotResults.YSpacing,
-                //        XNumber = plotResults.XNumber,
-                //        YNumber = plotResults.YNumber
-                //    });
-                //});
+                    DataCollection.Add(new DataSeries3D()
+                    {
+                        LineColor = Brushes.Black,
+                        PointArray = plotResults.PointArray.ToChartablePointArray(),
+                        XLimitMin = plotResults.XLimitMin,
+                        YLimitMin = plotResults.YLimitMin,
+                        XSpacing = plotResults.XSpacing,
+                        YSpacing = plotResults.YSpacing,
+                        XNumber = plotResults.XNumber,
+                        YNumber = plotResults.YNumber
+                    });
+                });
             });
-                    
+
             base.OnActivate();
         }
 
@@ -175,7 +175,7 @@ namespace Shell.Screens.Options
         public void PlotRho() => Plot(OptionGreeks.Rho, "Rho", 0, 0);
         public void PlotVega() => Plot(OptionGreeks.Vega, "Vega", 0, 0);
         private async void Plot(OptionGreeks greekType, string zLabel, int zDecimalPlaces, int zTickDecimalPlaces)
-        {
+        {            
             try
             {
                 string? optionType = OptionInputTable.Rows[0]["Value"].ToString();
@@ -194,6 +194,15 @@ namespace Shell.Screens.Options
             {
                 MessageBox.Show($"Failed to send plot request to backend to price\nReason:'{ex.Message}", "Calulate Plot parameters issue");
             }                        
+        }
+
+        public void AddChart()
+        {
+            DataCollection.Clear();
+            var ds = new DataSeries3D();
+            ds.LineColor = Brushes.Black;
+            ChartFunctions.Peak3D(ds);            
+            DataCollection.Add(ds);
         }
     }
 }
