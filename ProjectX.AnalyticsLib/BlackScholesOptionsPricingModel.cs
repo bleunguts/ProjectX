@@ -123,7 +123,7 @@ namespace ProjectX.Core.Services
                 YNumber = YNumber,
             };
 
-            return new PlotOptionsPricingResult(request.Id, plotResults);
+            return new PlotOptionsPricingResult(request, plotResults);
         }
 
     

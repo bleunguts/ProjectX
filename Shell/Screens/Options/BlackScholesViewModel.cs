@@ -113,28 +113,30 @@ namespace Shell.Screens.Options
 
             _gatewayApiClient.HubConnection.On<PlotOptionsPricingResult>("PlotResults", plotPricingResult =>
             {
-                var plotResults = plotPricingResult.PlotResults;
+                var plotResult = plotPricingResult.PlotResults;
+                var zDecimalPlaces = plotPricingResult.Request.ZDecimalPlaces;
+                var zTickDecimalPlaces = plotPricingResult.Request.ZTickDecimalPlaces;
 
-                Console.WriteLine($"Received Pricing 3D Plot Result: {plotResults.PointArray.Length} coordinates, requestId: {plotPricingResult.RequestId}");
+                Console.WriteLine($"Received Pricing 3D Plot Result: {plotResult.PointArray.Length} coordinates, requestId: {plotPricingResult.RequestId}");
 
                 App.Current.Dispatcher.Invoke((System.Action)delegate
                 {
                     DataCollection.Clear();
-                    //ZLabel = zLabel;
-                    //Zmin = Math.Round(plotResult.zmin, zDecimalPlaces);
-                    //Zmax = Math.Round(plotResult.zmax, zDecimalPlaces);
-                    //ZTick = Math.Round((plotResult.zmax - plotResult.zmin) / 5.0, zTickDecimalPlaces);            
+                    ZLabel = zLabel;
+                    Zmin = Math.Round(plotResult.zmin, zDecimalPlaces);
+                    Zmax = Math.Round(plotResult.zmax, zDecimalPlaces);
+                    ZTick = Math.Round((plotResult.zmax - plotResult.zmin) / 5.0, zTickDecimalPlaces);            
 
                     DataCollection.Add(new DataSeries3D()
                     {
                         LineColor = Brushes.Black,
-                        PointArray = plotResults.PointArray.ToChartablePointArray(),
-                        XLimitMin = plotResults.XLimitMin,
-                        YLimitMin = plotResults.YLimitMin,
-                        XSpacing = plotResults.XSpacing,
-                        YSpacing = plotResults.YSpacing,
-                        XNumber = plotResults.XNumber,
-                        YNumber = plotResults.YNumber
+                        PointArray = plotResult.PointArray.ToChartablePointArray(),
+                        XLimitMin = plotResult.XLimitMin,
+                        YLimitMin = plotResult.YLimitMin,
+                        XSpacing = plotResult.XSpacing,
+                        YSpacing = plotResult.YSpacing,
+                        XNumber = plotResult.XNumber,
+                        YNumber = plotResult.YNumber
                     });
                 });
             });
