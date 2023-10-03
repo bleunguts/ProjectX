@@ -22,6 +22,7 @@ namespace Shell
         Task SubmitPricingRequest(OptionsPricingByMaturitiesRequest pricingRequest, CancellationToken cancellationToken);
         Task StartHubAsync();
         Task StopHubAsync();
+        Task SubmitPlotRequest(PlotOptionsPricingRequest request, CancellationToken token);
     }
 
     [Export(typeof(IGatewayApiClient)), PartCreationPolicy(CreationPolicy.NonShared)]
@@ -50,15 +51,21 @@ namespace Shell
         public HubConnection HubConnection => _hubConnector.Connection;
         public async Task StartHubAsync() => await _hubConnector.Start();
         public async Task StopHubAsync() => await _hubConnector.Stop();
-
-        public async Task SubmitPricingRequest(OptionsPricingByMaturitiesRequest pricingRequest, CancellationToken cancellationToken)
+        public async Task SubmitPlotRequest(PlotOptionsPricingRequest pricingRequest, CancellationToken token)
+        {            
+            await Submit<PlotOptionsPricingRequest>(pricingRequest, "PricingTasks/blackScholesPlotParameters", token);
+        }
+        public async Task SubmitPricingRequest(OptionsPricingByMaturitiesRequest optionsPricingByMaturitiesRequest, CancellationToken cancellationToken)
+        {            
+            await Submit<OptionsPricingByMaturitiesRequest>(optionsPricingByMaturitiesRequest, "PricingTasks/blackScholesPricer", cancellationToken);
+        }
+        private async Task<object> Submit<T>(T pricingRequest, string endPoint, CancellationToken cancellationToken)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, "PricingTasks")
-            {                
-                Content = new StringContent(JsonSerializer.Serialize(pricingRequest), Encoding.UTF8, "application/json")
+            var request = new HttpRequestMessage(HttpMethod.Post, endPoint)
+            {
+                Content = new StringContent(JsonSerializer.Serialize<T>(pricingRequest), Encoding.UTF8, "application/json")
             };
-
-            using var response = await _httpClient.SendAsync(request, cancellationToken);
+            var response = await _httpClient.SendAsync(request, cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -66,6 +73,8 @@ namespace Shell
                 _logger.LogWarning($"Failed to send request. {request.Method} {request.RequestUri} failed with content: {content}");
                 throw new ApplicationException($"{request.Method} {request.RequestUri} failed with content: {content}");
             }
-        }        
+
+            return response;
+        }         
     }
 }

@@ -143,19 +143,28 @@ namespace Shell.Screens.Options
         public void PlotTheta() => Plot(OptionGreeks.Theta, "Theta", 0, 0);
         public void PlotRho() => Plot(OptionGreeks.Rho, "Rho", 0, 0);
         public void PlotVega() => Plot(OptionGreeks.Vega, "Vega", 0, 0);
-        private void Plot(OptionGreeks greekType, string zLabel, int zDecimalPlaces, int zTickDecimalPlaces)
+        private async void Plot(OptionGreeks greekType, string zLabel, int zDecimalPlaces, int zTickDecimalPlaces)
         {
-            // TODO: Implemnt PlotGreeksRequest
-            //ZLabel = zLabel;
+            try
+            {
+                string? optionType = OptionInputTable.Rows[0]["Value"].ToString();
+                double spot = Convert.ToDouble(OptionInputTable.Rows[1]["Value"]);
+                double strike = Convert.ToDouble(OptionInputTable.Rows[2]["Value"]);
+                double rate = Convert.ToDouble(OptionInputTable.Rows[3]["Value"]);
+                double carry = Convert.ToDouble(OptionInputTable.Rows[4]["Value"]);
+                double vol = Convert.ToDouble(OptionInputTable.Rows[5]["Value"]);
+                var request = new PlotOptionsPricingRequest(optionType!.ToOptionType(), strike, rate, carry, vol);
+                await _gatewayApiClient.SubmitPlotRequest(request, _cts.Token);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to send plot request to backend to price\nReason:'{ex.Message}", "Calulate Plot parameters issue");
+            }
 
-            //string? optionType = OptionInputTable.Rows[0]["Value"].ToString();
-            //double spot = Convert.ToDouble(OptionInputTable.Rows[1]["Value"]);
-            //double strike = Convert.ToDouble(OptionInputTable.Rows[2]["Value"]);
-            //double rate = Convert.ToDouble(OptionInputTable.Rows[3]["Value"]);
-            //double carry = Convert.ToDouble(OptionInputTable.Rows[4]["Value"]);
-            //double vol = Convert.ToDouble(OptionInputTable.Rows[5]["Value"]);
+
             //var plotResult = _blackScholesPricerService.PlotGreeks(greekType, optionType.ToOptionType(), strike, rate, carry, vol);
 
+            //ZLabel = zLabel;
             //Zmin = Math.Round(plotResult.zmin, zDecimalPlaces);
             //Zmax = Math.Round(plotResult.zmax, zDecimalPlaces);
             //ZTick = Math.Round((plotResult.zmax - plotResult.zmin) / 5.0, zTickDecimalPlaces);
