@@ -12,7 +12,7 @@ namespace ProjectX.Core.Services
 {
     public interface IBlackScholesOptionsPricingModel
     {        
-        PlotResults PlotGreeks(PlotOptionsPricingRequest pricingRequest);
+        PlotOptionsPricingResult PlotGreeks(PlotOptionsPricingRequest pricingRequest);
         OptionsPricingByMaturityResults Price(OptionsPricingByMaturitiesRequest request);
     }
 
@@ -55,9 +55,9 @@ namespace ProjectX.Core.Services
             return new OptionsPricingByMaturityResults(request.Id, temp);            
         }
 
-        public PlotResults PlotGreeks(PlotOptionsPricingRequest pricingRequest)
+        public PlotOptionsPricingResult PlotGreeks(PlotOptionsPricingRequest request)
         {
-            (OptionGreeks greekType, OptionType optionType, double strike, double rate, double carry, double vol) = pricingRequest;
+            (OptionGreeks greekType, OptionType optionType, double strike, double rate, double carry, double vol) = request;
             double xmin = 0.1;
             double xmax = 3.0;
             double ymin = 10;
@@ -110,7 +110,7 @@ namespace ProjectX.Core.Services
                     }
                 }
             }
-            return new PlotResults
+            var plotResults = new PlotResults
             {
                 PointArray = pts,
                 zmin = zmin,
@@ -122,6 +122,8 @@ namespace ProjectX.Core.Services
                 XNumber = XNumber,
                 YNumber = YNumber,
             };
+
+            return new PlotOptionsPricingResult(request.Id, plotResults);
         }
 
     

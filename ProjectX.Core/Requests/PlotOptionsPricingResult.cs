@@ -2,8 +2,11 @@
 {
     public class PlotOptionsPricingResult : OptionsPricingResultsBase
     {
-        public PlotOptionsPricingResult(Guid RequestId) : base(RequestId)
+        public PlotResults PlotResults { get; }
+        public PlotOptionsPricingResult(Guid RequestId, PlotResults plotResults) : base(RequestId)
         {
+            PlotResults = plotResults;
         }
+
     }
 }
