@@ -55,9 +55,9 @@ namespace Shell.Screens.Options
         private DataTable optionInputTable = new();
         private DataTable optionTable = new();
         private double zmin = 0;
-        private double zmax = 0;
+        private double zmax = 1;
         private string zLabel = string.Empty;
-        private double zTick = 0;
+        private double zTick = 0.2;
         private CancellationTokenSource _cts = new();
 
         public BindableCollection<DataSeries3D> DataCollection { get; set; } = new BindableCollection<DataSeries3D>();        
@@ -198,7 +198,7 @@ namespace Shell.Screens.Options
             }                        
         }
 
-        public void AddChart()
+        public void AddDummyChart()
         {
             DataCollection.Clear();
             var ds = new DataSeries3D();
