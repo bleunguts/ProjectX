@@ -1,20 +1,15 @@
 ﻿using Caliburn.Micro;
 using Chart3DControl;
 using Microsoft.AspNetCore.SignalR.Client;
-using Newtonsoft.Json;
 using ProjectX.Core;
 using ProjectX.Core.Requests;
 using ProjectX.Core.Services;
 using System;
 using System.ComponentModel.Composition;
 using System.Data;
-using System.Data.Common;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media;
-using System.Windows.Threading;
 
 namespace Shell.Screens.Options
 {
@@ -100,9 +95,8 @@ namespace Shell.Screens.Options
             base.OnActivate();
 
             await _gatewayApiClient.StartHubAsync();
-            _gatewayApiClient.HubConnection.On<string>("PricingResults", pricingResultJson =>
-            {
-                var pricingResult = JsonConvert.DeserializeObject<OptionsPricingResults>(pricingResultJson);
+            _gatewayApiClient.HubConnection.On<OptionsPricingResults>("PricingResults", pricingResult =>
+            {                
                 Console.WriteLine($"Received Pricing Result: {pricingResult.ResultsCount} results, requestId: {pricingResult.RequestId}");
                 App.Current.Dispatcher.Invoke((System.Action)delegate
                 {                   

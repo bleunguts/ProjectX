@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using Newtonsoft.Json;
 using ProjectX.Core.Services;
-using System.Net.Http.Json;
-using System.Text.Json.Serialization;
 
 namespace ProjectX.GatewayAPI.Controllers
 {
@@ -29,9 +26,8 @@ namespace ProjectX.GatewayAPI.Controllers
         [HttpPost]
         public async Task PricingResultsTaskCompletedAsync(OptionsPricingResults results)
         {
-            _logger.LogInformation($"PricingResults TaskCompleted for RequestId:{results.RequestId}, {results.ResultsCount} sets of option results");
-            var json = JsonConvert.SerializeObject(results);
-            await _hubContext.Clients.All.SendAsync("PricingResults", json);                                
+            _logger.LogInformation($"PricingResults TaskCompleted for RequestId:{results.RequestId}, {results.ResultsCount} sets of option results");            
+            await _hubContext.Clients.All.SendAsync("PricingResults", results);                                
         }
     }
 }
