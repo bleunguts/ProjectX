@@ -45,7 +45,7 @@ public class PricingResultsApiClient : IPricingResultsApiClient
 
         if (!response.IsSuccessStatusCode)
         {
-            _logger.LogWarning("Failed to send match result.");
+            _logger.LogWarning("Failed to send pricing result.");
         }
 
         return response;

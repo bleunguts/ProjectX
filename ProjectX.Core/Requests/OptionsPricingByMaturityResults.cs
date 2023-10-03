@@ -19,9 +19,9 @@ namespace ProjectX.Core.Requests
         }
         public MaturityAndOptionGreeksResultPair this[int index] => Results[index];        
     
-        public OptionsPricingByMaturityResults(Guid RequestId, List<MaturityAndOptionGreeksResultPair> maturityAndOptionGreeksResultPairs) : base(RequestId)
+        public OptionsPricingByMaturityResults(Guid RequestId, List<MaturityAndOptionGreeksResultPair> results) : base(RequestId)
         {
-            Results = maturityAndOptionGreeksResultPairs;
+            Results = results;
         }
 
         public override string ToString() => $"{ResultsCount} results";       
