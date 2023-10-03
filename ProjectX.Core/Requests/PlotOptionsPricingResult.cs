@@ -7,6 +7,5 @@
         {
             PlotResults = plotResults;
         }
-
     }
 }

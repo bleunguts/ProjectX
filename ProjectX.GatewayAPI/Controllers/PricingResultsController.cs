@@ -34,7 +34,7 @@ namespace ProjectX.GatewayAPI.Controllers
         public void PricingResultsPlotTaskCompletedAsync(PlotOptionsPricingResult results)
         {
             _logger.LogInformation($"OptionsPricingResults bsPlot TaskCompleted. RequestId:{results.RequestId}");
-            _hubContext.Clients.All.PricingResults(results);
+            _hubContext.Clients.All.PlotResults(results);
         }
 
     }

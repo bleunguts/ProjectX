@@ -4,7 +4,7 @@ using ProjectX.Core.Requests;
 public interface IStreamHub
 {
     Task PricingResults(OptionsPricingByMaturityResults results);    
-    Task PricingResults(PlotOptionsPricingResult results);    
+    Task PlotResults(PlotOptionsPricingResult results);    
 }
 
 public class StreamHub : Hub<IStreamHub>
@@ -14,8 +14,8 @@ public class StreamHub : Hub<IStreamHub>
         Clients.All.PricingResults(results);
     }
 
-    public void OptionsPricingResultsReceived2(PlotOptionsPricingResult results)
+    public void OptionsPricingPlotResultsReceived(PlotOptionsPricingResult results)
     {
-        Clients.All.PricingResults(results);
+        Clients.All.PlotResults(results);
     }
 }

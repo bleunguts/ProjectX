@@ -9,6 +9,7 @@ using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace Shell.Screens.Options
 {
@@ -108,6 +109,35 @@ namespace Shell.Screens.Options
                     }
                 });                
             });
+
+            _gatewayApiClient.HubConnection.On<PlotOptionsPricingResult>("PlotResults", plotPricingResult =>
+            {
+                var plotResults = plotPricingResult.PlotResults;
+
+                Console.WriteLine($"Received Pricing 3D Plot Result: {plotResults.PointArray.Length} coordinates, requestId: {plotPricingResult.RequestId}");
+
+                App.Current.Dispatcher.Invoke((System.Action)delegate
+                {
+                    DataCollection.Clear();
+                    //ZLabel = zLabel;
+                    //Zmin = Math.Round(plotResult.zmin, zDecimalPlaces);
+                    //Zmax = Math.Round(plotResult.zmax, zDecimalPlaces);
+                    //ZTick = Math.Round((plotResult.zmax - plotResult.zmin) / 5.0, zTickDecimalPlaces);            
+
+                    DataCollection.Add(new DataSeries3D()
+                    {
+                        LineColor = Brushes.Black,
+                        PointArray = plotResults.PointArray.ToChartablePointArray(),
+                        XLimitMin = plotResults.XLimitMin,
+                        YLimitMin = plotResults.YLimitMin,
+                        XSpacing = plotResults.XSpacing,
+                        YSpacing = plotResults.YSpacing,
+                        XNumber = plotResults.XNumber,
+                        YNumber = plotResults.YNumber
+                    });
+                });
+            });
+                    
             base.OnActivate();
         }
 
@@ -162,24 +192,7 @@ namespace Shell.Screens.Options
             catch (Exception ex)
             {
                 MessageBox.Show($"Failed to send plot request to backend to price\nReason:'{ex.Message}", "Calulate Plot parameters issue");
-            }            
-
-            //ZLabel = zLabel;
-            //Zmin = Math.Round(plotResult.zmin, zDecimalPlaces);
-            //Zmax = Math.Round(plotResult.zmax, zDecimalPlaces);
-            //ZTick = Math.Round((plotResult.zmax - plotResult.zmin) / 5.0, zTickDecimalPlaces);
-            //DataCollection.Clear();
-            //DataCollection.Add(new DataSeries3D()
-            //{
-            //    LineColor = Brushes.Black,
-            //    PointArray = plotResult.PointArray.ToChartablePointArray(),
-            //    XLimitMin = plotResult.XLimitMin,
-            //    YLimitMin = plotResult.YLimitMin,
-            //    XSpacing = plotResult.XSpacing,
-            //    YSpacing = plotResult.YSpacing,
-            //    XNumber = plotResult.XNumber,
-            //    YNumber = plotResult.YNumber
-            //});
+            }                        
         }
     }
 }
