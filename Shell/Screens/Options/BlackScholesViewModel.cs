@@ -3,7 +3,6 @@ using Chart3DControl;
 using Microsoft.AspNetCore.SignalR.Client;
 using ProjectX.Core;
 using ProjectX.Core.Requests;
-using ProjectX.Core.Services;
 using System;
 using System.ComponentModel.Composition;
 using System.Data;
@@ -97,7 +96,7 @@ namespace Shell.Screens.Options
             _cts = new CancellationTokenSource();
 
             await _gatewayApiClient.StartHubAsync();
-            _gatewayApiClient.HubConnection.On<OptionsPricingResults>("PricingResults", pricingResult =>
+            _gatewayApiClient.HubConnection.On<OptionsPricingByMaturityResults>("PricingResults", pricingResult =>
             {                
                 Console.WriteLine($"Received Pricing Result: {pricingResult.ResultsCount} results, requestId: {pricingResult.RequestId}");
                 App.Current.Dispatcher.Invoke((System.Action)delegate
@@ -130,7 +129,7 @@ namespace Shell.Screens.Options
                 double rate = Convert.ToDouble(OptionInputTable.Rows[3]["Value"]);
                 double carry = Convert.ToDouble(OptionInputTable.Rows[4]["Value"]);
                 double vol = Convert.ToDouble(OptionInputTable.Rows[5]["Value"]);
-                var request = new MultipleTimeslicesOptionsPricingRequest(10, optionType.ToOptionType(), spot, strike, rate, carry, vol);
+                var request = new OptionsPricingByMaturitiesRequest(10, optionType.ToOptionType(), spot, strike, rate, carry, vol);
                 await _gatewayApiClient.SubmitPricingRequest(request, _cts.Token);                                            
             }
             catch (Exception ex)

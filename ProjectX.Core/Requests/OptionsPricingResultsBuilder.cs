@@ -18,9 +18,9 @@ namespace ProjectX.Core.Services
             _results.Add(new MaturityAndOptionGreeksResultPair(maturity, greeks));
         } 
 
-        public OptionsPricingResults Build()
+        public OptionsPricingByMaturityResults Build()
         {            
-            return new OptionsPricingResults(_request.Id, _results);
+            return new OptionsPricingByMaturityResults(_request.Id, _results);
         }
     }
 }

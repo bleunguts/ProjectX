@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
 using System.Text;
-using ProjectX.Core.Services;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Builder.Extensions;
+using ProjectX.Core.Requests;
 
 namespace ProjectX.GatewayAPI.ExternalServices;
 
@@ -25,7 +25,7 @@ public class PricingResultsApiClient : IPricingResultsApiClient
         _httpClient.BaseAddress = new Uri(endpointAddress);
     }
 
-    public async Task PostResultAsync(OptionsPricingResults result, CancellationToken cancellationToken = default)
+    public async Task PostResultAsync(OptionsPricingByMaturityResults result, CancellationToken cancellationToken = default)
     {
         var request = new HttpRequestMessage(HttpMethod.Post, "PricingResults")
         {

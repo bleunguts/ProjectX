@@ -11,7 +11,7 @@ namespace ProjectX.Core.Tests
         [Test]
         public async Task WhenPricingBlackScholesOptionItShouldReturnValidResultsAsync()
         {
-            var request = new MultipleTimeslicesOptionsPricingRequest(10, OptionType.Call, 100.0, 150.0, 1.0, 1.0, 0.3);
+            var request = new OptionsPricingByMaturitiesRequest(10, OptionType.Call, 100.0, 150.0, 1.0, 1.0, 0.3);
             
             Console.WriteLine($"JSON={JsonConvert.SerializeObject(request)}");
             var actual = _sut.Price(request);

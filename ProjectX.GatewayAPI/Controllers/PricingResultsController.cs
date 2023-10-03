@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using ProjectX.Core.Services;
+using ProjectX.Core.Requests;
 
 namespace ProjectX.GatewayAPI.Controllers
 {
@@ -24,7 +24,7 @@ namespace ProjectX.GatewayAPI.Controllers
         }
 
         [HttpPost]
-        public void PricingResultsTaskCompletedAsync(OptionsPricingResults results)
+        public void PricingResultsTaskCompletedAsync(OptionsPricingByMaturityResults results)
         {
             _logger.LogInformation($"OptionsPricingResults TaskCompleted. RequestId:{results.RequestId}, There  are {results.ResultsCount} option results and maturity pairs");
             _hubContext.Clients.All.PricingResults(results);

@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using ProjectX.Core.Services;
+using ProjectX.Core.Requests;
 
 public interface IStreamHub
 {
-    Task PricingResults(OptionsPricingResults results);    
+    Task PricingResults(OptionsPricingByMaturityResults results);    
 }
 
 public class StreamHub : Hub<IStreamHub>
 {
-    public void OptionsPricingResultsReceived(OptionsPricingResults results)
+    public void OptionsPricingResultsReceived(OptionsPricingByMaturityResults results)
     {
         Clients.All.PricingResults(results);
     }

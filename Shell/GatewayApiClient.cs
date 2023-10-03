@@ -19,7 +19,7 @@ namespace Shell
     public interface IGatewayApiClient
     {
         HubConnection HubConnection { get; }
-        Task SubmitPricingRequest(MultipleTimeslicesOptionsPricingRequest pricingRequest, CancellationToken cancellationToken);
+        Task SubmitPricingRequest(OptionsPricingByMaturitiesRequest pricingRequest, CancellationToken cancellationToken);
         Task StartHubAsync();
         Task StopHubAsync();
     }
@@ -51,7 +51,7 @@ namespace Shell
         public async Task StartHubAsync() => await _hubConnector.Start();
         public async Task StopHubAsync() => await _hubConnector.Stop();
 
-        public async Task SubmitPricingRequest(MultipleTimeslicesOptionsPricingRequest pricingRequest, CancellationToken cancellationToken)
+        public async Task SubmitPricingRequest(OptionsPricingByMaturitiesRequest pricingRequest, CancellationToken cancellationToken)
         {
             var request = new HttpRequestMessage(HttpMethod.Post, "PricingTasks")
             {                

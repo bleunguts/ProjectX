@@ -22,7 +22,7 @@ namespace ProjectX.GatewayAPI.Tests
 
             var channel = new PricingTasksChannel(NullLogger<PricingTasksChannel>.Instance);
 
-            var demoRequests = new MultipleTimeslicesOptionsPricingRequest[]
+            var demoRequests = new OptionsPricingByMaturitiesRequest[]
             {
                 new(10, OptionType.Call, 100.0, 150.0, 1.0, 1.0, 0.3),
                 new(10, OptionType.Put, 100.0, 150.0, 1.0, 1.0, 0.3),
@@ -47,7 +47,7 @@ namespace ProjectX.GatewayAPI.Tests
         {
             public int ExecutionCount { get; set; } = 0;
 
-            public Task Process(MultipleTimeslicesOptionsPricingRequest multipleTimeslicesOptionsPricingRequest, CancellationToken cancellationToken = default)
+            public Task Process(OptionsPricingByMaturitiesRequest multipleTimeslicesOptionsPricingRequest, CancellationToken cancellationToken = default)
             {
                 ExecutionCount++;
                 return Task.CompletedTask;

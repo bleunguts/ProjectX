@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ProjectX.Core.Requests
+﻿namespace ProjectX.Core.Requests
 {
-    public class MultipleTimeslicesOptionsPricingRequest : IRequest
+    public class OptionsPricingByMaturitiesRequest : IRequest
     {
         public Guid Id { get; }
         public int TimeSlices { get; }
@@ -17,7 +11,7 @@ namespace ProjectX.Core.Requests
         public double Carry { get; }
         public double Vol { get; }
 
-        public MultipleTimeslicesOptionsPricingRequest(int timeSlices, OptionType optionType, double spot, double strike, double rate, double carry, double vol)
+        public OptionsPricingByMaturitiesRequest(int timeSlices, OptionType optionType, double spot, double strike, double rate, double carry, double vol)
         {
             TimeSlices = timeSlices;
             OptionType = optionType;

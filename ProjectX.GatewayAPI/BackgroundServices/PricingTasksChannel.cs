@@ -7,20 +7,20 @@ public class PricingTasksChannel
 {
     private const int MaxMessagesInChannel = 200;
     private readonly ILogger<PricingTasksChannel> _logger;
-    private Channel<MultipleTimeslicesOptionsPricingRequest> _channel;    
+    private Channel<OptionsPricingByMaturitiesRequest> _channel;    
     public PricingTasksChannel(ILogger<PricingTasksChannel> logger)
     {
         _logger = logger;
-        _channel = Channel.CreateBounded<MultipleTimeslicesOptionsPricingRequest>(new BoundedChannelOptions(MaxMessagesInChannel)
+        _channel = Channel.CreateBounded<OptionsPricingByMaturitiesRequest>(new BoundedChannelOptions(MaxMessagesInChannel)
         {
             SingleWriter = true,
             SingleReader = true
         });
     }
-    public IAsyncEnumerable<MultipleTimeslicesOptionsPricingRequest> ReadAllAsync(CancellationToken ct = default) => _channel.Reader.ReadAllAsync(ct);
-    public ChannelReader<MultipleTimeslicesOptionsPricingRequest> Reader => _channel.Reader;
+    public IAsyncEnumerable<OptionsPricingByMaturitiesRequest> ReadAllAsync(CancellationToken ct = default) => _channel.Reader.ReadAllAsync(ct);
+    public ChannelReader<OptionsPricingByMaturitiesRequest> Reader => _channel.Reader;
 
-    public async Task<bool> SendRequestAsync(MultipleTimeslicesOptionsPricingRequest request)
+    public async Task<bool> SendRequestAsync(OptionsPricingByMaturitiesRequest request)
     {
         while (await _channel.Writer.WaitToWriteAsync())
         {

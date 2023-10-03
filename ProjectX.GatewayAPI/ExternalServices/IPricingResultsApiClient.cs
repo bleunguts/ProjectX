@@ -1,9 +1,9 @@
-﻿using ProjectX.Core.Services;
+﻿using ProjectX.Core.Requests;
 
 namespace ProjectX.GatewayAPI.ExternalServices
 {
     public interface IPricingResultsApiClient
     {
-        Task PostResultAsync(OptionsPricingResults result, CancellationToken cancellationToken = default);
+        Task PostResultAsync(OptionsPricingByMaturityResults result, CancellationToken cancellationToken = default);
     }
 }

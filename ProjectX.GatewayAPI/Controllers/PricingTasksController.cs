@@ -24,7 +24,7 @@ namespace ProjectX.GatewayAPI.Controllers
         }
 
         [HttpPost]
-        public async Task BlackScholesPricingRequestAsync(MultipleTimeslicesOptionsPricingRequest request)
+        public async Task BlackScholesPricingRequestAsync(OptionsPricingByMaturitiesRequest request)
         {
             _logger.LogInformation($"Pricing Request recieved: {request}");            
             try

@@ -13,13 +13,13 @@ namespace ProjectX.Core.Services
     public interface IBlackScholesOptionsPricingModel
     {
         PlotResults PlotGreeks(OptionGreeks greekType, OptionType optionType, double strike, double rate, double carry, double vol);
-        OptionsPricingResults Price(MultipleTimeslicesOptionsPricingRequest request);
+        OptionsPricingByMaturityResults Price(OptionsPricingByMaturitiesRequest request);
     }
 
     [Export(typeof(IBlackScholesOptionsPricingModel)), PartCreationPolicy(CreationPolicy.NonShared)]    
     public class BlackScholesOptionsPricingModel : IBlackScholesOptionsPricingModel
     {
-        public OptionsPricingResults Price(MultipleTimeslicesOptionsPricingRequest request)
+        public OptionsPricingByMaturityResults Price(OptionsPricingByMaturitiesRequest request)
         {
             (int timeSlices, OptionType optionType, double spot, double strike, double rate, double carry, double vol) = request;
 

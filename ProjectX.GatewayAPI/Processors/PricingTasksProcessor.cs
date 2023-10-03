@@ -10,7 +10,7 @@ namespace ProjectX.GatewayAPI.Processors
         private readonly ILogger<PricingTasksProcessor> _logger;
         private readonly IBlackScholesOptionsPricingModel _pricingModel;
         private readonly IPricingResultsApiClient _pricingResultsApiClient;
-        private readonly ConcurrentDictionary<Guid, OptionsPricingResults> _responses = new ConcurrentDictionary<Guid, OptionsPricingResults>();
+        private readonly ConcurrentDictionary<Guid, OptionsPricingByMaturityResults> _responses = new ConcurrentDictionary<Guid, OptionsPricingByMaturityResults>();
 
         public PricingTasksProcessor(ILogger<PricingTasksProcessor> logger, 
             IBlackScholesOptionsPricingModel pricingModel,
@@ -20,11 +20,11 @@ namespace ProjectX.GatewayAPI.Processors
             this._pricingModel = pricingModel;
             this._pricingResultsApiClient = pricingResultsApiClient;
         }
-        public Task Process(MultipleTimeslicesOptionsPricingRequest pricingRequest, CancellationToken cancellationToken)
+        public Task Process(OptionsPricingByMaturitiesRequest pricingRequest, CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Spin off calculator to price RequestId=[{pricingRequest.Id}]");
 
-            return Task.Run<OptionsPricingResults>(() =>
+            return Task.Run<OptionsPricingByMaturityResults>(() =>
             {
                 var pricingResult = _pricingModel.Price(pricingRequest);
                 _logger.LogInformation($"Priced successfully RequestId:{pricingResult.RequestId} ResultsCount:{pricingResult.ResultsCount}");
@@ -32,7 +32,7 @@ namespace ProjectX.GatewayAPI.Processors
             }).ContinueWith(p =>
             {
                 var pricingResult = p.Result;
-                _logger.LogInformation($"Posting Pricing Results to Endpoint ... RequestId:{pricingResult.RequestId} ResultsCount:{pricingResult.ResultsCount}, maturities: {pricingResult.Maturities()}, prices: {pricingResult.Prices()}");
+                _logger.LogInformation($"Posting Pricing Results to Endpoint ... RequestId:{pricingResult.RequestId} {pricingResult.Dump()}");
                 _pricingResultsApiClient.PostResultAsync(pricingResult);
             }, cancellationToken);
         }

@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using ProjectX.Core.Services;
+using ProjectX.Core.Requests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace ProjectX.Core.Tests
         [Test]
         public void WhenOptionsPricingResultsIsBeingSerializedAndDeserialiezedThenItShouldNotBlowUp()
         {
-            var obj = new OptionsPricingResults(Guid.NewGuid(), 
+            var obj = new OptionsPricingByMaturityResults(Guid.NewGuid(), 
                 new List<MaturityAndOptionGreeksResultPair> 
                 { 
                     new (1.0, new OptionGreeksResult(1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
@@ -21,7 +21,7 @@ namespace ProjectX.Core.Tests
                 });
             var serialized = JsonConvert.SerializeObject(obj);
             Console.WriteLine($"Json: {serialized}");
-            var deserialized = JsonConvert.DeserializeObject<OptionsPricingResults>(serialized);
+            var deserialized = JsonConvert.DeserializeObject<OptionsPricingByMaturityResults>(serialized);
             Console.WriteLine($"ConvertBack: {deserialized}");
         }
     }
