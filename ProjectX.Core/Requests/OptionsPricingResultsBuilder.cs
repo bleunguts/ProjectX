@@ -5,23 +5,22 @@ namespace ProjectX.Core.Services
     public class OptionsPricingResultsBuilder
     {
         private readonly IRequest _request;
-        private readonly List<(double maturity, OptionGreeksResult greeks)> _results;
+        private readonly List<OptionGreeksPerMaturityResult> _results;
 
         public OptionsPricingResultsBuilder(IRequest request)
         {
             _request = request;
-            _results = new List<(double maturity, OptionGreeksResult greeks)>();
+            _results = new List<OptionGreeksPerMaturityResult>();
         }
 
         public void AddResult(double maturity, OptionGreeksResult greeks)  
         {
-            _results.Add((maturity, greeks));
+            _results.Add(new OptionGreeksPerMaturityResult(maturity, greeks));
         } 
 
         public OptionsPricingResults Build()
-        {
-            List<(double Key, OptionGreeksResult Value)> x = _results.Select(x => (x.maturity, x.greeks)).ToList();
-            return new OptionsPricingResults(_request.Id, x);
+        {            
+            return new OptionsPricingResults(_request.Id, _results);
         }
     }
 }

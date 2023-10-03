@@ -14,10 +14,10 @@ namespace ProjectX.Core.Tests
         public void WhenOptionsPricingResultsIsBeingSerializedAndDeserialiezedThenItShouldNotBlowUp()
         {
             var obj = new OptionsPricingResults(Guid.NewGuid(), 
-                new List<(double maturities, OptionGreeksResult optionGreeks)> 
+                new List<OptionGreeksPerMaturityResult> 
                 { 
-                    (1.0, new OptionGreeksResult(1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
-                    (3.0, new OptionGreeksResult(5.0, 1.0, 1.0, 1.0, 1.0, 5.0)) 
+                    new (1.0, new OptionGreeksResult(1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
+                    new (3.0, new OptionGreeksResult(5.0, 1.0, 1.0, 1.0, 1.0, 5.0)) 
                 });
             var serialized = JsonConvert.SerializeObject(obj);
             Console.WriteLine($"Json: {serialized}");

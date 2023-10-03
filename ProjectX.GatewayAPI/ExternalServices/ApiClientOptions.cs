@@ -1,6 +1,6 @@
 ﻿namespace ProjectX.GatewayAPI.ExternalServices;
 
-public class ProjectXApiClientOptions
+public class ApiClientOptions
 {
     public string BaseAddress { get; set; } = string.Empty;
 }

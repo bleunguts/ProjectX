@@ -17,7 +17,7 @@ builder.Services.AddSingleton<PricingTasksChannel>();
 
 builder.Services.AddOptions();
 IConfiguration config = builder.Configuration;
-builder.Services.Configure<ProjectXApiClientOptions>(options => options.BaseAddress = config.GetSection("ExternalServices")["ProjectXUrl"]);
+builder.Services.Configure<ApiClientOptions>(options => options.BaseAddress = config.GetSection("ExternalServices")["ProjectXUrl"]);
 
 builder.Services.AddHttpClient<IPricingResultsApiClient, PricingResultsApiClient>();
 builder.Services.AddHostedService<PricingTasksService>();

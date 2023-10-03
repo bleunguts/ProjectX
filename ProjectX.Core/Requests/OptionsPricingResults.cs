@@ -4,21 +4,30 @@ using System.Linq;
 
 namespace ProjectX.Core.Services
 {
+    public record OptionGreeksPerMaturityResult(double Maturity, OptionGreeksResult OptionGreeks);
+
     public class OptionsPricingResults
     {
-        private readonly List<(double maturities, OptionGreeksResult optionGreeks)> _results = new List<(double maturities, OptionGreeksResult optionGreeks)>();
-        public List<(double maturities, OptionGreeksResult optionGreeks)> Results => _results;
+        private readonly List<OptionGreeksPerMaturityResult> _results;
+        public List<OptionGreeksPerMaturityResult> Results => _results;
         public Guid RequestId { get; }
-        public int ResultsCount { get; }
-        public (double maturities, OptionGreeksResult optionGreeks) this[int index] => (_results[index]);
-        public OptionsPricingResults(Guid requestId, List<(double maturities, OptionGreeksResult optionGreeks)> results)
+
+        public int ResultsCount 
+        {
+            get
+            {
+                if (_results == null) return 0;
+                return _results.Count;
+            }
+        }
+        public OptionGreeksPerMaturityResult this[int index] => _results[index];
+        public OptionsPricingResults(Guid requestId, List<OptionGreeksPerMaturityResult> results)
         {
             RequestId = requestId;
-            ResultsCount = results == null ? 0 : results.Count();
-            _results = results ?? new List<(double maturities, OptionGreeksResult optionGreeks)>();
+            _results = results;
         }
-        public string Maturities() => string.Join(',', _results.Select(x => x.maturities));
-        public string Prices() => string.Join(',', _results.Select(x => x.optionGreeks.price));
+        public string Maturities() => string.Join(',', _results.Select((Func<OptionGreeksPerMaturityResult, double>)(x => x.Maturity)));
+        public string Prices() => string.Join(',', _results.Select((Func<OptionGreeksPerMaturityResult, double>)(x => x.OptionGreeks.price)));
         public override string ToString() => $"{ResultsCount} results, maturties: {Maturities()}, prices: {Prices()}";
     } 
 }

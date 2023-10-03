@@ -28,17 +28,14 @@ namespace ProjectX.GatewayAPI.Processors
             {
                 var pricingResult = _pricingModel.Price(pricingRequest);
                 _logger.LogInformation($"Priced successfully RequestId:{pricingResult.RequestId} ResultsCount:{pricingResult.ResultsCount}");
+
+                _logger.LogInformation($"Posting Pricing Results to Endpoint ... RequestId:{pricingResult.RequestId} ResultsCount:{pricingResult.ResultsCount}, maturities: {pricingResult.Maturities()}, prices: {pricingResult.Prices()}");
+                _pricingResultsApiClient.PostResultAsync(pricingResult);
                 return pricingResult;
             });
-
             pricingTask.Start();
-            pricingTask.ContinueWith((results) =>
-            {
-                var pricingResult = results.Result;
-                _logger.LogInformation($"Posting Pricing Results to Endpoint ... RequestId:{pricingResult.RequestId} ResultsCount:{pricingResult.ResultsCount}, maturities: {pricingResult.Maturities()}, prices: {pricingResult.Prices()}");
-                _pricingResultsApiClient.PostResultAsync(pricingResult);  
-            });
-            return pricingTask;
+
+            return Task.CompletedTask;
         }
     }
 }

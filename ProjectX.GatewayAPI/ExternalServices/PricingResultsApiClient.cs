@@ -13,7 +13,7 @@ public class PricingResultsApiClient : IPricingResultsApiClient
 
     public PricingResultsApiClient(HttpClient httpClient, 
         ILogger<PricingResultsApiClient> logger, 
-        IOptions<ProjectXApiClientOptions> options)
+        IOptions<ApiClientOptions> options)
     {
         this._httpClient = httpClient;
         this._logger = logger;

@@ -17,8 +17,8 @@ namespace ProjectX.Core.Tests
             var actual = _sut.Price(request);
             Assert.That(actual, Is.Not.Null);            
             Assert.That(actual.ResultsCount, Is.EqualTo(10));
-            Assert.That(actual[0].maturities, Is.EqualTo(0.1));
-            Assert.That(actual[0].optionGreeks.price, Is.Not.EqualTo(0));           
+            Assert.That(actual[0].Maturity, Is.EqualTo(0.1));
+            Assert.That(actual[0].OptionGreeks.price, Is.Not.EqualTo(0));           
         }
 
         [Test]

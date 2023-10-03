@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using Chart3DControl;
 using Microsoft.AspNetCore.SignalR.Client;
+using Newtonsoft.Json;
 using ProjectX.Core;
 using ProjectX.Core.Requests;
 using ProjectX.Core.Services;
@@ -8,6 +9,7 @@ using System;
 using System.ComponentModel.Composition;
 using System.Data;
 using System.Data.Common;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -98,14 +100,17 @@ namespace Shell.Screens.Options
             base.OnActivate();
 
             await _gatewayApiClient.StartHubAsync();
-            _gatewayApiClient.HubConnection.On<int>("PricingResults", r =>
+            _gatewayApiClient.HubConnection.On<string>("PricingResults", pricingResultJson =>
             {
-                Console.WriteLine($"Received Pricing Result: {r} results");
-
+                var pricingResult = JsonConvert.DeserializeObject<OptionsPricingResults>(pricingResultJson);
+                Console.WriteLine($"Received Pricing Result: {pricingResult.ResultsCount} results, requestId: {pricingResult.RequestId}");
                 App.Current.Dispatcher.Invoke((System.Action)delegate
-                {
+                {                   
                     OptionTable.Clear();
-                    OptionTable.Rows.Add(r, 0, 0, 0, 0, 0, 0);
+                    foreach (var (maturity, riskResult) in pricingResult.Results)
+                    {
+                        OptionTable.Rows.Add(maturity, riskResult.price, riskResult.delta, riskResult.gamma, riskResult.theta, riskResult.rho, riskResult.vega);
+                    }
                 });
 
                 //var channel = await _gatewayApiClient.HubConnection.StreamAsChannelAsync<OptionsPricingResults>("StreamResults", CancellationToken.None);
@@ -113,23 +118,12 @@ namespace Shell.Screens.Options
                 //{
                 //    while (channel.TryRead(out var pricingResult))
                 //    {
-                //        Console.WriteLine($"Received Pricing Result: {pricingResult.ResultsCount} results, requestId: {pricingResult.RequestId}");
-                //        OptionTable.Clear();
-                //        foreach (var (maturity, riskResult) in pricingResult.Results)
-                //        {
-                //            OptionTable.Rows.Add(maturity, riskResult.price, riskResult.delta, riskResult.gamma, riskResult.theta, riskResult.rho, riskResult.vega);
-                //        }
                 //    }
                 //}
 
                 //await foreach(var pricingResult in _gatewayApiClient.HubConnection.StreamAsync<OptionsPricingResults>("PricingResults", cancellationToken))
                 //{
                 //    Console.WriteLine($"Received Pricing Result: {pricingResult.ResultsCount} results, requestId: {pricingResult.RequestId}");                    
-                //    OptionTable.Clear();
-                //    foreach (var (maturity, riskResult) in pricingResult.Results)
-                //    {
-                //        OptionTable.Rows.Add(maturity, riskResult.price, riskResult.delta, riskResult.gamma, riskResult.theta, riskResult.rho, riskResult.vega);
-                //    }
                 //}
             });            
         }
