@@ -26,22 +26,21 @@ namespace Shell
 
     [Export(typeof(IGatewayApiClient)), PartCreationPolicy(CreationPolicy.NonShared)]
     public class GatewayApiClient : IGatewayApiClient
-    {
-        private const string url = "https://localhost:7029";
-
+    {       
         private readonly HttpClient _httpClient;
         private readonly ILogger<GatewayApiClient> _logger;
         private readonly IHubConnector _hubConnector;
 
         [ImportingConstructor]
         public GatewayApiClient(ILogger<GatewayApiClient> logger,
-            IHubConnector hubConnector)
+            IHubConnector hubConnector,
+            IOptions<GatewayApiClientOptions> options)
         {
             _logger = logger;
             _hubConnector = hubConnector;                    
             _httpClient = new HttpClient();
 
-            var endpointAddress = url ?? string.Empty;
+            var endpointAddress = options?.Value?.BaseUrl ?? string.Empty;
 
             if (string.IsNullOrEmpty(endpointAddress))
                 throw new Exception("Invalid API base address");
@@ -49,14 +48,8 @@ namespace Shell
             _httpClient.BaseAddress = new Uri(endpointAddress);
         }
         public HubConnection HubConnection => _hubConnector.Connection;
-
-        public async Task StartHubAsync()
-        {
-            if(_hubConnector.Connection.State != HubConnectionState.Connected)
-            {
-                await _hubConnector.Start();
-            }
-        }
+        public async Task StartHubAsync() => await _hubConnector.Start();
+        public async Task StopHubAsync() => await _hubConnector.Stop();
 
         public async Task SubmitPricingRequest(MultipleTimeslicesOptionsPricingRequest pricingRequest, CancellationToken cancellationToken)
         {
@@ -73,11 +66,6 @@ namespace Shell
                 _logger.LogWarning($"Failed to send request. {request.Method} {request.RequestUri} failed with content: {content}");
                 throw new ApplicationException($"{request.Method} {request.RequestUri} failed with content: {content}");
             }
-        }
-
-        public async Task StopHubAsync()
-        {
-            await _hubConnector.Connection.DisposeAsync();
-        }
+        }        
     }
 }

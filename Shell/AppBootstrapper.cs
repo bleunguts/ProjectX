@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
 using ProjectX.Core.MarketData;
 using ProjectX.Core.Services;
 using System;
@@ -38,9 +39,12 @@ namespace Shell
             
             batch.AddExportedValue<ILogger<FXMarketService>>(new NullLogger<FXMarketService>());
             batch.AddExportedValue<ILogger<eFXTradeExecutionService>>(new NullLogger<eFXTradeExecutionService>());
-            batch.AddExportedValue<ILogger<GatewayApiClient>>(new NullLogger<GatewayApiClient>());            
+            batch.AddExportedValue<ILogger<GatewayApiClient>>(new NullLogger<GatewayApiClient>());
 
-            batch.AddExportedValue<IHubConnector>(new HubConnector("https://localhost:7029"));
+            var options = Microsoft.Extensions.Options.Options.Create(new GatewayApiClientOptions { BaseUrl = "https://localhost:7029" });
+            batch.AddExportedValue<IOptions<GatewayApiClientOptions>>(options);
+
+            //batch.AddExportedValue<IHubConnector>(new HubConnector("https://localhost:7029"));
             batch.AddExportedValue<IFXSpotPriceStream>(new RandomFXSpotPriceStream(2, 500));            
 
             container.Compose(batch);                        

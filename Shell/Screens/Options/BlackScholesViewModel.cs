@@ -48,16 +48,18 @@ namespace Shell.Screens.Options
             OptionInputTable.Rows.Add("Strike", 100, "Strike price");
             OptionInputTable.Rows.Add("Rate", 0.1, "Interest rate");
             OptionInputTable.Rows.Add("Carry", 0.04, "Cost of carry");
-            OptionInputTable.Rows.Add("Vol", 0.3, "Volatility");          
+            OptionInputTable.Rows.Add("Vol", 0.3, "Volatility");            
         }
 
         #region Bindable Properties
-        private DataTable optionInputTable = new DataTable();
-        private DataTable optionTable = new DataTable();
+        private DataTable optionInputTable = new();
+        private DataTable optionTable = new();
         private double zmin = 0;
         private double zmax = 0;
         private string zLabel = string.Empty;
         private double zTick = 0;
+        private CancellationTokenSource _cts = new();
+
         public BindableCollection<DataSeries3D> DataCollection { get; set; } = new BindableCollection<DataSeries3D>();
         public DataTable OptionInputTable
         {
@@ -91,8 +93,8 @@ namespace Shell.Screens.Options
         }
         #endregion
         protected override async void OnActivate()
-        {
-            base.OnActivate();
+        {            
+            _cts = new CancellationTokenSource();
 
             await _gatewayApiClient.StartHubAsync();
             _gatewayApiClient.HubConnection.On<OptionsPricingResults>("PricingResults", pricingResult =>
@@ -106,19 +108,20 @@ namespace Shell.Screens.Options
                         OptionTable.Rows.Add(maturity, riskResult.price, riskResult.delta, riskResult.gamma, riskResult.theta, riskResult.rho, riskResult.vega);
                     }
                 });                
-            });            
+            });
+            base.OnActivate();
         }
 
         protected override async void OnDeactivate(bool close)
         {
             base.OnDeactivate(close);
 
+            _cts.Cancel();
             await _gatewayApiClient.StopHubAsync();
         }
 
         public async Task CalculatePrice()
-        {
-            var cancellationToken = new CancellationToken();
+        {            
             try
             {              
                 string? optionType = OptionInputTable.Rows[0]["Value"].ToString();
@@ -128,7 +131,7 @@ namespace Shell.Screens.Options
                 double carry = Convert.ToDouble(OptionInputTable.Rows[4]["Value"]);
                 double vol = Convert.ToDouble(OptionInputTable.Rows[5]["Value"]);
                 var request = new MultipleTimeslicesOptionsPricingRequest(10, optionType.ToOptionType(), spot, strike, rate, carry, vol);
-                await _gatewayApiClient.SubmitPricingRequest(request, cancellationToken);                                            
+                await _gatewayApiClient.SubmitPricingRequest(request, _cts.Token);                                            
             }
             catch (Exception ex)
             {
