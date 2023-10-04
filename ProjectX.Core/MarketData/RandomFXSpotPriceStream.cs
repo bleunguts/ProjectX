@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Options;
-using ProjectX.Core.Analytics;
 using System.ComponentModel.Composition;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;

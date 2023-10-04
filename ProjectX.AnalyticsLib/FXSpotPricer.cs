@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.Composition;
+﻿using ProjectX.Core;
+using System.ComponentModel.Composition;
 
-namespace ProjectX.Core.Analytics
+namespace ProjectX.AnalyticsLib
 {
+
     [Export(typeof(IFXSpotPricer)), PartCreationPolicy(CreationPolicy.Shared)]
     public class FXSpotPricer : IFXSpotPricer
     {

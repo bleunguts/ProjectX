@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Reactive.Testing;
-using ProjectX.Core.Analytics;
 using ProjectX.Core.MarketData;
 using ProjectX.Core.Requests;
 using System;
@@ -12,6 +11,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Moq;
 
 namespace ProjectX.Core.Tests
 {
@@ -20,7 +20,7 @@ namespace ProjectX.Core.Tests
         private static ILogger<FXMarketService> _logger;
         private static decimal RawSpreadInPips = 2.0M;
         readonly IFXSpotPriceStream _priceGenerator = new RandomFXSpotPriceStream(RawSpreadInPips, 100);
-        readonly IFXSpotPricer _fxPricer = new FXSpotPricer();
+        readonly Mock<IFXSpotPricer> _fxPricer = new Mock<IFXSpotPricer>();
 
         [SetUp]
         public void SetUp()
@@ -37,10 +37,10 @@ namespace ProjectX.Core.Tests
         {
             // arrange
             var recieved = new List<System.Reactive.Timestamped<SpotPriceResponse>>();
-            var errors = new List<Exception>();
+            var errors = new List<Exception>();            
 
             // act
-            FXMarketService _sut = new FXMarketService(_logger, _priceGenerator, _fxPricer);            
+            FXMarketService _sut = new FXMarketService(_logger, _priceGenerator, _fxPricer.Object);            
             var spotPriceEvents = _sut.StreamSpotPricesFor(new SpotPriceRequest("EURUSD", "tests", FXRateMode.Subscribe));
             spotPriceEvents!.Subscribe(recieved.Add,errors.Add);            
             await Task.Delay(950);
@@ -57,7 +57,7 @@ namespace ProjectX.Core.Tests
         public void WhenUnsubscribingFromPriceStreamShouldRemoveFromInternalDictionary()        
         {
             // arrange
-            FXMarketService _sut = new FXMarketService(_logger, _priceGenerator, _fxPricer);
+            FXMarketService _sut = new FXMarketService(_logger, _priceGenerator, _fxPricer.Object);
             _sut.StreamSpotPricesFor(new SpotPriceRequest("EURUSD", "tests", FXRateMode.Subscribe));
             Assert.That(_sut.SpotPriceStreamsFor("EURUSD"), Is.Not.Null);
 

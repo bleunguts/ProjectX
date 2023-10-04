@@ -13,7 +13,6 @@ using System.Collections.Concurrent;
 using System.Reactive.Linq;
 using System.Diagnostics;
 using System.Reactive;
-using ProjectX.Core.Analytics;
 using System.ComponentModel.Composition;
 using ProjectX.Core.Requests;
 
