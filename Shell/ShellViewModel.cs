@@ -59,7 +59,7 @@ namespace Shell
         public void OnClick(object sender)
         {
             Button? btn = sender as Button;
-            var selectedScreen = btn!.Content.ToString();
+            var selectedScreen = btn!.Content.ToString()!.Replace(" ", "");            
            
             Items.Clear();
             var selectedScreens = screens
