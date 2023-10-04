@@ -15,6 +15,8 @@ namespace ProjectX.GatewayAPI.BackgroundServices
         private readonly FXTasksChannel _fxTaskChannel;
         private readonly IFXMarketService _fxMarketService;
 
+        private Dictionary<string, IDisposable> _disposables = new Dictionary<string, IDisposable>(); 
+
         public FXPricingService(ILogger<FXPricingService> logger,
             FXTasksChannel fXTasksChannel,
             IFXMarketService fxMarketService,           
@@ -43,12 +45,21 @@ namespace ProjectX.GatewayAPI.BackgroundServices
                     switch(request.Mode)
                     {
                         case FXRateMode.Subscribe:
-                            _fxMarketService.StreamSpotPricesFor(request)
+                            var disposable = _fxMarketService.StreamSpotPricesFor(request)
                                             .Subscribe(priceResponse => hubContext.Clients.All.PushFxRate(new SpotPriceResult(request.ClientName, priceResponse.Timestamp, priceResponse.Value)));
+                            if(!_disposables.TryAdd(request.CurrencyPair, disposable))
+                            {
+                                _logger.LogWarning($"Disposable stream already added {request.CurrencyPair}");
+                            }
                             break;
                        case FXRateMode.Unsubscribe:
                             _fxMarketService.UnStream(request.CurrencyPair);
-                            hubContext.Clients.All.StopFxRate(request.CurrencyPair);
+                            if(_disposables.TryGetValue(request.CurrencyPair, out IDisposable d))
+                            {
+                                d.Dispose();
+                                _disposables.Remove(request.CurrencyPair);
+                            }
+                            await hubContext.Clients.All.StopFxRate(request.CurrencyPair);
                             break;
                         default:
                             throw new NotSupportedException($"SpotRequest type {request.Mode} is not supported");
