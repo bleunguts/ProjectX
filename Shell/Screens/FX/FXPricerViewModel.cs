@@ -141,8 +141,7 @@ namespace Shell.Screens.FX
                 App.Current.Dispatcher.Invoke((System.Action)delegate
                 {
                     UpdatePrice(fxRate.SpotPriceResponse, fxRate.Timestamp);
-                });
-                AppendStatus($"subscribed to price stream {selectedCurrency} successfully.");
+                });                
             });
 
             _gatewayApiClient.HubConnection.On<string>("StopFxRate", ccyPair =>
@@ -179,6 +178,7 @@ namespace Shell.Screens.FX
             {
                 var selectedCurrency = SelectedCurrency ?? throw new ArgumentNullException(nameof(SelectedCurrency));
                 _gatewayApiClient.SubmitFxRateSubscribeRequest(new SpotPriceRequest(selectedCurrency, ClientName, FXRateMode.Subscribe), _cts.Token);
+                AppendStatus($"subscribed to price stream {selectedCurrency} successfully.");
             }
             catch (Exception ex) 
             {
