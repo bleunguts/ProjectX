@@ -35,7 +35,10 @@
                 <Button Content="Unsubscribe" x:Name="Unsubscribe" Width="80" Margin="0 0 0 4"/>
             </StackPanel>
             <Label Grid.Row="3" Grid.Column="0" Content="Latest Price:" FontWeight="ExtraBold" FontSize="20"/>
-            <Label Grid.Row="3" Grid.Column="1" x:Name="LatestPrice" FontWeight="ExtraBold" FontSize="20" Grid.ColumnSpan="2"/>
+            <StackPanel Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal">
+                <Label x:Name="LatestPrice" FontWeight="ExtraBold" FontSize="20" />
+                <Label x:Name="SpreadInPips" Foreground="Magenta" FontSize="10" VerticalAlignment="Center"/>
+            </StackPanel>
             <Label Grid.Row="4" Grid.Column="1" x:Name="LatestPriceTimeStamp" Content="timestamp" FontStyle="Italic" FontSize="8" MinHeight="20" Grid.ColumnSpan="2"/>
             <Label Grid.Row="5" Grid.Column="0" Content="Quantity:"/>
             <TextBox Grid.Row="5" Grid.Column="1" Height="27" TextAlignment="Center" x:Name="Notional" Width="120" VerticalAlignment="Top" />

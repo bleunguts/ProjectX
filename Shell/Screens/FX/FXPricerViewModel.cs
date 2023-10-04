@@ -69,6 +69,7 @@ namespace Shell.Screens.FX
         private string clientName = "ProjectX Trader";      
         private string _latestPriceTimeStamp = "---";
         private DataTable _positionsTable = new DataTable();
+        private string spreadInPips = string.Empty;
 
         public IEnumerable<string> Currency
         {
@@ -128,6 +129,11 @@ namespace Shell.Screens.FX
             set { _positionsTable = value; NotifyOfPropertyChange(() => PositionsTable); }
         }
 
+        public string SpreadInPips
+        {
+            get { return spreadInPips; }
+            set { spreadInPips = value; NotifyOfPropertyChange(() => SpreadInPips); }
+        }
 
         #endregion
 
@@ -205,8 +211,9 @@ namespace Shell.Screens.FX
                 PriceStream = response.SpotPrice.CurrencyPair;
 
                 App.Current.Dispatcher.Invoke((System.Action)delegate
-                {
+                {                    
                     AddPriceToPricesList(latestPrice);
+                    SpreadInPips = $"({response.SpotPrice.Spread()} pips spread)";
                 });
                 
                 AppendStatus($"New Spot Price arrived at {timestamp.ToLocalTime()} for {response.SpotPrice.CurrencyPair}.");

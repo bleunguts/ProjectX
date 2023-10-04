@@ -23,7 +23,7 @@ namespace ProjectX.Core
     }
     public record SpreadedSpotPriceResponse(SpotPrice SpotPrice, string ClientName, int SpreadInPips) : SpotPriceResponse(SpotPrice, ClientName);
     public record struct SpotPrice(decimal BidPrice, decimal AskPrice, string CurrencyPair, Guid PriceId)
-    {
+    {        
         public SpotPrice(string currencyPair, decimal bidPrice, decimal askPrice) : this(bidPrice, askPrice, currencyPair, Guid.NewGuid())
         {
             CurrencyPair = currencyPair;
