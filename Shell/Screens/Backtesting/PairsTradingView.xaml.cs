@@ -13,11 +13,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Shell.Screens.TradingStrategies;
+namespace Shell.Screens.Backtesting;
 
-public partial class SingleView : UserControl
+public partial class PairsTradingView : UserControl
 {
-    public SingleView()
+    public PairsTradingView()
     {
         InitializeComponent();
     }

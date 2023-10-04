@@ -64,11 +64,11 @@
                         </LinearGradientBrush>
                     </ScrollViewer.Background>
                     <StackPanel x:Name="buttonPanel" Margin="0 10 0 0">
+                        <Button Content="Backtesting" Margin="5,0,5,0" cal:Message.Attach="[Event Click]=[Action OnClick($source)]"/>
+                        <Button Content="MarketPrices" Margin="5,0,5,0" cal:Message.Attach="[Event Click]=[Action OnClick($source)]"/>
                         <Button Content="Options" Margin="5,0,5,0" cal:Message.Attach="[Event Click]=[Action OnClick($source)]"/>
                         <Button Content="FX" Margin="5,0,5,0" cal:Message.Attach="[Event Click]=[Action OnClick($source)]"/>
-                        <Button Content="Fixed Income" Margin="5,0,5,0" cal:Message.Attach="[Event Click]=[Action OnClick($source)]"/>
-                        <Button Content="Market Prices" Margin="5,0,5,0" cal:Message.Attach="[Event Click]=[Action OnClick($source)]"/>
-                        <Button Content="Trading Strategies" Margin="5,0,5,0" cal:Message.Attach="[Event Click]=[Action OnClick($source)]"/>
+                        <Button Content="FixedIncome" Margin="5,0,5,0" cal:Message.Attach="[Event Click]=[Action OnClick($source)]"/>
                     </StackPanel>
                 </ScrollViewer>
                 <TabControl Grid.Column="1" x:Name="Items"/>
