@@ -137,11 +137,18 @@ namespace Shell.Screens.FX
 
             await _gatewayApiClient.StartHubAsync();
             _gatewayApiClient.HubConnection.On<SpotPriceResult>("PushFxRate", fxRate =>
-            {               
-                App.Current.Dispatcher.Invoke((System.Action)delegate
+            {
+                try
                 {
-                    UpdatePrice(fxRate.SpotPriceResponse, fxRate.Timestamp);
-                });                
+                    App.Current.Dispatcher.Invoke((System.Action)delegate
+                        {
+                            UpdatePrice(fxRate.SpotPriceResponse, fxRate.Timestamp);
+                        });
+                }
+                finally
+                {
+
+                } 
             });
 
             _gatewayApiClient.HubConnection.On<string>("StopFxRate", ccyPair =>
@@ -200,7 +207,7 @@ namespace Shell.Screens.FX
                     AddPriceToPricesList(latestPrice);
                 });
                 
-                AppendStatus($"[{DateTime.Now.ToLocalTime()}] New Spot Price arrived at {timestamp.ToLocalTime()} for {response.SpotPrice.CurrencyPair}.");
+                AppendStatus($"New Spot Price arrived at {timestamp.ToLocalTime()} for {response.SpotPrice.CurrencyPair}.");
             }
             catch (Exception exp)
             {

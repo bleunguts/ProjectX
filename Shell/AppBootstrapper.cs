@@ -35,18 +35,11 @@ namespace Shell
             var batch = new CompositionBatch();
             batch.AddExportedValue<IWindowManager>(new WindowManager());
             batch.AddExportedValue<IEventAggregator>(new EventAggregator());
-            batch.AddExportedValue(container);
-            
-            batch.AddExportedValue<ILogger<FXMarketService>>(new NullLogger<FXMarketService>());
+            batch.AddExportedValue(container);                      
             batch.AddExportedValue<ILogger<eFXTradeExecutionService>>(new NullLogger<eFXTradeExecutionService>());
             batch.AddExportedValue<ILogger<GatewayApiClient>>(new NullLogger<GatewayApiClient>());
-
             var options = Microsoft.Extensions.Options.Options.Create(new GatewayApiClientOptions { BaseUrl = "https://localhost:7029" });
-            batch.AddExportedValue<IOptions<GatewayApiClientOptions>>(options);
-
-            //batch.AddExportedValue<IHubConnector>(new HubConnector("https://localhost:7029"));
-            batch.AddExportedValue<IFXSpotPriceStream>(new RandomFXSpotPriceStream(2, 500));            
-
+            batch.AddExportedValue<IOptions<GatewayApiClientOptions>>(options);                                  
             container.Compose(batch);                        
         }
 

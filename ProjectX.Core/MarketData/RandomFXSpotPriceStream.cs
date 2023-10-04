@@ -1,4 +1,5 @@
-﻿using ProjectX.Core.Analytics;
+﻿using Microsoft.Extensions.Options;
+using ProjectX.Core.Analytics;
 using System.ComponentModel.Composition;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
@@ -6,12 +7,23 @@ using System.Reactive.Subjects;
 
 namespace ProjectX.Core.MarketData
 {    
+    public class RandomFXSpotPriceStreamOptions
+    {
+        public decimal RawSpreadInPips { get; set; } = 5;
+        public int IntervalBetweenSends { get; set; } = 1000;
+    }
     public class RandomFXSpotPriceStream : IFXSpotPriceStream
     {
         private readonly decimal _rawSpreadInPips = 2;
         private readonly int _intervalBetweenSends = 2000;
         private Random _random = new Random();
- 
+
+        public RandomFXSpotPriceStream(IOptions<RandomFXSpotPriceStreamOptions> options)
+        {
+            _rawSpreadInPips = options.Value.RawSpreadInPips;
+            _intervalBetweenSends = options.Value.IntervalBetweenSends;
+        }
+
         public RandomFXSpotPriceStream(decimal rawSpreadInPips, int intervalBetweenSends)
         {
             this._rawSpreadInPips = rawSpreadInPips;

@@ -26,7 +26,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 builder.Services.TryAddScoped<IPricingTasksProcessor, PricingTasksProcessor>();
 builder.Services.TryAddScoped<IBlackScholesOptionsPricingModel, BlackScholesOptionsPricingModel>();
 builder.Services.AddSingleton<IFXSpotPricer,FXSpotPricer>();
-builder.Services.AddSingleton<IFXSpotPriceStream>(new RandomFXSpotPriceStream(8, 1000));
+builder.Services.AddSingleton<IFXSpotPriceStream, RandomFXSpotPriceStream>();
 builder.Services.AddSingleton<IFXMarketService, FXMarketService>();
 builder.Services.AddSingleton<PricingTasksChannel>();
 builder.Services.AddSingleton<FXTasksChannel>();
@@ -34,6 +34,11 @@ builder.Services.AddSingleton<FXTasksChannel>();
 builder.Services.AddOptions();
 IConfiguration config = builder.Configuration;
 builder.Services.Configure<ApiClientOptions>(options => options.BaseAddress = config.GetSection("ExternalServices")["ProjectXUrl"]);
+builder.Services.Configure<RandomFXSpotPriceStreamOptions>(options =>
+{
+    options.RawSpreadInPips = Convert.ToDecimal(config.GetSection("FX")["RawSpreadInPips"]);
+    options.IntervalBetweenSends = Convert.ToInt32(config.GetSection("FX")["IntervalBetweenSends"]);
+});
 
 builder.Services.AddHttpClient<IPricingResultsApiClient, PricingResultsApiClient>();
 builder.Services.AddHostedService<PricingTasksService>();
