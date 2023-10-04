@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using ProjectX.Core;
 using System;
 using System.ComponentModel.Composition;
 using System.Text;

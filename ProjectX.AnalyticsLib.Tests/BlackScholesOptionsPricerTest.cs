@@ -4,9 +4,9 @@ using ProjectX.Core.Services;
 
 namespace ProjectX.Core.Tests
 {
-    public class BlackScholesOptionsPricingModelTest
+    public class BlackScholesOptionsPricerTest
     {
-        private readonly BlackScholesOptionsPricingModel _sut = new BlackScholesOptionsPricingModel();
+        private readonly BlackScholesOptionsPricer _sut = new BlackScholesOptionsPricer();
 
         [Test]
         public async Task WhenPricingBlackScholesOptionItShouldReturnValidResultsAsync()

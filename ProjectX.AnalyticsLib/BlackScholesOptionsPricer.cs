@@ -17,7 +17,7 @@ namespace ProjectX.Core.Services
     }
 
     [Export(typeof(IBlackScholesOptionsPricingModel)), PartCreationPolicy(CreationPolicy.NonShared)]    
-    public class BlackScholesOptionsPricingModel : IBlackScholesOptionsPricingModel
+    public class BlackScholesOptionsPricer : IBlackScholesOptionsPricingModel
     {
         public OptionsPricingByMaturityResults Price(OptionsPricingByMaturitiesRequest request)
         {

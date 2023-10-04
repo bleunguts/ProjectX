@@ -14,13 +14,13 @@ using System.Windows.Media;
 namespace Shell.Screens.Options
 {
     [Export(typeof(IScreen)), PartCreationPolicy(CreationPolicy.NonShared)]
-    public class BlackScholesViewModel : Screen
+    public class BlackScholesPricerViewModel : Screen
     {
         private readonly IEventAggregator _events;
         private readonly IGatewayApiClient _gatewayApiClient;
 
         [ImportingConstructor]
-        public BlackScholesViewModel(IEventAggregator events, IGatewayApiClient gatewayApiClient)
+        public BlackScholesPricerViewModel(IEventAggregator events, IGatewayApiClient gatewayApiClient)
         {
             this._events = events;
             this._gatewayApiClient = gatewayApiClient;

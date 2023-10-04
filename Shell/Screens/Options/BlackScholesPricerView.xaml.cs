@@ -18,9 +18,9 @@ namespace Shell.Screens.Options
     /// <summary>
     /// Interaction logic for BlackScholesView.xaml
     /// </summary>
-    public partial class BlackScholesView : UserControl
+    public partial class BlackScholesPricerView : UserControl
     {
-        public BlackScholesView()
+        public BlackScholesPricerView()
         {
             InitializeComponent();
         }

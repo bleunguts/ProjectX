@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace ProjectX.Core.Requests
 {
-    public enum FXRateMode { Subscribe, Unsubscribe };   
+    public enum SpotPriceSubscriptionMode { Subscribe, Unsubscribe };   
 }

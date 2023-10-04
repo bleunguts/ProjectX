@@ -186,7 +186,7 @@ namespace Shell.Screens.FX
             try
             {
                 var selectedCurrency = SelectedCurrency ?? throw new ArgumentNullException(nameof(SelectedCurrency));
-                _gatewayApiClient.SubmitFxRateSubscribeRequest(new SpotPriceRequest(selectedCurrency, ClientName, FXRateMode.Subscribe), _cts.Token);
+                _gatewayApiClient.SubmitFxRateSubscribeRequest(new SpotPriceRequest(selectedCurrency, ClientName, SpotPriceSubscriptionMode.Subscribe), _cts.Token);
                 AppendStatus($"subscribed to price stream {selectedCurrency} successfully.");
             }
             catch (Exception ex) 
@@ -231,7 +231,7 @@ namespace Shell.Screens.FX
             try
             {
                 var selectedCurrency = SelectedCurrency ?? throw new ArgumentNullException(nameof(SelectedCurrency));
-                _gatewayApiClient.SubmitFxRateUnsubscribeRequest(new SpotPriceRequest(selectedCurrency, ClientName, FXRateMode.Unsubscribe), _cts.Token);
+                _gatewayApiClient.SubmitFxRateUnsubscribeRequest(new SpotPriceRequest(selectedCurrency, ClientName, SpotPriceSubscriptionMode.Unsubscribe), _cts.Token);
             }
             catch(Exception ex)
             {

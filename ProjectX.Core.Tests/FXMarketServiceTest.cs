@@ -41,7 +41,7 @@ namespace ProjectX.Core.Tests
 
             // act
             FXMarketService _sut = new FXMarketService(_logger, _priceGenerator, _fxPricer.Object);            
-            var spotPriceEvents = _sut.StreamSpotPricesFor(new SpotPriceRequest("EURUSD", "tests", FXRateMode.Subscribe));
+            var spotPriceEvents = _sut.StreamSpotPricesFor(new SpotPriceRequest("EURUSD", "tests", SpotPriceSubscriptionMode.Subscribe));
             spotPriceEvents!.Subscribe(recieved.Add,errors.Add);            
             await Task.Delay(950);
             Console.WriteLine($"{recieved.Count} responses received.");
@@ -58,7 +58,7 @@ namespace ProjectX.Core.Tests
         {
             // arrange
             FXMarketService _sut = new FXMarketService(_logger, _priceGenerator, _fxPricer.Object);
-            _sut.StreamSpotPricesFor(new SpotPriceRequest("EURUSD", "tests", FXRateMode.Subscribe));
+            _sut.StreamSpotPricesFor(new SpotPriceRequest("EURUSD", "tests", SpotPriceSubscriptionMode.Subscribe));
             Assert.That(_sut.SpotPriceStreamsFor("EURUSD"), Is.Not.Null);
 
             // act

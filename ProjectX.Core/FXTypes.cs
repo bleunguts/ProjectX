@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 
 namespace ProjectX.Core
 {
+    public interface IFXSpotPricer
+    {
+        SpotPrice Price(string ccyPair, SpotPrice spotPrice, int spreadInPips);
+    }
+
     public enum FXProductType
     {
         Spot

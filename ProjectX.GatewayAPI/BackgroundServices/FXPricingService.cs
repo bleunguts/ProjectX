@@ -44,7 +44,7 @@ namespace ProjectX.GatewayAPI.BackgroundServices
                     
                     switch(request.Mode)
                     {
-                        case FXRateMode.Subscribe:
+                        case SpotPriceSubscriptionMode.Subscribe:
                             if (_disposables.ContainsKey(request.CurrencyPair))
                             {
                                 break;
@@ -57,7 +57,7 @@ namespace ProjectX.GatewayAPI.BackgroundServices
                                 _logger.LogWarning($"Disposable stream already added {request.CurrencyPair}");
                             }
                             break;
-                       case FXRateMode.Unsubscribe:
+                       case SpotPriceSubscriptionMode.Unsubscribe:
                             _fxMarketService.UnStream(request.CurrencyPair);
                             if(_disposables.TryGetValue(request.CurrencyPair, out IDisposable d))
                             {
