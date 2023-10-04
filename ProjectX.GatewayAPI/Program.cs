@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using ProjectX.Core;
+using ProjectX.Core.Analytics;
+using ProjectX.Core.MarketData;
 using ProjectX.Core.Services;
 using ProjectX.GatewayAPI.BackgroundServices;
 using ProjectX.GatewayAPI.ExternalServices;
@@ -23,7 +25,11 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 
 builder.Services.TryAddScoped<IPricingTasksProcessor, PricingTasksProcessor>();
 builder.Services.TryAddScoped<IBlackScholesOptionsPricingModel, BlackScholesOptionsPricingModel>();
+builder.Services.AddSingleton<IFXSpotPricer,FXSpotPricer>();
+builder.Services.AddSingleton<IFXSpotPriceStream>(new RandomFXSpotPriceStream(8, 1000));
+builder.Services.AddSingleton<IFXMarketService, FXMarketService>();
 builder.Services.AddSingleton<PricingTasksChannel>();
+builder.Services.AddSingleton<FXTasksChannel>();
 
 builder.Services.AddOptions();
 IConfiguration config = builder.Configuration;
@@ -31,13 +37,9 @@ builder.Services.Configure<ApiClientOptions>(options => options.BaseAddress = co
 
 builder.Services.AddHttpClient<IPricingResultsApiClient, PricingResultsApiClient>();
 builder.Services.AddHostedService<PricingTasksService>();
+builder.Services.AddHostedService<FXPricingService>();
 builder.Services.AddSignalR(config => config.EnableDetailedErrors = true)
-                .AddMessagePackProtocol();
-                //.AddJsonProtocol(options =>
-                //{
-                //    options.PayloadSerializerOptions.Converters.Add(new Array2DConverter());
-                //});
-
+                .AddMessagePackProtocol();              
 
 var app = builder.Build();
 

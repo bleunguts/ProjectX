@@ -24,6 +24,8 @@ namespace Shell
         Task StartHubAsync();
         Task StopHubAsync();
         Task SubmitPlotRequest(PlotOptionsPricingRequest request, CancellationToken token);
+        Task SubmitFxRateSubscribeRequest(SpotPriceRequest spotPriceRequest, CancellationToken token);
+        Task SubmitFxRateUnsubscribeRequest(SpotPriceRequest spotPriceRequest, CancellationToken token);
     }
 
     [Export(typeof(IGatewayApiClient)), PartCreationPolicy(CreationPolicy.NonShared)]
@@ -52,6 +54,17 @@ namespace Shell
         public HubConnection HubConnection => _hubConnector.Connection;
         public async Task StartHubAsync() => await _hubConnector.Start();
         public async Task StopHubAsync() => await _hubConnector.Stop();
+
+        public async Task SubmitFxRateSubscribeRequest(SpotPriceRequest spotPriceRequest, CancellationToken token)
+        {
+            await Submit<SpotPriceRequest>(spotPriceRequest, Endpoints.FXSpotPriceStart, token);
+        }
+
+        public async Task SubmitFxRateUnsubscribeRequest(SpotPriceRequest spotPriceRequest, CancellationToken token)
+        {
+            await Submit<SpotPriceRequest>(spotPriceRequest, Endpoints.FXSpotPriceEnd, token);
+        }
+
         public async Task SubmitPlotRequest(PlotOptionsPricingRequest pricingRequest, CancellationToken token)
         {            
             await Submit<PlotOptionsPricingRequest>(pricingRequest, Endpoints.RequestsPlotOptionBS, token);
@@ -60,11 +73,11 @@ namespace Shell
         {            
             await Submit<OptionsPricingByMaturitiesRequest>(optionsPricingByMaturitiesRequest, Endpoints.RequestsPriceOptionBS, cancellationToken);
         }
-        private async Task<object> Submit<T>(T pricingRequest, string endPoint, CancellationToken cancellationToken)
+        private async Task<object> Submit<T>(T theRequest, string endPoint, CancellationToken cancellationToken)
         {
             var request = new HttpRequestMessage(HttpMethod.Post, endPoint)
             {
-                Content = new StringContent(JsonSerializer.Serialize<T>(pricingRequest), Encoding.UTF8, "application/json")
+                Content = new StringContent(JsonSerializer.Serialize<T>(theRequest), Encoding.UTF8, "application/json")
             };
             var response = await _httpClient.SendAsync(request, cancellationToken);
 

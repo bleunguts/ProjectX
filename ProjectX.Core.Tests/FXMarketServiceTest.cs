@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Reactive.Testing;
 using ProjectX.Core.Analytics;
 using ProjectX.Core.MarketData;
+using ProjectX.Core.Requests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +41,7 @@ namespace ProjectX.Core.Tests
 
             // act
             FXMarketService _sut = new FXMarketService(_logger, _priceGenerator, _fxPricer);            
-            var spotPriceEvents = _sut.StreamSpotPricesFor(new SpotPriceRequest("EURUSD", "tests"));
+            var spotPriceEvents = _sut.StreamSpotPricesFor(new SpotPriceRequest("EURUSD", "tests", FXRateMode.Subscribe));
             spotPriceEvents!.Subscribe(recieved.Add,errors.Add);            
             await Task.Delay(950);
             Console.WriteLine($"{recieved.Count} responses received.");
@@ -57,7 +58,7 @@ namespace ProjectX.Core.Tests
         {
             // arrange
             FXMarketService _sut = new FXMarketService(_logger, _priceGenerator, _fxPricer);
-            _sut.StreamSpotPricesFor(new SpotPriceRequest("EURUSD", "tests"));
+            _sut.StreamSpotPricesFor(new SpotPriceRequest("EURUSD", "tests", FXRateMode.Subscribe));
             Assert.That(_sut.SpotPriceStreamsFor("EURUSD"), Is.Not.Null);
 
             // act

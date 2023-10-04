@@ -18,6 +18,9 @@ using static ProjectX.Core.Services.eFXTradeExecutionService;
 using ProjectX.Core.Services;
 using System.Data;
 using System.Windows.Documents;
+using ProjectX.Core.Requests;
+using System.Threading;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Shell.Screens.FX
 {
@@ -25,15 +28,20 @@ namespace Shell.Screens.FX
     public partial class FXPricerViewModel : Screen
     {
         private readonly IEventAggregator _events;
-        private readonly IFXMarketService _fXMarketService;
+        private readonly IGatewayApiClient _gatewayApiClient;
         private readonly ISpotPriceFormatter _spotPriceFormatter;
         private readonly IFXTradeExecutionService _fxTrader;
+        private readonly CancellationTokenSource _cts = new CancellationTokenSource();
 
         [ImportingConstructor]
-        public FXPricerViewModel(IEventAggregator events, IFXMarketService fXMarketService, ISpotPriceFormatter spotPriceFormatter, IFXTradeExecutionService fxTrader)
+        public FXPricerViewModel(
+            IEventAggregator events,
+            IGatewayApiClient gatewayApiClient, 
+            ISpotPriceFormatter spotPriceFormatter, 
+            IFXTradeExecutionService fxTrader)
         {
             _events = events;
-            _fXMarketService = fXMarketService;
+            _gatewayApiClient = gatewayApiClient;
             _spotPriceFormatter = spotPriceFormatter;
             _fxTrader = fxTrader;
             DisplayName = "FXPricer (FX)";
@@ -123,6 +131,26 @@ namespace Shell.Screens.FX
 
         #endregion
 
+        protected override async void OnActivate()
+        {
+            base.OnActivate();
+
+            await _gatewayApiClient.StartHubAsync();
+            _gatewayApiClient.HubConnection.On<SpotPriceResult>("PushFxRate", fxRate =>
+            {               
+                App.Current.Dispatcher.Invoke((System.Action)delegate
+                {
+                    UpdatePrice(fxRate.SpotPriceResponse, fxRate.Timestamp);
+                });
+                AppendStatus($"subscribed to price stream {selectedCurrency} successfully.");
+            });
+
+            _gatewayApiClient.HubConnection.On<string>("StopFxRate", ccyPair =>
+            {                               
+                AppendStatus($"Stream unsubscribed to {ccyPair}.");
+            });            
+        }
+    
         public void BuyTrade() => MakeTrade(BuySell.Buy);
 
         public void SellTrade() => MakeTrade(BuySell.Sell);
@@ -146,32 +174,33 @@ namespace Shell.Screens.FX
         public void ClearHistory() => ClearPricesList();
 
         public void Subscribe()
-        {
-            if (_currentDisposableStream != null)
+        {   
+            try
             {
-                _currentDisposableStream.Dispose();
+                var selectedCurrency = SelectedCurrency ?? throw new ArgumentNullException(nameof(SelectedCurrency));
+                _gatewayApiClient.SubmitFxRateSubscribeRequest(new SpotPriceRequest(selectedCurrency, ClientName, FXRateMode.Subscribe), _cts.Token);
             }
-            var selectedCurrency = SelectedCurrency ?? throw new ArgumentNullException(nameof(SelectedCurrency));
-            _currentDisposableStream = _fXMarketService.StreamSpotPricesFor(new ProjectX.Core.SpotPriceRequest(selectedCurrency, ClientName))
-                .                                        Subscribe(priceResponse => UpdatePrice(priceResponse));
-            AppendStatus($"subscribed to price stream {selectedCurrency} successfully.");
+            catch (Exception ex) 
+            {
+                MessageBox.Show($"Failed to send fx subscription request to backend to price\nReason:'{ex.Message}", "FX Rate issue");
+            }
         }
 
-        void UpdatePrice(Timestamped<SpotPriceResponse> response)
+        void UpdatePrice(SpotPriceResponse response, DateTimeOffset timestamp)
         {
             try
             {
-                var latestPrice = _spotPriceFormatter.PrettifySpotPrice(response.Value.SpotPrice);
+                var latestPrice = _spotPriceFormatter.PrettifySpotPrice(response.SpotPrice);
                 LatestPrice = latestPrice;
-                LatestPriceTimeStamp = response.Timestamp.ToLocalTime().ToString();
-                PriceStream = response.Value.SpotPrice.CurrencyPair;
+                LatestPriceTimeStamp = timestamp.ToLocalTime().ToString();
+                PriceStream = response.SpotPrice.CurrencyPair;
 
                 App.Current.Dispatcher.Invoke((System.Action)delegate
                 {
                     AddPriceToPricesList(latestPrice);
                 });
                 
-                //AppendStatus($"[{DateTime.Now.ToLocalTime()}] New Spot Price arrived at {response.Timestamp.ToLocalTime()} for {response.Value.SpotPrice.CurrencyPair}.");
+                AppendStatus($"[{DateTime.Now.ToLocalTime()}] New Spot Price arrived at {timestamp.ToLocalTime()} for {response.SpotPrice.CurrencyPair}.");
             }
             catch (Exception exp)
             {
@@ -188,15 +217,17 @@ namespace Shell.Screens.FX
         }
         private void AddPriceToPricesList(string price) => _prices.Insert(0, price);
 
-        public void Unsubscribe() 
+        public void Unsubscribe()
         {
-            _fXMarketService.UnStream(SelectedCurrency);
-            if(_currentDisposableStream != null)
+            try
             {
-                _currentDisposableStream.Dispose();
-                _currentDisposableStream = null;
+                var selectedCurrency = SelectedCurrency ?? throw new ArgumentNullException(nameof(SelectedCurrency));
+                _gatewayApiClient.SubmitFxRateUnsubscribeRequest(new SpotPriceRequest(selectedCurrency, ClientName, FXRateMode.Unsubscribe), _cts.Token);
             }
-            AppendStatus($"Stream unsubscribed to {SelectedCurrency}.");
+            catch(Exception ex)
+            {
+                MessageBox.Show($"Failed to send fx unsubscription request to backend to price\nReason:'{ex.Message}", "FX Rate issue");
+            }            
         }
 
         public void ShowPositions()
@@ -224,9 +255,7 @@ namespace Shell.Screens.FX
             lastRow["CcyPair"] = "total";
             lastRow["Pnl"] = totalPnl.ToString("#,#0");
             PositionsTable.Rows.Add(lastRow);
-        }
-
-        private IDisposable? _currentDisposableStream;
+        }        
     }
  
 }

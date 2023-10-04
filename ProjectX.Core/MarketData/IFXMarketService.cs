@@ -1,4 +1,5 @@
 ﻿using System.Reactive;
+using ProjectX.Core.Requests;
 
 namespace ProjectX.Core.MarketData
 {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProjectX.Core.Requests;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
@@ -15,11 +16,6 @@ namespace ProjectX.Core
         // Swap
         // Options
     }
-    public record SpotPriceRequest(string CurrencyPair, string ClientName)
-    {
-        public FXProductType ProductType { private set; get; } = FXProductType.Spot;
-    }
-    public record SpotPriceResponse(SpotPrice SpotPrice, string ClientName);
     public record SpreadedSpotPriceResponse(SpotPrice SpotPrice, string ClientName, int SpreadInPips) : SpotPriceResponse(SpotPrice, ClientName);
     public record struct SpotPrice(decimal BidPrice, decimal AskPrice, string CurrencyPair, Guid PriceId)
     {

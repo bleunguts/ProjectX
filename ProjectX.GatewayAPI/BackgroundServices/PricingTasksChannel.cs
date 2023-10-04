@@ -19,7 +19,6 @@ public class PricingTasksChannel
     }
     public IAsyncEnumerable<IRequest> ReadAllAsync(CancellationToken ct = default) => _channel.Reader.ReadAllAsync(ct);
     public ChannelReader<IRequest> Reader => _channel.Reader;
-
     public async Task<bool> SendRequestAsync(IRequest request)
     {
         while (await _channel.Writer.WaitToWriteAsync())
@@ -30,9 +29,7 @@ public class PricingTasksChannel
                 return true;
             }
         }
-
         return false;
     } 
-
     public void CompleteWriter(Exception? ex = null) => _channel.Writer.Complete(ex);
 }

@@ -8,7 +8,7 @@ namespace ProjectX.Core.Services;
 
 public interface IFXTradeExecutionService
 {
-    eFXTradeExecutionService.TradeResponse ExecuteTrade(eFXTradeExecutionService.TradeRequest request);
+    TradeResponse ExecuteTrade(TradeRequest request);
     Dictionary<string, (int netQuantity, int totalTrades, decimal PnL, string debug)> PositionsFor(string clientName);
     (decimal purchasePrice, decimal totalPrice) PriceTrade(FXProductType productType, BuySell buySell, int notional, SpotPrice price);
 }
@@ -77,8 +77,5 @@ public class eFXTradeExecutionService : IFXTradeExecutionService
         var purchasePrice = buySell == BuySell.Buy ? price.AskPrice : price.BidPrice;
         var totalPrice = purchasePrice * quantity;
         return (purchasePrice, totalPrice);
-    }   
-    public record Trade(string clientName, int quantity, decimal totalPrice, BuySell buySell, FXProductType productType, string currencyPair, Guid transactionPriceId, decimal transactionPrice);
-    public record TradeRequest(FXProductType ProductType, SpotPrice Price, int Quantity, BuySell BuySell, string ClientName, DateTimeOffset PriceTimestamp);
-    public record TradeResponse(string ClientName, BuySell BuySell, string currencyPair, int Quantity, decimal TransactionPrice, Guid TransactionPriceId, decimal TotalPrice, DateTimeOffset PriceTimestamp);
+    }     
 }
