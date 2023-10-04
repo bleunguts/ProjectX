@@ -138,17 +138,11 @@ namespace Shell.Screens.FX
             await _gatewayApiClient.StartHubAsync();
             _gatewayApiClient.HubConnection.On<SpotPriceResult>("PushFxRate", fxRate =>
             {
-                try
-                {
-                    App.Current.Dispatcher.Invoke((System.Action)delegate
-                        {
-                            UpdatePrice(fxRate.SpotPriceResponse, fxRate.Timestamp);
-                        });
-                }
-                finally
-                {
-
-                } 
+                
+                App.Current.Dispatcher.Invoke((System.Action)delegate
+                    {
+                        UpdatePrice(fxRate.SpotPriceResponse, fxRate.Timestamp);
+                    });              
             });
 
             _gatewayApiClient.HubConnection.On<string>("StopFxRate", ccyPair =>
@@ -156,7 +150,13 @@ namespace Shell.Screens.FX
                 AppendStatus($"Stream unsubscribed to {ccyPair}.");
             });            
         }
-    
+
+        protected override async void OnDeactivate(bool close)
+        {
+            await _gatewayApiClient.StopHubAsync();
+            base.OnDeactivate(close);
+        }
+
         public void BuyTrade() => MakeTrade(BuySell.Buy);
 
         public void SellTrade() => MakeTrade(BuySell.Sell);
