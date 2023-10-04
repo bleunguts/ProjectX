@@ -45,6 +45,11 @@ namespace ProjectX.GatewayAPI.BackgroundServices
                     switch(request.Mode)
                     {
                         case FXRateMode.Subscribe:
+                            if (_disposables.ContainsKey(request.CurrencyPair))
+                            {
+                                break;
+                            }
+
                             var disposable = _fxMarketService.StreamSpotPricesFor(request)
                                             .Subscribe(priceResponse => hubContext.Clients.All.PushFxRate(new SpotPriceResult(request.ClientName, priceResponse.Timestamp, priceResponse.Value)));
                             if(!_disposables.TryAdd(request.CurrencyPair, disposable))

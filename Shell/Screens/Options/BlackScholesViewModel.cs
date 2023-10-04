@@ -144,7 +144,7 @@ namespace Shell.Screens.Options
             base.OnActivate();
         }
 
-        protected override async void OnDeactivateAsync(bool close)
+        protected override async void OnDeactivate(bool close)
         {
             base.OnDeactivate(close);
 

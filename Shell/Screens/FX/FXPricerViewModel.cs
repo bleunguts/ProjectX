@@ -153,7 +153,9 @@ namespace Shell.Screens.FX
 
         protected override async void OnDeactivate(bool close)
         {
-            await _gatewayApiClient.StopHubAsync();
+            _cts.Cancel();
+            await _gatewayApiClient.StopHubAsync();            
+
             base.OnDeactivate(close);
         }
 
