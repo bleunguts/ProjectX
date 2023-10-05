@@ -7,6 +7,8 @@ ProjectX🌊 App that does technical analysis to shoot two birds with one stone 
 
 **Quant Model Pricing (QMP)** 		
 * QMP implements pricing models for FX products (commisions), Options Pricing, Bonds Pricing, CDS Pricing
+* Options includes Vanilla Options Black Scholes Pricer (C# & CPP), Implied Vol Pricer, Barrier Options
+* Fixed Income includes Simple Bonds Pricer, CDS Pricer    
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 _Roadmap_
@@ -16,10 +18,15 @@ _Roadmap_
 * All pricing model calcs are Azure-enabled (using AspNetCore BackgroundServices)
 * Enhanced eTrader trade management screen shows PnL helps facilitate demo trading
 
-_Tech Stack: C# 11, .NET 7, WPF, Caliburn.Micro, System.ComponentModel.Composition.Hosting.CompositionContainer (IoC), Reactive 6,Background Services, SignalR, React 8, .NET Json Serialization_
+_Tech Stack:_
+* C# 11, .NET 7, WPF, Caliburn.Micro, System.ComponentModel.Composition.Hosting.CompositionContainer (IoC), ReactiveX 6,
+* ASPNET Core WebApi 6, SignalR, .NET Json Serialization, Background Services (Azure Ready)
+* React 8, Bootstrap
   
 _Market data sources:_
+* Financial Modelling Prep (https://site.financialmodelingprep.com/developer/docs/)
+* Quandl download GOOGL stock data it seems to have data from 2018 to 2014 (http://www.quandl.com/api/v3/datasets/WIKI/GOOGL.csv?auth_token=gp_z7rn26KEP3uJFuuiw&collapse=daily&transformation=none&sort_order=asc&exclude_headers=False)
 * Rapid API (https://rapidapi.com/blog/best-stock-api/)
 * Free Finance Data Api
 * Twelve Data
-* Quandl download GOOGL stock data it seems to have data from 2018 to 2014 (http://www.quandl.com/api/v3/datasets/WIKI/GOOGL.csv?auth_token=gp_z7rn26KEP3uJFuuiw&collapse=daily&transformation=none&sort_order=asc&exclude_headers=False)
+
