@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
 import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
-import Title from './Title';
+import Typography from '@mui/material/Typography';
 
-// Generate Sales Data
+// create data for chart
 function createData(time: string, amount?: number) {
   return { time, amount };
 }
@@ -25,7 +25,9 @@ export default function Chart() {
 
   return (
     <React.Fragment>
-      <Title>Today</Title>
+      <Typography component="h2" variant="h6" color="primary" gutterBottom>
+              Options Chart
+      </Typography>
       <ResponsiveContainer>
         <LineChart
           data={data}
@@ -54,7 +56,7 @@ export default function Chart() {
                 ...theme.typography.body1,
               }}
             >
-              Sales ($)
+              PV ($)
             </Label>
           </YAxis>
           <Line
