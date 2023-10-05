@@ -11,22 +11,15 @@ import Sidebar from './Sidebar';
 import Footer from './Footer';
 
 const sections = [
-  { title: 'Technology', url: '#' },
-  { title: 'Design', url: '#' },
-  { title: 'Culture', url: '#' },
-  { title: 'Business', url: '#' },
-  { title: 'Politics', url: '#' },
-  { title: 'Opinion', url: '#' },
-  { title: 'Science', url: '#' },
-  { title: 'Health', url: '#' },
-  { title: 'Style', url: '#' },
-  { title: 'Travel', url: '#' },
+  { title: 'Home', url: '#' },
+  { title: 'Backtesting Strategies', url: '#' },  
+  { title: 'Market Data', url: '#' },
 ];
 
 const mainFeaturedPost = {
-  title: 'Title of a longer featured blog post',
+  title: 'Innovative trading signals engineering platform',
   description:
-    "Multiple lines of text that form the lede, informing new readers quickly and efficiently about what's most interesting in this post's contents.",
+        "Trading strategies employed mainly consists of mean reversion, momentum, arbitrage strategies. This app allows conceptualization of trading strategies and offers a backtesting platform to simulate the strategy based on historical market sourced prices",
   image: 'https://source.unsplash.com/random?wallpapers',
   imageText: 'main image description',
   linkText: 'Continue reading…',
@@ -34,27 +27,27 @@ const mainFeaturedPost = {
 
 const featuredPosts = [
   {
-    title: 'Featured post',
+    title: 'Mean Reversion Trading signals',
     date: 'Nov 12',
     description:
-      'This is a wider card with supporting text below as a natural lead-in to additional content.',
+      'The main purpose is to generate trading signals such as mean reversion and provide backtesting',
     image: 'https://source.unsplash.com/random?wallpapers',
     imageLabel: 'Image Text',
   },
   {
-    title: 'Post title',
+    title: 'Arbitrage Trading signals',
     date: 'Nov 11',
     description:
-      'This is a wider card with supporting text below as a natural lead-in to additional content.',
+      'This is a more involved component of the system. The app provides various pricers that I have developed for options, fixed income, FX products and will show actual market prices to compare with.  This provides analytics tools on mismatches in function inputs such as (vol, spot prices) that can expose potential arbitrage ops',
     image: 'https://source.unsplash.com/random?wallpapers',
     imageLabel: 'Image Text',
   },
 ];
 
 const sidebar = {
-  title: 'About',
+  title: 'FX Rates',
   description:
-    'Etiam porta sem malesuada magna mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.',
+    'Publishes FX prices using in-house pricing based on spreads sourced from the market or configurable by the user',
   archives: [
     { title: 'March 2020', url: '#' },
     { title: 'February 2020', url: '#' },
@@ -72,7 +65,10 @@ const sidebar = {
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
-
+const bodyComponents = [
+    'Backtesting: Mean reversion single stock trading backtesting.  Includes backtesting against five years of market sourced prices with visual graphs',
+    'Backtesting: Mean reversion pair trading backtesting. Includes backtesting against five years of market sourced prices with visual graphs'
+];
 export default function Blog() {
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -87,7 +83,7 @@ export default function Blog() {
             ))}
           </Grid>
           <Grid container spacing={5} sx={{ mt: 3 }}>
-            <Main title="From the firehose" posts={[]} />
+            <Main title="Features" posts={bodyComponents} />
             <Sidebar
               title={sidebar.title}
               description={sidebar.description}

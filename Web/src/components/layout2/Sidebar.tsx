@@ -4,6 +4,7 @@ import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
+import FxTicker from './FxTicker';
 
 interface SidebarProps {
   archives: ReadonlyArray<{
@@ -26,13 +27,14 @@ export default function Sidebar(props: SidebarProps) {
         <Typography>{description}</Typography>
       </Paper>
       <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-        Archives
-      </Typography>
+        FX Rates
+      </Typography>      
       {archives.map((archive) => (
         <Link display="block" variant="body1" href={archive.url} key={archive.title}>
           {archive.title}
         </Link>
-      ))}      
+      ))}
+      <FxTicker/>
     </Grid>
   );
 }
