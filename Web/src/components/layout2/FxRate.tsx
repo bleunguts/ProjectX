@@ -3,9 +3,13 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
 
-const ccyPairs = ["EURUSD: 1.05123/1.05095", "GBPUSD: 1.255009/1.21093"]
 
-export default function FxRate() {
+interface FxRateProps {
+    ccyPairs: ReadonlyArray<string>;    
+}
+
+export default function FxRate(props: FxRateProps) {
+    const { ccyPairs } = props;
     
     return (       
         <>
