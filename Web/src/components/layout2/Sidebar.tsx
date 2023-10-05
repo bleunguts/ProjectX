@@ -16,7 +16,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar(props: SidebarProps) {
-  const { archives, description, title } = props;
+  const { description, title } = props;
 
   return (
     <Grid item xs={12} md={4}>
@@ -28,12 +28,7 @@ export default function Sidebar(props: SidebarProps) {
       </Paper>
       <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
         Subscriptions
-      </Typography>      
-      {archives.map((archive) => (
-        <Link display="block" variant="body1" href={archive.url} key={archive.title}>
-          {archive.title}
-        </Link>
-      ))}
+      </Typography>            
       <FxTicker/>
     </Grid>
   );

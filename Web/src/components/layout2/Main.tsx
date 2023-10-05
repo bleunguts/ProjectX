@@ -34,7 +34,11 @@ export default function Main(props: MainProps) {
                 width: 800,                      
             }}>
             <CardContent>
-                <Typography>{post}</Typography>                
+                <Typography style={{
+                    marginBottom: 12,
+                }}>
+                    {post}
+                </Typography>                
             </CardContent>
         </Card>
     ))}      
