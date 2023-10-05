@@ -1,10 +1,10 @@
 import './App.css'
-import Dashboard from './components/Dashboard'
+import Blog from './components/layout2/Blog'
 
 function App() {  
     return (       
-    <>        
-        <Dashboard/>      
+    <>                    
+        <Blog/>
     </>
   )
 }
