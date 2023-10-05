@@ -32,10 +32,7 @@ export default function FeaturedPost(props: FeaturedPostProps) {
             </Typography>
             <Typography variant="subtitle1" paragraph>
               {post.description}
-            </Typography>
-            <Typography variant="subtitle1" color="primary">
-              Continue reading...
-            </Typography>
+            </Typography>           
           </CardContent>
           <CardMedia
             component="img"

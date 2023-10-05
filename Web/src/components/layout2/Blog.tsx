@@ -12,7 +12,7 @@ import Footer from './Footer';
 
 const sections = [
   { title: 'Home', url: '#' },
-  { title: 'Backtesting Strategies', url: '#' },  
+  { title: 'Backtesting', url: '#' },  
   { title: 'Market Data', url: '#' },
 ];
 
@@ -21,8 +21,7 @@ const mainFeaturedPost = {
   description:
         "Trading strategies employed mainly consists of mean reversion, momentum, arbitrage strategies. This app allows conceptualization of trading strategies and offers a backtesting platform to simulate the strategy based on historical market sourced prices",
   image: 'https://source.unsplash.com/random?wallpapers',
-  imageText: 'main image description',
-  linkText: 'Continue reading…',
+  imageText: 'main image description',  
 };
 
 const featuredPosts = [
@@ -31,7 +30,7 @@ const featuredPosts = [
     date: 'Nov 12',
     description:
       'The main purpose is to generate trading signals such as mean reversion and provide backtesting',
-    image: 'https://source.unsplash.com/random?wallpapers',
+    image: './signals.PNG',
     imageLabel: 'Image Text',
   },
   {
@@ -39,7 +38,7 @@ const featuredPosts = [
     date: 'Nov 11',
     description:
       'This is a more involved component of the system. The app provides various pricers that I have developed for options, fixed income, FX products and will show actual market prices to compare with.  This provides analytics tools on mismatches in function inputs such as (vol, spot prices) that can expose potential arbitrage ops',
-    image: 'https://source.unsplash.com/random?wallpapers',
+      image: './signals.PNG',
     imageLabel: 'Image Text',
   },
 ];
