@@ -7,8 +7,13 @@ ProjectX🌊 App that does technical analysis to shoot two birds with one stone 
 
 **Quant Model Pricing (QMP)** 		
 * QMP implements pricing models for FX products (commisions), Options Pricing, Bonds Pricing, CDS Pricing
-* Options includes Vanilla Options Black Scholes Pricer (C# & CPP), Implied Vol Pricer, Barrier Options
-* Fixed Income includes Simple Bonds Pricer, CDS Pricer    
+* Vanilla Options Black Scholes Pricer (C#)
+* Implied Vol Pricer
+* Barrier Options Pricer
+* Simple Bonds Pricer
+* CDS Pricer
+* Vanilla Options BS Pricer C++ better RNGs and normal distribution for stochastic component  (future support)
+* QL.NET product pricer (future support)
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 _Roadmap_
