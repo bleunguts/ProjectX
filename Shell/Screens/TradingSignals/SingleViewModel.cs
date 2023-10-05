@@ -6,17 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shell.Screens.Backtesting;
+namespace Shell.Screens.TradingSignals;
 
 [Export(typeof(IScreen)), PartCreationPolicy(CreationPolicy.NonShared)]
-public class PairsTradingViewModel : Screen
+public class SingleViewModel : Screen
 {
     private readonly IEventAggregator eventAggregator;
 
     [ImportingConstructor]
-    public PairsTradingViewModel(IEventAggregator eventAggregator)
+    public SingleViewModel(IEventAggregator eventAggregator)
     {
         this.eventAggregator = eventAggregator;
-        DisplayName = "Pairs Trading (Backtesting)";
+        DisplayName = "Mean Reversion Single Trade (Backtesting)";
     }
 }

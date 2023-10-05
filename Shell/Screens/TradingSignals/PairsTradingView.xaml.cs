@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Shell.Screens.Backtesting;
+namespace Shell.Screens.TradingSignals;
 
 public partial class PairsTradingView : UserControl
 {
