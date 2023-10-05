@@ -16,7 +16,7 @@ _Roadmap_
 * All pricing model calcs are Azure-enabled (using AspNetCore BackgroundServices)
 * Enhanced eTrader trade management screen shows PnL helps facilitate demo trading
 
-_Tech Stack: C# 11, .NET 7, WPF, Caliburn.Micro, System.ComponentModel.Composition.Hosting.CompositionContainer (IoC), Reactive 6,_
+_Tech Stack: C# 11, .NET 7, WPF, Caliburn.Micro, System.ComponentModel.Composition.Hosting.CompositionContainer (IoC), Reactive 6,Background Services, SignalR, React 8, .NET Json Serialization_
   
 _Market data sources:_
 * Rapid API (https://rapidapi.com/blog/best-stock-api/)
