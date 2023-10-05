@@ -66,8 +66,8 @@ const sidebar = {
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 const bodyComponents = [
-    'Backtesting: Mean reversion single stock trading backtesting.  Includes backtesting against five years of market sourced prices with visual graphs',
-    'Backtesting: Mean reversion pair trading backtesting. Includes backtesting against five years of market sourced prices with visual graphs'
+    'Single stock mean reversion signal backtesting, includes visual graphs and real market sourced historical pricing data',
+    'Pair stock mean reversion signal backtesting, includes visual graphs and real market sourced historical pricing data'
 ];
 export default function Blog() {
   return (
