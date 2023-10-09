@@ -17,6 +17,6 @@ public class PairsTradingViewModel : Screen
     public PairsTradingViewModel(IEventAggregator eventAggregator)
     {
         this.eventAggregator = eventAggregator;
-        DisplayName = "Mean Reversion Pair Trades (Backtesting)";
+        DisplayName = "Pairs Trading mean reverting strategy (Backtesting)";
     }
 }

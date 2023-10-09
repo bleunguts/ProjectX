@@ -17,6 +17,6 @@ public class SingleViewModel : Screen
     public SingleViewModel(IEventAggregator eventAggregator)
     {
         this.eventAggregator = eventAggregator;
-        DisplayName = "Mean Reversion Single Trade (Backtesting)";
+        DisplayName = "Mean Reversion strategy (Backtesting)";
     }
 }

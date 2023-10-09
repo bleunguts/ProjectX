@@ -17,7 +17,7 @@ namespace Shell.Screens.MarketPrices
         public EquitiesMarketViewModel(IEventAggregator eventAggregator)
         {
             this.eventAggregator = eventAggregator;
-            DisplayName = "Equities (MarketPrices)";
+            DisplayName = "Market Snapshot (MarketPrices)";
         }
     }
 }
