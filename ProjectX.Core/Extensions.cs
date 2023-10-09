@@ -13,5 +13,7 @@ namespace ProjectX.Core
         public static string Maturities(this OptionsPricingByMaturityResults o) => o.Results == null ? string.Empty : string.Join(',', o.Results.Select(x => x.Maturity));
         public static string Prices(this OptionsPricingByMaturityResults o) => o.Results == null ? string.Empty : string.Join(',', o.Results.Select(x => x.OptionGreeks.price));
         public static decimal Spread(this SpotPrice s) => Decimal.Truncate((Math.Abs(s.BidPrice - s.AskPrice)) * 1000);
+        public static DateTime ToDateTime(this string s) => DateTime.Parse(s);
+        public static bool IsBetween(this DateTime dateTime, DateTime from, DateTime to) => dateTime > from && dateTime < to;
     }
 }
