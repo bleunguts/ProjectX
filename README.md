@@ -16,10 +16,12 @@ _Roadmap_
 * All pricing model calcs are Azure-enabled (using AspNetCore BackgroundServices)
 * Enhanced eTrader trade management screen shows PnL helps facilitate demo trading
 
-_Tech Stack: C# 11, .NET 7, WPF, Caliburn.Micro, System.ComponentModel.Composition.Hosting.CompositionContainer (IoC), Reactive 6,Background Services, SignalR, React 8, .NET Json Serialization_
+_Tech Stack: C# 11, .NET 7, WPF, Caliburn.Micro, System.ComponentModel.Composition.Hosting.CompositionContainer (IoC), MS Chart Controls, ReactiveX 6, Background Services, SignalR, React 8, .NET Json Serialization_
   
 _Market data sources:_
 * Rapid API (https://rapidapi.com/blog/best-stock-api/)
 * Free Finance Data Api
 * Twelve Data
 * Quandl download GOOGL stock data it seems to have data from 2018 to 2014 (http://www.quandl.com/api/v3/datasets/WIKI/GOOGL.csv?auth_token=gp_z7rn26KEP3uJFuuiw&collapse=daily&transformation=none&sort_order=asc&exclude_headers=False)
+
+
