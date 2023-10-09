@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static ProjectX.Core.Services.eFXTradeExecutionService;
 
-namespace ProjectX.Core.Tests
+namespace ProjectX.Core.Tests.Services
 {
     public class eFXTraderExecutionServiceTest
     {
@@ -16,15 +16,15 @@ namespace ProjectX.Core.Tests
 
         [Test]
         public void WhenFetchingPositionsFromTradeManagerShouldReturnValidTradeCountFieldsAndCalculatedFields()
-        {           
+        {
             // act
             _sut.ExecuteTrade(TradeRequestFor(BuySell.Buy, "EURUSD", 100, 1.5M, 1.2M));
-          
+
             // assert            
-            Assert.That(_sut.PositionsFor(_clientName).TryGetValue("EURUSD", out (int netQuantity, int totalTrades, decimal pnl, string debug) v1), Is.True);            
+            Assert.That(_sut.PositionsFor(_clientName).TryGetValue("EURUSD", out (int netQuantity, int totalTrades, decimal pnl, string debug) v1), Is.True);
             Assert.That(v1.netQuantity, Is.EqualTo(100));
-            Assert.That(v1.totalTrades, Is.EqualTo(1));            
-            Assert.That(v1.pnl, Is.EqualTo(120m));            
+            Assert.That(v1.totalTrades, Is.EqualTo(1));
+            Assert.That(v1.pnl, Is.EqualTo(120m));
 
             _sut.ExecuteTrade(TradeRequestFor(BuySell.Buy, "EURUSD", 200, 2.5M, 0.2M));
             Assert.That(_sut.PositionsFor(_clientName).TryGetValue("EURUSD", out (int netQuantity, int totalTrades, decimal pnl, string debug) v2), Is.True);

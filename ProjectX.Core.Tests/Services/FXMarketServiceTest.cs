@@ -12,8 +12,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Moq;
 using ProjectX.Core.Services;
+using System.Reactive.Subjects;
 
-namespace ProjectX.Core.Tests
+namespace ProjectX.Core.Tests.Services
 {
     public class FXMarketServiceTest
     {
@@ -30,6 +31,11 @@ namespace ProjectX.Core.Tests
                 .BuildServiceProvider();
             var factory = serviceProvider.GetService<ILoggerFactory>();
             _logger = factory.CreateLogger<FXMarketService>();
+            
+            var randomStream = Observable.Interval(TimeSpan.FromMilliseconds(100))
+                                    .Select(l => new SpotPrice())
+                                    .Publish();
+            _priceGenerator.Setup(x => x.SpotPriceEventsFor(It.IsAny<string>())).Returns(randomStream);
         }
 
         [Test]
@@ -37,12 +43,12 @@ namespace ProjectX.Core.Tests
         {
             // arrange
             var recieved = new List<System.Reactive.Timestamped<SpotPriceResponse>>();
-            var errors = new List<Exception>();            
+            var errors = new List<Exception>();
 
             // act
-            FXMarketService _sut = new FXMarketService(_logger, _priceGenerator.Object, _fxPricer.Object);            
+            FXMarketService _sut = new FXMarketService(_logger, _priceGenerator.Object, _fxPricer.Object);
             var spotPriceEvents = _sut.StreamSpotPricesFor(new SpotPriceRequest("EURUSD", "tests", SpotPriceSubscriptionMode.Subscribe));
-            spotPriceEvents!.Subscribe(recieved.Add,errors.Add);            
+            spotPriceEvents!.Subscribe(recieved.Add, errors.Add);
             await Task.Delay(950);
             Console.WriteLine($"{recieved.Count} responses received.");
             foreach (var response in recieved)
@@ -50,11 +56,11 @@ namespace ProjectX.Core.Tests
 
             // assert
             Assert.That(recieved, Has.Count.GreaterThanOrEqualTo(9), $"Responses: {string.Join(Environment.NewLine, recieved)}  ");
-            Assert.That(errors, Has.Count.EqualTo(0), $"Errors occured: {string.Join(Environment.NewLine, errors)} ");                                    
+            Assert.That(errors, Has.Count.EqualTo(0), $"Errors occured: {string.Join(Environment.NewLine, errors)} ");
         }
 
-        [Test]  
-        public void WhenUnsubscribingFromPriceStreamShouldRemoveFromInternalDictionary()        
+        [Test]
+        public void WhenUnsubscribingFromPriceStreamShouldRemoveFromInternalDictionary()
         {
             // arrange
             FXMarketService _sut = new FXMarketService(_logger, _priceGenerator.Object, _fxPricer.Object);

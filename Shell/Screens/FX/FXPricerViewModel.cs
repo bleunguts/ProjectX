@@ -27,21 +27,18 @@ namespace Shell.Screens.FX
     public partial class FXPricerViewModel : Screen
     {
         private readonly IEventAggregator _events;
-        private readonly IGatewayApiClient _gatewayApiClient;
-        private readonly ISpotPriceFormatter _spotPriceFormatter;
+        private readonly IGatewayApiClient _gatewayApiClient;        
         private readonly IFXTradeExecutionService _fxTrader;
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
 
         [ImportingConstructor]
         public FXPricerViewModel(
             IEventAggregator events,
-            IGatewayApiClient gatewayApiClient, 
-            ISpotPriceFormatter spotPriceFormatter, 
+            IGatewayApiClient gatewayApiClient,             
             IFXTradeExecutionService fxTrader)
         {
             _events = events;
-            _gatewayApiClient = gatewayApiClient;
-            _spotPriceFormatter = spotPriceFormatter;
+            _gatewayApiClient = gatewayApiClient;            
             _fxTrader = fxTrader;
             DisplayName = "FXPricer (FX)";
             _positionsTable.Columns.AddRange(new[]
@@ -173,7 +170,7 @@ namespace Shell.Screens.FX
             if (!Prices.Any()) return; 
 
             var timestamped = DateTimeOffset.Parse(LatestPriceTimeStamp);
-            var currentPrice = _spotPriceFormatter.ToSpotPrice(Prices.First(), SelectedCurrency);
+            var currentPrice = Prices.First().ToSpotPrice(SelectedCurrency);
             var quantity = Notional;
             var clientName = ClientName;
             var request = new TradeRequest(FXProductType.Spot, currentPrice, quantity, buySell, clientName, timestamped);
@@ -204,7 +201,7 @@ namespace Shell.Screens.FX
         {
             try
             {
-                var latestPrice = _spotPriceFormatter.PrettifySpotPrice(response.SpotPrice);
+                var latestPrice = response.SpotPrice.ToPrettifiedBidAskPrice();
                 LatestPrice = latestPrice;
                 LatestPriceTimeStamp = timestamp.ToLocalTime().ToString();
                 PriceStream = response.SpotPrice.CurrencyPair;
