@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ProjectX.Core;
-using ProjectX.Core.MarketData;
 using ProjectX.Core.Requests;
 using System;
 using System.Collections.Generic;

@@ -4,11 +4,11 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using ProjectX.AnalyticsLib;
 using ProjectX.Core;
-using ProjectX.Core.MarketData;
 using ProjectX.Core.Services;
 using ProjectX.GatewayAPI.BackgroundServices;
 using ProjectX.GatewayAPI.ExternalServices;
 using ProjectX.GatewayAPI.Processors;
+using ProjectX.MarketData;
 using System.Runtime.CompilerServices;
 
 var builder = WebApplication.CreateBuilder(args);

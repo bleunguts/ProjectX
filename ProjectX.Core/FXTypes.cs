@@ -3,12 +3,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Subjects;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ProjectX.Core
 {
+    public interface IFXSpotPriceStream
+    {
+        IConnectableObservable<SpotPrice> SpotPriceEventsFor(string currencyPair);
+    }
+
     public interface IFXSpotPricer
     {
         SpotPrice Price(string ccyPair, SpotPrice spotPrice, int spreadInPips);

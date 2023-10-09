@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
-using ProjectX.Core.MarketData;
 using ProjectX.Core.Services;
 using System;
 using System.Collections.Generic;

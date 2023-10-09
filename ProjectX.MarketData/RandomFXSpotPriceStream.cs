@@ -1,11 +1,12 @@
 ﻿using Microsoft.Extensions.Options;
+using ProjectX.Core;
 using System.ComponentModel.Composition;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
-namespace ProjectX.Core.MarketData
-{    
+namespace ProjectX.MarketData
+{
     public class RandomFXSpotPriceStreamOptions
     {
         public decimal RawSpreadInPips { get; set; } = 5;
@@ -25,13 +26,13 @@ namespace ProjectX.Core.MarketData
 
         public RandomFXSpotPriceStream(decimal rawSpreadInPips, int intervalBetweenSends)
         {
-            this._rawSpreadInPips = rawSpreadInPips;
-            this._intervalBetweenSends = intervalBetweenSends;
+            _rawSpreadInPips = rawSpreadInPips;
+            _intervalBetweenSends = intervalBetweenSends;
         }
 
         public IConnectableObservable<SpotPrice> SpotPriceEventsFor(string currencyPair) =>
                                     Observable.Interval(TimeSpan.FromMilliseconds(_intervalBetweenSends))
-                                                .Select<long, SpotPrice>(l => GenerateSpotPrice(currencyPair))
+                                                .Select(l => GenerateSpotPrice(currencyPair))
                                                 .Publish();
 
         internal SpotPrice GenerateSpotPrice(string currencyPair)
@@ -41,7 +42,7 @@ namespace ProjectX.Core.MarketData
             var rawMid = (decimal)(1.6420 + _random.NextDouble() / 100);
 
             // apply spread
-            var difference = (_rawSpreadInPips / 10000M) / 2M;
+            var difference = _rawSpreadInPips / 10000M / 2M;
             var bidPrice = rawMid - difference;
             var askPrice = rawMid + difference;
             return new SpotPrice(currencyPair, bidPrice, askPrice);

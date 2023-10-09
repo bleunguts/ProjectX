@@ -1,7 +1,6 @@
 ﻿using Caliburn.Micro;
 using Microsoft.Extensions.Logging;
 using ProjectX.Core;
-using ProjectX.Core.MarketData;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;

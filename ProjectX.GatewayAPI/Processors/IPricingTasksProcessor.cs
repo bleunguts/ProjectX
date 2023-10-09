@@ -1,4 +1,4 @@
-﻿using ProjectX.Core.Requests;
+﻿using ProjectX.Core;
 
 namespace ProjectX.GatewayAPI.Processors
 {

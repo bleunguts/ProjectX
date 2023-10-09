@@ -1,4 +1,5 @@
-﻿using ProjectX.Core.Requests;
+﻿using ProjectX.Core;
+using ProjectX.Core.Requests;
 using ProjectX.Core.Services;
 using ProjectX.GatewayAPI.ExternalServices;
 using System.Collections.Concurrent;

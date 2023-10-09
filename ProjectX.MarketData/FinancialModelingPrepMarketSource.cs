@@ -11,7 +11,7 @@ public class FinancialModelingPrepMarketSource
     {
         _api = FinancialModelingPrepApiClientFactory.CreateClient(new FinancialModelingPrepOptions()
         {
-            ApiKey = "35fdfe7c1a0d49e6ca2283bb073fea3a"
+            ApiKey = "35fdfe7c1a0d49e6ca2283bb073fea3a"            
         });
     }
 

@@ -16,8 +16,14 @@ using System.Reactive;
 using System.ComponentModel.Composition;
 using ProjectX.Core.Requests;
 
-namespace ProjectX.Core.MarketData
+namespace ProjectX.Core.Services
 {
+    public interface IFXMarketService
+    {
+        IObservable<Timestamped<SpotPriceResponse>> StreamSpotPricesFor(SpotPriceRequest request);
+        void UnStream(string currencyPair);
+    }
+
     [Export(typeof(IFXMarketService)), PartCreationPolicy(CreationPolicy.NonShared)]
     public class FXMarketService : IDisposable, IFXMarketService
     {
@@ -34,7 +40,7 @@ namespace ProjectX.Core.MarketData
                 return null;
             }
             return disposable;
-        }       
+        }
 
         [ImportingConstructor]
         public FXMarketService(ILogger<FXMarketService> logger, IFXSpotPriceStream spotPriceGenerator, IFXSpotPricer fXPricer)
@@ -45,7 +51,7 @@ namespace ProjectX.Core.MarketData
         }
         public IObservable<Timestamped<SpotPriceResponse>> StreamSpotPricesFor(SpotPriceRequest request)
         {
-            var spotPriceResponseStream = _spotPriceGenerator.SpotPriceEventsFor(request.CurrencyPair)                                    
+            var spotPriceResponseStream = _spotPriceGenerator.SpotPriceEventsFor(request.CurrencyPair)
                                                                 .AutoConnect(1)
                                                                 .Select(spotPrice => Price(request, spotPrice, RawSpreadInPips))
                                                                 .Timestamp();

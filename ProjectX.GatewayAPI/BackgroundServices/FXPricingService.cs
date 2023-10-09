@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Hosting;
-using ProjectX.Core.MarketData;
 using ProjectX.Core.Requests;
+using ProjectX.Core.Services;
 using ProjectX.GatewayAPI.Processors;
 using System.Reactive;
 

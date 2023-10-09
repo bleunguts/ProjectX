@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Reactive.Testing;
-using ProjectX.Core.MarketData;
 using ProjectX.Core.Requests;
 using System;
 using System.Collections.Generic;
@@ -12,6 +11,7 @@ using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Moq;
+using ProjectX.Core.Services;
 
 namespace ProjectX.Core.Tests
 {
@@ -19,7 +19,7 @@ namespace ProjectX.Core.Tests
     {
         private static ILogger<FXMarketService> _logger;
         private static decimal RawSpreadInPips = 2.0M;
-        readonly IFXSpotPriceStream _priceGenerator = new RandomFXSpotPriceStream(RawSpreadInPips, 100);
+        readonly Mock<IFXSpotPriceStream> _priceGenerator = new Mock<IFXSpotPriceStream>();
         readonly Mock<IFXSpotPricer> _fxPricer = new Mock<IFXSpotPricer>();
 
         [SetUp]
@@ -40,7 +40,7 @@ namespace ProjectX.Core.Tests
             var errors = new List<Exception>();            
 
             // act
-            FXMarketService _sut = new FXMarketService(_logger, _priceGenerator, _fxPricer.Object);            
+            FXMarketService _sut = new FXMarketService(_logger, _priceGenerator.Object, _fxPricer.Object);            
             var spotPriceEvents = _sut.StreamSpotPricesFor(new SpotPriceRequest("EURUSD", "tests", SpotPriceSubscriptionMode.Subscribe));
             spotPriceEvents!.Subscribe(recieved.Add,errors.Add);            
             await Task.Delay(950);
@@ -57,7 +57,7 @@ namespace ProjectX.Core.Tests
         public void WhenUnsubscribingFromPriceStreamShouldRemoveFromInternalDictionary()        
         {
             // arrange
-            FXMarketService _sut = new FXMarketService(_logger, _priceGenerator, _fxPricer.Object);
+            FXMarketService _sut = new FXMarketService(_logger, _priceGenerator.Object, _fxPricer.Object);
             _sut.StreamSpotPricesFor(new SpotPriceRequest("EURUSD", "tests", SpotPriceSubscriptionMode.Subscribe));
             Assert.That(_sut.SpotPriceStreamsFor("EURUSD"), Is.Not.Null);
 

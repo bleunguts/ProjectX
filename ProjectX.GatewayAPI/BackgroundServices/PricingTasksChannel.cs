@@ -1,4 +1,4 @@
-﻿using ProjectX.Core.Requests;
+﻿using ProjectX.Core;
 using System.Threading.Channels;
 
 namespace ProjectX.GatewayAPI.BackgroundServices;
