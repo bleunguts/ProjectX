@@ -24,20 +24,28 @@
                 <DatePicker x:Name="ToDate"/>
             </StackPanel>
             <RibbonSeparator/>
-            <StackPanel Orientation="Horizontal" Margin="0 5 0 0" >
-                <TextBlock Text="Signal Smoothing:" VerticalAlignment="Center" />
-                <TextBlock x:Name="SignalType" Margin="10 0 0 0" VerticalAlignment="Center" IsEnabled="False" />
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
-                <TextBlock Text="Price Type:" VerticalAlignment="Center" />
-                <TextBlock x:Name="PriceType" TextAlignment="Center" VerticalAlignment="Center" Margin="10 0 0 0" IsEnabled="False"/>
-            </StackPanel>
+       
             <StackPanel>
-                <TextBlock Text="Notional:" Margin="15 5 0 0"/>
+                <TextBlock Text="Notional:" Margin="0 5 0 0"/>
                 <TextBox x:Name="Notional" Width="100" HorizontalAlignment="Left" Margin="15 5 0 0"/>
                 <Button x:Name="Compute" Content="Maximize PnL" Width="150" Margin="0 20 0 0"/>
             </StackPanel>
-            
+            <GroupBox Header="Model Parameters" Margin="0 30 0 0" Height="100">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Signal Smoothing:" VerticalAlignment="Center" />
+                    <TextBox Grid.Row="0" Grid.Column="1"  x:Name="SignalType" Width="100" VerticalAlignment="Center" IsEnabled="False" />
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Price Type:" VerticalAlignment="Center" />
+                    <TextBox  Grid.Row="1" Grid.Column="1" x:Name="PriceType" Width="100" TextAlignment="Center" VerticalAlignment="Center"  IsEnabled="False"/>
+                </Grid>
+            </GroupBox>
         </StackPanel>
         <Grid Grid.Column="1">
             <Grid.ColumnDefinitions>

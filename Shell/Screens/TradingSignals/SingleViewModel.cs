@@ -92,8 +92,7 @@ public partial class SingleViewModel : Screen
         await Task.Run(() => 
         {
             PnLTable.Clear();
-            YearlyPnLTable = new DataTable();
-            PnLRankingTable = new DataTable();
+            YearlyPnLTable = new DataTable();            
 
             var builder = new PnlRankingTableBuilder();
             builder.SetRows(DummyData.DummyPnLRankingTable);
