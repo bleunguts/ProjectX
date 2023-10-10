@@ -29,25 +29,26 @@
                 <TextBox x:Name="Notional" Width="100" HorizontalAlignment="Left" Margin="15 5 0 0"/>
                 <Button x:Name="Compute" Content="Maximize PnL" Width="150" Margin="0 20 0 0"/>
             </StackPanel>
-            <GroupBox Header="Model Parameters" Margin="0 30 0 0" Height="150">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="100"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Signal Smoothing:" VerticalAlignment="Center" />
-                    <TextBox Grid.Row="0" Grid.Column="1"  x:Name="SignalType" Width="100" VerticalAlignment="Center" IsEnabled="False" />
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Price Type:" VerticalAlignment="Center" />
-                    <TextBox  Grid.Row="1" Grid.Column="1" x:Name="PriceType" Width="100" TextAlignment="Center" VerticalAlignment="Center"  IsEnabled="False"/>
-                </Grid>
-            </GroupBox>
             <StackPanel>
-                <TextBlock Text="Pnl By Year" FontSize="8" Margin="0 0 0 2"/>
-                <DataGrid x:Name="YearlyPnLTable" ColumnWidth="*" CanUserAddRows="False" SelectionUnit="Cell"/>
+                <GroupBox Header="Model Parameters" Margin="0 30 0 0" Height="150">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Signal Smoothing:" VerticalAlignment="Center" />
+                        <TextBox Grid.Row="0" Grid.Column="1"  x:Name="SignalType" Width="100" VerticalAlignment="Center" IsEnabled="False" />
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Price Type:" VerticalAlignment="Center" />
+                        <TextBox  Grid.Row="1" Grid.Column="1" x:Name="PriceType" Width="100" TextAlignment="Center" VerticalAlignment="Center"  IsEnabled="False"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Pnl by Year" >
+                    <DataGrid x:Name="YearlyPnLTable" ColumnWidth="*" CanUserAddRows="False" SelectionUnit="FullRow"/>
+                </GroupBox>
             </StackPanel>
         </StackPanel>
         <Grid Grid.Column="1">
@@ -59,18 +60,18 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <StackPanel>
-                <TextBlock Text="Pnl Rankings" FontSize="8" Margin="0 0 0 2"/>
-                <DataGrid x:Name="PnLRankingTable" ColumnWidth="*" CanUserAddRows="False" Grid.Column="0" SelectionUnit="FullRow" cal:Message.Attach="[Event SelectedCellsChanged] = [Action SelectedCellChanged($source, $eventArgs)]" Margin="5,0,5,0"/>
+            <StackPanel Grid.Column="0">
+                <GroupBox Header="Pnl Rankings">
+                    <DataGrid x:Name="PnLRankingTable" ColumnWidth="*" CanUserAddRows="False" Grid.Column="0" SelectionUnit="FullRow" cal:Message.Attach="[Event SelectedCellsChanged] = [Action SelectedCellChanged($source, $eventArgs)]" Margin="5,0,5,0"/>
+                </GroupBox>
             </StackPanel>
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <StackPanel>
-                    <TextBlock Text="Selected Row drill down" FontSize="8" Margin="0 0 0 2"/>
-                    <DataGrid x:Name="PnLTable" ColumnWidth="*" CanUserAddRows="False" SelectionUnit="Cell"/>
-                </StackPanel>
+                <GroupBox Header="Selected Row drill down">
+                    <DataGrid x:Name="PnLTable" ColumnWidth="*" CanUserAddRows="False" SelectionUnit="FullRow"/>
+                </GroupBox>
             </Grid>
         </Grid>
     </Grid>

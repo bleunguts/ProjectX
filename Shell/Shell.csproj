@@ -52,6 +52,9 @@
     <Compile Update="Screens\MarketPrices\EquitiesMarketView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Screens\Options\ImpliedVolView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Screens\TradingSignals\PairsTradingView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

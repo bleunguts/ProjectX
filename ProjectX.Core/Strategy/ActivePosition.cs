@@ -29,10 +29,8 @@ public class ActivePosition
     public PnlTradeType TradeType => tradeType;
     public double PriceIn => priceIn;
     public DateTime DateIn => dateIn;
-
     public bool IsLongPosition() => TradeType == PnlTradeType.POSITION_LONG;
     public bool IsShortPosition() => TradeType == PnlTradeType.POSITION_SHORT;
-
     public static ActivePosition INACTIVE = new ActivePosition();
     public override bool Equals(object rhs)
     {
@@ -43,7 +41,6 @@ public class ActivePosition
                 priceIn == other.priceIn &&
                 shares == other.shares;
     }
-
     public override int GetHashCode()
     {
         return new { tradeType, dateIn, priceIn, shares }.GetHashCode();

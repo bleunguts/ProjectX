@@ -144,7 +144,7 @@ public partial class SingleViewModel : Screen
 
         public static PnlEntity[] DummyPnlTable => new[]
         {
-            new PnlEntity("IBM", new DateTime(2023, 1, 1), 2.0, 5, 1000, 120, 1200, 1000, 1000)
+            PnlEntity.Build(new DateTime(2023, 1, 1), "IBM", 130.8, 1.5, 120, 100, 120, 50, 500, 3, ActivePosition.INACTIVE)
         };
 
         public static IEnumerable<(string ticker, string period, string numTrades, string pnl, string sharpe, string pnlHold, string sharpehold)> YearlyPnL => new List<(string ticker, string period, string numTrades, string pnl, string sharpe, string pnlHold, string sharpehold)>
