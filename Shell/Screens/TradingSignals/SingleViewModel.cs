@@ -97,7 +97,7 @@ public partial class SingleViewModel : Screen
 
     public async void SelectedCellChanged(object sender, SelectedCellsChangedEventArgs e)
     {
-        await Task.Run(async () =>
+        await Task.Run(() =>
         {
             var selectedCells = e.AddedCells;
             DataRowView row = (DataRowView)selectedCells[selectedCells.Count - 1].Item;
@@ -111,10 +111,11 @@ public partial class SingleViewModel : Screen
             PnLTable.AddRange(DummyData.DummyPnlTable);
 
             // GetYearlyPnl and upate YearlyPnlTable            
+            // public static List<(string ticker, string year, int numTrades, double pnl, double sp0, double pnl2, double sp1)> GetYearlyPnl(List<PnlEntity> p)
+            // or can write own yearly aggregator based on pnls above 
             var builder = new YearlyPnLTableBuilder();
-            builder.SetRows(DummyData.YearlyPnL);
+            builder.SetRows(DummyData.YearlyPnL);            
             YearlyPnLTable = builder.Build();
-
 
             // Update IEnumerable<SignalData> SignalDataForSignalCharts
             // Compute Signals for user selected movingWindow 
@@ -123,7 +124,6 @@ public partial class SingleViewModel : Screen
             // GetDrawdown
             // Update IEnumerable<Drawdow> DrawdownDataForDrawdownCharts
             //DataTable dt2 = new DataTable();
-
         });
     }
 
