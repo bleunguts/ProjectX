@@ -11,7 +11,7 @@ public partial class SingleViewModel
         {
             new DataColumn("Ticker",typeof(string)),
             new DataColumn("Period",typeof(string)),
-            new DataColumn("NumTrades",typeof(string)),
+            new DataColumn("Num",typeof(string)),
             new DataColumn("PnL",typeof(string)),
             new DataColumn("Sharpe",typeof(string)),
             new DataColumn("PnLHold",typeof(string)),
@@ -20,7 +20,7 @@ public partial class SingleViewModel
 
         public override DataTable Build()
         {
-            return _dt;
+            return _dt;         
         }
 
         public void SetRows(IEnumerable<(string ticker, string period, string numTrades, string pnl, string sharpe, string pnlHold, string sharpehold)> yearlyPnL)
@@ -42,10 +42,10 @@ public partial class SingleViewModel
         protected override DataColumn[] Headers => new[]
         {
              new DataColumn("Ticker", typeof(string)),
-             new DataColumn("MovingWindow", typeof(int)),
+             new DataColumn("Window", typeof(int)),
              new DataColumn("SignalIn", typeof(double)),
              new DataColumn("SignalOut", typeof(double)),
-             new DataColumn("NumTrades", typeof(int)),
+             new DataColumn("Num", typeof(int)),
              new DataColumn("PnL", typeof(double)),
              new DataColumn("Sharpe", typeof(double)),
         };
