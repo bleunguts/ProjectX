@@ -27,12 +27,13 @@ public partial class SingleViewModel : Screen
     }
 
     private string ticker = "IBM";
-    private DateTime fromDate = new DateTime(2023, 2, 25);
-    private DateTime toDate = new DateTime(2023, 2, 25);
+    private DateTime fromDate = new(2023, 2, 25);
+    private DateTime toDate = new(2023, 2, 25);
     private string signalType = "MovingAverage";
     private string priceType = "Close";
-    private DataTable pnlRankingTable = new DataTable();
-    private DataTable yearlyPnLTable = new DataTable();
+    private int notional = 10_000;
+    private DataTable pnlRankingTable = new();
+    private DataTable yearlyPnLTable = new();
     private BindableCollection<PnlEntity> pnlTable = new();
 
     #region Bindable Properties    
@@ -77,8 +78,15 @@ public partial class SingleViewModel : Screen
     {
         get { return pnlTable; }
         set { pnlTable = value; NotifyOfPropertyChange(() => PnLTable); }
+    }    
+
+    public int Notional
+    {
+        get { return notional; }
+        set { notional = value; NotifyOfPropertyChange(() => Notional); }
     }
-    #endregion    
+
+    #endregion
     public async Task Compute()
     {
         await Task.Run(() => 
