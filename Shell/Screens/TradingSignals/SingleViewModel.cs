@@ -1,15 +1,22 @@
 ﻿using Caliburn.Micro;
+using LiveChartsCore;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.Painting.Effects;
 using ProjectX.Core.Strategy;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Data;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Runtime.InteropServices.Marshalling;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Markup;
 using System.Xml;
 
 namespace Shell.Screens.TradingSignals;
@@ -24,6 +31,23 @@ public partial class SingleViewModel : Screen
     {
         this.eventAggregator = eventAggregator;
         DisplayName = "Mean Reversion strategy (Backtesting)";
+
+        Series1 = new ISeries[]
+        {
+            new LineSeries<double>
+            {
+                Values = new double[] { 2, 1, 3, 5, 3, 4, 6 },
+                Name = Title1(),
+            },
+        };
+        Series2 = new ISeries[]
+        {
+            new LineSeries<double>
+            {
+                Values = new double[] { 2, 1, 3, 5, 3, 4, 6 },
+                Name = Title2(),
+            },
+        };
     }
 
     private string ticker = "IBM";
@@ -41,7 +65,7 @@ public partial class SingleViewModel : Screen
     {
         get { return ticker; }
         set { ticker = value; NotifyOfPropertyChange(() => Ticker); }
-    }    
+    }
     public DateTime FromDate
     {
         get { return fromDate; }
@@ -61,7 +85,7 @@ public partial class SingleViewModel : Screen
     {
         get { return priceType; }
         set { priceType = value; NotifyOfPropertyChange(() => PriceType); }
-    }    
+    }
     public DataTable YearlyPnLTable
     {
         get { return yearlyPnLTable; }
@@ -78,13 +102,48 @@ public partial class SingleViewModel : Screen
     {
         get { return pnlTable; }
         set { pnlTable = value; NotifyOfPropertyChange(() => PnLTable); }
-    }    
+    }
 
     public int Notional
     {
         get { return notional; }
         set { notional = value; NotifyOfPropertyChange(() => Notional); }
     }
+
+    public ISeries[] Series1 { get; set; }
+    public ISeries[] Series2 { get; set; }
+
+    #endregion
+
+    #region Chart Properties 
+    public string Title1 => $"{Ticker}: Stock Price (Price Type = {priceType}, Signal Type = {signalType})";
+    public string Title2 => $"{Ticker}: Signal (Price Type = {priceType}, Signal Type = {signalType})";
+    public Axis[] XAxes => new Axis[] { XAxis("Date") };
+    public Axis[] YAxes1 => new Axis[] { YAxis("Stock Price") };    
+    public Axis[] YAxes2 => new Axis[] { YAxis("Signal") };
+    private static Axis XAxis(string axisLabel) =>
+        new()
+        {
+            Name = axisLabel,
+            //NamePaint = new SolidColorPaint(SKColors.Black),
+            //LabelsPaint = new SolidColorPaint(SKColors.Blue),
+            //TextSize = 10,
+            //SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray) { StrokeThickness = 2 }
+        };
+
+    private static Axis YAxis(string axisLabel) =>
+         new()
+         {
+             Name = axisLabel,
+             //NamePaint = new SolidColorPaint(SKColors.Red),
+             //LabelsPaint = new SolidColorPaint(SKColors.Green),
+             //TextSize = 20,
+             //SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray)
+             //{
+             //    StrokeThickness = 2,
+             //    PathEffect = new DashEffect(new float[] { 3, 3 })
+             //}
+         };
 
     #endregion
     public async Task Compute()
