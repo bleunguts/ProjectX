@@ -7,6 +7,7 @@ using ProjectX.Core.Strategy;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Data;
 using System.Linq;
@@ -31,23 +32,23 @@ public partial class SingleViewModel : Screen
     {
         this.eventAggregator = eventAggregator;
         DisplayName = "Mean Reversion strategy (Backtesting)";
-
+        
         Series1 = new ISeries[]
         {
             new LineSeries<double>
             {
-                Values = new double[] { 2, 1, 3, 5, 3, 4, 6 },
-                Name = Title1(),
+                Values = Signals,
+                Name = Title1,
             },
         };
         Series2 = new ISeries[]
         {
             new LineSeries<double>
             {
-                Values = new double[] { 2, 1, 3, 5, 3, 4, 6 },
-                Name = Title2(),
+                Values = Signals,
+                Name = Title2,
             },
-        };
+        };        
     }
 
     private string ticker = "IBM";
@@ -59,6 +60,7 @@ public partial class SingleViewModel : Screen
     private DataTable pnlRankingTable = new();
     private DataTable yearlyPnLTable = new();
     private BindableCollection<PnlEntity> pnlTable = new();
+    private ObservableCollection<double> Signals = new();
 
     #region Bindable Properties    
     public string Ticker
@@ -111,7 +113,7 @@ public partial class SingleViewModel : Screen
     }
 
     public ISeries[] Series1 { get; set; }
-    public ISeries[] Series2 { get; set; }
+    public ISeries[] Series2 { get; set; }    
 
     #endregion
 
@@ -155,7 +157,7 @@ public partial class SingleViewModel : Screen
 
             var builder = new PnlRankingTableBuilder();
             builder.SetRows(DummyData.DummyPnLRankingTable);
-            PnLRankingTable = builder.Build();
+            PnLRankingTable = builder.Build();            
 
             return Task.CompletedTask;
         });       
@@ -186,6 +188,11 @@ public partial class SingleViewModel : Screen
             // Update IEnumerable<SignalData> SignalDataForSignalCharts
             // Compute Signals for user selected movingWindow 
             // var signal = SignalHelper.GetSignal(data, movingWindow, SelectedSignalType);
+            Signals.Clear();
+            foreach(var i in new double[] { 2, 1, 3, 5, 3, 4, 6 })
+            {
+                Signals.Add(i);
+            }
 
             // GetDrawdown
             // Update IEnumerable<Drawdow> DrawdownDataForDrawdownCharts
