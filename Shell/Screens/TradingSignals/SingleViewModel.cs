@@ -149,13 +149,17 @@ public partial class SingleViewModel : Screen
     private static Axis XAxis(string axisLabel) => new()
     {
         Name = axisLabel,
-        Labeler = value => new DateTime((long)value).ToString("yyyy-MM-dd"),                    
+        Labeler = value => new DateTime((long)value).ToString("MM-dd"),
+        NameTextSize = 14,
+        TextSize = 8,
     };
 
     private static Axis YAxis(string axisLabel) => new()
     {
         Name = axisLabel,
         Labeler = Labelers.SixRepresentativeDigits,
+        NameTextSize = 14,
+        TextSize = 12,
         //MinLimit = 0,       
     };
 
@@ -279,6 +283,7 @@ public partial class SingleViewModel : Screen
                 DataLabelsPaint = new SolidColorPaint(SKColors.Blue),
                 DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
                 DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
+                DataLabelsSize=10,
                 ScalesYAt = 0
             },
             new LineSeries<SignalEntity>
@@ -290,6 +295,7 @@ public partial class SingleViewModel : Screen
                 DataLabelsPaint = new SolidColorPaint(SKColors.Red),
                 DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
                 DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
+                DataLabelsSize=10,
                 ScalesYAt = 0
             }
         };
@@ -312,6 +318,7 @@ public partial class SingleViewModel : Screen
                 DataLabelsPaint = new SolidColorPaint(SKColors.DarkGreen),
                 DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
                 DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
+                DataLabelsSize=10,
                 ScalesYAt = 0
             },
             new LineSeries<SignalEntity>
@@ -322,7 +329,8 @@ public partial class SingleViewModel : Screen
                 Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, x.LowerBand),
                 DataLabelsPaint = new SolidColorPaint(SKColors.DarkGreen),
                 DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
-                DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
+                DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"), 
+                DataLabelsSize = 10,
                 ScalesYAt = 0,
             },
        };
