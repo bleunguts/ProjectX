@@ -1,23 +1,26 @@
 ﻿using MatthiWare.FinancialModelingPrep.Model.StockTimeSeries;
 using MatthiWare.FinancialModelingPrep;
+using ProjectX.Core;
 
 namespace ProjectX.MarketData;
 
-public class FinancialModelingPrepMarketSource
+public class FMPStockMarketSource : IStockMarketSource
 {
     private readonly IFinancialModelingPrepApiClient _api;
 
-    public FinancialModelingPrepMarketSource()
+    public FMPStockMarketSource()
     {
         _api = FinancialModelingPrepApiClientFactory.CreateClient(new FinancialModelingPrepOptions()
         {
-            ApiKey = "35fdfe7c1a0d49e6ca2283bb073fea3a"            
+            ApiKey = "35fdfe7c1a0d49e6ca2283bb073fea3a"
         });
     }
 
-    public async Task<HistoricalPriceResponse> GetPrices(string ticker, DateTime from, DateTime to)
+    public async Task<IEnumerable<MarketPrice>> GetPrices(string ticker, DateTime from, DateTime to)
     {
         var result = await _api.StockTimeSeries.GetHistoricalDailyPricesAsync(ticker, from.ToString("yyyy-MM-dd"), to.ToString("yyyy-MM-dd"));
-        return result.Data;
+        var response = result.Data;
+        
+        return response.Historical.Select(h => h.ToMarketPrice());
     }
 }
