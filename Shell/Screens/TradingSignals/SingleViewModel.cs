@@ -9,6 +9,7 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Data;
 using System.Linq;
@@ -20,6 +21,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Windows.Media.Animation;
+using System.Windows.Shapes;
 using System.Xml;
 
 namespace Shell.Screens.TradingSignals;
@@ -34,6 +36,13 @@ public partial class SingleViewModel : Screen
     {
         this.eventAggregator = eventAggregator;
         DisplayName = "Mean Reversion strategy (Backtesting)";
+
+        var builder = new PnlRankingTableBuilder(
+        new List<(string ticker, int bar, double zin, double zout, int numTrades, double pnlCum, double sharpe)>()
+        {
+            ("IBM", 5, 0, 1, 0, 0, 0),
+        });
+        PnLRankingTable = builder.Build();
     }
 
     private string ticker = "IBM";
@@ -42,13 +51,15 @@ public partial class SingleViewModel : Screen
     private string signalType = "MovingAverage";
     private string priceType = "Close";
     private int notional = 10_000;
-    private DataTable pnlRankingTable = new();
+    private DataTable pnlRankingTable = new() ;
     private DataTable yearlyPnLTable = new();
     private BindableCollection<PnlEntity> pnlTable = new();
     private ISeries[] _series1 = Array.Empty<ISeries>();
     private ISeries[] _series2 = Array.Empty<ISeries>();
     private Axis[] _yAxes1 = Array.Empty<Axis>();
     private Axis[] _yAxes2 = Array.Empty<Axis>();
+    private string _title1;
+    private string _title2;
 
     #region Bindable Properties    
     public string Ticker
@@ -113,9 +124,17 @@ public partial class SingleViewModel : Screen
 
     #endregion
 
-    #region Chart Properties 
-    public string Title1 => $"{Ticker}: Stock Price (Price Type = {priceType}, Signal Type = {signalType})";
-    public string Title2 => $"{Ticker}: Signal (Price Type = {priceType}, Signal Type = {signalType})";
+    #region Chart Properties     
+    public string Title1
+    {
+        get { return _title1; }
+        set { _title1 = value; NotifyOfPropertyChange(() => Title1); }
+    }
+    public string Title2
+    {
+        get { return _title2; }
+        set { _title2 = value; NotifyOfPropertyChange(() => Title2); }
+    }    
     public Axis[] XAxes => new Axis[] { XAxis("Date") };
     public Axis[] YAxes1
     {
@@ -192,6 +211,9 @@ public partial class SingleViewModel : Screen
             // Update IEnumerable<SignalData> SignalDataForSignalCharts
             // Compute Signals for user selected movingWindow 
             // var signal = SignalHelper.GetSignal(data, movingWindow, SelectedSignalType);
+
+            // Plot Accumulated PnL chart (1) accompanied by the Drawdown Chart (2)
+            // Price (1) accompanied by Signals chart (2)
             var signals = DummyData.Signals;
             Series1 = new ISeries[]
             {
@@ -218,7 +240,8 @@ public partial class SingleViewModel : Screen
                     ScalesYAt = 0
                 }                
             };
-            YAxes1 = new[] { YAxis("Accumulated P&L") };
+            Title1 = $"{Ticker}: Stock Price (Price Type = {priceType}, Signal Type = {signalType})";
+            YAxes1 = new[] { YAxis("Stock Price") };
             Series2 = new ISeries[]
             {
                 new LineSeries<SignalEntity>
@@ -241,10 +264,11 @@ public partial class SingleViewModel : Screen
                     DataLabelsPaint = new SolidColorPaint(SKColors.DarkGreen),
                     DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
                     DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
-                    ScalesYAt = 0
+                    ScalesYAt = 0,                    
                 },
             };
-            YAxes2 = new[] { YAxis("Drawdown (%)") };
+            Title2 = $"{Ticker}: Signal (Price Type = {priceType}, Signal Type = {signalType})";
+            YAxes2 = new[] { YAxis("Signal") };
 
             // GetDrawdown
             // Update IEnumerable<Drawdow> DrawdownDataForDrawdownCharts

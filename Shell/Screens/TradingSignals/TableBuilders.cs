@@ -81,6 +81,14 @@ public partial class SingleViewModel
 
     class PnlRankingTableBuilder : TableBuilder
     {
+        public PnlRankingTableBuilder()
+        {           
+        }
+        public PnlRankingTableBuilder(List<(string ticker, int bar, double zin, double zout, int numTrades, double pnlCum, double sharpe)> list)
+        {
+            FillRows(_dt, list);
+        }
+
         protected override DataColumn[] Headers => new[]
         {
              new DataColumn("Ticker", typeof(string)),

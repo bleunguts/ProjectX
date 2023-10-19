@@ -48,7 +48,7 @@
                     </Grid>
                 </GroupBox>
                 <GroupBox Header="Pnl by Year" >
-                    <DataGrid x:Name="YearlyPnLTable" ColumnWidth="*" CanUserAddRows="False" SelectionUnit="FullRow"/>
+                    <DataGrid x:Name="YearlyPnLTable" ColumnWidth="*" CanUserAddRows="False" SelectionUnit="FullRow" IsReadOnly="True"/>
                 </GroupBox>
             </StackPanel>
         </StackPanel>
@@ -63,7 +63,7 @@
             </Grid.RowDefinitions>
             <StackPanel Grid.Column="0">
                 <GroupBox Header="Pnl Rankings">
-                    <DataGrid x:Name="PnLRankingTable" ColumnWidth="*" CanUserAddRows="False" Grid.Column="0" SelectionUnit="FullRow" cal:Message.Attach="[Event SelectedCellsChanged] = [Action SelectedCellChanged($source, $eventArgs)]" Margin="5,0,5,0"/>
+                    <DataGrid x:Name="PnLRankingTable" ColumnWidth="*" CanUserAddRows="False" Grid.Column="0" SelectionUnit="FullRow" cal:Message.Attach="[Event SelectedCellsChanged] = [Action SelectedCellChanged($source, $eventArgs)]" Margin="5,0,5,0" IsReadOnly="True"/>
                 </GroupBox>
             </StackPanel>
             <Grid Grid.Column="1">
@@ -71,7 +71,7 @@
                     <RowDefinition/>
                 </Grid.RowDefinitions>
                 <GroupBox Header="Selected Row drill down">
-                    <DataGrid x:Name="PnLTable" ColumnWidth="*" CanUserAddRows="False" SelectionUnit="FullRow"/>
+                    <DataGrid x:Name="PnLTable" ColumnWidth="*" CanUserAddRows="False" SelectionUnit="FullRow" IsReadOnly="True"/>
                 </GroupBox>
             </Grid>
             <lvc:CartesianChart Grid.Column="0" Grid.Row="1" Title="{Binding Title1}" Series="{Binding Series1}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes1}" LegendPosition="Top"/>
