@@ -8,7 +8,6 @@ namespace Shell.Screens.TradingSignals;
 
 public partial class SingleViewModel
 {
-
     public class SignalBuilder 
     {
         private const int MaxSignals = 10;

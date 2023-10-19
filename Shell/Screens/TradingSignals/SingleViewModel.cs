@@ -192,8 +192,7 @@ public partial class SingleViewModel : Screen
             // Update IEnumerable<SignalData> SignalDataForSignalCharts
             // Compute Signals for user selected movingWindow 
             // var signal = SignalHelper.GetSignal(data, movingWindow, SelectedSignalType);
-            var signalBuilder = new SignalBuilder("IBM");
-            var signals = signalBuilder.Build(10, 20);
+            var signals = DummyData.Signals;
             Series1 = new ISeries[]
             {
                 new LineSeries<SignalEntity>
@@ -269,5 +268,7 @@ public partial class SingleViewModel : Screen
             ("IBM", "2020", "5", "1500.5", "0.48", "1500.0", "0.5"),
             ("IBM", "Total", "15", "3931.5", "1.65", "3300.0", "1.8"),
         };
+
+        public static IEnumerable<SignalEntity> Signals => new SignalBuilder("IBM").Build(10, 20);        
     }
 }
