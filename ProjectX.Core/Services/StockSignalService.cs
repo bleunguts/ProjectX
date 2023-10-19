@@ -9,27 +9,25 @@ using System.Threading.Tasks;
 namespace ProjectX.Core.Services
 {
     public class StockSignalService
-    {
-        private readonly string _ticker;
+    {        
         private readonly IStockMarketSource _marketSource;
 
-        public StockSignalService(string ticker, IStockMarketSource marketSource)
-        {
-            this._ticker = ticker;
+        public StockSignalService(IStockMarketSource marketSource)
+        {            
             this._marketSource = marketSource;
         }
 
         /// <summary>
         /// As a general rule of thumb, you will be safe if you provide 750 points of historical quote data (e.g. 3 years of daily data).
         /// </summary>
-        internal async Task<List<MarketPrice>> FetchMarketPricesAsync(DateTime startDate, DateTime endDate)
+        internal async Task<List<MarketPrice>> FetchMarketPricesAsync(string ticker, DateTime startDate, DateTime endDate)
         {            
-            var prices = await _marketSource.GetPrices(_ticker, startDate, endDate);
+            var prices = await _marketSource.GetPrices(ticker, startDate, endDate);
             return prices.ToList();
         }        
-        public async Task<List<SignalEntity>> GetSignalUsingMovingAverageByDefault(DateTime startDate, DateTime endDate, int movingWindow)
+        public async Task<List<SignalEntity>> GetSignalUsingMovingAverageByDefault(string ticker, DateTime startDate, DateTime endDate, int movingWindow)
         {
-            List<MarketPrice> marketPrices = await FetchMarketPricesAsync(startDate, endDate);
+            List<MarketPrice> marketPrices = await FetchMarketPricesAsync(ticker, startDate, endDate);
             
             var processed = marketPrices                            
                             .GetMaEnvelopes(movingWindow)         
@@ -45,7 +43,7 @@ namespace ProjectX.Core.Services
                 }                                                
                 signalsProcessed.Add(new SignalEntity
                 {
-                    Ticker = _ticker,
+                    Ticker = ticker,
                     Date = signal.Date,
                     Price = Convert.ToDouble(marketPrices[i].Close),
                     PricePredicted = signal.Centerline ?? Double.MaxValue,

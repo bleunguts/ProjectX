@@ -63,8 +63,8 @@ namespace ProjectX.Core.Tests.Services
         [Test]
         public async Task WhenGettingStockSignalsShouldReturnMovingAveragedSmoothingOverRawValues()
         {
-            var service = new StockSignalService(Ticker, _marketSource.Object);
-            var actual = await service.GetSignalUsingMovingAverageByDefault(_startDate, _endDate, _movingWindow);            
+            var service = new StockSignalService(_marketSource.Object);
+            var actual = await service.GetSignalUsingMovingAverageByDefault(Ticker, _startDate, _endDate, _movingWindow);            
             foreach(var p in actual)
             {
                 Console.Out.WriteLine($"{p.Ticker}: {p.Date} price={p.Price} predicted={p.PricePredicted} upper={p.UpperBand} lower={p.LowerBand} signal={p.Signal}");
