@@ -1,10 +1,53 @@
-﻿using System.Collections.Generic;
+﻿using ProjectX.Core.Strategy;
+using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Runtime.CompilerServices;
 
 namespace Shell.Screens.TradingSignals;
 
 public partial class SingleViewModel
 {
+
+    public class SignalBuilder 
+    {
+        private const int MaxSignals = 10;
+        private readonly Random _random = new();
+
+        private readonly string _ticker;
+        private readonly DateTime _startDate;
+        public SignalBuilder(string ticker)
+        {
+            this._ticker = ticker;
+            this._startDate = DateTime.Now.AddDays(-90);
+        }
+        public IEnumerable<SignalEntity> Build(int low, int high)
+        {
+            var signals = new List<SignalEntity>();
+            var date = _startDate;
+            for (int i = 0; i <= MaxSignals; i++)
+            {
+                var price = _random.Next(low, high);
+                var pricePredicted = price + _random.NextDouble();
+                var signal = price + _random.NextDouble();
+                var lowerBand = low - _random.NextDouble();
+                var upperBand = high + _random.NextDouble();
+                signals.Add(new SignalEntity
+                {
+                    Ticker = _ticker,
+                    Price = price,
+                    Date = date,
+                    LowerBand = lowerBand,
+                    UpperBand = upperBand,
+                    PricePredicted = pricePredicted,
+                    Signal = signal
+                });
+                date = date.AddDays(1);
+            }
+            return signals;
+        }
+    }
+
     class YearlyPnLTableBuilder : TableBuilder
     {
         protected override DataColumn[] Headers => new[]

@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using LiveChartsCore;
+using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
@@ -18,6 +19,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Markup;
+using System.Windows.Media.Animation;
 using System.Xml;
 
 namespace Shell.Screens.TradingSignals;
@@ -32,23 +34,6 @@ public partial class SingleViewModel : Screen
     {
         this.eventAggregator = eventAggregator;
         DisplayName = "Mean Reversion strategy (Backtesting)";
-        
-        Series1 = new ISeries[]
-        {
-            new LineSeries<double>
-            {
-                Values = Signals,
-                Name = Title1,
-            },
-        };
-        Series2 = new ISeries[]
-        {
-            new LineSeries<double>
-            {
-                Values = Signals,
-                Name = Title2,
-            },
-        };        
     }
 
     private string ticker = "IBM";
@@ -60,7 +45,8 @@ public partial class SingleViewModel : Screen
     private DataTable pnlRankingTable = new();
     private DataTable yearlyPnLTable = new();
     private BindableCollection<PnlEntity> pnlTable = new();
-    private ObservableCollection<double> Signals = new();
+    private ISeries[] _series1 = new ISeries[] { };
+    private ISeries[] _series2 = new ISeries[] { };
 
     #region Bindable Properties    
     public string Ticker
@@ -110,10 +96,18 @@ public partial class SingleViewModel : Screen
     {
         get { return notional; }
         set { notional = value; NotifyOfPropertyChange(() => Notional); }
-    }
+    } 
 
-    public ISeries[] Series1 { get; set; }
-    public ISeries[] Series2 { get; set; }    
+    public ISeries[] Series1 
+    {
+        get { return _series1; }
+        set { _series1 = value; NotifyOfPropertyChange(() => Series1); }
+    }
+    public ISeries[] Series2
+    {
+        get { return _series2; }
+        set { _series2 = value; NotifyOfPropertyChange(() => Series2); }
+    }
 
     #endregion
 
@@ -121,22 +115,21 @@ public partial class SingleViewModel : Screen
     public string Title1 => $"{Ticker}: Stock Price (Price Type = {priceType}, Signal Type = {signalType})";
     public string Title2 => $"{Ticker}: Signal (Price Type = {priceType}, Signal Type = {signalType})";
     public Axis[] XAxes => new Axis[] { XAxis("Date") };
-    public Axis[] YAxes1 => new Axis[] { YAxis("Stock Price") };    
+    public Axis[] YAxes1 => new Axis[] { YAxis("Stock Price") };
     public Axis[] YAxes2 => new Axis[] { YAxis("Signal") };
     private static Axis XAxis(string axisLabel) =>
         new()
         {
             Name = axisLabel,
-            //NamePaint = new SolidColorPaint(SKColors.Black),
-            //LabelsPaint = new SolidColorPaint(SKColors.Blue),
-            //TextSize = 10,
-            //SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray) { StrokeThickness = 2 }
+            Labeler = value => new DateTime((long)value).ToString("yyyy-MM-dd"),                    
         };
 
     private static Axis YAxis(string axisLabel) =>
          new()
          {
              Name = axisLabel,
+             Labeler = Labelers.SixRepresentativeDigits,
+             MinLimit = 0,
              //NamePaint = new SolidColorPaint(SKColors.Red),
              //LabelsPaint = new SolidColorPaint(SKColors.Green),
              //TextSize = 20,
@@ -150,28 +143,29 @@ public partial class SingleViewModel : Screen
     #endregion
     public async Task Compute()
     {
-        await Task.Run(() => 
+        await Task.Run(() =>
         {
             PnLTable.Clear();
-            YearlyPnLTable = new DataTable();            
+            YearlyPnLTable = new DataTable();
 
             var builder = new PnlRankingTableBuilder();
             builder.SetRows(DummyData.DummyPnLRankingTable);
-            PnLRankingTable = builder.Build();            
+            PnLRankingTable = builder.Build();
 
             return Task.CompletedTask;
-        });       
-    }   
+        });
+    }
 
     public async void SelectedCellChanged(object sender, SelectedCellsChangedEventArgs e)
     {
         await Task.Run(() =>
-        {
+        {            
             var selectedCells = e.AddedCells;
+            if (selectedCells.Count - 1 <= 0) return;            
             DataRowView row = (DataRowView)selectedCells[selectedCells.Count - 1].Item;
             int movingWindow = Convert.ToInt32(row[1]);
             double signalIn = Convert.ToDouble(row[2]);
-            double signalOut = Convert.ToDouble(row[3]);        
+            double signalOut = Convert.ToDouble(row[3]);
 
             // Fix below
             // var pnls = BacktestHelper.ComputeLongShortPnl(signal, 10_000.0, signalIn, signalOut, SelectedStrategyType, IsReinvest).ToList();            
@@ -182,17 +176,60 @@ public partial class SingleViewModel : Screen
             // public static List<(string ticker, string year, int numTrades, double pnl, double sp0, double pnl2, double sp1)> GetYearlyPnl(List<PnlEntity> p)
             // or can write own yearly aggregator based on pnls above 
             var builder = new YearlyPnLTableBuilder();
-            builder.SetRows(DummyData.YearlyPnL);            
+            builder.SetRows(DummyData.YearlyPnL);
             YearlyPnLTable = builder.Build();
 
             // Update IEnumerable<SignalData> SignalDataForSignalCharts
             // Compute Signals for user selected movingWindow 
             // var signal = SignalHelper.GetSignal(data, movingWindow, SelectedSignalType);
-            Signals.Clear();
-            foreach(var i in new double[] { 2, 1, 3, 5, 3, 4, 6 })
+            var signalBuilder = new SignalBuilder("IBM");
+            var signals = signalBuilder.Build(10, 20);
+            Series1 = new ISeries[]
             {
-                Signals.Add(i);
-            }
+                new LineSeries<SignalEntity>
+                {
+                    Values = signals,
+                    Name = "Original Price",
+                    Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, Math.Round(x.Price,1)),
+                    Stroke = new SolidColorPaint(SKColors.Blue),                    
+                    DataLabelsPaint = new SolidColorPaint(SKColors.Blue),
+                    DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,                                        
+                    ScalesYAt = 0
+                },
+                new LineSeries<SignalEntity>
+                {
+                    Values = signals,
+                    Name = "Predicted Price",
+                    Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, Math.Round(x.PricePredicted,1)),
+                    Stroke = new SolidColorPaint(SKColors.Red),                    
+                    DataLabelsPaint = new SolidColorPaint(SKColors.Red),
+                    DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
+                    ScalesYAt = 0
+                }                
+            };
+            Series2 = new ISeries[]
+            {
+                new LineSeries<SignalEntity>
+                {
+                    Values = signals,
+                    Name = "Upper Band",
+                    Stroke = new SolidColorPaint(SKColors.DarkGreen),
+                    Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, Math.Round(x.UpperBand, 1)),                    
+                    DataLabelsPaint = new SolidColorPaint(SKColors.DarkGreen),
+                    DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
+                    ScalesYAt = 0
+                },
+                new LineSeries<SignalEntity>
+                {
+                    Values = signals,
+                    Name = "Lower Band",
+                    Stroke = new SolidColorPaint(SKColors.DarkGreen),
+                    Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, Math.Round(x.LowerBand,1)),                    
+                    DataLabelsPaint = new SolidColorPaint(SKColors.DarkGreen),
+                    DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
+                    ScalesYAt = 0
+                },
+            };                        
 
             // GetDrawdown
             // Update IEnumerable<Drawdow> DrawdownDataForDrawdownCharts
