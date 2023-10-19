@@ -4,6 +4,7 @@ using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
+using ProjectX.Core.Services;
 using ProjectX.Core.Strategy;
 using SkiaSharp;
 using System;
@@ -18,6 +19,7 @@ using System.Reflection.Emit;
 using System.Runtime.InteropServices.Marshalling;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Markup;
@@ -31,12 +33,14 @@ namespace Shell.Screens.TradingSignals;
 [Export(typeof(IScreen)), PartCreationPolicy(CreationPolicy.NonShared)]
 public partial class SingleViewModel : Screen
 {
-    private readonly IEventAggregator eventAggregator;
+    private readonly IEventAggregator _eventAggregator;
+    private readonly IStockSignalService _stockSignalService;
 
     [ImportingConstructor]
-    public SingleViewModel(IEventAggregator eventAggregator)
+    public SingleViewModel(IEventAggregator eventAggregator, IStockSignalService stockSignalService)
     {
-        this.eventAggregator = eventAggregator;
+        _eventAggregator = eventAggregator;
+        _stockSignalService = stockSignalService;
         DisplayName = "Mean Reversion strategy (Backtesting)";    
     }
 
@@ -53,8 +57,8 @@ public partial class SingleViewModel : Screen
     private ISeries[] _series2 = Array.Empty<ISeries>();
     private Axis[] _yAxes1 = Array.Empty<Axis>();
     private Axis[] _yAxes2 = Array.Empty<Axis>();
-    private string _title1;
-    private string _title2;
+    private string _title1 = string.Empty;
+    private string _title2 = string.Empty;
     private BindableCollection<SignalEntity> _signals = new();
 
     #region Bindable Properties    
@@ -175,7 +179,7 @@ public partial class SingleViewModel : Screen
         });
     }
 
-    protected override void OnActivate()
+    protected override async void OnActivate()
     {
         base.OnActivate();
 
@@ -183,7 +187,7 @@ public partial class SingleViewModel : Screen
         const double signalIn = 0;
         const double signalOut = 1.0;
         PnLRankingTable = PnlRankingTableDefaults(movingWindow, signalIn, signalOut).Build();
-        DisplayPriceAndSignalView(movingWindow, signalIn, signalOut);
+        await DisplayPriceAndSignalViewAsync(movingWindow, signalIn, signalOut);
 
         static PnlRankingTableBuilder PnlRankingTableDefaults(int movingWindow, double signalIn, double signalOut)
         {
@@ -213,20 +217,27 @@ public partial class SingleViewModel : Screen
     /// <summary>
     /// Price (1) accompanied by Signals chart (2)
     /// </summary>    
-    private void DisplayPriceAndSignalView(int movingWindow, double signalIn, double signalOut)
+    private async Task DisplayPriceAndSignalViewAsync(int movingWindow, double signalIn, double signalOut)
     {
-        // TODO: compuute signals here
-        _signals = new BindableCollection<SignalEntity>(DummyData.Signals);
+        try
+        {
+            var smoothenedSignals = await _stockSignalService.GetSignalUsingMovingAverageByDefault(Ticker, FromDate, ToDate, movingWindow);
+            _signals = new BindableCollection<SignalEntity>(smoothenedSignals);
 
-        var priceChart = PlotPriceChart(_signals);
-        Series1 = priceChart.series;
-        Title1 = priceChart.title;
-        YAxes1 = priceChart.yAxis;
+            var priceChart = PlotPriceChart(_signals);
+            Series1 = priceChart.series;
+            Title1 = priceChart.title;
+            YAxes1 = priceChart.yAxis;
 
-        var signalChart = PlotSignalChart(_signals);
-        Series2 = signalChart.series;
-        Title2 = signalChart.title;
-        YAxes2 = signalChart.yAxis;
+            var signalChart = PlotSignalChart(_signals);
+            Series2 = signalChart.series;
+            Title2 = signalChart.title;
+            YAxes2 = signalChart.yAxis;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Failed to process stock market data\nReason:'{ex.Message}", "Stock signals issue");
+        }
     }
 
     private void DisplayAccumulatedPnlAndDrawdownForStrategyView(int movingWindow, double signalIn, double signalOut)

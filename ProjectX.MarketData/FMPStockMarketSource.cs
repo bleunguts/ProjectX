@@ -20,6 +20,10 @@ public class FMPStockMarketSource : IStockMarketSource
     {
         var result = await _api.StockTimeSeries.GetHistoricalDailyPricesAsync(ticker, from.ToString("yyyy-MM-dd"), to.ToString("yyyy-MM-dd"));
         var response = result.Data;        
+        if (response.Historical == null)
+        {
+            throw new Exception($"Cannot fetch any data for ticker {ticker} for periods {from.ToShortDateString()} to {to.ToShortDateString()}");
+        }
         return response.Historical.Select(h => h.ToMarketPrice());
     }
 }
