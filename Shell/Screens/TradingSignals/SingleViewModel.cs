@@ -212,7 +212,7 @@ public partial class SingleViewModel : Screen
             double signalIn = Convert.ToDouble(row[2]);
             double signalOut = Convert.ToDouble(row[3]);
 
-            DisplayAccumulatedPnlAndDrawdownForStrategyView(movingWindow, signalIn, signalOut);    
+            DisplayAccumulatedPnlAndDrawdownForStrategyViewAsync(movingWindow, signalIn, signalOut);    
         });
     }
 
@@ -242,30 +242,33 @@ public partial class SingleViewModel : Screen
         }
     }
 
-    private void DisplayAccumulatedPnlAndDrawdownForStrategyView(int movingWindow, double signalIn, double signalOut)
+    private async Task DisplayAccumulatedPnlAndDrawdownForStrategyViewAsync(int movingWindow, double signalIn, double signalOut)
     {
-        // compute signals first 
-
-        // supply signals to long short strategy
-
-        // var pnls = BacktestHelper.ComputeLongShortPnl(signal, 10_000.0, signalIn, signalOut, SelectedStrategyType, IsReinvest).ToList();            
+        var smoothenedSignals = await _stockSignalService.GetSignalUsingMovingAverageByDefault(Ticker, FromDate, ToDate, movingWindow);
+        // TODO: Compute PnL Long Short strategy
+        // var pnls = BacktestHelper.ComputeLongShortPnl(signal, 10_000.0, signalIn, signalOut, SelectedStrategyType, IsReinvest).ToList();
         PnLTable.Clear();
         PnLTable.AddRange(DummyData.DummyPnlTable);
+
         // filled pnl for strategy
 
         // do the aggregate yearly stats
-        // public static List<(string ticker, string year, int numTrades, double pnl, double sp0, double pnl2, double sp1)> GetYearlyPnl(List<PnlEntity> p)
+        // TODO: Compute Yearly PnL
+        // BacktestHelper.GetYearlyPnl(PnLTable.ToList())
         var builder = new YearlyPnLTableBuilder();
         builder.SetRows(DummyData.YearlyPnL);
         YearlyPnLTable = builder.Build();
-        // filled yearly stats
-        
-        // TODO: Plot Accumulated PnL chart (1) accompanied by the Drawdown Chart (2)
-        // Add PnlCharts code here
-     
-        // GetDrawdown
-        // Update IEnumerable<Drawdow> DrawdownDataForDrawdownCharts
-        //DataTable dt2 = new DataTable();
+
+        // Drawdown Graphs
+        // TODO: BacktestHelper code get drawdown
+        // var results = BacktestHelper.GetDrawDown(PnLCollection.ToList(), 10_000.0);
+        // DataTable dt2 = new DataTable();
+
+        // Plot Accumulated PnL chart (1) accompanied by the Drawdown Chart (2)
+        // TODO: 
+        // Add PnlCharts code here for Chart1
+        // Add Drawdown(usingStrategy=true) for Chart2 
+
     }
 
     private (ISeries[] series, string title, Axis[] yAxis) PlotPriceChart(IEnumerable<PriceSignalEntity> signals) 
