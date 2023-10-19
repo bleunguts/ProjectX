@@ -49,6 +49,8 @@ namespace ProjectX.Core.Services
                 {
                     throw new ArgumentNullException(nameof(signal), "Signal should not be null");
                 }
+                if (signal.Centerline == null) continue;
+
                 signalsProcessed.Add(new SignalEntity
                 {
                     Ticker = ticker,
