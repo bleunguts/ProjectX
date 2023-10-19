@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Reflection.Emit;
 using System.Runtime.InteropServices.Marshalling;
@@ -231,16 +232,32 @@ public partial class SingleViewModel : Screen
         // Compute Signals for user selected movingWindow 
         // var signal = SignalHelper.GetSignal(data, movingWindow, SelectedSignalType);
 
-        // Plot Accumulated PnL chart (1) accompanied by the Drawdown Chart (2)
         // Price (1) accompanied by Signals chart (2)
-        var signals = DummyData.Signals;
-        Series1 = new ISeries[]
+        // Plot Accumulated PnL chart (1) accompanied by the Drawdown Chart (2)        
+        var priceChart = PlotPriceChart(DummyData.Signals);
+        Series1 = priceChart.series;
+        Title1 = priceChart.title;
+        YAxes1 = priceChart.yAxis;
+
+        var signalChart = PlotSignalChart(DummyData.Signals);
+        Series2 = signalChart.series;
+        Title2 = signalChart.title;
+        YAxes2 = signalChart.yAxis;
+
+        // GetDrawdown
+        // Update IEnumerable<Drawdow> DrawdownDataForDrawdownCharts
+        //DataTable dt2 = new DataTable();
+    }
+
+    private (ISeries[] series, string title, Axis[] yAxis) PlotPriceChart(IEnumerable<SignalEntity> signals) 
+    {
+        var series = new ISeries[]
         {
                 new LineSeries<SignalEntity>
                 {
                     Values = signals,
                     Name = "Original Price",
-                    Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, x.Price),
+                    Mapping = (x, y) => y.Coordinate = new (x.Date.Ticks, x.Price),
                     Stroke = new SolidColorPaint(SKColors.Blue),
                     DataLabelsPaint = new SolidColorPaint(SKColors.Blue),
                     DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
@@ -251,7 +268,7 @@ public partial class SingleViewModel : Screen
                 {
                     Values = signals,
                     Name = "Predicted Price",
-                    Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, x.PricePredicted),
+                    Mapping = (x, y) => y.Coordinate = new (x.Date.Ticks, x.PricePredicted),
                     Stroke = new SolidColorPaint(SKColors.Red),
                     DataLabelsPaint = new SolidColorPaint(SKColors.Red),
                     DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
@@ -259,39 +276,43 @@ public partial class SingleViewModel : Screen
                     ScalesYAt = 0
                 }
         };
-        Title1 = $"{Ticker}: Stock Price (Price Type = {priceType}, Signal Type = {signalType})";
-        YAxes1 = new[] { YAxis("Stock Price") };
-        Series2 = new ISeries[]
-        {
-                new LineSeries<SignalEntity>
-                {
-                    Values = signals,
-                    Name = "Upper Band",
-                    Stroke = new SolidColorPaint(SKColors.DarkGreen),
-                    Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, x.UpperBand, 1),
-                    DataLabelsPaint = new SolidColorPaint(SKColors.DarkGreen),
-                    DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
-                    DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
-                    ScalesYAt = 0
-                },
-                new LineSeries<SignalEntity>
-                {
-                    Values = signals,
-                    Name = "Lower Band",
-                    Stroke = new SolidColorPaint(SKColors.DarkGreen),
-                    Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, x.LowerBand),
-                    DataLabelsPaint = new SolidColorPaint(SKColors.DarkGreen),
-                    DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
-                    DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
-                    ScalesYAt = 0,
-                },
-        };
-        Title2 = $"{Ticker}: Signal (Price Type = {priceType}, Signal Type = {signalType})";
-        YAxes2 = new[] { YAxis("Signal") };
+        var title = $"{Ticker}: Stock Price (Price Type = {priceType}, Signal Type = {signalType})";
+        var yAxes = new[] { YAxis("Stock Price") };
 
-        // GetDrawdown
-        // Update IEnumerable<Drawdow> DrawdownDataForDrawdownCharts
-        //DataTable dt2 = new DataTable();
+        return (series, title, yAxes);
+    }
+
+    private (ISeries[] series, string title, Axis[] yAxis) PlotSignalChart(IEnumerable<SignalEntity> signals)
+    {
+       var series = new ISeries[]
+       {
+            new LineSeries<SignalEntity>
+            {
+                Values = signals,
+                Name = "Upper Band",
+                Stroke = new SolidColorPaint(SKColors.DarkGreen),
+                Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, x.UpperBand, 1),
+                DataLabelsPaint = new SolidColorPaint(SKColors.DarkGreen),
+                DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
+                DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
+                ScalesYAt = 0
+            },
+            new LineSeries<SignalEntity>
+            {
+                Values = signals,
+                Name = "Lower Band",
+                Stroke = new SolidColorPaint(SKColors.DarkGreen),
+                Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, x.LowerBand),
+                DataLabelsPaint = new SolidColorPaint(SKColors.DarkGreen),
+                DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
+                DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
+                ScalesYAt = 0,
+            },
+       };
+       var title = $"{Ticker}: Signal (Price Type = {priceType}, Signal Type = {signalType})";
+       var yAxes = new[] { YAxis("Signal") };
+
+       return (series, title, yAxes);
     }
 
     static class DummyData
