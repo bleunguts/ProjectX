@@ -44,7 +44,7 @@ public partial class SingleViewModel : Screen
         DisplayName = "Mean Reversion strategy (Backtesting)";    
     }
 
-    private string ticker = "IBM";
+    private string ticker = "ACAQ";
     private DateTime fromDate = new(2023, 9, 1);
     private DateTime toDate = new(2023, 9, 25);
     private string signalType = "MovingAverage";
@@ -188,10 +188,10 @@ public partial class SingleViewModel : Screen
         base.OnActivate();
 
         const int movingWindow = 5;        
-        PnLRankingTable = PnlRankingTableDefaults(movingWindow, 0, 0).Build();
+        PnLRankingTable = PnlRankingTableDefaults(movingWindow).Build();
         await DisplayPriceAndSignalViewAsync(movingWindow);
 
-        static PnlRankingTableBuilder PnlRankingTableDefaults(int movingWindow, double signalIn, double signalOut)
+        static PnlRankingTableBuilder PnlRankingTableDefaults(int movingWindow, double signalIn = 0, double signalOut = 0)
         {
             return new PnlRankingTableBuilder(
             new List<(string ticker, int bar, double zin, double zout, int numTrades, double pnlCum, double sharpe)>()
