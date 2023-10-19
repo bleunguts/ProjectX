@@ -35,8 +35,8 @@ namespace ProjectX.Core.Services
                             .GetMaEnvelopes(movingWindow)         
                             .ToList();
 
-            List<SignalEntity> signalsProcessed = new List<SignalEntity>();
-            for (int i = 0; i < processed.Count - 1; i++)
+            List<SignalEntity> signalsProcessed = new();
+            for (int i = 0; i < processed.Count; i++)
             {                
                 var signal = processed[i];                
                 if(signal == null)

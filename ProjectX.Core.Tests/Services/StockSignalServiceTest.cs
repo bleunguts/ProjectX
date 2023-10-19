@@ -70,7 +70,7 @@ namespace ProjectX.Core.Tests.Services
                 Console.Out.WriteLine($"{p.Ticker}: {p.Date} price={p.Price} predicted={p.PricePredicted} upper={p.UpperBand} lower={p.LowerBand} signal={p.Signal}");
             }
             Assert.That(actual, Is.Not.Empty);
-            Assert.That(actual, Has.Count.EqualTo(30));
+            Assert.That(actual, Has.Count.EqualTo(31));
             _marketSource.Verify(x => x.GetPrices(Ticker, _startDate, _endDate), Times.Once);
 
             //var data = await SignalHelper.GetStockData(Ticker, StartDate, EndDate, SelectedPriceType);
