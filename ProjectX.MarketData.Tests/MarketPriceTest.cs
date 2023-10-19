@@ -12,13 +12,22 @@ namespace ProjectX.MarketData.Tests
         [Test]
         public void CanConvertHistoricalPriceItemToInternalDomainObject()
         {
+            const int someValue = 123;
             var item = new HistoricalPriceItem()
-            {
-                Close = 123
+            {                
+                Close = someValue,
+                Open = someValue,
+                High = someValue,
+                Low = someValue,
+                Volume= 10_000
             };
                 
             var actualPrice = item.ToMarketPrice();
-            Assert.That(actualPrice.Close, Is.EqualTo(123));
+            Assert.That(actualPrice.Close, Is.EqualTo(someValue));
+            Assert.That(actualPrice.Open, Is.EqualTo(someValue));
+            Assert.That(actualPrice.High, Is.EqualTo(someValue));
+            Assert.That(actualPrice.Low, Is.EqualTo(someValue));
+            Assert.That(actualPrice.Volume, Is.EqualTo(10_000));            
         }            
     }
 }

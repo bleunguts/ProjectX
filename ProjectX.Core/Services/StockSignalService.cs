@@ -17,12 +17,15 @@ namespace ProjectX.Core.Services
             this._ticker = ticker;
             this._marketSource = marketSource;
         }
+
+        /// <summary>
+        /// As a general rule of thumb, you will be safe if you provide 750 points of historical quote data (e.g. 3 years of daily data).
+        /// </summary>
         internal async Task<IEnumerable<MarketPrice>> FetchMarketPricesAsync(DateTime startDate, DateTime endDate)
         {            
             var prices = await _marketSource.GetPrices(_ticker, startDate, endDate);
             return prices;
-        }
-     
+        }        
         public async Task<IEnumerable<SignalEntity>> GetSignalUsingMovingAverageByDefault(DateTime startDate, DateTime endDate, int movingWindow)
         {     
             IEnumerable<MarketPrice> marketPrices = await FetchMarketPricesAsync(startDate, endDate);

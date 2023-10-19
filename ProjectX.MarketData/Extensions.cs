@@ -7,6 +7,10 @@ public static class Extensions
 {
     public static MarketPrice ToMarketPrice(this HistoricalPriceItem p) => new()
     {
-        Close = p.Close
+        Open = Convert.ToDecimal(p.Open),
+        Close = Convert.ToDecimal(p.Close),
+        High = Convert.ToDecimal(p.High),   
+        Low = Convert.ToDecimal(p.Low),
+        Volume = Convert.ToDecimal(p.Volume),
     };
 }
