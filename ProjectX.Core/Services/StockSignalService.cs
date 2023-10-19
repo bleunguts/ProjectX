@@ -17,18 +17,19 @@ namespace ProjectX.Core.Services
             this._ticker = ticker;
             this._marketSource = marketSource;
         }
-        internal async Task<IEnumerable<MarketPrice>> FetchDataAsync(DateTime startDate, DateTime endDate)
-        {
-            // stores signal data locally 
-            // calls a marketData facade to invoke getting the data
+        internal async Task<IEnumerable<MarketPrice>> FetchMarketPricesAsync(DateTime startDate, DateTime endDate)
+        {            
             var prices = await _marketSource.GetPrices(_ticker, startDate, endDate);
             return prices;
         }
-        public IEnumerable<SignalEntity> GetSignal(IEnumerable<SignalEntity> signals, int movingWindow, string signalType)
-        {
-            // only implement for moving average
-            // use moving average library
-            throw new NotImplementedException();
+     
+        public async Task<IEnumerable<SignalEntity>> GetSignalUsingMovingAverageByDefault(DateTime startDate, DateTime endDate, int movingWindow)
+        {     
+            IEnumerable<MarketPrice> marketPrices = await FetchMarketPricesAsync(startDate, endDate);
+
+            // TODO: parse marketPrices into Moving Average library that results in signals             
+
+            return new List<SignalEntity>();
         }
     }
 }
