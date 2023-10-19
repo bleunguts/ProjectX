@@ -11,7 +11,7 @@ namespace ProjectX.Core.Services
 {
     public interface IStockSignalService
     {
-        Task<List<SignalEntity>> GetSignalUsingMovingAverageByDefault(string ticker, DateTime startDate, DateTime endDate, int movingWindow);
+        Task<List<PriceSignalEntity>> GetSignalUsingMovingAverageByDefault(string ticker, DateTime startDate, DateTime endDate, int movingWindow);
     }
 
     [Export(typeof(IStockSignalService)), PartCreationPolicy(CreationPolicy.NonShared)]
@@ -33,7 +33,7 @@ namespace ProjectX.Core.Services
             var prices = await _marketSource.GetPrices(ticker, startDate, endDate);
             return prices.ToList();
         }
-        public async Task<List<SignalEntity>> GetSignalUsingMovingAverageByDefault(string ticker, DateTime startDate, DateTime endDate, int movingWindow)
+        public async Task<List<PriceSignalEntity>> GetSignalUsingMovingAverageByDefault(string ticker, DateTime startDate, DateTime endDate, int movingWindow)
         {
             List<MarketPrice> marketPrices = await FetchMarketPricesAsync(ticker, startDate, endDate);
 
@@ -41,7 +41,7 @@ namespace ProjectX.Core.Services
                             .GetMaEnvelopes(movingWindow)
                             .ToList();
 
-            List<SignalEntity> signalsProcessed = new();
+            List<PriceSignalEntity> signalsProcessed = new();
             for (int i = 0; i < processed.Count; i++)
             {
                 var signal = processed[i];
@@ -50,16 +50,18 @@ namespace ProjectX.Core.Services
                     throw new ArgumentNullException(nameof(signal), "Signal should not be null");
                 }
                 if (signal.Centerline == null) continue;
+                if (signal.LowerEnvelope == null) continue;
+                if (signal.UpperEnvelope == null) continue;                
 
-                signalsProcessed.Add(new SignalEntity
+                signalsProcessed.Add(new PriceSignalEntity
                 {
                     Ticker = ticker,
                     Date = signal.Date,
-                    Price = Convert.ToDouble(marketPrices[i].Close),
-                    PricePredicted = signal.Centerline ?? Double.MaxValue,
-                    LowerBand = signal.LowerEnvelope ?? Double.MaxValue,
-                    UpperBand = signal.UpperEnvelope ?? Double.MaxValue,
-                    Signal = signal.Centerline ?? Double.MaxValue,
+                    Price = marketPrices[i].Close,
+                    PricePredicted = (decimal)signal.Centerline,
+                    LowerBand = (decimal)signal.LowerEnvelope,
+                    UpperBand = (decimal)signal.UpperEnvelope,
+                    Signal = (decimal)signal.Centerline,
                 });
             }
             return signalsProcessed;

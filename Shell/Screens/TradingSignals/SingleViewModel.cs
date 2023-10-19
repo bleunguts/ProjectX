@@ -59,7 +59,7 @@ public partial class SingleViewModel : Screen
     private Axis[] _yAxes2 = Array.Empty<Axis>();
     private string _title1 = string.Empty;
     private string _title2 = string.Empty;
-    private BindableCollection<SignalEntity> _signals = new();
+    private BindableCollection<PriceSignalEntity> _signals = new();
 
     #region Bindable Properties    
     public string Ticker
@@ -226,7 +226,7 @@ public partial class SingleViewModel : Screen
         try
         {
             var smoothenedSignals = await _stockSignalService.GetSignalUsingMovingAverageByDefault(Ticker, FromDate, ToDate, movingWindow);
-            _signals = new BindableCollection<SignalEntity>(smoothenedSignals);
+            _signals = new BindableCollection<PriceSignalEntity>(smoothenedSignals);
 
             var priceChart = PlotPriceChart(_signals);
             Series1 = priceChart.series;
@@ -270,15 +270,15 @@ public partial class SingleViewModel : Screen
         //DataTable dt2 = new DataTable();
     }
 
-    private (ISeries[] series, string title, Axis[] yAxis) PlotPriceChart(IEnumerable<SignalEntity> signals) 
+    private (ISeries[] series, string title, Axis[] yAxis) PlotPriceChart(IEnumerable<PriceSignalEntity> signals) 
     {
         var series = new ISeries[]
         {
-            new LineSeries<SignalEntity>
+            new LineSeries<PriceSignalEntity>
             {
                 Values = signals,
                 Name = "Original Price",
-                Mapping = (x, y) => y.Coordinate = new (x.Date.Ticks, x.Price),
+                Mapping = (x, y) => y.Coordinate = new (x.Date.Ticks, (double)x.Price),
                 Stroke = new SolidColorPaint(SKColors.Blue),
                 DataLabelsPaint = new SolidColorPaint(SKColors.Blue),
                 DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
@@ -286,11 +286,11 @@ public partial class SingleViewModel : Screen
                 DataLabelsSize=10,
                 ScalesYAt = 0
             },
-            new LineSeries<SignalEntity>
+            new LineSeries<PriceSignalEntity>
             {
                 Values = signals,
                 Name = "Predicted Price",
-                Mapping = (x, y) => y.Coordinate = new (x.Date.Ticks, x.PricePredicted),
+                Mapping = (x, y) => y.Coordinate = new (x.Date.Ticks, (double)x.PricePredicted),
                 Stroke = new SolidColorPaint(SKColors.Red),
                 DataLabelsPaint = new SolidColorPaint(SKColors.Red),
                 DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
@@ -305,28 +305,28 @@ public partial class SingleViewModel : Screen
         return (series, title, yAxes);
     }
 
-    private (ISeries[] series, string title, Axis[] yAxis) PlotSignalChart(IEnumerable<SignalEntity> signals)
+    private (ISeries[] series, string title, Axis[] yAxis) PlotSignalChart(IEnumerable<PriceSignalEntity> signals)
     {
        var series = new ISeries[]
        {
-            new LineSeries<SignalEntity>
+            new LineSeries<PriceSignalEntity>
             {
                 Values = signals,
                 Name = "Upper Band",
                 Stroke = new SolidColorPaint(SKColors.DarkGreen),
-                Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, x.UpperBand, 1),
+                Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, (double)x.UpperBand, 1),
                 DataLabelsPaint = new SolidColorPaint(SKColors.DarkGreen),
                 DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
                 DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
                 DataLabelsSize=10,
                 ScalesYAt = 0
             },
-            new LineSeries<SignalEntity>
+            new LineSeries<PriceSignalEntity>
             {
                 Values = signals,
                 Name = "Lower Band",
                 Stroke = new SolidColorPaint(SKColors.DarkGreen),
-                Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, x.LowerBand),
+                Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, (double)x.LowerBand),
                 DataLabelsPaint = new SolidColorPaint(SKColors.DarkGreen),
                 DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
                 DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"), 
@@ -361,6 +361,6 @@ public partial class SingleViewModel : Screen
             ("IBM", "Total", "15", "3931.5", "1.65", "3300.0", "1.8"),
         };
 
-        public static IEnumerable<SignalEntity> Signals => new SignalBuilder("IBM").Build(10, 20);        
+        public static IEnumerable<PriceSignalEntity> Signals => new SignalBuilder("IBM").Build(10, 20);        
     }
 }

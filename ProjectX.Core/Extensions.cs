@@ -15,7 +15,6 @@ namespace ProjectX.Core
         public static decimal Spread(this SpotPrice s) => Decimal.Truncate((Math.Abs(s.BidPrice - s.AskPrice)) * 1000);
         public static DateTime ToDateTime(this string s) => DateTime.Parse(s);
         public static bool IsBetween(this DateTime dateTime, DateTime from, DateTime to) => dateTime > from && dateTime < to;
-
         public static string ToPrettifiedBidAskPrice(this SpotPrice price) => $"{price.BidPrice.ToString("#.00000")}/{price.AskPrice.ToString("#.00000")}";
         public static SpotPrice ToSpotPrice(this string spotPrice, string selectedCurrency)
         {
@@ -24,6 +23,27 @@ namespace ProjectX.Core
             var askPrice = Convert.ToDecimal(parts[1].Trim());
 
             return new SpotPrice(selectedCurrency, bidPrice, askPrice);
+        }
+        public static decimal StdDev<T>(this IEnumerable<T> list, Func<T, decimal> values)
+        {
+            var mean = 0.0M;
+            var stdDev = 0.0M;
+            var n = 0;
+
+            n = 0;
+            foreach (var value in list.Select(values))
+            {
+                n++;
+                mean += value;
+            }
+            mean /= n;
+
+            foreach (var value in list.Select(values))
+            {
+                stdDev += (value - mean) * (value - mean);
+            }            
+            stdDev = (decimal)Math.Sqrt((double)stdDev / (n - 1));
+            return stdDev;
         }
     }
 }

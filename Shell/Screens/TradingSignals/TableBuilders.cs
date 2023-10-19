@@ -20,9 +20,9 @@ public partial class SingleViewModel
             this._ticker = ticker;
             this._startDate = DateTime.Now.AddDays(-90);
         }
-        public IEnumerable<SignalEntity> Build(int low, int high)
+        public IEnumerable<PriceSignalEntity> Build(int low, int high)
         {
-            var signals = new List<SignalEntity>();
+            var signals = new List<PriceSignalEntity>();
             var date = _startDate;
             for (int i = 0; i <= MaxSignals; i++)
             {
@@ -31,15 +31,15 @@ public partial class SingleViewModel
                 var signal = price + _random.NextDouble();
                 var lowerBand = low - _random.NextDouble();
                 var upperBand = high + _random.NextDouble();
-                signals.Add(new SignalEntity
+                signals.Add(new PriceSignalEntity
                 {
                     Ticker = _ticker,
                     Price = price,
                     Date = date,
-                    LowerBand = lowerBand,
-                    UpperBand = upperBand,
-                    PricePredicted = pricePredicted,
-                    Signal = signal
+                    LowerBand = (decimal)lowerBand,
+                    UpperBand = (decimal)upperBand,
+                    PricePredicted = (decimal)pricePredicted,
+                    Signal = (decimal)signal
                 });
                 date = date.AddDays(1);
             }

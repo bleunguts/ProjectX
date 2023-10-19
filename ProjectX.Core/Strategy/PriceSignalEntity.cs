@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace ProjectX.Core.Strategy
 {
-    public class SignalEntity
+    public class PriceSignalEntity
     {
         public required string Ticker { get; set; }
         public DateTime Date { get; set; }
-        public double Price { get; set; }        
-        public double UpperBand { get; set; }
-        public double PricePredicted { get; set; }
-        public double LowerBand { get; set; }
-        public double Signal { get; set; }
+        public decimal Price { get; set; }        
+        public decimal PricePredicted { get; set; }
+        public decimal UpperBand { get; set; }
+        public decimal LowerBand { get; set; }
+        public decimal Signal { get; set; }
 
         public override string ToString()
         {
