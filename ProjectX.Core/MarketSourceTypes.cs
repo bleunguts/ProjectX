@@ -20,5 +20,6 @@ namespace ProjectX.Core
         public DateTime Date { get; set;  }
 
         public decimal Close { get; set; }
+        public string Ticker { get; set; }
     }
 }

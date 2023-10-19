@@ -13,5 +13,6 @@ public static class Extensions
         Low = Convert.ToDecimal(p.Low),
         Volume = Convert.ToDecimal(p.Volume),
         Date = DateTime.Parse(p.Date),
+        Ticker = p.Label,
     };
 }
