@@ -199,20 +199,22 @@ public partial class SingleViewModel : Screen
                 {
                     Values = signals,
                     Name = "Original Price",
-                    Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, Math.Round(x.Price,1)),
+                    Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, x.Price),
                     Stroke = new SolidColorPaint(SKColors.Blue),                    
                     DataLabelsPaint = new SolidColorPaint(SKColors.Blue),
                     DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,                                        
+                    DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
                     ScalesYAt = 0
                 },
                 new LineSeries<SignalEntity>
                 {
                     Values = signals,
                     Name = "Predicted Price",
-                    Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, Math.Round(x.PricePredicted,1)),
+                    Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, x.PricePredicted),
                     Stroke = new SolidColorPaint(SKColors.Red),                    
                     DataLabelsPaint = new SolidColorPaint(SKColors.Red),
                     DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
+                    DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
                     ScalesYAt = 0
                 }                
             };
@@ -224,9 +226,10 @@ public partial class SingleViewModel : Screen
                     Values = signals,
                     Name = "Upper Band",
                     Stroke = new SolidColorPaint(SKColors.DarkGreen),
-                    Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, Math.Round(x.UpperBand, 1)),                    
+                    Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, x.UpperBand, 1),                    
                     DataLabelsPaint = new SolidColorPaint(SKColors.DarkGreen),
                     DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
+                    DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
                     ScalesYAt = 0
                 },
                 new LineSeries<SignalEntity>
@@ -234,9 +237,10 @@ public partial class SingleViewModel : Screen
                     Values = signals,
                     Name = "Lower Band",
                     Stroke = new SolidColorPaint(SKColors.DarkGreen),
-                    Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, Math.Round(x.LowerBand,1)),                    
+                    Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, x.LowerBand),                    
                     DataLabelsPaint = new SolidColorPaint(SKColors.DarkGreen),
                     DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
+                    DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
                     ScalesYAt = 0
                 },
             };
