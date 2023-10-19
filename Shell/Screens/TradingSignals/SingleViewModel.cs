@@ -142,27 +142,17 @@ public partial class SingleViewModel : Screen
         get { return _yAxes2; }
         set { _yAxes2 = value; NotifyOfPropertyChange(() => YAxes2); }
     } 
-    private static Axis XAxis(string axisLabel) =>
-    new()
+    private static Axis XAxis(string axisLabel) => new()
     {
         Name = axisLabel,
         Labeler = value => new DateTime((long)value).ToString("yyyy-MM-dd"),                    
     };
 
-    private static Axis YAxis(string axisLabel) =>
-    new()
+    private static Axis YAxis(string axisLabel) => new()
     {
         Name = axisLabel,
         Labeler = Labelers.SixRepresentativeDigits,
-        MinLimit = 0,
-        //NamePaint = new SolidColorPaint(SKColors.Red),
-        //LabelsPaint = new SolidColorPaint(SKColors.Green),
-        //TextSize = 20,
-        //SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray)
-        //{
-        //    StrokeThickness = 2,
-        //    PathEffect = new DashEffect(new float[] { 3, 3 })
-        //}
+        MinLimit = 0,       
     };
 
     #endregion
@@ -216,7 +206,7 @@ public partial class SingleViewModel : Screen
             double signalIn = Convert.ToDouble(row[2]);
             double signalOut = Convert.ToDouble(row[3]);
 
-            DisplayPriceAndSignalView(movingWindow, signalIn, signalOut);    
+            DisplayAccumulatedPnlAndDrawdownForStrategyView(movingWindow, signalIn, signalOut);    
         });
     }
 
@@ -239,7 +229,7 @@ public partial class SingleViewModel : Screen
         YAxes2 = signalChart.yAxis;
     }
 
-    private void CalculateAndUpdateUI(int movingWindow, double signalIn, double signalOut)
+    private void DisplayAccumulatedPnlAndDrawdownForStrategyView(int movingWindow, double signalIn, double signalOut)
     {
         // compute signals first 
 
