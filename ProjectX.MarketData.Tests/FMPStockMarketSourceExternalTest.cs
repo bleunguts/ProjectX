@@ -34,10 +34,11 @@ namespace ProjectX.MarketData.Tests
         public async Task WhenCallingGetHistoricalPricesShouldReturnValidPricesAsync()
         {
             var marketDataService = new FMPStockMarketSource();
-            var marketPrices = await marketDataService.GetPrices("GOOGL", new DateTime(2020, 1, 1), new DateTime(2020, 2, 1));
+            var marketPrices = await marketDataService.GetPrices("IBM", new DateTime(2023, 1, 1), new DateTime(2023, 10, 1));
+            Assert.That(marketPrices.Count(), Is.GreaterThan(0));
             foreach (var data in marketPrices)
             {
-                //Console.WriteLine($"Date: {data.Date.ToDateTime()}, Symbol: {data.Date}, Label:{data.Label}, Close:{data.Close}, Volume:{data.Volume}");
+                Console.WriteLine($"Date: {data.Date}, Close:{data.Close}, Volume:{data.Volume}");
                 //Assert.That(data.Date.ToDateTime().IsBetween(new DateTime(2020, 1, 1), new DateTime(2020, 2, 1)), Is.True);
                 Assert.That(data.Close, Is.GreaterThan(0));
             }

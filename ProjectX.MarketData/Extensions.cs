@@ -12,5 +12,6 @@ public static class Extensions
         High = Convert.ToDecimal(p.High),   
         Low = Convert.ToDecimal(p.Low),
         Volume = Convert.ToDecimal(p.Volume),
+        Date = DateTime.Parse(p.Date),
     };
 }

@@ -45,8 +45,8 @@ public partial class SingleViewModel : Screen
     }
 
     private string ticker = "IBM";
-    private DateTime fromDate = new(2023, 2, 25);
-    private DateTime toDate = new(2023, 2, 25);
+    private DateTime fromDate = new(2023, 9, 1);
+    private DateTime toDate = new(2023, 9, 25);
     private string signalType = "MovingAverage";
     private string priceType = "Close";
     private int notional = 10_000;
@@ -156,7 +156,7 @@ public partial class SingleViewModel : Screen
     {
         Name = axisLabel,
         Labeler = Labelers.SixRepresentativeDigits,
-        MinLimit = 0,       
+        //MinLimit = 0,       
     };
 
     #endregion

@@ -19,7 +19,8 @@ namespace ProjectX.MarketData.Tests
                 Open = someValue,
                 High = someValue,
                 Low = someValue,
-                Volume= 10_000
+                Volume= 10_000,
+                Date = "2023-09-29"
             };
                 
             var actualPrice = item.ToMarketPrice();
@@ -27,7 +28,8 @@ namespace ProjectX.MarketData.Tests
             Assert.That(actualPrice.Open, Is.EqualTo(someValue));
             Assert.That(actualPrice.High, Is.EqualTo(someValue));
             Assert.That(actualPrice.Low, Is.EqualTo(someValue));
-            Assert.That(actualPrice.Volume, Is.EqualTo(10_000));            
+            Assert.That(actualPrice.Volume, Is.EqualTo(10_000));
+            Assert.That(actualPrice.Date, Is.EqualTo(new DateTime(2023, 9, 29)));
         }            
     }
 }
