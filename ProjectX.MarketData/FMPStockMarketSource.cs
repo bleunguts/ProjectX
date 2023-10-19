@@ -15,15 +15,15 @@ public class FMPStockMarketSource : IStockMarketSource
             ApiKey = "35fdfe7c1a0d49e6ca2283bb073fea3a"
         });
     }
-
     public async Task<IEnumerable<MarketPrice>> GetPrices(string ticker, DateTime from, DateTime to)
     {
         var result = await _api.StockTimeSeries.GetHistoricalDailyPricesAsync(ticker, from.ToString("yyyy-MM-dd"), to.ToString("yyyy-MM-dd"));
         var response = result.Data;        
         if (response.Historical == null)
         {
-            throw new Exception($"Cannot fetch any data for ticker {ticker} for periods {from.ToShortDateString()} to {to.ToShortDateString()}");
+            throw new Exception($"Cannot fetch any data for ticker {ticker} for periods {from.ToShortDateString()} to {to.ToShortDateString()} sourceProvider: {this}");
         }
         return response.Historical.Select(h => h.ToMarketPrice());
     }
+    public override string ToString() => $"FinancialModelingPrep market source {_api.ToString()}";
 }
