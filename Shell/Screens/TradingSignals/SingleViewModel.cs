@@ -24,6 +24,7 @@ using System.Windows.Markup;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Xml;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Shell.Screens.TradingSignals;
 
@@ -54,6 +55,7 @@ public partial class SingleViewModel : Screen
     private Axis[] _yAxes2 = Array.Empty<Axis>();
     private string _title1;
     private string _title2;
+    private BindableCollection<SignalEntity> _signals = new();
 
     #region Bindable Properties    
     public string Ticker
@@ -175,6 +177,10 @@ public partial class SingleViewModel : Screen
             builder.SetRows(DummyData.DummyPnLRankingTable);
             PnLRankingTable = builder.Build();
 
+            // TODO: get stock data
+            // compute parameter permutations for strategy ad resultant pnl for each OptimHelper.OptimSingleName(data, SelectedSignalType, SelectedStrategyType, IsReinvest
+            // store results into PnLRankingTable above
+
             return Task.CompletedTask;
         });
     }
@@ -187,7 +193,7 @@ public partial class SingleViewModel : Screen
         const double signalIn = 0;
         const double signalOut = 1.0;
         PnLRankingTable = PnlRankingTableDefaults(movingWindow, signalIn, signalOut).Build();
-        CalculateAndUpdateUI(movingWindow, signalIn, signalOut);
+        DisplayPriceAndSignalView(movingWindow, signalIn, signalOut);
 
         static PnlRankingTableBuilder PnlRankingTableDefaults(int movingWindow, double signalIn, double signalOut)
         {
@@ -210,40 +216,50 @@ public partial class SingleViewModel : Screen
             double signalIn = Convert.ToDouble(row[2]);
             double signalOut = Convert.ToDouble(row[3]);
 
-            CalculateAndUpdateUI(movingWindow, signalIn, signalOut);    
+            DisplayPriceAndSignalView(movingWindow, signalIn, signalOut);    
         });
     }
 
-    private void CalculateAndUpdateUI(int movingWindow, double signalIn, double signalOut)
+    /// <summary>
+    /// Price (1) accompanied by Signals chart (2)
+    /// </summary>    
+    private void DisplayPriceAndSignalView(int movingWindow, double signalIn, double signalOut)
     {
-        // Fix below
-        // var pnls = BacktestHelper.ComputeLongShortPnl(signal, 10_000.0, signalIn, signalOut, SelectedStrategyType, IsReinvest).ToList();            
-        PnLTable.Clear();
-        PnLTable.AddRange(DummyData.DummyPnlTable);
+        // TODO: compuute signals here
+        _signals = new BindableCollection<SignalEntity>(DummyData.Signals);
 
-        // GetYearlyPnl and upate YearlyPnlTable            
-        // public static List<(string ticker, string year, int numTrades, double pnl, double sp0, double pnl2, double sp1)> GetYearlyPnl(List<PnlEntity> p)
-        // or can write own yearly aggregator based on pnls above 
-        var builder = new YearlyPnLTableBuilder();
-        builder.SetRows(DummyData.YearlyPnL);
-        YearlyPnLTable = builder.Build();
-
-        // Update IEnumerable<SignalData> SignalDataForSignalCharts
-        // Compute Signals for user selected movingWindow 
-        // var signal = SignalHelper.GetSignal(data, movingWindow, SelectedSignalType);
-
-        // Price (1) accompanied by Signals chart (2)
-        // Plot Accumulated PnL chart (1) accompanied by the Drawdown Chart (2)        
-        var priceChart = PlotPriceChart(DummyData.Signals);
+        var priceChart = PlotPriceChart(_signals);
         Series1 = priceChart.series;
         Title1 = priceChart.title;
         YAxes1 = priceChart.yAxis;
 
-        var signalChart = PlotSignalChart(DummyData.Signals);
+        var signalChart = PlotSignalChart(_signals);
         Series2 = signalChart.series;
         Title2 = signalChart.title;
         YAxes2 = signalChart.yAxis;
+    }
 
+    private void CalculateAndUpdateUI(int movingWindow, double signalIn, double signalOut)
+    {
+        // compute signals first 
+
+        // supply signals to long short strategy
+
+        // var pnls = BacktestHelper.ComputeLongShortPnl(signal, 10_000.0, signalIn, signalOut, SelectedStrategyType, IsReinvest).ToList();            
+        PnLTable.Clear();
+        PnLTable.AddRange(DummyData.DummyPnlTable);
+        // filled pnl for strategy
+
+        // do the aggregate yearly stats
+        // public static List<(string ticker, string year, int numTrades, double pnl, double sp0, double pnl2, double sp1)> GetYearlyPnl(List<PnlEntity> p)
+        var builder = new YearlyPnLTableBuilder();
+        builder.SetRows(DummyData.YearlyPnL);
+        YearlyPnLTable = builder.Build();
+        // filled yearly stats
+        
+        // TODO: Plot Accumulated PnL chart (1) accompanied by the Drawdown Chart (2)
+        // Add PnlCharts code here
+     
         // GetDrawdown
         // Update IEnumerable<Drawdow> DrawdownDataForDrawdownCharts
         //DataTable dt2 = new DataTable();
@@ -253,28 +269,28 @@ public partial class SingleViewModel : Screen
     {
         var series = new ISeries[]
         {
-                new LineSeries<SignalEntity>
-                {
-                    Values = signals,
-                    Name = "Original Price",
-                    Mapping = (x, y) => y.Coordinate = new (x.Date.Ticks, x.Price),
-                    Stroke = new SolidColorPaint(SKColors.Blue),
-                    DataLabelsPaint = new SolidColorPaint(SKColors.Blue),
-                    DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
-                    DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
-                    ScalesYAt = 0
-                },
-                new LineSeries<SignalEntity>
-                {
-                    Values = signals,
-                    Name = "Predicted Price",
-                    Mapping = (x, y) => y.Coordinate = new (x.Date.Ticks, x.PricePredicted),
-                    Stroke = new SolidColorPaint(SKColors.Red),
-                    DataLabelsPaint = new SolidColorPaint(SKColors.Red),
-                    DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
-                    DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
-                    ScalesYAt = 0
-                }
+            new LineSeries<SignalEntity>
+            {
+                Values = signals,
+                Name = "Original Price",
+                Mapping = (x, y) => y.Coordinate = new (x.Date.Ticks, x.Price),
+                Stroke = new SolidColorPaint(SKColors.Blue),
+                DataLabelsPaint = new SolidColorPaint(SKColors.Blue),
+                DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
+                DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
+                ScalesYAt = 0
+            },
+            new LineSeries<SignalEntity>
+            {
+                Values = signals,
+                Name = "Predicted Price",
+                Mapping = (x, y) => y.Coordinate = new (x.Date.Ticks, x.PricePredicted),
+                Stroke = new SolidColorPaint(SKColors.Red),
+                DataLabelsPaint = new SolidColorPaint(SKColors.Red),
+                DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
+                DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
+                ScalesYAt = 0
+            }
         };
         var title = $"{Ticker}: Stock Price (Price Type = {priceType}, Signal Type = {signalType})";
         var yAxes = new[] { YAxis("Stock Price") };
