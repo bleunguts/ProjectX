@@ -19,8 +19,7 @@ public class FMPStockMarketSource : IStockMarketSource
     public async Task<IEnumerable<MarketPrice>> GetPrices(string ticker, DateTime from, DateTime to)
     {
         var result = await _api.StockTimeSeries.GetHistoricalDailyPricesAsync(ticker, from.ToString("yyyy-MM-dd"), to.ToString("yyyy-MM-dd"));
-        var response = result.Data;
-        
+        var response = result.Data;        
         return response.Historical.Select(h => h.ToMarketPrice());
     }
 }
