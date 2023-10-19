@@ -187,11 +187,9 @@ public partial class SingleViewModel : Screen
     {
         base.OnActivate();
 
-        const int movingWindow = 5;
-        const double signalIn = 0;
-        const double signalOut = 1.0;
-        PnLRankingTable = PnlRankingTableDefaults(movingWindow, signalIn, signalOut).Build();
-        await DisplayPriceAndSignalViewAsync(movingWindow, signalIn, signalOut);
+        const int movingWindow = 5;        
+        PnLRankingTable = PnlRankingTableDefaults(movingWindow, 0, 0).Build();
+        await DisplayPriceAndSignalViewAsync(movingWindow);
 
         static PnlRankingTableBuilder PnlRankingTableDefaults(int movingWindow, double signalIn, double signalOut)
         {
@@ -221,7 +219,7 @@ public partial class SingleViewModel : Screen
     /// <summary>
     /// Price (1) accompanied by Signals chart (2)
     /// </summary>    
-    private async Task DisplayPriceAndSignalViewAsync(int movingWindow, double signalIn, double signalOut)
+    private async Task DisplayPriceAndSignalViewAsync(int movingWindow)
     {
         try
         {
@@ -279,7 +277,7 @@ public partial class SingleViewModel : Screen
                 Values = signals,
                 Name = "Original Price",
                 Mapping = (x, y) => y.Coordinate = new (x.Date.Ticks, (double)x.Price),
-                Stroke = new SolidColorPaint(SKColors.Blue),
+                Stroke = new SolidColorPaint(SKColors.Blue),                
                 DataLabelsPaint = new SolidColorPaint(SKColors.Blue),
                 DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
                 DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
@@ -297,7 +295,31 @@ public partial class SingleViewModel : Screen
                 DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
                 DataLabelsSize=10,
                 ScalesYAt = 0
-            }
+            },
+             new LineSeries<PriceSignalEntity>
+            {
+                Values = signals,
+                Name = "Upper Band",
+                Stroke = new SolidColorPaint(SKColors.DarkGreen),
+                Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, (double)x.UpperBand),
+                DataLabelsPaint = new SolidColorPaint(SKColors.DarkGreen),
+                DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
+                DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
+                DataLabelsSize=10,                
+                ScalesYAt = 0
+            },
+            new LineSeries<PriceSignalEntity>
+            {
+                Values = signals,
+                Name = "Lower Band",
+                Stroke = new SolidColorPaint(SKColors.DarkGreen),
+                Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, (double)x.LowerBand),
+                DataLabelsPaint = new SolidColorPaint(SKColors.DarkGreen),
+                DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
+                DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
+                DataLabelsSize = 10,
+                ScalesYAt = 0,
+            },
         };
         var title = $"{Ticker}: Stock Price (Price Type = {priceType}, Signal Type = {signalType})";
         var yAxes = new[] { YAxis("Stock Price") };
@@ -312,24 +334,11 @@ public partial class SingleViewModel : Screen
             new LineSeries<PriceSignalEntity>
             {
                 Values = signals,
-                Name = "Upper Band",
-                Stroke = new SolidColorPaint(SKColors.DarkGreen),
-                Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, (double)x.UpperBand, 1),
+                Name = "Signal",                
+                Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, (double)x.Signal),
                 DataLabelsPaint = new SolidColorPaint(SKColors.DarkGreen),
                 DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
                 DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
-                DataLabelsSize=10,
-                ScalesYAt = 0
-            },
-            new LineSeries<PriceSignalEntity>
-            {
-                Values = signals,
-                Name = "Lower Band",
-                Stroke = new SolidColorPaint(SKColors.DarkGreen),
-                Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, (double)x.LowerBand),
-                DataLabelsPaint = new SolidColorPaint(SKColors.DarkGreen),
-                DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
-                DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"), 
                 DataLabelsSize = 10,
                 ScalesYAt = 0,
             },

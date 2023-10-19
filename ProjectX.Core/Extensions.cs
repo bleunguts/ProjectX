@@ -41,8 +41,9 @@ namespace ProjectX.Core
             foreach (var value in list.Select(values))
             {
                 stdDev += (value - mean) * (value - mean);
-            }            
-            stdDev = (decimal)Math.Sqrt((double)stdDev / (n - 1));
+            }
+            var interim = stdDev / (n - 1);
+            stdDev = (decimal) Math.Sqrt(Convert.ToDouble(interim));
             return stdDev;
         }
     }
