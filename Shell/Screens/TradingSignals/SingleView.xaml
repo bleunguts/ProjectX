@@ -74,8 +74,8 @@
                     <DataGrid x:Name="PnLTable" ColumnWidth="*" CanUserAddRows="False" SelectionUnit="FullRow"/>
                 </GroupBox>
             </Grid>
-            <lvc:CartesianChart Grid.Column="0" Grid.Row="1" Series="{Binding Series1}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes1}"/>
-            <lvc:CartesianChart Grid.Column="1" Grid.Row="1" Series="{Binding Series2}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes2}" />
+            <lvc:CartesianChart Grid.Column="0" Grid.Row="1" Title="{Binding Title1}" Series="{Binding Series1}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes1}" LegendPosition="Top"/>
+            <lvc:CartesianChart Grid.Column="1" Grid.Row="1" Title="{Binding Title2}" Series="{Binding Series2}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes2}" LegendPosition="Top"/>
         </Grid>
     </Grid>
 </UserControl>

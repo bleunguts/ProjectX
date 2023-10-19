@@ -45,8 +45,10 @@ public partial class SingleViewModel : Screen
     private DataTable pnlRankingTable = new();
     private DataTable yearlyPnLTable = new();
     private BindableCollection<PnlEntity> pnlTable = new();
-    private ISeries[] _series1 = new ISeries[] { };
-    private ISeries[] _series2 = new ISeries[] { };
+    private ISeries[] _series1 = Array.Empty<ISeries>();
+    private ISeries[] _series2 = Array.Empty<ISeries>();
+    private Axis[] _yAxes1 = Array.Empty<Axis>();
+    private Axis[] _yAxes2 = Array.Empty<Axis>();
 
     #region Bindable Properties    
     public string Ticker
@@ -115,30 +117,38 @@ public partial class SingleViewModel : Screen
     public string Title1 => $"{Ticker}: Stock Price (Price Type = {priceType}, Signal Type = {signalType})";
     public string Title2 => $"{Ticker}: Signal (Price Type = {priceType}, Signal Type = {signalType})";
     public Axis[] XAxes => new Axis[] { XAxis("Date") };
-    public Axis[] YAxes1 => new Axis[] { YAxis("Stock Price") };
-    public Axis[] YAxes2 => new Axis[] { YAxis("Signal") };
+    public Axis[] YAxes1
+    {
+        get { return _yAxes1; }
+        set { _yAxes1 = value; NotifyOfPropertyChange(() => YAxes1); }
+    } 
+    public Axis[] YAxes2
+    {
+        get { return _yAxes2; }
+        set { _yAxes2 = value; NotifyOfPropertyChange(() => YAxes2); }
+    } 
     private static Axis XAxis(string axisLabel) =>
-        new()
-        {
-            Name = axisLabel,
-            Labeler = value => new DateTime((long)value).ToString("yyyy-MM-dd"),                    
-        };
+    new()
+    {
+        Name = axisLabel,
+        Labeler = value => new DateTime((long)value).ToString("yyyy-MM-dd"),                    
+    };
 
     private static Axis YAxis(string axisLabel) =>
-         new()
-         {
-             Name = axisLabel,
-             Labeler = Labelers.SixRepresentativeDigits,
-             MinLimit = 0,
-             //NamePaint = new SolidColorPaint(SKColors.Red),
-             //LabelsPaint = new SolidColorPaint(SKColors.Green),
-             //TextSize = 20,
-             //SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray)
-             //{
-             //    StrokeThickness = 2,
-             //    PathEffect = new DashEffect(new float[] { 3, 3 })
-             //}
-         };
+    new()
+    {
+        Name = axisLabel,
+        Labeler = Labelers.SixRepresentativeDigits,
+        MinLimit = 0,
+        //NamePaint = new SolidColorPaint(SKColors.Red),
+        //LabelsPaint = new SolidColorPaint(SKColors.Green),
+        //TextSize = 20,
+        //SeparatorsPaint = new SolidColorPaint(SKColors.LightSlateGray)
+        //{
+        //    StrokeThickness = 2,
+        //    PathEffect = new DashEffect(new float[] { 3, 3 })
+        //}
+    };
 
     #endregion
     public async Task Compute()
@@ -207,6 +217,7 @@ public partial class SingleViewModel : Screen
                     ScalesYAt = 0
                 }                
             };
+            YAxes1 = new[] { YAxis("Accumulated P&L") };
             Series2 = new ISeries[]
             {
                 new LineSeries<SignalEntity>
@@ -229,7 +240,8 @@ public partial class SingleViewModel : Screen
                     DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
                     ScalesYAt = 0
                 },
-            };                        
+            };
+            YAxes2 = new[] { YAxis("Drawdown (%)") };
 
             // GetDrawdown
             // Update IEnumerable<Drawdow> DrawdownDataForDrawdownCharts
