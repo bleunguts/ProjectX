@@ -4,7 +4,7 @@ namespace ProjectX.Core.Services
 {
     public class BacktestService
     {
-        public IEnumerable<PnlEntity> ComputeLongShortPnl(
+        public IEnumerable<StrategyPnl> ComputeLongShortPnl(
             IEnumerable<PriceSignal> inputSignals,
             double notional, // initial invest capital
             double signalIn,
@@ -14,7 +14,7 @@ namespace ProjectX.Core.Services
             ActivePosition currentPosition = ActivePosition.INACTIVE;
             var signals = new List<PriceSignal>(inputSignals);
             var candidateSignal = signals.First();
-            var pnlEntities = new List<PnlEntity>() { PnlEntityFactory.NewPnlEntity(candidateSignal.Date, candidateSignal.Ticker, candidateSignal.Price, candidateSignal.Signal) };
+            List<StrategyPnl> pnls = CreatePnlsWith(candidateSignal);
 
             double pnlCum = 0.0;
             int totalNumTrades = 0;
@@ -29,11 +29,11 @@ namespace ProjectX.Core.Services
                 double pnlDaily = 0.0;
                 double pnlPerTrade = 0.0;
                 double prevSignal = strategy.IsMomentum() ? (double)-prev.Signal : (double)prev.Signal;
-                double prevPnlCum = pnlEntities[i - 1].PnLCum;
+                double prevPnlCum = pnls[i - 1].PnLCum;
 
                 switch (currentPosition)
                 {
-                    case InactivePosition position:                        
+                    case InactivePosition _:
                         bool testSignal(double prevSignal_, double signalIn_, out PositionStatus positionStatus)
                         {
                             // Enter Long Position:
@@ -61,7 +61,7 @@ namespace ProjectX.Core.Services
                             var shares = strategy.IsReinvest ? (notional + prevPnlCum) / (double)current.Price : notional / (double)current.Price;
                             EnterPosition(ref currentPosition, positionStatus, current.Date, (double)current.Price, shares);
                             totalNumTrades++;
-                        }                        
+                        }
                         break;
                     case LiveActivePosition livePosition:
                         if (livePosition.IsLongPosition())
@@ -102,15 +102,16 @@ namespace ProjectX.Core.Services
                 double pnlDailyHold = notional * (double)((current.Price - prev.Price) / initialPrice);
                 double pnlCumHold = notional * (double)((current.Price - initialPrice) / initialPrice);
 
-                pnlEntities.Add(PnlEntityFactory.NewPnlEntity(current.Date, current.Ticker, (double)current.Price, (double)current.Signal, pnlCum, pnlDaily, pnlPerTrade, pnlDailyHold, pnlCumHold, totalNumTrades, currentPosition));
-
+                pnls.Add(StrategyPnlFactory.NewPnl(current.Date, current.Ticker, (double)current.Price, (double)current.Signal, pnlCum, pnlDaily, pnlPerTrade, pnlDailyHold, pnlCumHold, totalNumTrades, currentPosition));                
+                // exiting position has to be called at the end after adding pnlresults
                 if (exitingPosition) { ExitPosition(ref currentPosition); }
             }
 
-            return pnlEntities;
-
-            void ExitPosition(ref ActivePosition position) => position = ActivePosition.INACTIVE;
-            void EnterPosition(ref ActivePosition position, PositionStatus tradeType, DateTime dateIn, double priceIn, double shares) => position = new LiveActivePosition(tradeType, dateIn, priceIn, shares);
+            return pnls;
         }
+
+        private static void ExitPosition(ref ActivePosition position) => position = ActivePosition.INACTIVE;
+        private static void EnterPosition(ref ActivePosition position, PositionStatus tradeType, DateTime dateIn, double priceIn, double shares) => position = new LiveActivePosition(tradeType, dateIn, priceIn, shares);
+        private static List<StrategyPnl> CreatePnlsWith(PriceSignal candidateSignal) => new() { StrategyPnlFactory.NewPnl(candidateSignal.Date, candidateSignal.Ticker, candidateSignal.Price, candidateSignal.Signal) };
     }
 }

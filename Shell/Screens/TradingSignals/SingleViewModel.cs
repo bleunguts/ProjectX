@@ -52,7 +52,7 @@ public partial class SingleViewModel : Screen
     private int notional = 10_000;
     private DataTable pnlRankingTable = new() ;
     private DataTable yearlyPnLTable = new();
-    private BindableCollection<PnlEntity> pnlTable = new();
+    private BindableCollection<StrategyPnl> pnlTable = new();
     private ISeries[] _series1 = Array.Empty<ISeries>();
     private ISeries[] _series2 = Array.Empty<ISeries>();
     private Axis[] _yAxes1 = Array.Empty<Axis>();
@@ -99,7 +99,7 @@ public partial class SingleViewModel : Screen
         set { pnlRankingTable = value; NotifyOfPropertyChange(() => PnLRankingTable); }
     }
 
-    public BindableCollection<PnlEntity> PnLTable
+    public BindableCollection<StrategyPnl> PnLTable
     {
         get { return pnlTable; }
         set { pnlTable = value; NotifyOfPropertyChange(() => PnLTable); }
@@ -360,9 +360,9 @@ public partial class SingleViewModel : Screen
             ("IBM", 9, 9, 20, 5, 180, 1.9)
         };
 
-        public static PnlEntity[] DummyPnlTable => new[]
+        public static StrategyPnl[] DummyPnlTable => new[]
         {
-            PnlEntityFactory.NewPnlEntity(new DateTime(2023, 1, 1), "IBM", 130.8, 1.5, 120, 100, 120, 50, 500, 3, LiveActivePosition.INACTIVE)
+            StrategyPnlFactory.NewPnl(new DateTime(2023, 1, 1), "IBM", 130.8, 1.5, 120, 100, 120, 50, 500, 3, LiveActivePosition.INACTIVE)
         };
 
         public static IEnumerable<(string ticker, string period, string numTrades, string pnl, string sharpe, string pnlHold, string sharpehold)> YearlyPnL => new List<(string ticker, string period, string numTrades, string pnl, string sharpe, string pnlHold, string sharpehold)>

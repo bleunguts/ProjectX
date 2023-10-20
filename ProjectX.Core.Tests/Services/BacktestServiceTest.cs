@@ -38,24 +38,24 @@ namespace ProjectX.Core.Tests.Services
                 builder.NewSignal(-4.1)  // exit long trade (prevSignal > 0)
             };
 
-            var pnlEntities = _backtestService.ComputeLongShortPnl(signals, notional, signalIn, signalOut, strategy).ToList();
-            pnlEntities.Print();
-            (int enterTradeIndex, int exitTradeIndex) = pnlEntities.DeconstructTradeTimeline(PositionStatus.POSITION_LONG);
-            var enterTrade = pnlEntities[enterTradeIndex];
+            var strategyPnls = _backtestService.ComputeLongShortPnl(signals, notional, signalIn, signalOut, strategy).ToList();
+            strategyPnls.Print();
+            (int enterTradeIndex, int exitTradeIndex) = strategyPnls.DeconstructTradeTimeline(PositionStatus.POSITION_LONG);
+            var enterTrade = strategyPnls[enterTradeIndex];
             Assert.That(enterTrade.Date, Is.EqualTo(signals[enterTradeIndex].Date));
             Assert.That(enterTrade.TradeType, Is.EqualTo(PositionStatus.POSITION_LONG));
             Assert.That(enterTrade.PriceIn, Is.EqualTo(signals[enterTradeIndex].Price));
             Assert.That(enterTrade.NumTrades, Is.EqualTo(1));
             Assert.That(enterTrade.PnlPerTrade, Is.EqualTo(0));
 
-            var exitTrade = pnlEntities[exitTradeIndex];
+            var exitTrade = strategyPnls[exitTradeIndex];
             Assert.That(exitTrade.Date, Is.EqualTo(signals[exitTradeIndex].Date));
             Assert.That(exitTrade.TradeType, Is.EqualTo(PositionStatus.POSITION_LONG));
             Assert.That(exitTrade.PriceIn, Is.EqualTo(signals[enterTradeIndex].Price));
             Assert.That(exitTrade.NumTrades, Is.EqualTo(2));
             Assert.That(exitTrade.PnlPerTrade, Is.GreaterThan(0).Or.LessThan(0));
 
-            pnlEntities.PrintStrategyFor(enterTradeIndex, exitTradeIndex);
+            strategyPnls.PrintStrategyFor(enterTradeIndex, exitTradeIndex);
         }
 
         // prevSignal > 2 enters short
@@ -79,25 +79,25 @@ namespace ProjectX.Core.Tests.Services
                 builder.NewSignal(0.1)   // exit short trade (prevSignal < 0) 
             };
 
-            var pnlEntities = _backtestService.ComputeLongShortPnl(signals, notional, signalIn, signalOut, new TradingStrategy(TradingStrategyType.MeanReversion, false)).ToList();
-            pnlEntities.Print();
+            var strategyPnls = _backtestService.ComputeLongShortPnl(signals, notional, signalIn, signalOut, new TradingStrategy(TradingStrategyType.MeanReversion, false)).ToList();
+            strategyPnls.Print();
 
-            (int enterTradeIndex, int exitTradeIndex) = pnlEntities.DeconstructTradeTimeline(PositionStatus.POSITION_SHORT);
-            var enterTrade = pnlEntities[enterTradeIndex];
+            (int enterTradeIndex, int exitTradeIndex) = strategyPnls.DeconstructTradeTimeline(PositionStatus.POSITION_SHORT);
+            var enterTrade = strategyPnls[enterTradeIndex];
             Assert.That(enterTrade.Date, Is.EqualTo(signals[enterTradeIndex].Date));
             Assert.That(enterTrade.TradeType, Is.EqualTo(PositionStatus.POSITION_SHORT));
             Assert.That(enterTrade.PriceIn, Is.EqualTo(signals[enterTradeIndex].Price));
             Assert.That(enterTrade.NumTrades, Is.EqualTo(1));
             Assert.That(enterTrade.PnlPerTrade, Is.EqualTo(0));
 
-            var exitTrade = pnlEntities[exitTradeIndex];
+            var exitTrade = strategyPnls[exitTradeIndex];
             Assert.That(exitTrade.Date, Is.EqualTo(signals[exitTradeIndex].Date));
             Assert.That(exitTrade.TradeType, Is.EqualTo(PositionStatus.POSITION_SHORT));
             Assert.That(exitTrade.PriceIn, Is.EqualTo(signals[enterTradeIndex].Price));
             Assert.That(exitTrade.NumTrades, Is.EqualTo(2));
             Assert.That(exitTrade.PnlPerTrade, Is.GreaterThan(0).Or.LessThan(0));
 
-            pnlEntities.PrintStrategyFor(enterTradeIndex, exitTradeIndex);
+            strategyPnls.PrintStrategyFor(enterTradeIndex, exitTradeIndex);
         }
 
         [Test]
@@ -125,8 +125,8 @@ namespace ProjectX.Core.Tests.Services
                 builder.NewSignal(0.1)    // exit short trade (prevSignal < -3) 
             };
 
-            var pnlEntities = _backtestService.ComputeLongShortPnl(signals, notional, signalIn, signalOut, new TradingStrategy(TradingStrategyType.MeanReversion, false)).ToList();                     
-            pnlEntities.PrintStrategyFor(PositionStatus.POSITION_SHORT);            
+            var strategyPnls = _backtestService.ComputeLongShortPnl(signals, notional, signalIn, signalOut, new TradingStrategy(TradingStrategyType.MeanReversion, false)).ToList();                     
+            strategyPnls.PrintStrategyFor(PositionStatus.POSITION_SHORT);            
         }                 
     }    
 }

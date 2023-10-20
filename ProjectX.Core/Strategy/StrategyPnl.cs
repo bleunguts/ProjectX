@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace ProjectX.Core.Strategy
 {
     public enum PositionStatus { POSITION_NONE = 0, POSITION_LONG, POSITION_SHORT }
-    public class PnlEntity
+    public class StrategyPnl
     {              
-        public PnlEntity(DateTime date, string ticker, double price, double signal, double pnLCum, double pnLDaily, double pnlPerTrade, double pnlDailyHold, double pnlCumHold, PositionStatus tradeType, DateTime? dateIn, double? priceIn, int numTrades)
+        public StrategyPnl(DateTime date, string ticker, double price, double signal, double pnLCum, double pnLDaily, double pnlPerTrade, double pnlDailyHold, double pnlCumHold, PositionStatus tradeType, DateTime? dateIn, double? priceIn, int numTrades)
         {
             Date = date;
             Ticker = ticker;
