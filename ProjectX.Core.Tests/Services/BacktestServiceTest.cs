@@ -1,4 +1,5 @@
-﻿using ProjectX.Core.Strategy;
+﻿using ProjectX.Core.Services;
+using ProjectX.Core.Strategy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,8 @@ namespace ProjectX.Core.Tests.Services
         public void WhenSignalIsLessThanNegSignalItShouldEnterAndExitLongTrade()
         {
             var builder = new SignalBuilder(ticker);
-            var signals = new List<PriceSignalEntity>
+            var strategy = new TradingStrategy(TradingStrategyType.MeanReversion, false);
+            var signals = new List<PriceSignal>
             {
                 builder.NewSignal(-1.5),
                 builder.NewSignal(-2.1),
@@ -36,9 +38,9 @@ namespace ProjectX.Core.Tests.Services
                 builder.NewSignal(-4.1)  // exit long trade (prevSignal > 0)
             };
 
-            var pnlEntities = _backtestService.ComputeLongShortPnl(signals, notional, signalIn, signalOut, StrategyType.MeanReversion, false).ToList();
-            Print(pnlEntities);
-            (int enterTradeIndex, int exitTradeIndex) = ToTrades(pnlEntities, PnlTradeType.POSITION_LONG);
+            var pnlEntities = _backtestService.ComputeLongShortPnl(signals, notional, signalIn, signalOut, strategy).ToList();
+            pnlEntities.Print();
+            (int enterTradeIndex, int exitTradeIndex) = pnlEntities.DeconstructTradeTimeline(PnlTradeType.POSITION_LONG);
             var enterTrade = pnlEntities[enterTradeIndex];
             Assert.That(enterTrade.Date, Is.EqualTo(signals[enterTradeIndex].Date));
             Assert.That(enterTrade.TradeType, Is.EqualTo(PnlTradeType.POSITION_LONG));
@@ -53,7 +55,7 @@ namespace ProjectX.Core.Tests.Services
             Assert.That(exitTrade.NumTrades, Is.EqualTo(2));
             Assert.That(exitTrade.PnlPerTrade, Is.GreaterThan(0).Or.LessThan(0));
 
-            PrintStrategy(pnlEntities, enterTradeIndex, exitTradeIndex);
+            pnlEntities.PrintStrategyFor(enterTradeIndex, exitTradeIndex);
         }
 
         // prevSignal > 2 enters short
@@ -68,7 +70,7 @@ namespace ProjectX.Core.Tests.Services
         public void WhenSignalIsGreaterThanSignalItShouldEnterAndExitShortTrade()
         {
             var builder = new SignalBuilder(ticker, startDate);
-            var signals = new List<PriceSignalEntity>
+            var signals = new List<PriceSignal>
             {
                 builder.NewSignal(-1.5),
                 builder.NewSignal(3.1),
@@ -77,10 +79,10 @@ namespace ProjectX.Core.Tests.Services
                 builder.NewSignal(0.1)   // exit short trade (prevSignal < 0) 
             };
 
-            var pnlEntities = _backtestService.ComputeLongShortPnl(signals, notional, signalIn, signalOut, StrategyType.MeanReversion, false).ToList();
-            Print(pnlEntities);
+            var pnlEntities = _backtestService.ComputeLongShortPnl(signals, notional, signalIn, signalOut, new TradingStrategy(TradingStrategyType.MeanReversion, false)).ToList();
+            pnlEntities.Print();
 
-            (int enterTradeIndex, int exitTradeIndex) = ToTrades(pnlEntities, PnlTradeType.POSITION_SHORT);
+            (int enterTradeIndex, int exitTradeIndex) = pnlEntities.DeconstructTradeTimeline(PnlTradeType.POSITION_SHORT);
             var enterTrade = pnlEntities[enterTradeIndex];
             Assert.That(enterTrade.Date, Is.EqualTo(signals[enterTradeIndex].Date));
             Assert.That(enterTrade.TradeType, Is.EqualTo(PnlTradeType.POSITION_SHORT));
@@ -95,7 +97,7 @@ namespace ProjectX.Core.Tests.Services
             Assert.That(exitTrade.NumTrades, Is.EqualTo(2));
             Assert.That(exitTrade.PnlPerTrade, Is.GreaterThan(0).Or.LessThan(0));
 
-            PrintStrategy(pnlEntities, enterTradeIndex, exitTradeIndex);
+            pnlEntities.PrintStrategyFor(enterTradeIndex, exitTradeIndex);
         }
 
         [Test]
@@ -106,7 +108,7 @@ namespace ProjectX.Core.Tests.Services
             var random = new Random();                        
             var builder = new SignalBuilder(ticker, startDate);
 
-            var signals = new List<PriceSignalEntity>
+            var signals = new List<PriceSignal>
             {
                 builder.NewSignal(15.5),
                 builder.NewSignal(-1.1),  // enters short trade (prevSignal > 2)
@@ -123,30 +125,8 @@ namespace ProjectX.Core.Tests.Services
                 builder.NewSignal(0.1)    // exit short trade (prevSignal < -3) 
             };
 
-            var pnlEntities = _backtestService.ComputeLongShortPnl(signals, notional, signalIn, signalOut, StrategyType.MeanReversion, false).ToList();
-            Print(pnlEntities);
-            (int enterTradeIndex, int exitTradeIndex) = ToTrades(pnlEntities, PnlTradeType.POSITION_SHORT);
-            PrintStrategy(pnlEntities, enterTradeIndex, exitTradeIndex);
-        }       
-
-        private static (int enterTradeIndex, int exitTradeIndex) ToTrades(List<PnlEntity> pnlEntities, PnlTradeType pnlTradeType)
-        {
-            var first = pnlEntities.FindIndex(p => p.TradeType == pnlTradeType);
-            var last = pnlEntities.FindLastIndex(p => p.TradeType == pnlTradeType);
-            return (first, last);
-        }
-
-        private static void Print(List<PnlEntity> pnlEntities) => pnlEntities.ForEach(p => Console.WriteLine(p));
-
-        private static void PrintStrategy(List<PnlEntity> pnlEntities, int start, int end)
-        {
-            Console.WriteLine("Strategy PnL:");
-            for (int i = start; i <= end; i++)
-            {
-                PnlEntity p = pnlEntities[i];
-                //{0:0.##}
-                Console.WriteLine($"{p.Date.ToShortDateString()},Price={p.Price:0.##},Signal={p.Signal:0.##},PnlPerTrade={p.PnlPerTrade:0.##},PnlDaily={p.PnLDaily:0.##},PnlCum={p.PnLCum:0.##},PnlDailyHold={p.PnLDailyHold:0.##},PnlCumHold={p.PnLCumHold:0.##}");
-            }
-        }
-    }
+            var pnlEntities = _backtestService.ComputeLongShortPnl(signals, notional, signalIn, signalOut, new TradingStrategy(TradingStrategyType.MeanReversion, false)).ToList();                     
+            pnlEntities.PrintStrategyFor(PnlTradeType.POSITION_SHORT);            
+        }                 
+    }    
 }

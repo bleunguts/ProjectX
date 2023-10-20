@@ -9,10 +9,10 @@ namespace ProjectX.Core.Services
 {
     public static class MarketPriceExtensions
     {
-        public static IEnumerable<PriceSignalEntity> MovingAverage(this IEnumerable<MarketPrice> r, int movingWindow)
+        public static IEnumerable<PriceSignal> MovingAverage(this IEnumerable<MarketPrice> r, int movingWindow)
         {
             var rawSignals = r.ToList();
-            var computedSignals = new List<PriceSignalEntity>();
+            var computedSignals = new List<PriceSignal>();
 
             for (int i = movingWindow - 1; i < rawSignals.Count; i++)
             {
@@ -25,7 +25,7 @@ namespace ProjectX.Core.Services
                 decimal std = temp.StdDev(x => x.Close);
                 decimal price = rawSignals[i].Close;
                 decimal zscore = std == 0 ? 0 :(price - avg) / std;
-                computedSignals.Add(new PriceSignalEntity
+                computedSignals.Add(new PriceSignal
                 {
                     Ticker = rawSignals[i].Ticker,
                     Date = rawSignals[i].Date,

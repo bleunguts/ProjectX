@@ -21,19 +21,19 @@ public class SignalBuilder
         this._currentDate = startDate ?? DateTime.Now.AddDays(-90);
     }
 
-    public PriceSignalEntity NewSignal(double v)
+    public PriceSignal NewSignal(double v)
     {
         return NewSignal((decimal)v);
     }
 
-    public PriceSignalEntity NewSignal(decimal signal, int low = 10, int high = 20)
+    public PriceSignal NewSignal(decimal signal, int low = 10, int high = 20)
     {
         var price = _random.Next(low, high);
         var pricePredicted = price + (decimal)_random.NextDouble();        
         var lowerBand = low - (decimal)_random.NextDouble();
         var upperBand = high + (decimal)_random.NextDouble();
 
-        var entity = new PriceSignalEntity()
+        var entity = new PriceSignal()
         {
             Ticker = _ticker,
             Date = _currentDate,
@@ -48,9 +48,9 @@ public class SignalBuilder
         return entity;
     }
 
-    public IEnumerable<PriceSignalEntity> Build(int low, int high)
+    public IEnumerable<PriceSignal> Build(int low, int high)
     {
-        var signals = new List<PriceSignalEntity>();
+        var signals = new List<PriceSignal>();
         var date = _currentDate;
         for (int i = 0; i <= MaxSignals; i++)
         {
@@ -59,7 +59,7 @@ public class SignalBuilder
             var signal = price + _random.NextDouble();
             var lowerBand = low - _random.NextDouble();
             var upperBand = high + _random.NextDouble();
-            signals.Add(new PriceSignalEntity
+            signals.Add(new PriceSignal
             {
                 Ticker = _ticker,
                 Price = price,

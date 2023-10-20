@@ -59,7 +59,7 @@ public partial class SingleViewModel : Screen
     private Axis[] _yAxes2 = Array.Empty<Axis>();
     private string _title1 = string.Empty;
     private string _title2 = string.Empty;
-    private BindableCollection<PriceSignalEntity> _signals = new();
+    private BindableCollection<PriceSignal> _signals = new();
 
     #region Bindable Properties    
     public string Ticker
@@ -224,7 +224,7 @@ public partial class SingleViewModel : Screen
         try
         {
             var smoothenedSignals = await _stockSignalService.GetSignalUsingMovingAverageByDefault(Ticker, FromDate, ToDate, movingWindow);
-            _signals = new BindableCollection<PriceSignalEntity>(smoothenedSignals);
+            _signals = new BindableCollection<PriceSignal>(smoothenedSignals);
 
             var priceChart = PlotPriceChart(_signals);
             Series1 = priceChart.series;
@@ -271,11 +271,11 @@ public partial class SingleViewModel : Screen
 
     }
 
-    private (ISeries[] series, string title, Axis[] yAxis) PlotPriceChart(IEnumerable<PriceSignalEntity> signals) 
+    private (ISeries[] series, string title, Axis[] yAxis) PlotPriceChart(IEnumerable<PriceSignal> signals) 
     {
         var series = new ISeries[]
         {
-            new LineSeries<PriceSignalEntity>
+            new LineSeries<PriceSignal>
             {
                 Values = signals,
                 Name = "Original Price",
@@ -287,7 +287,7 @@ public partial class SingleViewModel : Screen
                 DataLabelsSize=10,
                 ScalesYAt = 0
             },
-            new LineSeries<PriceSignalEntity>
+            new LineSeries<PriceSignal>
             {
                 Values = signals,
                 Name = "Predicted Price",
@@ -299,7 +299,7 @@ public partial class SingleViewModel : Screen
                 DataLabelsSize=10,
                 ScalesYAt = 0
             },
-             new LineSeries<PriceSignalEntity>
+             new LineSeries<PriceSignal>
             {
                 Values = signals,
                 Name = "Upper Band",
@@ -311,7 +311,7 @@ public partial class SingleViewModel : Screen
                 DataLabelsSize=10,                
                 ScalesYAt = 0
             },
-            new LineSeries<PriceSignalEntity>
+            new LineSeries<PriceSignal>
             {
                 Values = signals,
                 Name = "Lower Band",
@@ -330,11 +330,11 @@ public partial class SingleViewModel : Screen
         return (series, title, yAxes);
     }
 
-    private (ISeries[] series, string title, Axis[] yAxis) PlotSignalChart(IEnumerable<PriceSignalEntity> signals)
+    private (ISeries[] series, string title, Axis[] yAxis) PlotSignalChart(IEnumerable<PriceSignal> signals)
     {
        var series = new ISeries[]
        {
-            new LineSeries<PriceSignalEntity>
+            new LineSeries<PriceSignal>
             {
                 Values = signals,
                 Name = "Signal",                
@@ -373,6 +373,6 @@ public partial class SingleViewModel : Screen
             ("IBM", "Total", "15", "3931.5", "1.65", "3300.0", "1.8"),
         };
 
-        public static IEnumerable<PriceSignalEntity> Signals => new ProjectX.Core.SignalBuilder("IBM").Build(10, 20);        
+        public static IEnumerable<PriceSignal> Signals => new ProjectX.Core.SignalBuilder("IBM").Build(10, 20);        
     }
 }

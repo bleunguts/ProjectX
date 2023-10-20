@@ -11,7 +11,7 @@ namespace ProjectX.Core.Services
 {
     public interface IStockSignalService
     {
-        Task<List<PriceSignalEntity>> GetSignalUsingMovingAverageByDefault(string ticker, DateTime startDate, DateTime endDate, int movingWindow);
+        Task<List<PriceSignal>> GetSignalUsingMovingAverageByDefault(string ticker, DateTime startDate, DateTime endDate, int movingWindow);
     }
 
     [Export(typeof(IStockSignalService)), PartCreationPolicy(CreationPolicy.NonShared)]
@@ -28,7 +28,7 @@ namespace ProjectX.Core.Services
         /// <summary>
         /// As a general rule of thumb, you will be safe if you provide 750 points of historical quote data (e.g. 3 years of daily data).
         /// </summary>
-        public async Task<List<PriceSignalEntity>> GetSignalUsingMovingAverageByDefault(string ticker, DateTime startDate, DateTime endDate, int movingWindow)
+        public async Task<List<PriceSignal>> GetSignalUsingMovingAverageByDefault(string ticker, DateTime startDate, DateTime endDate, int movingWindow)
         {
             var marketPrices = await _marketSource.GetPrices(ticker, startDate, endDate);            
 

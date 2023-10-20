@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ProjectX.Core.Strategy
 {
-    public class PriceSignalEntity
+    public class PriceSignal
     {
         public required string Ticker { get; set; }
         public DateTime Date { get; set; }

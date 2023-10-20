@@ -1,20 +1,18 @@
 ﻿using ProjectX.Core.Strategy;
 
-namespace ProjectX.Core.Tests.Services
+namespace ProjectX.Core.Services
 {
-    public enum StrategyType { MeanReversion, Momentum }
     public class BacktestService
     {
         public IEnumerable<PnlEntity> ComputeLongShortPnl(
-            IEnumerable<PriceSignalEntity> inputSignals,
+            IEnumerable<PriceSignal> inputSignals,
             double notional, // initial invest capital
             double signalIn,
             double signalOut,
-            StrategyType strategyType,
-            bool isReinvest)
+            TradingStrategy strategy)
         {
             ActivePosition activePosition = ActivePosition.INACTIVE;
-            var signals = new List<PriceSignalEntity>(inputSignals);
+            var signals = new List<PriceSignal>(inputSignals);
             var candidateSignal = signals.First();
             var pnlEntities = new List<PnlEntity>() { PnlEntityFactory.NewPnlEntity(candidateSignal.Date, candidateSignal.Ticker, candidateSignal.Price, candidateSignal.Signal) };
 
@@ -29,7 +27,7 @@ namespace ProjectX.Core.Tests.Services
 
                 double pnlDaily = 0.0;
                 double pnlPerTrade = 0.0;
-                double prevSignal = strategyType == StrategyType.Momentum ? (double)-prev.Signal : (double)prev.Signal;
+                double prevSignal = strategy.IsMomentum() ? (double)-prev.Signal : (double)prev.Signal;
                 double prevPnlCum = pnlEntities[i - 1].PnLCum;
 
                 if (activePosition.IsActive)
@@ -89,7 +87,7 @@ namespace ProjectX.Core.Tests.Services
                     PnlTradeType positionType = PnlTradeType.POSITION_NONE;
                     if (testSignal(prevSignal, signalIn, out positionType))
                     {
-                        var shares = isReinvest ? (notional + prevPnlCum) / (double)current.Price : notional / (double)current.Price;
+                        var shares = strategy.IsReinvest ? (notional + prevPnlCum) / (double)current.Price : notional / (double)current.Price;
                         activePosition = EnterPosition(positionType, current.Date, (double)current.Price, shares);
                         totalNumTrades++;
                     }
