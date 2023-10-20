@@ -8,24 +8,8 @@ namespace ProjectX.Core.Strategy
 {
     public enum PnlTradeType { POSITION_NONE = 0, POSITION_LONG, POSITION_SHORT }
     public class PnlEntity
-    {      
-        public static PnlEntity Build(DateTime date, string ticker, double price, double signal, double pnLCum, double pnLDaily, double pnlPerTrade, double pnlDailyHold, double pnlCumHold, int numTrades, ActivePosition activePosition)
-        {
-            var tradeType = PnlTradeType.POSITION_NONE;
-            DateTime? dateIn = null;
-            double? priceIn = null;
-
-            if (activePosition.IsActive)
-            {
-                tradeType = activePosition.TradeType;
-                priceIn = activePosition.PriceIn;
-                dateIn = activePosition.DateIn;
-            }
-
-            return new PnlEntity(date, ticker, price, signal, pnLCum, pnLDaily, pnlPerTrade, pnlDailyHold, pnlCumHold, tradeType, dateIn, priceIn, numTrades);
-        }
-
-        private PnlEntity(DateTime date, string ticker, double price, double signal, double pnLCum, double pnLDaily, double pnlPerTrade, double pnlDailyHold, double pnlCumHold, PnlTradeType tradeType, DateTime? dateIn, double? priceIn, int numTrades)
+    {              
+        public PnlEntity(DateTime date, string ticker, double price, double signal, double pnLCum, double pnLDaily, double pnlPerTrade, double pnlDailyHold, double pnlCumHold, PnlTradeType tradeType, DateTime? dateIn, double? priceIn, int numTrades)
         {
             Date = date;
             Ticker = ticker;
