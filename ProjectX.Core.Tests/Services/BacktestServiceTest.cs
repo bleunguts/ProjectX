@@ -7,13 +7,15 @@ using System.Threading.Tasks;
 
 namespace ProjectX.Core.Tests.Services
 {
-    public class BacktestHelperTest
+    public class BacktestServiceTest
     {
         const double notional = 10_000.0;
         const double signalIn = 2;
         const double signalOut = 0.0;
         const string ticker = "IBM";
         readonly DateTime startDate = DateTime.Now;
+
+        private readonly BacktestService _backtestService = new();
 
         // prevSignal > 2 enters short
         // prevSignal < -2 enters long
@@ -34,7 +36,7 @@ namespace ProjectX.Core.Tests.Services
                 builder.NewSignal(-4.1)  // exit long trade (prevSignal > 0)
             };
 
-            var pnlEntities = BacktestHelper.ComputeLongShortPnl(signals, notional, signalIn, signalOut, StrategyTypeEnum.MeanReversion, false).ToList();
+            var pnlEntities = _backtestService.ComputeLongShortPnl(signals, notional, signalIn, signalOut, StrategyType.MeanReversion, false).ToList();
             Print(pnlEntities);
             (int enterTradeIndex, int exitTradeIndex) = ToTrades(pnlEntities, PnlTradeType.POSITION_LONG);
             var enterTrade = pnlEntities[enterTradeIndex];
@@ -75,7 +77,7 @@ namespace ProjectX.Core.Tests.Services
                 builder.NewSignal(0.1)   // exit short trade (prevSignal < 0) 
             };
 
-            var pnlEntities = BacktestHelper.ComputeLongShortPnl(signals, notional, signalIn, signalOut, StrategyTypeEnum.MeanReversion, false).ToList();
+            var pnlEntities = _backtestService.ComputeLongShortPnl(signals, notional, signalIn, signalOut, StrategyType.MeanReversion, false).ToList();
             Print(pnlEntities);
 
             (int enterTradeIndex, int exitTradeIndex) = ToTrades(pnlEntities, PnlTradeType.POSITION_SHORT);
@@ -121,7 +123,7 @@ namespace ProjectX.Core.Tests.Services
                 builder.NewSignal(0.1)    // exit short trade (prevSignal < -3) 
             };
 
-            var pnlEntities = BacktestHelper.ComputeLongShortPnl(signals, notional, signalIn, signalOut, StrategyTypeEnum.MeanReversion, false).ToList();
+            var pnlEntities = _backtestService.ComputeLongShortPnl(signals, notional, signalIn, signalOut, StrategyType.MeanReversion, false).ToList();
             Print(pnlEntities);
             (int enterTradeIndex, int exitTradeIndex) = ToTrades(pnlEntities, PnlTradeType.POSITION_SHORT);
             PrintStrategy(pnlEntities, enterTradeIndex, exitTradeIndex);

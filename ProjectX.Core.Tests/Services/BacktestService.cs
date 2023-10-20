@@ -2,15 +2,15 @@
 
 namespace ProjectX.Core.Tests.Services
 {
-    public enum StrategyTypeEnum { MeanReversion, Momentum }
-    public class BacktestHelper
+    public enum StrategyType { MeanReversion, Momentum }
+    public class BacktestService
     {
-        public static IEnumerable<PnlEntity> ComputeLongShortPnl(
+        public IEnumerable<PnlEntity> ComputeLongShortPnl(
             IEnumerable<PriceSignalEntity> inputSignals,
             double notional, // initial invest capital
             double signalIn,
             double signalOut,
-            StrategyTypeEnum strategyType,
+            StrategyType strategyType,
             bool isReinvest)
         {
             ActivePosition activePosition = ActivePosition.INACTIVE;
@@ -29,7 +29,7 @@ namespace ProjectX.Core.Tests.Services
 
                 double pnlDaily = 0.0;
                 double pnlPerTrade = 0.0;
-                double prevSignal = strategyType == StrategyTypeEnum.Momentum ? (double)-prev.Signal : (double)prev.Signal;
+                double prevSignal = strategyType == StrategyType.Momentum ? (double)-prev.Signal : (double)prev.Signal;
                 double prevPnlCum = pnlEntities[i - 1].PnLCum;
 
                 if (activePosition.IsActive)
