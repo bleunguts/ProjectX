@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace ProjectX.Core.Strategy
 {
-    public enum PnlTradeType { POSITION_NONE = 0, POSITION_LONG, POSITION_SHORT }
+    public enum PositionStatus { POSITION_NONE = 0, POSITION_LONG, POSITION_SHORT }
     public class PnlEntity
     {              
-        public PnlEntity(DateTime date, string ticker, double price, double signal, double pnLCum, double pnLDaily, double pnlPerTrade, double pnlDailyHold, double pnlCumHold, PnlTradeType tradeType, DateTime? dateIn, double? priceIn, int numTrades)
+        public PnlEntity(DateTime date, string ticker, double price, double signal, double pnLCum, double pnLDaily, double pnlPerTrade, double pnlDailyHold, double pnlCumHold, PositionStatus tradeType, DateTime? dateIn, double? priceIn, int numTrades)
         {
             Date = date;
             Ticker = ticker;
@@ -30,7 +30,7 @@ namespace ProjectX.Core.Strategy
         public DateTime Date { get; set; }
         public double Price { get; set; }
         public double Signal { get; set; }
-        public PnlTradeType TradeType { get; set; }
+        public PositionStatus TradeType { get; set; }
         public DateTime? DateIn { get; set; }
         public double? PriceIn { get; set; }
 

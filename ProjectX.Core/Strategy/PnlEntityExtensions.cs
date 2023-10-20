@@ -2,9 +2,9 @@
 {
     public static class PnlEntityExtensions
     {
-        public static void PrintStrategyFor(this List<PnlEntity> pnlEntities, PnlTradeType tradeType)
+        public static void PrintStrategyFor(this List<PnlEntity> pnlEntities, PositionStatus tradeType)
         {
-            (int enterTradeIndex, int exitTradeIndex) = pnlEntities.DeconstructTradeTimeline(PnlTradeType.POSITION_SHORT);
+            (int enterTradeIndex, int exitTradeIndex) = pnlEntities.DeconstructTradeTimeline(PositionStatus.POSITION_SHORT);
             pnlEntities.Print();
             pnlEntities.PrintStrategyFor(enterTradeIndex, exitTradeIndex);
         }
@@ -21,7 +21,7 @@
 
         public static void Print(this List<PnlEntity> pnlEntities) => pnlEntities.ForEach(p => Console.WriteLine(p));
 
-        public static (int enterTradeIndex, int exitTradeIndex) DeconstructTradeTimeline(this List<PnlEntity> pnlEntities, PnlTradeType pnlTradeType)
+        public static (int enterTradeIndex, int exitTradeIndex) DeconstructTradeTimeline(this List<PnlEntity> pnlEntities, PositionStatus pnlTradeType)
         {
             var first = pnlEntities.FindIndex(p => p.TradeType == pnlTradeType);
             var last = pnlEntities.FindLastIndex(p => p.TradeType == pnlTradeType);

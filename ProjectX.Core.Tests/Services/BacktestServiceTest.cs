@@ -40,17 +40,17 @@ namespace ProjectX.Core.Tests.Services
 
             var pnlEntities = _backtestService.ComputeLongShortPnl(signals, notional, signalIn, signalOut, strategy).ToList();
             pnlEntities.Print();
-            (int enterTradeIndex, int exitTradeIndex) = pnlEntities.DeconstructTradeTimeline(PnlTradeType.POSITION_LONG);
+            (int enterTradeIndex, int exitTradeIndex) = pnlEntities.DeconstructTradeTimeline(PositionStatus.POSITION_LONG);
             var enterTrade = pnlEntities[enterTradeIndex];
             Assert.That(enterTrade.Date, Is.EqualTo(signals[enterTradeIndex].Date));
-            Assert.That(enterTrade.TradeType, Is.EqualTo(PnlTradeType.POSITION_LONG));
+            Assert.That(enterTrade.TradeType, Is.EqualTo(PositionStatus.POSITION_LONG));
             Assert.That(enterTrade.PriceIn, Is.EqualTo(signals[enterTradeIndex].Price));
             Assert.That(enterTrade.NumTrades, Is.EqualTo(1));
             Assert.That(enterTrade.PnlPerTrade, Is.EqualTo(0));
 
             var exitTrade = pnlEntities[exitTradeIndex];
             Assert.That(exitTrade.Date, Is.EqualTo(signals[exitTradeIndex].Date));
-            Assert.That(exitTrade.TradeType, Is.EqualTo(PnlTradeType.POSITION_LONG));
+            Assert.That(exitTrade.TradeType, Is.EqualTo(PositionStatus.POSITION_LONG));
             Assert.That(exitTrade.PriceIn, Is.EqualTo(signals[enterTradeIndex].Price));
             Assert.That(exitTrade.NumTrades, Is.EqualTo(2));
             Assert.That(exitTrade.PnlPerTrade, Is.GreaterThan(0).Or.LessThan(0));
@@ -82,17 +82,17 @@ namespace ProjectX.Core.Tests.Services
             var pnlEntities = _backtestService.ComputeLongShortPnl(signals, notional, signalIn, signalOut, new TradingStrategy(TradingStrategyType.MeanReversion, false)).ToList();
             pnlEntities.Print();
 
-            (int enterTradeIndex, int exitTradeIndex) = pnlEntities.DeconstructTradeTimeline(PnlTradeType.POSITION_SHORT);
+            (int enterTradeIndex, int exitTradeIndex) = pnlEntities.DeconstructTradeTimeline(PositionStatus.POSITION_SHORT);
             var enterTrade = pnlEntities[enterTradeIndex];
             Assert.That(enterTrade.Date, Is.EqualTo(signals[enterTradeIndex].Date));
-            Assert.That(enterTrade.TradeType, Is.EqualTo(PnlTradeType.POSITION_SHORT));
+            Assert.That(enterTrade.TradeType, Is.EqualTo(PositionStatus.POSITION_SHORT));
             Assert.That(enterTrade.PriceIn, Is.EqualTo(signals[enterTradeIndex].Price));
             Assert.That(enterTrade.NumTrades, Is.EqualTo(1));
             Assert.That(enterTrade.PnlPerTrade, Is.EqualTo(0));
 
             var exitTrade = pnlEntities[exitTradeIndex];
             Assert.That(exitTrade.Date, Is.EqualTo(signals[exitTradeIndex].Date));
-            Assert.That(exitTrade.TradeType, Is.EqualTo(PnlTradeType.POSITION_SHORT));
+            Assert.That(exitTrade.TradeType, Is.EqualTo(PositionStatus.POSITION_SHORT));
             Assert.That(exitTrade.PriceIn, Is.EqualTo(signals[enterTradeIndex].Price));
             Assert.That(exitTrade.NumTrades, Is.EqualTo(2));
             Assert.That(exitTrade.PnlPerTrade, Is.GreaterThan(0).Or.LessThan(0));
@@ -126,7 +126,7 @@ namespace ProjectX.Core.Tests.Services
             };
 
             var pnlEntities = _backtestService.ComputeLongShortPnl(signals, notional, signalIn, signalOut, new TradingStrategy(TradingStrategyType.MeanReversion, false)).ToList();                     
-            pnlEntities.PrintStrategyFor(PnlTradeType.POSITION_SHORT);            
+            pnlEntities.PrintStrategyFor(PositionStatus.POSITION_SHORT);            
         }                 
     }    
 }

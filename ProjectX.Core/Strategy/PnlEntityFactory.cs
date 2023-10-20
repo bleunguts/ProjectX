@@ -6,18 +6,19 @@
 
         public static PnlEntity NewPnlEntity(DateTime date, string ticker, double price, double signal, double pnLCum, double pnLDaily, double pnlPerTrade, double pnlDailyHold, double pnlCumHold, int numTrades, ActivePosition activePosition)
         {
-            var tradeType = PnlTradeType.POSITION_NONE;
+            var positionStatus = PositionStatus.POSITION_NONE;
             DateTime? dateIn = null;
             double? priceIn = null;
 
-            if (activePosition.IsActive)
+            LiveActivePosition? position = activePosition as LiveActivePosition;
+            if (activePosition.IsActive && position != null)
             {
-                tradeType = activePosition.TradeType;
-                priceIn = activePosition.PriceIn;
-                dateIn = activePosition.DateIn;
+                positionStatus = position.PositionStatus;
+                priceIn = position.PriceIn;
+                dateIn = position.DateIn;
             }
 
-            return new PnlEntity(date, ticker, price, signal, pnLCum, pnLDaily, pnlPerTrade, pnlDailyHold, pnlCumHold, tradeType, dateIn, priceIn, numTrades);
+            return new PnlEntity(date, ticker, price, signal, pnLCum, pnLDaily, pnlPerTrade, pnlDailyHold, pnlCumHold, positionStatus, dateIn, priceIn, numTrades);
         }
     }
 }
