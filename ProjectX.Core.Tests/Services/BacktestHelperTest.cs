@@ -101,9 +101,7 @@ namespace ProjectX.Core.Tests.Services
         {
             var signalIn = 2.0;
             var signalOut = -3.0;
-            var random = new Random();
-            const double basePrice = 1_000_000.0;
-            int counter = 0;
+            var random = new Random();                        
             var builder = new SignalBuilder(ticker, startDate);
 
             var signals = new List<PriceSignalEntity>
@@ -147,16 +145,6 @@ namespace ProjectX.Core.Tests.Services
                 //{0:0.##}
                 Console.WriteLine($"{p.Date.ToShortDateString()},Price={p.Price:0.##},Signal={p.Signal:0.##},PnlPerTrade={p.PnlPerTrade:0.##},PnlDaily={p.PnLDaily:0.##},PnlCum={p.PnLCum:0.##},PnlDailyHold={p.PnLDailyHold:0.##},PnlCumHold={p.PnLCumHold:0.##}");
             }
-        }
-    }
-
-    public enum StrategyTypeEnum { MeanReversion, Converging }
-
-    public class BacktestHelper
-    {
-        public static List<PnlEntity> ComputeLongShortPnl(List<PriceSignalEntity> signals, double notional, double signalIn, double signalOut, object meanReversion, bool v)
-        {
-            throw new NotImplementedException();
         }
     }
 }
