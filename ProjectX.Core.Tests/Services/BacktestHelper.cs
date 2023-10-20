@@ -16,7 +16,7 @@ namespace ProjectX.Core.Tests.Services
             ActivePosition activePosition = ActivePosition.INACTIVE;
             var signals = new List<PriceSignalEntity>(inputSignals);
             var candidateSignal = signals.First();
-            var pnlEntities = new List<PnlEntity>() { PnlEntityFactory.Build(candidateSignal.Date, candidateSignal.Ticker, candidateSignal.Price, candidateSignal.Signal) };
+            var pnlEntities = new List<PnlEntity>() { PnlEntityFactory.NewPnlEntity(candidateSignal.Date, candidateSignal.Ticker, candidateSignal.Price, candidateSignal.Signal) };
 
             double pnlCum = 0.0;
             int totalNumTrades = 0;
@@ -100,7 +100,7 @@ namespace ProjectX.Core.Tests.Services
                 double pnlDailyHold = notional * (double)((current.Price - prev.Price) / initialPrice);
                 double pnlCumHold = notional * (double)((current.Price - initialPrice) / initialPrice);
 
-                pnlEntities.Add(PnlEntityFactory.Build(current.Date, current.Ticker, (double)current.Price, (double)current.Signal, pnlCum, pnlDaily, pnlPerTrade, pnlDailyHold, pnlCumHold, totalNumTrades, activePosition));
+                pnlEntities.Add(PnlEntityFactory.NewPnlEntity(current.Date, current.Ticker, (double)current.Price, (double)current.Signal, pnlCum, pnlDaily, pnlPerTrade, pnlDailyHold, pnlCumHold, totalNumTrades, activePosition));
 
                 if (exitingPosition) { ExitPosition(ref activePosition); }
             }

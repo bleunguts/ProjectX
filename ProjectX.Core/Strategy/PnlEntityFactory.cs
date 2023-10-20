@@ -2,9 +2,9 @@
 {
     public class PnlEntityFactory
     {
-        public static PnlEntity Build(DateTime date, string ticker, decimal price, decimal signal) => Build(date, ticker, (double) price, (double) signal, 0.0, 0.0, 0.0, 0.0, 0.0, 0, ActivePosition.INACTIVE);
+        public static PnlEntity NewPnlEntity(DateTime date, string ticker, decimal price, decimal signal) => NewPnlEntity(date, ticker, (double) price, (double) signal, 0.0, 0.0, 0.0, 0.0, 0.0, 0, ActivePosition.INACTIVE);
 
-        public static PnlEntity Build(DateTime date, string ticker, double price, double signal, double pnLCum, double pnLDaily, double pnlPerTrade, double pnlDailyHold, double pnlCumHold, int numTrades, ActivePosition activePosition)
+        public static PnlEntity NewPnlEntity(DateTime date, string ticker, double price, double signal, double pnLCum, double pnLDaily, double pnlPerTrade, double pnlDailyHold, double pnlCumHold, int numTrades, ActivePosition activePosition)
         {
             var tradeType = PnlTradeType.POSITION_NONE;
             DateTime? dateIn = null;
