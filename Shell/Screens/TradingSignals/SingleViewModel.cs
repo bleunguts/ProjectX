@@ -373,6 +373,6 @@ public partial class SingleViewModel : Screen
             ("IBM", "Total", "15", "3931.5", "1.65", "3300.0", "1.8"),
         };
 
-        public static IEnumerable<PriceSignalEntity> Signals => new SignalBuilder("IBM").Build(10, 20);        
+        public static IEnumerable<PriceSignalEntity> Signals => new ProjectX.Core.SignalBuilder("IBM").Build(10, 20);        
     }
 }
