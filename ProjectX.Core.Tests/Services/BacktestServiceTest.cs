@@ -137,9 +137,9 @@ public class BacktestServiceTest
     {
         StrategyPnl[] pnls = new[]
         {
-            GiveMeAPnlEntitiy(NextDateFor(2020), 10, 100.0, 0, 0, 0),
-            GiveMeAPnlEntitiy(NextDateFor(2020), 10, 110.0, 0, 110, 50),
-            GiveMeAPnlEntitiy(NextDateFor(2020), 10, 120.0, 0, 120, 30)
+            GiveMeAPnlEntitiy(NextDateFor(2020), 10, 100.0, 0, 100.0, 0),
+            GiveMeAPnlEntitiy(NextDateFor(2020), 10, 110.0, 0, 110.0, 0),
+            GiveMeAPnlEntitiy(NextDateFor(2020), 10, 120.0, 0, 120.0, 0)
         };
         (double strategyResult, double holdResult) = _backtestService.GetSharpe(pnls);
 
@@ -163,9 +163,25 @@ public class BacktestServiceTest
             GiveMeAPnlEntitiy(NextDateFor(2021), 2, 150.0, 50, 190, 50),
         };
 
-        foreach (var row in _backtestService.GetYearlyPnl(pnls))
+        var result = _backtestService.GetYearlyPnl(pnls).ToList();
+        foreach (var row in result)
         {
-            Console.WriteLine($"numTrades={row.numTrades},ticker={row.ticker},year={row.year},pnl={row.pnl},pnl2={row.pnl2},sp0={row.sp0},sp1={row.sp1}");
+            Console.WriteLine($"numTrades={row.numTrades},ticker={row.ticker},year={row.year},pnl={row.pnl},pnlHold={row.pnlHold},sharpe={row.sharpe},sharpeHold={row.sharpeHold}");
+        }   
+        Assert.That(result, Has.Count.EqualTo(3));
+        var years = new List<YearlyStrategyPnl>();
+        years.Add(result.First(r => r.year == "2020"));
+        years.Add(result.First(r => r.year == "2021"));
+        var total = result.First(r => r.year == "Total");
+        years.Add(total);
+
+        foreach (var year in years)
+        {
+            Assert.That(year, Is.Not.Null);
+            Assert.That(year.pnl, Is.GreaterThan(0).Or.LessThan(0));
+            Assert.That(year.sharpe, Is.GreaterThan(0).Or.LessThan(0));
+            Assert.That(year.pnlHold, Is.GreaterThan(0).Or.LessThan(0));
+            Assert.That(year.sharpeHold, Is.GreaterThan(0).Or.LessThan(0));
         }   
     }
 

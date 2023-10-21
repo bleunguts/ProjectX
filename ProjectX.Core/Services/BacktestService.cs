@@ -136,10 +136,40 @@ namespace ProjectX.Core.Services
             return ( sp, spHolding );
         }
 
-        public IEnumerable<YearlyStrategyPnl> GetYearlyPnl(List<StrategyPnl> pnls)
+        public IEnumerable<YearlyStrategyPnl> GetYearlyPnl(List<StrategyPnl> p)
         {
-            throw new NotImplementedException();
+            DateTime firstDate = p.First().Date;
+            DateTime lastDate = p.Last().Date;
+
+            DateTime currentDate = new DateTime(firstDate.Year, 1, 1);
+            var result = new List<YearlyStrategyPnl>();
+            while (currentDate <= lastDate)
+            {
+                DateTime FIRST_DAY_OF_THAT_YEAR = new DateTime(currentDate.Year, 1, 1);
+                DateTime LAST_DAY_OF_THAT_YEAR = new DateTime(currentDate.Year, 12, 31);
+                var pnls = p.Where(pnl => pnl.Date >= FIRST_DAY_OF_THAT_YEAR && pnl.Date <= LAST_DAY_OF_THAT_YEAR).OrderBy(pnl => pnl.Date).ToList();
+                if (pnls.Count > 0)
+                {
+                    var first = pnls.First();
+                    var last = pnls.Last();
+                    var entitiesWithPnlDaily = pnls.Where(pnl => pnl.PnLDaily != 0).OrderBy(pnl => pnl.Date).ToList();
+                    if (entitiesWithPnlDaily.Count > 0)
+                    {
+                        var sharpe = GetSharpe(entitiesWithPnlDaily);
+                        int numTrades = last.NumTrades - first.NumTrades;
+                        double pnl1 = last.PnLCum - first.PnLCum + first.PnLDaily;
+                        double pnl2 = last.PnLCumHold - first.PnLCumHold + first.PnLDailyHold;
+                        result.Add(new YearlyStrategyPnl(first.Ticker, currentDate.Year.ToString(), numTrades, Math.Round(pnl1, 0), sharpe.strategyResult, Math.Round(pnl2, 0), sharpe.holdResult));
+                    }
+                }
+                currentDate = currentDate.AddYears(1);
+            }
+            var sharpeResult = GetSharpe(p);
+            double sum = Math.Round(p.Last().PnLCum, 0);
+            double sum1 = Math.Round(p.Last().PnLCumHold, 0);
+            result.Add(new YearlyStrategyPnl(p.First().Ticker, "Total", p.Last().NumTrades, sum, sharpeResult.strategyResult, sum1, sharpeResult.holdResult));
+            return result;
         }
     }
-    public record YearlyStrategyPnl(string ticker, string year, int numTrades, double pnl, double sp0, double pnl2, double sp1);
+    public record YearlyStrategyPnl(string ticker, string year, int numTrades, double pnl, double sharpe, double pnlHold, double sharpeHold);
 }
