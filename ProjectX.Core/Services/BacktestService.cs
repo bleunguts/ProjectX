@@ -4,6 +4,8 @@ namespace ProjectX.Core.Services
 {
     public class BacktestService
     {
+        private static List<StrategyPnl> CreatePnlsWith(PriceSignal candidateSignal) => new() { StrategyPnlFactory.NewPnl(candidateSignal.Date, candidateSignal.Ticker, candidateSignal.Price, candidateSignal.Signal) };
+
         public IEnumerable<StrategyPnl> ComputeLongShortPnl(
             IEnumerable<PriceSignal> inputSignals,
             double notional, // initial invest capital
@@ -110,6 +112,10 @@ namespace ProjectX.Core.Services
 
             return pnls;
         }       
-        private static List<StrategyPnl> CreatePnlsWith(PriceSignal candidateSignal) => new() { StrategyPnlFactory.NewPnl(candidateSignal.Date, candidateSignal.Ticker, candidateSignal.Price, candidateSignal.Signal) };
+        public IEnumerable<YearlyStrategyPnl> GetYearlyPnl(List<StrategyPnl> pnls)
+        {
+            throw new NotImplementedException();
+        }
     }
+    public record YearlyStrategyPnl(string ticker, string year, int numTrades, double pnl, double sp0, double pnl2, double sp1);
 }
