@@ -5,8 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ProjectX.Core.Strategy
-{
-    public enum PositionStatus { POSITION_NONE = 0, POSITION_LONG, POSITION_SHORT }
+{   
     public class StrategyPnl
     {              
         public StrategyPnl(DateTime date, string ticker, double price, double signal, double pnLCum, double pnLDaily, double pnlPerTrade, double pnlDailyHold, double pnlCumHold, PositionStatus tradeType, DateTime? dateIn, double? priceIn, int numTrades)
@@ -43,7 +42,7 @@ namespace ProjectX.Core.Strategy
 
         public override string ToString()
         {
-            return $"Ticker={Ticker},Date={Date.ToShortDateString()},Price={Price},Signal={Signal},Type={TradeType},NumTrades={NumTrades},DateIn={DateIn},PriceIn{PriceIn},PnlPerTrade={PnlPerTrade},PnlDaily={PnLDaily},PnlCum={PnLCum},PnlDailyHold={PnLDailyHold},PnlCumHold={PnLCumHold}";
+            return $"Ticker={Ticker},Date={Date.ToShortDateString()},Price={Price},Signal={Signal},Type={TradeType},NumTrades={NumTrades},DateIn={DateIn},PriceIn={PriceIn},PnlPerTrade={PnlPerTrade},PnlDaily={PnLDaily},PnlCum={PnLCum},PnlDailyHold={PnLDailyHold},PnlCumHold={PnLCumHold}";
         }
     }
 }

@@ -11,7 +11,7 @@ namespace ProjectX.Core.Services
             double signalOut,
             TradingStrategy strategy)
         {
-            ActivePosition currentPosition = ActivePosition.INACTIVE;
+            Position currentPosition = new Position();
             var signals = new List<PriceSignal>(inputSignals);
             var candidateSignal = signals.First();
             List<StrategyPnl> pnls = CreatePnlsWith(candidateSignal);
@@ -31,9 +31,9 @@ namespace ProjectX.Core.Services
                 double prevSignal = strategy.IsMomentum() ? (double)-prev.Signal : (double)prev.Signal;
                 double prevPnlCum = pnls[i - 1].PnLCum;
 
-                switch (currentPosition)
+                switch (currentPosition.PositionState)
                 {
-                    case InactivePosition _:
+                    case InactivePositionState _:
                         bool testSignal(double prevSignal_, double signalIn_, out PositionStatus positionStatus)
                         {
                             // Enter Long Position:
@@ -59,11 +59,12 @@ namespace ProjectX.Core.Services
                         if (testSignal(prevSignal, signalIn, out positionStatus))
                         {
                             var shares = strategy.IsReinvest ? (notional + prevPnlCum) / (double)current.Price : notional / (double)current.Price;
-                            EnterPosition(ref currentPosition, positionStatus, current.Date, (double)current.Price, shares);
+                            currentPosition.EnterPosition(positionStatus, current.Date, (double)current.Price, shares);
                             totalNumTrades++;
                         }
                         break;
-                    case LiveActivePosition livePosition:
+                    case LiveActivePositionState _:
+                        var livePosition = currentPosition;
                         if (livePosition.IsLongPosition())
                         {
                             // long position, compute daily PnL:
@@ -104,14 +105,11 @@ namespace ProjectX.Core.Services
 
                 pnls.Add(StrategyPnlFactory.NewPnl(current.Date, current.Ticker, (double)current.Price, (double)current.Signal, pnlCum, pnlDaily, pnlPerTrade, pnlDailyHold, pnlCumHold, totalNumTrades, currentPosition));                
                 // exiting position has to be called at the end after adding pnlresults
-                if (exitingPosition) { ExitPosition(ref currentPosition); }
+                if (exitingPosition) { currentPosition.ExitPosition(); }
             }
 
             return pnls;
-        }
-
-        private static void ExitPosition(ref ActivePosition position) => position = ActivePosition.INACTIVE;
-        private static void EnterPosition(ref ActivePosition position, PositionStatus tradeType, DateTime dateIn, double priceIn, double shares) => position = new LiveActivePosition(tradeType, dateIn, priceIn, shares);
+        }       
         private static List<StrategyPnl> CreatePnlsWith(PriceSignal candidateSignal) => new() { StrategyPnlFactory.NewPnl(candidateSignal.Date, candidateSignal.Ticker, candidateSignal.Price, candidateSignal.Signal) };
     }
 }
