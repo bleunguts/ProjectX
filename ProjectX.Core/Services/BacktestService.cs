@@ -1,4 +1,5 @@
 ﻿using ProjectX.Core.Strategy;
+using System.Xml;
 
 namespace ProjectX.Core.Services
 {
@@ -111,7 +112,30 @@ namespace ProjectX.Core.Services
             }
 
             return pnls;
-        }       
+        }
+
+        /// <summary>
+        /// Sharpe ratio is a risk measure used to determine return of the strategy above risk free rate
+        /// It average of daily returns divided by standard deviation of the daily returns        
+        /// </summary>     
+        public (double strategyResult, double holdResult) GetSharpe(IEnumerable<StrategyPnl> pnl)                  
+        {
+
+            // computes annualized sharpe ratio by taking int account daily P&L from the strategy and from the buying-and-holding of position
+            double avg = pnl.Average(x => x.PnLDaily);
+            double std = (double)pnl.StdDev(x => (decimal)x.PnLDaily);
+
+            // buying and holding of position
+            double avgHolding = pnl.Average(x => x.PnLDailyHold);
+            double stdHolding = (double)pnl.StdDev(x => (decimal)x.PnLDailyHold);
+
+            double sp = Math.Round(Math.Sqrt(252.0) * avg / std, 4);
+            double spHolding = Math.Round(Math.Sqrt(252.0) * avgHolding / stdHolding, 4);
+
+            // shows how your strategy performs each year 
+            return ( sp, spHolding );
+        }
+
         public IEnumerable<YearlyStrategyPnl> GetYearlyPnl(List<StrategyPnl> pnls)
         {
             throw new NotImplementedException();

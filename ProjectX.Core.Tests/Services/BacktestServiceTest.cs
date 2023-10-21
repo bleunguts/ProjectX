@@ -133,6 +133,21 @@ public class BacktestServiceTest
     }
 
     [Test]
+    public void WhenComputingSharpeRatioForStrategyAndHolding()
+    {
+        StrategyPnl[] pnls = new[]
+        {
+            GiveMeAPnlEntitiy(NextDateFor(2020), 10, 100.0, 0, 0, 0),
+            GiveMeAPnlEntitiy(NextDateFor(2020), 10, 110.0, 0, 110, 50),
+            GiveMeAPnlEntitiy(NextDateFor(2020), 10, 120.0, 0, 120, 30)
+        };
+        (double strategyResult, double holdResult) = _backtestService.GetSharpe(pnls);
+
+        Assert.That(strategyResult, Is.GreaterThan(0).Or.LessThan(0));
+        Assert.That(holdResult, Is.GreaterThan(0).Or.LessThan(0));
+    }
+
+    [Test]
     public void WhenGettingYearlyPnl()
     {
         var today = DateTime.Now;
