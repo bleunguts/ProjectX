@@ -1,8 +1,13 @@
-﻿using ProjectX.Core.Strategy;
+﻿using MatthiWare.FinancialModelingPrep.Model;
+using ProjectX.Core.Services;
+using ProjectX.Core.Strategy;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows.Documents;
+using System.Windows.Shapes;
 
 namespace Shell.Screens.TradingSignals;
 public partial class SingleViewModel
@@ -24,10 +29,22 @@ public partial class SingleViewModel
         {
             return _dt;         
         }
+        public void SetRows(IEnumerable<YearlyStrategyPnl> yearlyPnls)
+        {
+            FillRows(_dt, yearlyPnls);
+        }
 
         public void SetRows(IEnumerable<(string ticker, string period, string numTrades, string pnl, string sharpe, string pnlHold, string sharpehold)> yearlyPnL)
         {
             FillRows(_dt, yearlyPnL);
+        }        
+
+        static void FillRows(DataTable table, IEnumerable<YearlyStrategyPnl> rows)
+        {
+            foreach (var row in rows)
+            {
+                table.Rows.Add(row.ticker, row.year, row.numTrades, row.pnl, row.sharpe, row.pnlHold, row.sharpeHold);
+            }
         }
 
         static void FillRows(DataTable table, IEnumerable<(string ticker, string period, string numTrades, string pnl, string sharpe, string pnlHold, string sharpehold)> rows)
@@ -36,7 +53,7 @@ public partial class SingleViewModel
             {
                 table.Rows.Add(row.ticker, row.period, row.numTrades, row.pnl, row.sharpe, row.pnlHold, row.sharpehold);
             }
-        }
+        }   
     }
 
     class PnlRankingTableBuilder : TableBuilder

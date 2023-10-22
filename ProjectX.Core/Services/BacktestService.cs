@@ -1,9 +1,17 @@
 ﻿using ProjectX.Core.Strategy;
+using System.ComponentModel.Composition;
 using System.Xml;
 
 namespace ProjectX.Core.Services
 {
-    public class BacktestService
+    public interface IBacktestService
+    {
+        IEnumerable<StrategyPnl> ComputeLongShortPnl(IEnumerable<PriceSignal> inputSignals, double notional, double signalIn, double signalOut, TradingStrategy strategy);
+        IEnumerable<YearlyStrategyPnl> GetYearlyPnl(List<StrategyPnl> pnls);
+    }
+
+    [Export(typeof(IBacktestService)), PartCreationPolicy(CreationPolicy.Shared)]
+    public class BacktestService : IBacktestService
     {
         private static List<StrategyPnl> CreatePnlsWith(PriceSignal candidateSignal) => new() { StrategyPnlFactory.NewPnl(candidateSignal.Date, candidateSignal.Ticker, candidateSignal.Price, candidateSignal.Signal) };
 
@@ -14,7 +22,7 @@ namespace ProjectX.Core.Services
             double signalOut,
             TradingStrategy strategy)
         {
-            Position currentPosition = new Position();
+            Position currentPosition = new();
             var signals = new List<PriceSignal>(inputSignals);
             var candidateSignal = signals.First();
             List<StrategyPnl> pnls = CreatePnlsWith(candidateSignal);
@@ -106,7 +114,7 @@ namespace ProjectX.Core.Services
                 double pnlDailyHold = notional * (double)((current.Price - prev.Price) / initialPrice);
                 double pnlCumHold = notional * (double)((current.Price - initialPrice) / initialPrice);
 
-                pnls.Add(StrategyPnlFactory.NewPnl(current.Date, current.Ticker, (double)current.Price, (double)current.Signal, pnlCum, pnlDaily, pnlPerTrade, pnlDailyHold, pnlCumHold, totalNumTrades, currentPosition));                
+                pnls.Add(StrategyPnlFactory.NewPnl(current.Date, current.Ticker, (double)current.Price, (double)current.Signal, pnlCum, pnlDaily, pnlPerTrade, pnlDailyHold, pnlCumHold, totalNumTrades, currentPosition));
                 // exiting position has to be called at the end after adding pnlresults
                 if (exitingPosition) { currentPosition.ExitPosition(); }
             }
@@ -118,7 +126,7 @@ namespace ProjectX.Core.Services
         /// Sharpe ratio is a risk measure used to determine return of the strategy above risk free rate
         /// It average of daily returns divided by standard deviation of the daily returns        
         /// </summary>     
-        public (double strategyResult, double holdResult) GetSharpe(IEnumerable<StrategyPnl> pnl)                  
+        public (double strategyResult, double holdResult) GetSharpe(IEnumerable<StrategyPnl> pnl)
         {
 
             // computes annualized sharpe ratio by taking int account daily P&L from the strategy and from the buying-and-holding of position
@@ -133,13 +141,13 @@ namespace ProjectX.Core.Services
             double spHolding = Math.Round(Math.Sqrt(252.0) * avgHolding / stdHolding, 4);
 
             // shows how your strategy performs each year 
-            return ( sp, spHolding );
+            return (sp, spHolding);
         }
 
-        public IEnumerable<YearlyStrategyPnl> GetYearlyPnl(List<StrategyPnl> p)
+        public IEnumerable<YearlyStrategyPnl> GetYearlyPnl(List<StrategyPnl> pnls)
         {
-            DateTime firstDate = p.First().Date;
-            DateTime lastDate = p.Last().Date;
+            DateTime firstDate = pnls.First().Date;
+            DateTime lastDate = pnls.Last().Date;
 
             DateTime currentDate = new DateTime(firstDate.Year, 1, 1);
             var result = new List<YearlyStrategyPnl>();
@@ -147,12 +155,12 @@ namespace ProjectX.Core.Services
             {
                 DateTime FIRST_DAY_OF_THAT_YEAR = new DateTime(currentDate.Year, 1, 1);
                 DateTime LAST_DAY_OF_THAT_YEAR = new DateTime(currentDate.Year, 12, 31);
-                var pnls = p.Where(pnl => pnl.Date >= FIRST_DAY_OF_THAT_YEAR && pnl.Date <= LAST_DAY_OF_THAT_YEAR).OrderBy(pnl => pnl.Date).ToList();
-                if (pnls.Count > 0)
+                var currentPnls = pnls.Where(pnl => pnl.Date >= FIRST_DAY_OF_THAT_YEAR && pnl.Date <= LAST_DAY_OF_THAT_YEAR).OrderBy(pnl => pnl.Date).ToList();
+                if (currentPnls.Count > 0)
                 {
-                    var first = pnls.First();
-                    var last = pnls.Last();
-                    var entitiesWithPnlDaily = pnls.Where(pnl => pnl.PnLDaily != 0).OrderBy(pnl => pnl.Date).ToList();
+                    var first = currentPnls.First();
+                    var last = currentPnls.Last();
+                    var entitiesWithPnlDaily = currentPnls.Where(pnl => pnl.PnLDaily != 0).OrderBy(pnl => pnl.Date).ToList();
                     if (entitiesWithPnlDaily.Count > 0)
                     {
                         var sharpe = GetSharpe(entitiesWithPnlDaily);
@@ -164,10 +172,10 @@ namespace ProjectX.Core.Services
                 }
                 currentDate = currentDate.AddYears(1);
             }
-            var sharpeResult = GetSharpe(p);
-            double sum = Math.Round(p.Last().PnLCum, 0);
-            double sum1 = Math.Round(p.Last().PnLCumHold, 0);
-            result.Add(new YearlyStrategyPnl(p.First().Ticker, "Total", p.Last().NumTrades, sum, sharpeResult.strategyResult, sum1, sharpeResult.holdResult));
+            var sharpeResult = GetSharpe(pnls);
+            double sum = Math.Round(pnls.Last().PnLCum, 0);
+            double sum1 = Math.Round(pnls.Last().PnLCumHold, 0);
+            result.Add(new YearlyStrategyPnl(pnls.First().Ticker, "Total", pnls.Last().NumTrades, sum, sharpeResult.strategyResult, sum1, sharpeResult.holdResult));
             return result;
         }
     }

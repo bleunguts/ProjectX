@@ -35,12 +35,14 @@ public partial class SingleViewModel : Screen
 {
     private readonly IEventAggregator _eventAggregator;
     private readonly IStockSignalService _stockSignalService;
+    private readonly IBacktestService _backtestService;
 
     [ImportingConstructor]
-    public SingleViewModel(IEventAggregator eventAggregator, IStockSignalService stockSignalService)
+    public SingleViewModel(IEventAggregator eventAggregator, IStockSignalService stockSignalService, IBacktestService backtestService)
     {
         _eventAggregator = eventAggregator;
         _stockSignalService = stockSignalService;
+        _backtestService = backtestService;
         DisplayName = "Mean Reversion strategy (Backtesting)";    
     }
 
@@ -172,6 +174,7 @@ public partial class SingleViewModel : Screen
             YearlyPnLTable = new DataTable();
 
             var builder = new PnlRankingTableBuilder();
+            // TODO OptimSingleName Ranking Table
             builder.SetRows(DummyData.DummyPnLRankingTable);
             PnLRankingTable = builder.Build();
 
@@ -188,15 +191,15 @@ public partial class SingleViewModel : Screen
         base.OnActivate();
 
         const int movingWindow = 5;        
-        PnLRankingTable = PnlRankingTableDefaults(movingWindow).Build();
+        PnLRankingTable = PnlRankingTableDefaults(Ticker, movingWindow).Build();
         await DisplayPriceAndSignalViewAsync(movingWindow);
 
-        static PnlRankingTableBuilder PnlRankingTableDefaults(int movingWindow, double signalIn = 0, double signalOut = 0)
+        static PnlRankingTableBuilder PnlRankingTableDefaults(string ticker, int movingWindow, double signalIn = 0, double signalOut = 0)
         {
             return new PnlRankingTableBuilder(
             new List<(string ticker, int bar, double zin, double zout, int numTrades, double pnlCum, double sharpe)>()
             {
-                ("IBM", movingWindow, signalIn, signalOut, 0, 0, 0),
+                (ticker, movingWindow, signalIn, signalOut, 0, 0, 0),
             });
         }
     }
@@ -245,18 +248,18 @@ public partial class SingleViewModel : Screen
     private async Task DisplayAccumulatedPnlAndDrawdownForStrategyViewAsync(int movingWindow, double signalIn, double signalOut)
     {
         var smoothenedSignals = await _stockSignalService.GetSignalUsingMovingAverageByDefault(Ticker, FromDate, ToDate, movingWindow);
-        // TODO: Compute PnL Long Short strategy
-        // var pnls = BacktestHelper.ComputeLongShortPnl(signal, 10_000.0, signalIn, signalOut, SelectedStrategyType, IsReinvest).ToList();
+
+        bool IsReinvest = false;
+        var pnls = _backtestService.ComputeLongShortPnl(smoothenedSignals, 10_000.0, signalIn, signalOut, new TradingStrategy(TradingStrategyType.MeanReversion, IsReinvest)).ToList();
         PnLTable.Clear();
-        PnLTable.AddRange(DummyData.DummyPnlTable);
+        PnLTable.AddRange(pnls);
 
         // filled pnl for strategy
 
-        // do the aggregate yearly stats
-        // TODO: Compute Yearly PnL
-        // BacktestHelper.GetYearlyPnl(PnLTable.ToList())
+        // do the aggregate yearly stats        
+        var yearlyPnls = _backtestService.GetYearlyPnl(pnls);
         var builder = new YearlyPnLTableBuilder();
-        builder.SetRows(DummyData.YearlyPnL);
+        builder.SetRows(yearlyPnls);
         YearlyPnLTable = builder.Build();
 
         // Drawdown Graphs
