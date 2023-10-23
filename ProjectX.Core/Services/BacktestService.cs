@@ -9,6 +9,7 @@ namespace ProjectX.Core.Services
         IEnumerable<StrategyPnl> ComputeLongShortPnl(IEnumerable<PriceSignal> inputSignals, double notional, double signalIn, double signalOut, TradingStrategy strategy);
         IEnumerable<YearlyStrategyPnl> GetYearlyPnl(List<StrategyPnl> pnls);
         IEnumerable<MatrixStrategyPnl> ComputeLongShortPnlFull(IEnumerable<MarketPrice> inputSignals, double notional, TradingStrategy strategy);
+        IEnumerable<StrategyDrawdown> CalculateDrawdown(List<StrategyPnl> pnls, double notional);
     }
 
     [Export(typeof(IBacktestService)), PartCreationPolicy(CreationPolicy.Shared)]
@@ -214,6 +215,32 @@ namespace ProjectX.Core.Services
                     }
                 }
             }
+            return results;
+        }
+
+        public IEnumerable<StrategyDrawdown> CalculateDrawdown(List<StrategyPnl> pnls, double notional)
+        {
+            var results = new List<StrategyDrawdown>();
+
+            double max = 0; double maxHold = 0;
+            double min = 2.0 * notional; double minHold = 2.0 * notional;
+
+            for (int i = 0; i < pnls.Count; i++)
+            {
+                var current = pnls[i];
+                double pnl = current.PnLCum + notional;
+                double pnlHold = current.PnLCumHold + notional;
+                max = Math.Max(max, pnl);
+                min = Math.Min(min, pnl);
+                maxHold = Math.Max(maxHold, pnlHold);
+                minHold = Math.Min(minHold, pnlHold);
+                double drawdown = 100.0 * (max - pnl) / max;
+                double drawdownHold = 100.0 * (maxHold - pnlHold) / maxHold;
+                double drawup = 100.0 * (pnl - minHold) / pnl;
+                double drawupHold = 100.0 * (pnlHold - minHold) / pnlHold;
+                results.Add(new StrategyDrawdown(current.Date, pnl, drawdown, drawup, pnlHold, drawdownHold, drawupHold));
+            }
+
             return results;
         }
     }

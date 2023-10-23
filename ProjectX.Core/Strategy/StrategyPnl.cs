@@ -20,4 +20,6 @@ namespace ProjectX.Core.Strategy
             return $"Ticker={Ticker},Date={Date.ToShortDateString()},Price={Price},Signal={Signal},Type={TradeType},NumTrades={NumTrades},DateIn={DateIn},PriceIn={PriceIn},PnlPerTrade={PnlPerTrade},PnlDaily={PnLDaily},PnlCum={PnLCum},PnlDailyHold={PnLDailyHold},PnlCumHold={PnLCumHold}";
         }
     }
+
+    public record StrategyDrawdown(DateTime date, double pnl, double drawdown, double drawup, double pnlHold, double drawdownHold, double drawupHold);
 }

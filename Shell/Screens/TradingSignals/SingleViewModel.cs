@@ -27,6 +27,7 @@ using System.Windows.Markup;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Xml;
+using static SkiaSharp.HarfBuzz.SKShaper;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Shell.Screens.TradingSignals;
@@ -44,7 +45,7 @@ public partial class SingleViewModel : Screen
         _eventAggregator = eventAggregator;
         _stockSignalService = stockSignalService;
         _backtestService = backtestService;
-        DisplayName = "Mean Reversion strategy (Backtesting)";    
+        DisplayName = "Mean Reversion strategy (Backtesting)";
     }
 
     private string ticker = "ACAQ";
@@ -53,7 +54,7 @@ public partial class SingleViewModel : Screen
     private string signalType = "MovingAverage";
     private string priceType = "Close";
     private int notional = 10_000;
-    private DataTable pnlRankingTable = new() ;
+    private DataTable pnlRankingTable = new();
     private DataTable yearlyPnLTable = new();
     private BindableCollection<StrategyPnl> pnlTable = new();
     private ISeries[] _series1 = Array.Empty<ISeries>();
@@ -112,9 +113,9 @@ public partial class SingleViewModel : Screen
     {
         get { return notional; }
         set { notional = value; NotifyOfPropertyChange(() => Notional); }
-    } 
+    }
 
-    public ISeries[] Series1 
+    public ISeries[] Series1
     {
         get { return _series1; }
         set { _series1 = value; NotifyOfPropertyChange(() => Series1); }
@@ -137,18 +138,18 @@ public partial class SingleViewModel : Screen
     {
         get { return _title2; }
         set { _title2 = value; NotifyOfPropertyChange(() => Title2); }
-    }    
+    }
     public Axis[] XAxes => new Axis[] { XAxis("Date") };
     public Axis[] YAxes1
     {
         get { return _yAxes1; }
         set { _yAxes1 = value; NotifyOfPropertyChange(() => YAxes1); }
-    } 
+    }
     public Axis[] YAxes2
     {
         get { return _yAxes2; }
         set { _yAxes2 = value; NotifyOfPropertyChange(() => YAxes2); }
-    } 
+    }
     private static Axis XAxis(string axisLabel) => new()
     {
         Name = axisLabel,
@@ -173,13 +174,13 @@ public partial class SingleViewModel : Screen
         {
             PnLTable.Clear();
             YearlyPnLTable = new DataTable();
-                        
-            var inputs = await _stockSignalService.GetPrices(Ticker, FromDate, ToDate); 
+
+            var inputs = await _stockSignalService.GetPrices(Ticker, FromDate, ToDate);
             var pnls = _backtestService.ComputeLongShortPnlFull(inputs, Notional, new TradingStrategy(TradingStrategyType.MeanReversion, false));
-            var builder = new PnlRankingTableBuilder();            
+            var builder = new PnlRankingTableBuilder();
             builder.SetRows(pnls);
             PnLRankingTable = builder.Build();
-            
+
             return Task.CompletedTask;
         });
     }
@@ -188,7 +189,7 @@ public partial class SingleViewModel : Screen
     {
         base.OnActivate();
 
-        const int movingWindow = 5;        
+        const int movingWindow = 5;
         PnLRankingTable = PnlRankingTableDefaults(Ticker, movingWindow).Build();
         await DisplayPriceAndSignalViewAsync(movingWindow);
 
@@ -201,19 +202,36 @@ public partial class SingleViewModel : Screen
             });
         }
     }
-  
+
     public async void SelectedCellChanged(object sender, SelectedCellsChangedEventArgs e)
     {
         await Task.Run(async () =>
-        {            
+        {
             var selectedCells = e.AddedCells;
-            if (selectedCells.Count - 1 <= 0) return;            
-            DataRowView row = (DataRowView)selectedCells[selectedCells.Count - 1].Item;            
+            if (selectedCells.Count - 1 <= 0) return;
+            DataRowView row = (DataRowView)selectedCells[selectedCells.Count - 1].Item;
             int movingWindow = Convert.ToInt32(row[1]);
             double signalIn = Convert.ToDouble(row[2]);
             double signalOut = Convert.ToDouble(row[3]);
+            bool IsReinvest = false;
 
-            await DisplayAccumulatedPnlAndDrawdownForStrategyViewAsync(movingWindow, signalIn, signalOut);    
+            var smoothenedSignals = await _stockSignalService.GetSignalUsingMovingAverageByDefault(Ticker, FromDate, ToDate, movingWindow);
+            List<StrategyPnl> pnls = _backtestService.ComputeLongShortPnl(smoothenedSignals, 10_000.0, signalIn, signalOut, new TradingStrategy(TradingStrategyType.MeanReversion, IsReinvest)).ToList();
+            PnLTable.Clear();
+            PnLTable.AddRange(pnls);            
+
+            // do the aggregate yearly stats        
+            var yearlyPnls = _backtestService.GetYearlyPnl(pnls);
+            var builder = new YearlyPnLTableBuilder();
+            builder.SetRows(yearlyPnls);
+            YearlyPnLTable = builder.Build();
+
+            double pnl = Math.Round(Convert.ToDouble(row["PnL"]), 0);
+            double sharpe = Math.Round(Convert.ToDouble(row["Sharpe"]), 3);
+            int numTrades = Convert.ToInt32(row["Num"]);
+            
+            IEnumerable<StrategyDrawdown> drawdownResults = _backtestService.CalculateDrawdown(pnls, Notional);
+            DisplayAccumulatedPnlAndDrawdownForStrategyView(pnls, drawdownResults, pnl, sharpe, numTrades);
         });
     }
 
@@ -243,36 +261,95 @@ public partial class SingleViewModel : Screen
         }
     }
 
-    private async Task DisplayAccumulatedPnlAndDrawdownForStrategyViewAsync(int movingWindow, double signalIn, double signalOut)
+    private void DisplayAccumulatedPnlAndDrawdownForStrategyView(List<StrategyPnl> pnls, IEnumerable<StrategyDrawdown> drawdownResults, double pnl, double sharpe, int numTrades)
     {
-        var smoothenedSignals = await _stockSignalService.GetSignalUsingMovingAverageByDefault(Ticker, FromDate, ToDate, movingWindow);
-
-        bool IsReinvest = false;
-        var pnls = _backtestService.ComputeLongShortPnl(smoothenedSignals, 10_000.0, signalIn, signalOut, new TradingStrategy(TradingStrategyType.MeanReversion, IsReinvest)).ToList();
-        PnLTable.Clear();
-        PnLTable.AddRange(pnls);
-
-        // filled pnl for strategy
-
-        // do the aggregate yearly stats        
-        var yearlyPnls = _backtestService.GetYearlyPnl(pnls);
-        var builder = new YearlyPnLTableBuilder();
-        builder.SetRows(yearlyPnls);
-        YearlyPnLTable = builder.Build();
-
-        // Drawdown Graphs
-        // TODO: BacktestHelper code get drawdown
-        // var results = BacktestHelper.GetDrawDown(PnLCollection.ToList(), 10_000.0);
-        // DataTable dt2 = new DataTable();
-
         // Plot Accumulated PnL chart (1) accompanied by the Drawdown Chart (2)
-        // TODO: 
-        // Add PnlCharts code here for Chart1
-        // Add Drawdown(usingStrategy=true) for Chart2 
+        var accumulatedPnlChart = PlotAccumulatedPnlChart(pnls, pnl, sharpe, numTrades);
+        Series1 = accumulatedPnlChart.series;
+        Title1 = accumulatedPnlChart.title;
+        YAxes1 = accumulatedPnlChart.yAxis;
 
+        // Drawdown Graphs            
+        var drawdownChart = PlotDrawdownChart(drawdownResults);
+        Series2 = drawdownChart.series;
+        Title2 = drawdownChart.title;
+        YAxes2 = drawdownChart.yAxis;
     }
 
-    private (ISeries[] series, string title, Axis[] yAxis) PlotPriceChart(IEnumerable<PriceSignal> signals) 
+    private (ISeries[] series, string title, Axis[] yAxis) PlotDrawdownChart(IEnumerable<StrategyDrawdown> drawdowns)
+    {
+        double maxDrawdown = drawdowns.Max(r => r.drawdown);
+        var series = new ISeries[]
+        {
+            new LineSeries<StrategyDrawdown>
+            {
+                Values = drawdowns,
+                Name = "Drawdown",
+                Mapping = (x, y) => y.Coordinate = new (x.date.Ticks, (double)x.drawdown),
+                Stroke = new SolidColorPaint(SKColors.Blue),
+                DataLabelsPaint = new SolidColorPaint(SKColors.Blue),
+                DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
+                DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
+                DataLabelsSize=10,
+                ScalesYAt = 0
+            },
+            new LineSeries<StrategyDrawdown>
+            {
+                Values = drawdowns,
+                Name = "MaxDrawdown",
+                Mapping = (x, y) => y.Coordinate = new (x.date.Ticks, maxDrawdown),
+                Stroke = new SolidColorPaint(SKColors.Red),
+                DataLabelsPaint = new SolidColorPaint(SKColors.Red),
+                DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
+                DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
+                DataLabelsSize=10,
+                ScalesYAt = 0
+            },
+        };
+
+        var title = $"{Ticker}: Drawdown for Signal Type = {SignalType}";
+        var yAxes = new[] { YAxis("Drawdown (%)") };
+
+        return (series, title, yAxes);
+    }
+
+    private (ISeries[] series, string title, Axis[] yAxis) PlotAccumulatedPnlChart(List<StrategyPnl> pnls, double pnl, double sharpe, int numTrades)
+    {
+        var series = new ISeries[]
+        {
+            new LineSeries<StrategyPnl>
+            {
+                Values = pnls,
+                Name = "PnL for Holding Position",
+                Mapping = (x, y) => y.Coordinate = new (x.Date.Ticks, (double)x.PnLCumHold),
+                Stroke = new SolidColorPaint(SKColors.Blue),
+                DataLabelsPaint = new SolidColorPaint(SKColors.Blue),
+                DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
+                DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
+                DataLabelsSize=10,
+                ScalesYAt = 0
+            },
+              new LineSeries<StrategyPnl>
+            {
+                Values = pnls,
+                Name = "PnL",
+                Mapping = (x, y) => y.Coordinate = new (x.Date.Ticks, (double)x.PnLCum),
+                Stroke = new SolidColorPaint(SKColors.Red),
+                DataLabelsPaint = new SolidColorPaint(SKColors.Red),
+                DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
+                DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
+                DataLabelsSize=10,
+                ScalesYAt = 0
+            },
+        };
+
+        var title = $"{Ticker}: P&L (Total PnL = {pnl}, Sharpe = {sharpe}, NumTrades = {numTrades}";
+        var yAxes = new[] { YAxis("Cummulated P&L") };
+
+        return (series, title, yAxes);
+    }
+
+    private (ISeries[] series, string title, Axis[] yAxis) PlotPriceChart(IEnumerable<PriceSignal> signals)
     {
         var series = new ISeries[]
         {
@@ -281,7 +358,7 @@ public partial class SingleViewModel : Screen
                 Values = signals,
                 Name = "Original Price",
                 Mapping = (x, y) => y.Coordinate = new (x.Date.Ticks, (double)x.Price),
-                Stroke = new SolidColorPaint(SKColors.Blue),                
+                Stroke = new SolidColorPaint(SKColors.Blue),
                 DataLabelsPaint = new SolidColorPaint(SKColors.Blue),
                 DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
                 DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
@@ -309,7 +386,7 @@ public partial class SingleViewModel : Screen
                 DataLabelsPaint = new SolidColorPaint(SKColors.DarkGreen),
                 DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
                 DataLabelsFormatter = (point) => point.Coordinate.PrimaryValue.ToString("N1"),
-                DataLabelsSize=10,                
+                DataLabelsSize=10,
                 ScalesYAt = 0
             },
             new LineSeries<PriceSignal>
@@ -333,12 +410,12 @@ public partial class SingleViewModel : Screen
 
     private (ISeries[] series, string title, Axis[] yAxis) PlotSignalChart(IEnumerable<PriceSignal> signals)
     {
-       var series = new ISeries[]
-       {
+        var series = new ISeries[]
+        {
             new LineSeries<PriceSignal>
             {
                 Values = signals,
-                Name = "Signal",                
+                Name = "Signal",
                 Mapping = (x, y) => y.Coordinate = new(x.Date.Ticks, (double)x.Signal),
                 DataLabelsPaint = new SolidColorPaint(SKColors.DarkGreen),
                 DataLabelsPosition = LiveChartsCore.Measure.DataLabelsPosition.Top,
@@ -346,11 +423,11 @@ public partial class SingleViewModel : Screen
                 DataLabelsSize = 10,
                 ScalesYAt = 0,
             },
-       };
-       var title = $"{Ticker}: Signal (Price Type = {priceType}, Signal Type = {signalType})";
-       var yAxes = new[] { YAxis("Signal") };
+        };
+        var title = $"{Ticker}: Signal (Price Type = {priceType}, Signal Type = {signalType})";
+        var yAxes = new[] { YAxis("Signal") };
 
-       return (series, title, yAxes);
+        return (series, title, yAxes);
     }
 
     static class DummyData
@@ -374,6 +451,6 @@ public partial class SingleViewModel : Screen
             ("IBM", "Total", "15", "3931.5", "1.65", "3300.0", "1.8"),
         };
 
-        public static IEnumerable<PriceSignal> Signals => new ProjectX.Core.SignalBuilder("IBM").Build(10, 20);        
+        public static IEnumerable<PriceSignal> Signals => new ProjectX.Core.SignalBuilder("IBM").Build(10, 20);
     }
 }

@@ -205,7 +205,21 @@ public class BacktestServiceTest
             Assert.That(pnl.pnlCum, Is.GreaterThan(0).Or.LessThan(0));
             Assert.That(pnl.ticker, Is.EqualTo("IBM"));
         }
-    }    
+    }
+
+    [Test]     
+    public void WhenGettingDrawdownsFromPnls()
+    {
+        var pnls = new List<StrategyPnl>()
+        {
+            GiveMeAPnlEntitiy(NextDateFor(2020), 0, 0, 100, 0, 100),
+            GiveMeAPnlEntitiy(NextDateFor(2020), 0, 0, 500, 0, 500),
+            GiveMeAPnlEntitiy(NextDateFor(2020), 0, 0, 1000, 0, 1000),
+        };
+
+        var drawdownResult = _backtestService.CalculateDrawdown(pnls, 10_000);
+        Assert.That(drawdownResult, Is.Not.Null);
+    }
 
     static MarketPrice[] GetRandomPrices(int howmany = 100)
     {
