@@ -42,7 +42,7 @@ public partial class SingleViewModel
         {
             foreach (var row in rows)
             {
-                table.Rows.Add(row.ticker, row.year, row.numTrades, row.pnl, row.sharpe, row.pnlHold, row.sharpeHold);
+                table.Rows.Add(row.ticker, row.year, row.numTrades, Math.Round(row.pnl,2), Math.Round(row.sharpe,3), Math.Round(row.pnlHold,2), Math.Round(row.sharpeHold,3));
             }
         }
 
@@ -54,7 +54,58 @@ public partial class SingleViewModel
             }
         }   
     }
+    class PnLTableBuilder : TableBuilder
+    {
+        protected override DataColumn[] Headers => new[]
+        {
+            new DataColumn("Date",typeof(string)),
+            new DataColumn("Ticker",typeof(string)),
+            new DataColumn("Price",typeof(string)),
+            new DataColumn("Signal",typeof(string)),
+            new DataColumn("PnLCum",typeof(string)),
+            new DataColumn("PnLDaily",typeof(string)),
+            new DataColumn("PnLPerTrade",typeof(string)),
+            new DataColumn("PnLDailyHold",typeof(string)),
+            new DataColumn("PnLCumHold",typeof(string)),
+            new DataColumn("Position",typeof(string)),
+            new DataColumn("DateIn",typeof(string)),
+            new DataColumn("PriceIn",typeof(string)),
+            new DataColumn("Num",typeof(string)),
+        };
 
+        public override DataTable Build()
+        {
+            return _dt;
+        }
+
+        public void SetRows(List<StrategyPnl> pnls)
+        {
+            FillRows(_dt, pnls);
+        }
+
+        static void FillRows(DataTable table, IEnumerable<StrategyPnl> rows)
+        {
+            foreach (var row in rows)
+            {
+                var positionState = Position(row.TradeType);
+                var dateIn = row.DateIn.HasValue ? row.DateIn.Value.ToString("ddMMyy") : string.Empty;
+                table.Rows.Add(row.Date.ToString("ddMMyy"), row.Ticker, row.Price, Math.Round(row.Signal,3), Math.Round(row.PnLCum,2), Math.Round(row.PnLDaily, 2), Math.Round(row.PnlPerTrade, 2), Math.Round(row.PnLDaily, 2), Math.Round(row.PnLCum, 2), positionState, dateIn, row.PriceIn, row.NumTrades);
+            }
+
+            static string Position(PositionStatus positionStatus)
+            {
+                switch(positionStatus)
+                {
+                    case PositionStatus.POSITION_LONG:
+                        return "LONG";
+                    case PositionStatus.POSITION_SHORT:
+                        return "SHORT";
+                    default:
+                        return string.Empty;
+                }
+            }
+        }        
+    }
     class PnlRankingTableBuilder : TableBuilder
     {
         public PnlRankingTableBuilder()
@@ -91,7 +142,7 @@ public partial class SingleViewModel
         {
             foreach (var row in rows)
             {
-                table.Rows.Add(row.ticker, row.movingWindow, row.zin, row.zout, row.numTrades, row.pnlCum, row.sharpe);
+                table.Rows.Add(row.ticker, row.movingWindow, row.zin, row.zout, row.numTrades, Math.Round(row.pnlCum, 2), Math.Round(row.sharpe, 3));
             }
         }
     }

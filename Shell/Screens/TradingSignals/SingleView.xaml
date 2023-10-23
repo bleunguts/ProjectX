@@ -50,8 +50,8 @@
                         <TextBlock Grid.Row="2"  Grid.Column="0" Text="Price Trend" VerticalAlignment="Center"/>
                         <StackPanel Grid.Row="2" Grid.Column="1"  Orientation="Horizontal">
                             <TextBox x:Name="PriceTrend" Width="100" TextAlignment="Center" VerticalAlignment="Center" IsEnabled="False"/>
-                            <TextBlock x:Name="HurstValue" FontWeight="Bold" FontSize="16" TextAlignment="Center" VerticalAlignment="Center" IsEnabled="False"/>
-                            <Button Margin="30 0 0 0" x:Name="HurstCalc" Content="Hurst" Width="40" Height="20"/>
+                            <TextBlock x:Name="HurstValue" FontWeight="Bold" FontSize="16" TextAlignment="Center" VerticalAlignment="Center" IsEnabled="False" Width="50"/>
+                            <Button x:Name="HurstCalc" Content="Hurst" Width="40" Height="20"/>
                         </StackPanel>
                         <TextBlock Grid.Row="3" Grid.Column="1" x:Name="HurstDesc" VerticalAlignment="Center" TextAlignment="Right"/>
                     </Grid>

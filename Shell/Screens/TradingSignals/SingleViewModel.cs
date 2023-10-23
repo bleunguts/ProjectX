@@ -38,25 +38,27 @@ public partial class SingleViewModel : Screen
     private readonly IEventAggregator _eventAggregator;
     private readonly IStockSignalService _stockSignalService;
     private readonly IBacktestService _backtestService;
+    private readonly IStockMarketSource _marketSource;
 
     [ImportingConstructor]
-    public SingleViewModel(IEventAggregator eventAggregator, IStockSignalService stockSignalService, IBacktestService backtestService)
+    public SingleViewModel(IEventAggregator eventAggregator, IStockSignalService stockSignalService, IBacktestService backtestService, IStockMarketSource marketSource)
     {
         _eventAggregator = eventAggregator;
         _stockSignalService = stockSignalService;
         _backtestService = backtestService;
+        _marketSource = marketSource;
         DisplayName = "Mean Reversion strategy (Backtesting)";
     }
 
     private string ticker = "AAPL";
-    private DateTime fromDate = new(2023, 9, 1);
+    private DateTime fromDate = new(2023, 5, 1);
     private DateTime toDate = new(2023, 9, 25);
     private string signalType = "MovingAverage";
     private string priceType = "Close";
     private int notional = 10_000;
     private DataTable pnlRankingTable = new();
     private DataTable yearlyPnLTable = new();
-    private BindableCollection<StrategyPnl> pnlTable = new();
+    private DataTable pnlTable = new();
     private ISeries[] _series1 = Array.Empty<ISeries>();
     private ISeries[] _series2 = Array.Empty<ISeries>();
     private Axis[] _yAxes1 = Array.Empty<Axis>();
@@ -64,14 +66,14 @@ public partial class SingleViewModel : Screen
     private string _title1 = string.Empty;
     private string _title2 = string.Empty;
     private BindableCollection<PriceSignal> _signals = new();
-    private string _hurstValue = "1.2";
+    private string _hurstValue = "<>";
     private string _hurstDesc = 
     @"
         H < 0.5 - mean reverting
         H = 0.5 - geometric random walk
         H > 0.5 - momentum
     ";
-    private string priceTrend = "Momenetum";
+    private string priceTrend = nameof(TradingStrategyType.MeanReversion);
 
     #region Bindable Properties    
     public string Ticker
@@ -111,7 +113,7 @@ public partial class SingleViewModel : Screen
         set { pnlRankingTable = value; NotifyOfPropertyChange(() => PnLRankingTable); }
     }
 
-    public BindableCollection<StrategyPnl> PnLTable
+    public DataTable PnLTable
     {
         get { return pnlTable; }
         set { pnlTable = value; NotifyOfPropertyChange(() => PnLTable); }
@@ -199,7 +201,7 @@ public partial class SingleViewModel : Screen
             PnLTable.Clear();
             YearlyPnLTable = new DataTable();
 
-            var inputs = await _stockSignalService.GetPrices(Ticker, FromDate, ToDate);
+            var inputs = await _marketSource.GetPrices(Ticker, FromDate, ToDate);
             var pnls = _backtestService.ComputeLongShortPnlFull(inputs, Notional, new TradingStrategy(TradingStrategyType.MeanReversion, false));
             var builder = new PnlRankingTableBuilder();
             builder.SetRows(pnls);
@@ -227,9 +229,18 @@ public partial class SingleViewModel : Screen
         }
     }
 
-    public void HurstCalc()
+    public async void HurstCalc()
     {
+        var input = await _marketSource.GetHurst(Ticker, FromDate, ToDate);
+        
+        var l = input.Where(x => x.HasValue).Select(x => x.Value).ToList();
+        if(l.Count == 0)
+        {
+            MessageBox.Show($"Not enough data points to calculate hurst, requires at least five months of data. Items={input.Count()}");
+            return;
+        }        
 
+        HurstValue = l.Average().ToString("0.00");
     }
 
     public async void SelectedCellChanged(object sender, SelectedCellsChangedEventArgs e)
@@ -246,8 +257,9 @@ public partial class SingleViewModel : Screen
 
             var smoothenedSignals = await _stockSignalService.GetSignalUsingMovingAverageByDefault(Ticker, FromDate, ToDate, movingWindow);
             List<StrategyPnl> pnls = _backtestService.ComputeLongShortPnl(smoothenedSignals, 10_000.0, signalIn, signalOut, new TradingStrategy(TradingStrategyType.MeanReversion, IsReinvest)).ToList();
-            PnLTable.Clear();
-            PnLTable.AddRange(pnls);            
+            var builder2 = new PnLTableBuilder();
+            builder2.SetRows(pnls);            
+            PnLTable = builder2.Build();            
 
             // do the aggregate yearly stats        
             var yearlyPnls = _backtestService.GetYearlyPnl(pnls);
