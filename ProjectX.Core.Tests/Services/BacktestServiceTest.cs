@@ -191,7 +191,7 @@ public class BacktestServiceTest
         var builder = new SignalBuilder(ticker);
         var strategy = new TradingStrategy(TradingStrategyType.MeanReversion, false);
         var signals = GetRandomPrices(1000);
-        var pnls = _backtestService.ComputeLongShortPnlGrid(signals, 10_000, strategy).ToList();
+        var pnls = _backtestService.ComputeLongShortPnlFull(signals, 10_000, strategy).ToList();
         
         Assert.That(pnls, Has.Count.GreaterThan(100));        
         foreach(var pnl in pnls)

@@ -175,7 +175,7 @@ public partial class SingleViewModel : Screen
             YearlyPnLTable = new DataTable();
                         
             var inputs = await _stockSignalService.GetPrices(Ticker, FromDate, ToDate); 
-            var pnls = _backtestService.ComputeLongShortPnlGrid(inputs, Notional, new TradingStrategy(TradingStrategyType.MeanReversion, false));
+            var pnls = _backtestService.ComputeLongShortPnlFull(inputs, Notional, new TradingStrategy(TradingStrategyType.MeanReversion, false));
             var builder = new PnlRankingTableBuilder();            
             builder.SetRows(pnls);
             PnLRankingTable = builder.Build();
@@ -204,7 +204,7 @@ public partial class SingleViewModel : Screen
   
     public async void SelectedCellChanged(object sender, SelectedCellsChangedEventArgs e)
     {
-        await Task.Run(() =>
+        await Task.Run(async () =>
         {            
             var selectedCells = e.AddedCells;
             if (selectedCells.Count - 1 <= 0) return;            
@@ -213,7 +213,7 @@ public partial class SingleViewModel : Screen
             double signalIn = Convert.ToDouble(row[2]);
             double signalOut = Convert.ToDouble(row[3]);
 
-            DisplayAccumulatedPnlAndDrawdownForStrategyViewAsync(movingWindow, signalIn, signalOut);    
+            await DisplayAccumulatedPnlAndDrawdownForStrategyViewAsync(movingWindow, signalIn, signalOut);    
         });
     }
 
