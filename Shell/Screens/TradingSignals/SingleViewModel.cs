@@ -64,6 +64,14 @@ public partial class SingleViewModel : Screen
     private string _title1 = string.Empty;
     private string _title2 = string.Empty;
     private BindableCollection<PriceSignal> _signals = new();
+    private string _hurstValue = "1.2";
+    private string _hurstDesc = 
+    @"
+        H < 0.5 - mean reverting
+        H = 0.5 - geometric random walk
+        H > 0.5 - momentum
+    ";
+    private string priceTrend = "Momenetum";
 
     #region Bindable Properties    
     public string Ticker
@@ -126,6 +134,22 @@ public partial class SingleViewModel : Screen
         set { _series2 = value; NotifyOfPropertyChange(() => Series2); }
     }
 
+    public string HurstDesc
+    {
+        get { return _hurstDesc; }
+        set { _hurstDesc = value; NotifyOfPropertyChange(() => HurstDesc); }
+    }    
+
+    public string HurstValue
+    {
+        get { return _hurstValue; }
+        set { _hurstValue = value; NotifyOfPropertyChange(() => HurstValue); }
+    }   
+    public string PriceTrend
+    {
+        get { return priceTrend; }
+        set { priceTrend = value; NotifyOfPropertyChange(() => PriceTrend); }
+    }
     #endregion
 
     #region Chart Properties     
@@ -201,6 +225,11 @@ public partial class SingleViewModel : Screen
                 new MatrixStrategyPnl(ticker, movingWindow, signalIn, signalOut, 0, 0, 0),
             });
         }
+    }
+
+    public void HurstCalc()
+    {
+
     }
 
     public async void SelectedCellChanged(object sender, SelectedCellsChangedEventArgs e)

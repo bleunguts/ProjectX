@@ -31,7 +31,7 @@
                 <Button x:Name="Compute" Content="Maximize PnL" Width="150" Margin="0 20 0 0"/>
             </StackPanel>
             <StackPanel>
-                <GroupBox Header="Model Parameters" Margin="0 30 0 0" Height="150">
+                <GroupBox Header="Model Parameters" Margin="0 30 0 0" Height="170">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="100"/>
@@ -40,11 +40,20 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="30"/>
                             <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="50"/>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Grid.Column="0" Text="Signal Smoothing:" VerticalAlignment="Center" />
-                        <TextBox Grid.Row="0" Grid.Column="1"  x:Name="SignalType" Width="100" VerticalAlignment="Center" IsEnabled="False" />
+                        <TextBox Grid.Row="0" Grid.Column="1"  x:Name="SignalType" Width="100" VerticalAlignment="Center" HorizontalAlignment="Left" IsEnabled="False" />
                         <TextBlock Grid.Row="1" Grid.Column="0" Text="Price Type:" VerticalAlignment="Center" />
-                        <TextBox  Grid.Row="1" Grid.Column="1" x:Name="PriceType" Width="100" TextAlignment="Center" VerticalAlignment="Center"  IsEnabled="False"/>
+                        <TextBox  Grid.Row="1" Grid.Column="1" x:Name="PriceType" Width="100" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Left" IsEnabled="False"/>
+                        <TextBlock Grid.Row="2"  Grid.Column="0" Text="Price Trend" VerticalAlignment="Center"/>
+                        <StackPanel Grid.Row="2" Grid.Column="1"  Orientation="Horizontal">
+                            <TextBox x:Name="PriceTrend" Width="100" TextAlignment="Center" VerticalAlignment="Center" IsEnabled="False"/>
+                            <TextBlock x:Name="HurstValue" FontWeight="Bold" FontSize="16" TextAlignment="Center" VerticalAlignment="Center" IsEnabled="False"/>
+                            <Button Margin="30 0 0 0" x:Name="HurstCalc" Content="Hurst" Width="40" Height="20"/>
+                        </StackPanel>
+                        <TextBlock Grid.Row="3" Grid.Column="1" x:Name="HurstDesc" VerticalAlignment="Center" TextAlignment="Right"/>
                     </Grid>
                 </GroupBox>
                 <GroupBox Header="Pnl by Year" >
