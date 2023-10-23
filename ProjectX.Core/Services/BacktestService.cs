@@ -178,6 +178,10 @@ namespace ProjectX.Core.Services
             result.Add(new YearlyStrategyPnl(pnls.First().Ticker, "Total", pnls.Last().NumTrades, sum, sharpeResult.strategyResult, sum1, sharpeResult.holdResult));
             return result;
         }
+
+        public IEnumerable<MatrixStrategyPnl> ComputeLongShortPnlGrid(IEnumerable<PriceSignal> input, TradingStrategy strategy)
+        {
+            throw new NotImplementedException();
+        }
     }
-    public record YearlyStrategyPnl(string ticker, string year, int numTrades, double pnl, double sharpe, double pnlHold, double sharpeHold);
 }

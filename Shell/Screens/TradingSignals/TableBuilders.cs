@@ -1,5 +1,4 @@
 ﻿using MatthiWare.FinancialModelingPrep.Model;
-using ProjectX.Core.Services;
 using ProjectX.Core.Strategy;
 using System;
 using System.Collections.Generic;
@@ -61,7 +60,7 @@ public partial class SingleViewModel
         public PnlRankingTableBuilder()
         {           
         }
-        public PnlRankingTableBuilder(List<(string ticker, int bar, double zin, double zout, int numTrades, double pnlCum, double sharpe)> list)
+        public PnlRankingTableBuilder(List<MatrixStrategyPnl> list)
         {
             FillRows(_dt, list);
         }
@@ -77,7 +76,7 @@ public partial class SingleViewModel
              new DataColumn("Sharpe", typeof(double)),
         };
 
-        public void SetRows(IEnumerable<(string ticker, int bar, double zin, double zout, int numTrades, double pnlCum, double sharpe)> data)
+        public void SetRows(IEnumerable<MatrixStrategyPnl> data)
         {
             FillRows(_dt, data);
         }
@@ -88,7 +87,7 @@ public partial class SingleViewModel
             return _dt.DefaultView.ToTable();
         }
 
-        static void FillRows(DataTable table, IEnumerable<(string ticker, int bar, double zin, double zout, int numTrades, double pnlCum, double sharpe)> rows)
+        static void FillRows(DataTable table, IEnumerable<MatrixStrategyPnl> rows)
         {
             foreach (var row in rows)
             {

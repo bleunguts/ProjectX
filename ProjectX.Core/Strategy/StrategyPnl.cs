@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ProjectX.Core.Strategy
-{   
+{
+    public record MatrixStrategyPnl(string ticker, int bar, double zin, double zout, int numTrades, double pnlCum, double sharpe);
+    public record YearlyStrategyPnl(string ticker, string year, int numTrades, double pnl, double sharpe, double pnlHold, double sharpeHold);
     public class StrategyPnl
     {              
         public StrategyPnl(DateTime date, string ticker, double price, double signal, double pnLCum, double pnLDaily, double pnlPerTrade, double pnlDailyHold, double pnlCumHold, PositionStatus tradeType, DateTime? dateIn, double? priceIn, int numTrades)

@@ -197,9 +197,9 @@ public partial class SingleViewModel : Screen
         static PnlRankingTableBuilder PnlRankingTableDefaults(string ticker, int movingWindow, double signalIn = 0, double signalOut = 0)
         {
             return new PnlRankingTableBuilder(
-            new List<(string ticker, int bar, double zin, double zout, int numTrades, double pnlCum, double sharpe)>()
+            new List<MatrixStrategyPnl>()
             {
-                (ticker, movingWindow, signalIn, signalOut, 0, 0, 0),
+                new MatrixStrategyPnl(ticker, movingWindow, signalIn, signalOut, 0, 0, 0),
             });
         }
     }
@@ -357,10 +357,10 @@ public partial class SingleViewModel : Screen
 
     static class DummyData
     {
-        public static IEnumerable<(string ticker, int bar, double zin, double zout, int numTrades, double pnlCum, double sharpe)> DummyPnLRankingTable => new List<(string ticker, int bar, double zin, double zout, int numTrades, double pnlCum, double sharpe)>()
+        public static IEnumerable<MatrixStrategyPnl> DummyPnLRankingTable => new List<MatrixStrategyPnl>()
         {
-            ("IBM", 10, 10, 20, 5, 120, 0.9),
-            ("IBM", 9, 9, 20, 5, 180, 1.9)
+            new MatrixStrategyPnl("IBM", 10, 10, 20, 5, 120, 0.9),
+            new MatrixStrategyPnl("IBM", 9, 9, 20, 5, 180, 1.9)
         };
 
         public static StrategyPnl[] DummyPnlTable => new[]

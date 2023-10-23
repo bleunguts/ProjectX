@@ -185,6 +185,24 @@ public class BacktestServiceTest
         }   
     }
 
+    [Test]
+    public void WhenGettingMatrixStrategyPnl()
+    {
+        var builder = new SignalBuilder(ticker);
+        var strategy = new TradingStrategy(TradingStrategyType.MeanReversion, false);
+        var signals = new List<PriceSignal>
+        {
+            builder.NewSignal(-1.5),
+            builder.NewSignal(-2.1),
+            builder.NewSignal(-3.1), // enters long trade (prevSignal < -2) 
+            builder.NewSignal(1.1),
+            builder.NewSignal(-4.1)  // exit long trade (prevSignal > 0)
+        };
+
+        var results = _backtestService.ComputeLongShortPnlGrid(signals, strategy).ToList();
+        Assert.That(results, Has.Count.GreaterThan(0));
+    }
+
     static StrategyPnl GiveMeAPnlEntitiy(DateTime date, int numTrades, double pnlDaily, double pnlCum, double pnlDailyHold, double pnlCumHold) 
         => StrategyPnlFactory.NewPnl(date, "TICKER", -1.0, -1.0, pnlCum, pnlDaily, -1.0, pnlDailyHold, pnlCumHold, numTrades, new Position());
 
