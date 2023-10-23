@@ -190,17 +190,49 @@ public class BacktestServiceTest
     {
         var builder = new SignalBuilder(ticker);
         var strategy = new TradingStrategy(TradingStrategyType.MeanReversion, false);
-        var signals = new List<PriceSignal>
+        var signals = GetRandomPrices(1000);
+        var pnls = _backtestService.ComputeLongShortPnlGrid(signals, 10_000, strategy).ToList();
+        
+        Assert.That(pnls, Has.Count.GreaterThan(100));        
+        foreach(var pnl in pnls)
         {
-            builder.NewSignal(-1.5),
-            builder.NewSignal(-2.1),
-            builder.NewSignal(-3.1), // enters long trade (prevSignal < -2) 
-            builder.NewSignal(1.1),
-            builder.NewSignal(-4.1)  // exit long trade (prevSignal > 0)
-        };
+            Console.WriteLine(pnl); 
+            Assert.That(pnl.movingWindow, Is.GreaterThan(0));
+            Assert.That(pnl.zin, Is.GreaterThan(0));
+            Assert.That(pnl.zout, Is.GreaterThanOrEqualTo(0));
+            Assert.That(pnl.sharpe, Is.GreaterThan(0).Or.LessThan(0), pnl.ToString());
+            Assert.That(pnl.numTrades, Is.GreaterThan(0));
+            Assert.That(pnl.pnlCum, Is.GreaterThan(0).Or.LessThan(0));
+            Assert.That(pnl.ticker, Is.EqualTo("IBM"));
+        }
+    }    
 
-        var results = _backtestService.ComputeLongShortPnlGrid(signals, strategy).ToList();
-        Assert.That(results, Has.Count.GreaterThan(0));
+    static MarketPrice[] GetRandomPrices(int howmany = 100)
+    {
+        var current = DateTime.Now.AddDays(-howmany * 2);
+        List<MarketPrice> marketPrices = new List<MarketPrice>();   
+        for (int i = 0; i < howmany; i++)
+        {
+            marketPrices.Add(new MarketPrice
+            {
+                Open = RandomPrice(15, 17),
+                Close = RandomPrice(15, 17),
+                High = RandomPrice(17, 18),
+                Low = RandomPrice(14, 15),  
+                Ticker = "IBM",
+                Volume = 1000,
+                Date = current
+            });
+            current = current.AddDays(1);
+        }
+
+        return marketPrices.ToArray();
+    }
+
+    static decimal RandomPrice(int from = 1, int end = 99)
+    {
+        Random random = new Random(Guid.NewGuid().GetHashCode());
+        return (decimal)( random.Next(from, end) + random.NextDouble() );
     }
 
     static StrategyPnl GiveMeAPnlEntitiy(DateTime date, int numTrades, double pnlDaily, double pnlCum, double pnlDailyHold, double pnlCumHold) 

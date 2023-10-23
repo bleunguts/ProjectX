@@ -179,9 +179,41 @@ namespace ProjectX.Core.Services
             return result;
         }
 
-        public IEnumerable<MatrixStrategyPnl> ComputeLongShortPnlGrid(IEnumerable<PriceSignal> input, TradingStrategy strategy)
+        public IEnumerable<MatrixStrategyPnl> ComputeLongShortPnlGrid(IEnumerable<MarketPrice> input, int notional, TradingStrategy strategy)
         {
-            throw new NotImplementedException();
+            var results = new List<MatrixStrategyPnl>();
+            int[] movingWindows = new int[] { 3, 5, 7, 10, 11, 12, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 150, 200, 250, 300 };
+            double[] zin = new double[] { 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.2, 1.4, 1.6, 1.8, 1.9 };
+            double[] zout = new double[] { 0, 0.1, 0.2, 0.3, 0.4 };
+
+            for (int i = 0; i < movingWindows.Length; i++)
+            {
+                var movingWindow = movingWindows[i];
+                if (movingWindow >= input.Count())
+                {
+                    Console.WriteLine($"MovingWindow={movingWindows[i]} is greater than InputSize={input.Count()}, skipping.");
+                    continue;
+                }
+
+                var smoothenedSignals = input.MovingAverage(movingWindow);
+                for (int j = 0; j < zin.Length; j++)
+                {
+                    for (int k = 0; k < zout.Length; k++)
+                    {
+                        var pnl = ComputeLongShortPnl(smoothenedSignals, notional, zin[j], zout[k], strategy);
+                        if(pnl.Any())
+                        {
+                            var sharpe = GetSharpe(pnl);                            
+                            StrategyPnl latestStrategyPnl = pnl.Last();
+                            if (Math.Abs(latestStrategyPnl.PnLCum) > 0)
+                            {
+                                results.Add(new MatrixStrategyPnl(latestStrategyPnl.Ticker, movingWindow, zin[j], zout[k], latestStrategyPnl.NumTrades, latestStrategyPnl.PnLCum, sharpe.strategyResult));
+                            }
+                        }
+                    }
+                }
+            }
+            return results;
         }
     }
 }

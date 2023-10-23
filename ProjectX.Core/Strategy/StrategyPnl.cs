@@ -6,42 +6,15 @@ using System.Threading.Tasks;
 
 namespace ProjectX.Core.Strategy
 {
-    public record MatrixStrategyPnl(string ticker, int bar, double zin, double zout, int numTrades, double pnlCum, double sharpe);
+    public record MatrixStrategyPnl(string ticker, int movingWindow, double zin, double zout, int numTrades, double pnlCum, double sharpe)
+    {
+        public override string ToString() =>
+            $"ticker={ticker} movingWindow={movingWindow} zin={zin} zout={zout} numTrades={numTrades} pnlCum={pnlCum} sharpe={sharpe}";
+    }
     public record YearlyStrategyPnl(string ticker, string year, int numTrades, double pnl, double sharpe, double pnlHold, double sharpeHold);
-    public class StrategyPnl
-    {              
-        public StrategyPnl(DateTime date, string ticker, double price, double signal, double pnLCum, double pnLDaily, double pnlPerTrade, double pnlDailyHold, double pnlCumHold, PositionStatus tradeType, DateTime? dateIn, double? priceIn, int numTrades)
-        {
-            Date = date;
-            Ticker = ticker;
-            Price = price;
-            Signal = signal;
-            TradeType = tradeType;
-            NumTrades = numTrades;
-            PnLCum = pnLCum;
-            PnLDaily = pnLDaily;
-            PnlPerTrade = pnlPerTrade;
-            PnLDailyHold = pnlDailyHold;
-            PnLCumHold = pnlCumHold;
-            DateIn = dateIn;
-            PriceIn = priceIn;
-        }
-     
-        public string Ticker { get; set; }
-        public DateTime Date { get; set; }
-        public double Price { get; set; }
-        public double Signal { get; set; }
-        public PositionStatus TradeType { get; set; }
-        public DateTime? DateIn { get; set; }
-        public double? PriceIn { get; set; }
 
-        public int NumTrades { get; set; }
-        public double PnlPerTrade { get; set; }
-        public double PnLDaily { get; set; }
-        public double PnLCum { get; set; }
-        public double PnLDailyHold { get; set; }
-        public double PnLCumHold { get; set; }
-
+    public record StrategyPnl(DateTime Date, string Ticker, double Price, double Signal, double PnLCum, double PnLDaily, double PnlPerTrade, double PnLDailyHold, double PnLCumHold, PositionStatus TradeType, DateTime? DateIn, double? PriceIn, int NumTrades)
+    {
         public override string ToString()
         {
             return $"Ticker={Ticker},Date={Date.ToShortDateString()},Price={Price},Signal={Signal},Type={TradeType},NumTrades={NumTrades},DateIn={DateIn},PriceIn={PriceIn},PnlPerTrade={PnlPerTrade},PnlDaily={PnLDaily},PnlCum={PnLCum},PnlDailyHold={PnLDailyHold},PnlCumHold={PnLCumHold}";

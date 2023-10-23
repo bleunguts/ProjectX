@@ -91,7 +91,7 @@ public partial class SingleViewModel
         {
             foreach (var row in rows)
             {
-                table.Rows.Add(row.ticker, row.bar, row.zin, row.zout, row.numTrades, row.pnlCum, row.sharpe);
+                table.Rows.Add(row.ticker, row.movingWindow, row.zin, row.zout, row.numTrades, row.pnlCum, row.sharpe);
             }
         }
     }
