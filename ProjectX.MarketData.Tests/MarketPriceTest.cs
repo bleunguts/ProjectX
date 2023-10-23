@@ -24,7 +24,7 @@ namespace ProjectX.MarketData.Tests
                 Label = "IBM"
             };
                 
-            var actualPrice = item.ToMarketPrice();
+            var actualPrice = item.ToMarketPrice("IBM");
             Assert.That(actualPrice.Close, Is.EqualTo(someValue));
             Assert.That(actualPrice.Open, Is.EqualTo(someValue));
             Assert.That(actualPrice.High, Is.EqualTo(someValue));

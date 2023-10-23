@@ -8,6 +8,7 @@ namespace ProjectX.Core.Services
     {
         IEnumerable<StrategyPnl> ComputeLongShortPnl(IEnumerable<PriceSignal> inputSignals, double notional, double signalIn, double signalOut, TradingStrategy strategy);
         IEnumerable<YearlyStrategyPnl> GetYearlyPnl(List<StrategyPnl> pnls);
+        IEnumerable<MatrixStrategyPnl> ComputeLongShortPnlGrid(IEnumerable<MarketPrice> inputSignals, double notional, TradingStrategy strategy);
     }
 
     [Export(typeof(IBacktestService)), PartCreationPolicy(CreationPolicy.Shared)]
@@ -179,7 +180,7 @@ namespace ProjectX.Core.Services
             return result;
         }
 
-        public IEnumerable<MatrixStrategyPnl> ComputeLongShortPnlGrid(IEnumerable<MarketPrice> input, int notional, TradingStrategy strategy)
+        public IEnumerable<MatrixStrategyPnl> ComputeLongShortPnlGrid(IEnumerable<MarketPrice> inputSignals, double notional, TradingStrategy strategy)
         {
             var results = new List<MatrixStrategyPnl>();
             int[] movingWindows = new int[] { 3, 5, 7, 10, 11, 12, 15, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 150, 200, 250, 300 };
@@ -189,13 +190,13 @@ namespace ProjectX.Core.Services
             for (int i = 0; i < movingWindows.Length; i++)
             {
                 var movingWindow = movingWindows[i];
-                if (movingWindow >= input.Count())
+                if (movingWindow >= inputSignals.Count())
                 {
-                    Console.WriteLine($"MovingWindow={movingWindows[i]} is greater than InputSize={input.Count()}, skipping.");
+                    Console.WriteLine($"MovingWindow={movingWindows[i]} is greater than InputSize={inputSignals.Count()}, skipping.");
                     continue;
                 }
 
-                var smoothenedSignals = input.MovingAverage(movingWindow);
+                var smoothenedSignals = inputSignals.MovingAverage(movingWindow);
                 for (int j = 0; j < zin.Length; j++)
                 {
                     for (int k = 0; k < zout.Length; k++)

@@ -5,7 +5,7 @@ namespace ProjectX.MarketData;
 
 public static class Extensions
 {
-    public static MarketPrice ToMarketPrice(this HistoricalPriceItem p) => new()
+    public static MarketPrice ToMarketPrice(this HistoricalPriceItem p, string ticker) => new()
     {
         Open = Convert.ToDecimal(p.Open),
         Close = Convert.ToDecimal(p.Close),
@@ -13,6 +13,6 @@ public static class Extensions
         Low = Convert.ToDecimal(p.Low),
         Volume = Convert.ToDecimal(p.Volume),
         Date = DateTime.Parse(p.Date),
-        Ticker = p.Label,
+        Ticker = ticker,
     };
 }

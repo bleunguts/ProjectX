@@ -4,6 +4,7 @@ using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.Painting.Effects;
+using ProjectX.Core;
 using ProjectX.Core.Services;
 using ProjectX.Core.Strategy;
 using SkiaSharp;
@@ -168,20 +169,17 @@ public partial class SingleViewModel : Screen
     #endregion
     public async Task Compute()
     {
-        await Task.Run(() =>
+        await Task.Run(async () =>
         {
             PnLTable.Clear();
             YearlyPnLTable = new DataTable();
-
-            var builder = new PnlRankingTableBuilder();
-            // TODO OptimSingleName Ranking Table
-            builder.SetRows(DummyData.DummyPnLRankingTable);
+                        
+            var inputs = await _stockSignalService.GetPrices(Ticker, FromDate, ToDate); 
+            var pnls = _backtestService.ComputeLongShortPnlGrid(inputs, Notional, new TradingStrategy(TradingStrategyType.MeanReversion, false));
+            var builder = new PnlRankingTableBuilder();            
+            builder.SetRows(pnls);
             PnLRankingTable = builder.Build();
-
-            // TODO: get stock data
-            // compute parameter permutations for strategy ad resultant pnl for each OptimHelper.OptimSingleName(data, SelectedSignalType, SelectedStrategyType, IsReinvest
-            // store results into PnLRankingTable above
-
+            
             return Task.CompletedTask;
         });
     }

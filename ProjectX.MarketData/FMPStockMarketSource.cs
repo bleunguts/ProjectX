@@ -23,7 +23,7 @@ public class FMPStockMarketSource : IStockMarketSource
         {
             throw new Exception($"Cannot fetch any data for ticker {ticker} for periods {from.ToShortDateString()} to {to.ToShortDateString()} sourceProvider: {this}");
         }
-        return response.Historical.Select(h => h.ToMarketPrice());
+        return response.Historical.Select(h => h.ToMarketPrice(ticker));
     }
     public override string ToString() => $"FinancialModelingPrep market source {_api.ToString()}";
 }

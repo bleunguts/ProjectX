@@ -64,7 +64,8 @@ namespace ProjectX.Core.Tests.Services
         public async Task WhenGettingStockSignalsShouldReturnMovingAveragedSmoothingOverRawValues()
         {
             var service = new StockSignalService(_marketSource.Object);
-            var actual = await service.GetSignalUsingMovingAverageByDefault(ticker, _startDate, _endDate, _movingWindow);            
+            var actual = (await service.GetSignalUsingMovingAverageByDefault(ticker, _startDate, _endDate, _movingWindow)).ToList();
+            
             foreach(var p in actual)
             {
                 Console.Out.WriteLine($"{p.Ticker}: {p.Date} price={p.Price} predicted={p.PricePredicted} upper={p.UpperBand} lower={p.LowerBand} signal={p.Signal}");
@@ -76,12 +77,6 @@ namespace ProjectX.Core.Tests.Services
             Assert.That(actual.All(x => x.Ticker == ticker), Is.True);
 
             _marketSource.Verify(x => x.GetPrices(ticker, _startDate, _endDate), Times.Once);
-
-            //var data = await SignalHelper.GetStockData(Ticker, StartDate, EndDate, SelectedPriceType);
-            //var signal = SignalHelper.GetSignal(data, MovingWindow, SelectedSignalType);
-
-            // signal is used as input to compute long short pnl model
-            //var pnls = BacktestHelper.ComputeLongShortPnl(signal, 10_000.0, signalIn, signalOut, SelectedStrategyType, IsReinvest).ToList();
         }
     }
 }
