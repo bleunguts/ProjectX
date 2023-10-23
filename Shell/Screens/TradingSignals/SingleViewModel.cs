@@ -48,7 +48,7 @@ public partial class SingleViewModel : Screen
         DisplayName = "Mean Reversion strategy (Backtesting)";
     }
 
-    private string ticker = "ACAQ";
+    private string ticker = "AAPL";
     private DateTime fromDate = new(2023, 9, 1);
     private DateTime toDate = new(2023, 9, 25);
     private string signalType = "MovingAverage";
