@@ -25,7 +25,7 @@ public partial class SingleViewModel
         };
 
         public override DataTable Build()
-        {
+        {              
             return _dt;         
         }
         public void SetRows(IEnumerable<YearlyStrategyPnl> yearlyPnls)
@@ -42,9 +42,9 @@ public partial class SingleViewModel
         {
             foreach (var row in rows)
             {
-                table.Rows.Add(row.ticker, row.year, row.numTrades, Math.Round(row.pnl,2), Math.Round(row.sharpe,3), Math.Round(row.pnlHold,2), Math.Round(row.sharpeHold,3));
+                table.Rows.Add(row.ticker, row.year, row.numTrades, FormatPnl(row.pnl), FormatSharpe(row.sharpe), FormatPnl(row.pnlHold), FormatSharpe(row.sharpeHold)); ;
             }
-        }
+        }        
 
         static void FillRows(DataTable table, IEnumerable<(string ticker, string period, string numTrades, string pnl, string sharpe, string pnlHold, string sharpehold)> rows)
         {
@@ -89,7 +89,7 @@ public partial class SingleViewModel
             {
                 var positionState = Position(row.TradeType);
                 var dateIn = row.DateIn.HasValue ? row.DateIn.Value.ToString("ddMMyy") : string.Empty;
-                table.Rows.Add(row.Date.ToString("ddMMyy"), row.Ticker, row.Price, Math.Round(row.Signal,3), Math.Round(row.PnLCum,2), Math.Round(row.PnLDaily, 2), Math.Round(row.PnlPerTrade, 2), Math.Round(row.PnLDaily, 2), Math.Round(row.PnLCum, 2), positionState, dateIn, row.PriceIn, row.NumTrades);
+                table.Rows.Add(row.Date.ToString("ddMMyy"), row.Ticker, row.Price, FormatSharpe(row.Signal), FormatPnl(row.PnLCum), FormatPnl(row.PnLDaily), FormatPnl(row.PnlPerTrade), FormatPnl(row.PnLDaily), FormatPnl(row.PnLCum), positionState, dateIn, row.PriceIn, row.NumTrades);
             }
 
             static string Position(PositionStatus positionStatus)
@@ -142,7 +142,7 @@ public partial class SingleViewModel
         {
             foreach (var row in rows)
             {
-                table.Rows.Add(row.ticker, row.movingWindow, row.zin, row.zout, row.numTrades, Math.Round(row.pnlCum, 2), Math.Round(row.sharpe, 3));
+                table.Rows.Add(row.ticker, row.movingWindow, row.zin, row.zout, row.numTrades, FormatPnl(row.pnlCum), FormatSharpe(row.sharpe));
             }
         }
     }
@@ -158,5 +158,8 @@ public partial class SingleViewModel
             _dt.Columns.AddRange(Headers);
         }
         public abstract DataTable Build();
+
+        protected static string FormatSharpe(double sharpe) => sharpe.ToString("N3");
+        protected static string FormatPnl(double pnl) => pnl.ToString("N0");
     }
 }
