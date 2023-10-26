@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 
 export interface ChartData {
   time: string,
-  amount?: number
+  amount: number
 }
 // create data for chart
 export interface ChartProps {
@@ -13,7 +13,7 @@ export interface ChartProps {
   label: string,
 }
 
-export function createData(time: string, amount?: number) : ChartData {
+export function createData(time: string, amount: number) : ChartData {
   return { time, amount };
 }
 
