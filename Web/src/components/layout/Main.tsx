@@ -6,6 +6,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Paper from '@mui/material/Paper';
 import Chart from './Chart';
+import { defineConfig } from 'vite';
 
 interface MainProps {
     posts: ReadonlyArray<string>;
@@ -42,20 +43,7 @@ export default function Main(props: MainProps) {
                         'Single stock mean reversion signal backtesting, includes visual graphs and real market sourced historical pricing data',
                     </Typography>
                 </CardContent>
-            </Card>
-            {/* Item 2*/}
-            <Card
-                style={{
-                    width: 800,
-                }}>
-                <CardContent>
-                    <Typography style={{
-                        marginBottom: 12,
-                    }}>
-                        'Pair stock mean reversion signal backtesting, includes visual graphs and real market sourced historical pricing data'
-                    </Typography>
-                </CardContent>
-            </Card>
+            </Card>    
             {/* Item 3*/}
             <Card
                 style={{
@@ -72,6 +60,31 @@ export default function Main(props: MainProps) {
                     >
                         <Chart />
                     </Paper>
+                </CardContent>
+            </Card>
+                    {/* Item 2*/}
+                    <Card
+                style={{
+                    width: 800,
+                }}>
+                <CardContent>
+                    <Typography style={{
+                        marginBottom: 12,
+                    }}>
+                    Future Roadmap features:
+                    </Typography>                
+                    {
+                        [
+                            "A way to rapid develop trading strategies and using back testing to validate it", 
+                            "Show live FX prices from FX market data source as an additional column 'Reference Price'",
+                            "All pricing model calcs are Azure-enabled (leveraging existing AspNetCore BackgroundServices)",
+                            "Enhanced eTrader trade management screen shows PnL helps facilitate demo tradin",
+                        ].map((x) =>
+                        <li>
+                        {x}
+                        </li>
+                        )                                        
+                    }                    
                 </CardContent>
             </Card>
         </Grid>
