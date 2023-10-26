@@ -29,4 +29,3 @@ _Tech Stack:_
 * React 8, Bootstrap,  Typescript, recharts,
 * StockIndicators Skender API,  NinjaTrader StockInidicator API, FinancialModellingPrep MarketData API, Quandl MarketData API 
  
-
