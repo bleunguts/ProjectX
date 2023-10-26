@@ -14,7 +14,7 @@ import { featuredPosts }  from './Posts'
 const sections = [
   { title: 'Home', url: '#' },
   { title: 'Backtesting', url: '#' },  
-  { title: 'Market Data', url: '#' },
+  { title: 'Market Analysis Intelligence', url: '#' },
 ];
 
 const mainFeaturedPost = {

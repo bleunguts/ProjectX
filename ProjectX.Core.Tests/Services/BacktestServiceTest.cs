@@ -39,6 +39,7 @@ public class BacktestServiceTest
         Console.WriteLine(json);
         File.WriteAllText($"c:\\temp\\chart.json", json);
     }
+
     // prevSignal > 2 enters short
     // prevSignal < -2 enters long
     // -2 < prevSignal < 2 is allowed out of this range it will go into short or long position
