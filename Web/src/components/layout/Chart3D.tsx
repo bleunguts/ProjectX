@@ -11,7 +11,7 @@ export default function Chart3D(props: Chart3DProps) {
     const layout = { 
         title: props.label,            
         autosize: false,
-        width: 500,
+        width: 700,
         height: 500,        
     };
 
@@ -27,10 +27,14 @@ export default function Chart3D(props: Chart3DProps) {
           type: 'surface'     
         },
       ];
+      
+    const config = {
+        displayModeBar: false
+    };
 
     return (
         <React.Fragment>        
-        <Plot data={data} layout={layout} />;
+        <Plot data={data} layout={layout} config={config} />;
       </React.Fragment>
     );
 }

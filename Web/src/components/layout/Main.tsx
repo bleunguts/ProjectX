@@ -9,7 +9,7 @@ import Chart, { createData } from './Chart';
 import { defineConfig } from 'vite';
 import { ChartData } from './Chart';
 import { BoltRounded } from '@mui/icons-material';
-import { strategyChartData } from './dummyStrategyChart';
+import { strategyChartData } from './DummyData';
 import Chart3D from './Chart3D';
 
 interface MainProps {
