@@ -28,7 +28,9 @@ export default function Chart(props: ChartProps) {
       {label}
       </Typography>
       <ResponsiveContainer>
-      <LineChart width={400} height={200} data={data} >
+      <LineChart width={400} height={200} data={data}>
+        <YAxis yAxisId={0} orientation='left'/>
+        <YAxis yAxisId={1} orientation='right'/>
         <XAxis dataKey="time" />
         <Tooltip />
         <CartesianGrid stroke="#f5f5f5" />
