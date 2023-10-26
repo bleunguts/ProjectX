@@ -59,7 +59,8 @@ export default function Main(props: MainProps) {
                             height: 240,
                         }}
                     >
-                        <Chart data={[
+                        <Chart label='Implied Volatility (derived from live option prices)' 
+                            data={[
                                createData('0.1', 0.25079345703125),
                                createData('0.15', 0.19720458984375),
                                createData('0.2', 0.17559814453125),

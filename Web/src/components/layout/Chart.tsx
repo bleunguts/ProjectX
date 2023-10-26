@@ -9,7 +9,8 @@ export interface ChartData {
 }
 // create data for chart
 export interface ChartProps {
-  data : ChartData[];  
+  data : ChartData[],
+  label: string,
 }
 
 export function createData(time: string, amount?: number) : ChartData {
@@ -19,11 +20,12 @@ export function createData(time: string, amount?: number) : ChartData {
 export default function Chart(props: ChartProps) {
   const theme = useTheme();
   const data = props.data;
+  const label = props.label;
 
   return (
     <React.Fragment>
       <Typography component="h2" variant="h6" color="primary" gutterBottom>
-              Volatility Chart
+      {label}
       </Typography>
       <ResponsiveContainer>
         <LineChart
