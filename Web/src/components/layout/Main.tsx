@@ -9,7 +9,7 @@ import Chart, { createData } from './Chart';
 import { defineConfig } from 'vite';
 import { ChartData } from './Chart';
 import { BoltRounded } from '@mui/icons-material';
-import { strategyChartData } from './DummyData';
+import { FakeStrategyChartData } from './DummyData';
 import Chart3D from './Chart3D';
 
 interface MainProps {
@@ -58,7 +58,7 @@ export default function Main(props: MainProps) {
                             height: 200,
                         }}
                     >              
-                    <Chart label='Long & Short Strategy Pnl' data={strategyChartData}/>                                   
+                    <Chart label='Long & Short Strategy Pnl' data={FakeStrategyChartData}/>                                   
                     </Paper>
                 </CardContent>
             </Card>

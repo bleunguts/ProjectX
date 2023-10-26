@@ -3,15 +3,6 @@ import { useTheme } from '@mui/material/styles';
 import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer, Tooltip, CartesianGrid, Legend } from 'recharts';
 import Typography from '@mui/material/Typography';
 
-export interface ChartData {
-  time: string,
-  amount: number
-}
-
-export function createData(time: string, amount: number) : ChartData {
-  return { time, amount };
-}
-
 // create data for chart
 export interface ChartProps {
   data : unknown[],
