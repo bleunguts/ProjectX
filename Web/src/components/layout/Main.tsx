@@ -8,6 +8,7 @@ import Paper from '@mui/material/Paper';
 import Chart, { createData } from './Chart';
 import { defineConfig } from 'vite';
 import { ChartData } from './Chart';
+import { BoltRounded } from '@mui/icons-material';
 
 interface MainProps {
     posts: ReadonlyArray<string>;
@@ -56,31 +57,59 @@ export default function Main(props: MainProps) {
                             p: 2,
                             display: 'flex',
                             flexDirection: 'column',
-                            height: 240,
+                            height: 1000,
                         }}
-                    >
-                        <Chart label='Implied Volatility (derived from live option prices)' 
-                            data={[
-                               createData('0.1', 0.25079345703125),
-                               createData('0.15', 0.19720458984375),
-                               createData('0.2', 0.17559814453125),
-                               createData('0.25', 0.16387939453125),
-                               createData('0.3', 0.15655517578125),
-                               createData('0.35', 0.15167236328125),
-                               createData('0.4', 0.14825439453125),
-                               createData('0.45', 0.14581298828125),
-                               createData('0.5', 0.14422607421875),
-                               createData('0.55', 0.14300537109375),
-                               createData('0.6', 0.14422607421875),
-                               createData('0.65', 0.14581298828125),
-                               createData('0.7', 0.14825439453125),
-                               createData('0.75', 0.15167236328125),
-                               createData('0.8', 0.15655517578125),
-                               createData('0.85', 0.16387939453125),
-                               createData('0.9', 0.17559814453125),
-                               createData('0.95', 0.19720458984375),
-                               createData('0.1', 0.25079345703125),
-                        ]}/>                                                    
+                    >              
+                    <Chart label='Long & Short Strategy Pnl' 
+                        data={[
+                            createData('0.1', 0.25079345703125),
+                            createData('0.15', 0.19720458984375),
+                            createData('0.2', 0.17559814453125),
+                            createData('0.25', 0.16387939453125),
+                            createData('0.3', 0.15655517578125),
+                            createData('0.35', 0.15167236328125),
+                            createData('0.4', 0.14825439453125),
+                            createData('0.45', 0.14581298828125),
+                            createData('0.5', 0.14422607421875),
+                            createData('0.55', 0.14300537109375),
+                            createData('0.6', 0.14422607421875),
+                            createData('0.65', 0.14581298828125),
+                            createData('0.7', 0.14825439453125),
+                            createData('0.75', 0.15167236328125),
+                            createData('0.8', 0.15655517578125),
+                            createData('0.85', 0.16387939453125),
+                            createData('0.9', 0.17559814453125),
+                            createData('0.95', 0.19720458984375),
+                            createData('0.1', 0.25079345703125),
+                    ]}/>                                   
+                    <Typography style={{
+                        marginTop: 18,                        
+                        fontStyle: 'italic',
+                    }}>
+                    Market inferred volatility (implied black scholes calc against live option prices)
+                    </Typography>   
+                    <Chart label='Implied Volatility (twelvedata marketdata api)' 
+                        data={[
+                            createData('0.1', 0.25079345703125),
+                            createData('0.15', 0.19720458984375),
+                            createData('0.2', 0.17559814453125),
+                            createData('0.25', 0.16387939453125),
+                            createData('0.3', 0.15655517578125),
+                            createData('0.35', 0.15167236328125),
+                            createData('0.4', 0.14825439453125),
+                            createData('0.45', 0.14581298828125),
+                            createData('0.5', 0.14422607421875),
+                            createData('0.55', 0.14300537109375),
+                            createData('0.6', 0.14422607421875),
+                            createData('0.65', 0.14581298828125),
+                            createData('0.7', 0.14825439453125),
+                            createData('0.75', 0.15167236328125),
+                            createData('0.8', 0.15655517578125),
+                            createData('0.85', 0.16387939453125),
+                            createData('0.9', 0.17559814453125),
+                            createData('0.95', 0.19720458984375),
+                            createData('0.1', 0.25079345703125),
+                    ]}/>                                                    
                     </Paper>
                 </CardContent>
             </Card>

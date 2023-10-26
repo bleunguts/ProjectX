@@ -24,7 +24,7 @@ export default function Chart(props: ChartProps) {
 
   return (
     <React.Fragment>
-      <Typography component="h2" variant="h6" color="primary" gutterBottom>
+      <Typography component="h2" variant="body1" color="primary" gutterBottom>
       {label}
       </Typography>
       <ResponsiveContainer>
@@ -33,15 +33,21 @@ export default function Chart(props: ChartProps) {
           margin={{
             top: 16,
             right: 16,
-            bottom: 0,
+            bottom: 16,
             left: 24,
           }}
         >
           <XAxis
             dataKey="time"
             stroke={theme.palette.text.secondary}
-            style={theme.typography.body2}                      
-          />
+            style={theme.typography.body2}                     
+          > 
+          <Label              
+              position="bottom"                
+              fontSize="10">       
+              t            
+              </Label>
+          </XAxis>
           <YAxis
             stroke={theme.palette.text.secondary}
             style={theme.typography.body2}            
@@ -55,7 +61,7 @@ export default function Chart(props: ChartProps) {
                 ...theme.typography.body1,
               }}
             >
-              Volatility
+              Accumulated Pnl($)
             </Label>
           </YAxis>
           <Line
