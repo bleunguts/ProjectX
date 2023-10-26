@@ -1,12 +1,15 @@
 ﻿using Moq;
+using Newtonsoft.Json;
 using ProjectX.Core.Services;
 using ProjectX.Core.Strategy;
+using ProjectX.MarketData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ProjectX.Core.Tests.Services;
 
@@ -21,6 +24,21 @@ public class BacktestServiceTest
 
     private readonly BacktestService _backtestService = new();
 
+    public record ChartData(string time, double amount, double amountHold);
+    [Test]
+    public async Task foo()
+    {
+        var smoothenedSignals = await new StockSignalService(new FMPStockMarketSource()).GetSignalUsingMovingAverageByDefault(ticker, new DateTime(2023,5,1), new DateTime(2023,9,25), 3);
+        List<StrategyPnl> pnls = _backtestService.ComputeLongShortPnl(smoothenedSignals, 10_000, 0.8, 0.2, new TradingStrategy(TradingStrategyType.MeanReversion, false)).ToList();
+        List<ChartData> result = new();
+        foreach (StrategyPnl pn in pnls)
+        {
+            result.Add(new ChartData(pn.Date.ToString("yyMMdd"), pn.PnLCum, pn.PnLCumHold));
+        }
+        var json = JsonConvert.SerializeObject(result);
+        Console.WriteLine(json);
+        File.WriteAllText($"c:\\temp\\chart.json", json);
+    }
     // prevSignal > 2 enters short
     // prevSignal < -2 enters long
     // -2 < prevSignal < 2 is allowed out of this range it will go into short or long position

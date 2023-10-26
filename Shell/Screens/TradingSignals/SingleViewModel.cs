@@ -19,6 +19,7 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Runtime.InteropServices.Marshalling;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -256,7 +257,8 @@ public partial class SingleViewModel : Screen
             bool IsReinvest = false;
 
             var smoothenedSignals = await _stockSignalService.GetSignalUsingMovingAverageByDefault(Ticker, FromDate, ToDate, movingWindow);
-            List<StrategyPnl> pnls = _backtestService.ComputeLongShortPnl(smoothenedSignals, 10_000.0, signalIn, signalOut, new TradingStrategy(TradingStrategyType.MeanReversion, IsReinvest)).ToList();
+            List<StrategyPnl> pnls = _backtestService.ComputeLongShortPnl(smoothenedSignals, Notional, signalIn, signalOut, new TradingStrategy(TradingStrategyType.MeanReversion, IsReinvest)).ToList();
+            
             var builder2 = new PnLTableBuilder();
             builder2.SetRows(pnls);            
             PnLTable = builder2.Build();            

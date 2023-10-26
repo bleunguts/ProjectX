@@ -7,14 +7,15 @@ export interface ChartData {
   time: string,
   amount: number
 }
-// create data for chart
-export interface ChartProps {
-  data : ChartData[],
-  label: string,
-}
 
 export function createData(time: string, amount: number) : ChartData {
   return { time, amount };
+}
+
+// create data for chart
+export interface ChartProps {
+  data : unknown[],
+  label: string,
 }
 
 export default function Chart(props: ChartProps) {
@@ -51,12 +52,11 @@ export default function Chart(props: ChartProps) {
           >
             <Label
               angle={270}
-              position="left"
-              fill='#676767'
-              fontSize={14}            
+              position="left"              
+              fontSize={14}                   
               style={{
-                textAnchor: 'middle',
-                fill: theme.palette.text.primary,
+                textAnchor: 'middle',                                
+                fill: '#8884d8',
                 ...theme.typography.body1,
               }}
             >
@@ -70,12 +70,11 @@ export default function Chart(props: ChartProps) {
           >
             <Label
               angle={270}
-              position="right"
-              fill='#676767'
+              position="right"                           
               fontSize={10}              
-              style={{
+              style={{                                
                 textAnchor: 'middle',
-                fill: theme.palette.text.primary,
+                fill: '#82ca9d',
                 ...theme.typography.body1,
               }}
             >
@@ -83,7 +82,7 @@ export default function Chart(props: ChartProps) {
             </Label>
           </YAxis>          
           <Line yAxisId='left' data={data} type="monotone" dataKey='amount' stroke="#8884d8" activeDot={{r:8}} strokeWidth='6'/>
-          <Line yAxisId='right' data={data} type="monotone" dataKey='amount' stroke="#82ca9d" strokeWidth='6'/>
+          <Line yAxisId='right' data={data} type="monotone" dataKey='amountHold' stroke="#82ca9d" strokeWidth='6'/>
         </LineChart>
       </ResponsiveContainer>
     </React.Fragment>
