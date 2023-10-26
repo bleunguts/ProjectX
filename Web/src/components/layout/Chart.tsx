@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
-import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer, Tooltip, CartesianGrid, Legend } from 'recharts';
 import Typography from '@mui/material/Typography';
 
 export interface ChartData {
@@ -18,72 +18,25 @@ export interface ChartProps {
   label: string,
 }
 
-export default function Chart(props: ChartProps) {
-  const theme = useTheme();
+export default function Chart(props: ChartProps) {  
   const data = props.data;
   const label = props.label;
-
+  
   return (
     <React.Fragment>
       <Typography component="h2" variant="body1" color="primary" gutterBottom>
       {label}
       </Typography>
       <ResponsiveContainer>
-        <LineChart
-          data={data}
-          margin={{
-            top: 16,
-            right: 16,
-            bottom: 16,
-            left: 24,
-          }}
-        >
-          <XAxis
-            dataKey="time"
-            stroke={theme.palette.text.secondary}
-            style={theme.typography.body2}                     
-          > 
-            <Label position="bottom" fontSize="10">t</Label>
-          </XAxis>
-          <YAxis            
-            orientation='left'            
-            tick={{fontSize:10}}
-            yAxisId='left'
-          >
-            <Label
-              angle={270}
-              position="left"              
-              fontSize={14}                   
-              style={{
-                textAnchor: 'middle',                                
-                fill: '#8884d8',
-                ...theme.typography.body1,
-              }}
-            >
-            Strategy Pnl($)
-            </Label>
-          </YAxis>
-          <YAxis            
-            orientation='right'
-            yAxisId='right'
-            tick={{fontSize:10}}
-          >
-            <Label
-              angle={270}
-              position="right"                           
-              fontSize={10}              
-              style={{                                
-                textAnchor: 'middle',
-                fill: '#82ca9d',
-                ...theme.typography.body1,
-              }}
-            >
-            Buy & Hold Benchmark Pnl($)
-            </Label>
-          </YAxis>          
-          <Line yAxisId='left' data={data} type="monotone" dataKey='amount' stroke="#8884d8" activeDot={{r:8}} strokeWidth='6'/>
-          <Line yAxisId='right' data={data} type="monotone" dataKey='amountHold' stroke="#82ca9d" strokeWidth='6'/>
-        </LineChart>
+      <LineChart width={400} height={400} data={data} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+        <XAxis dataKey="time" />
+        <Tooltip />
+        <CartesianGrid stroke="#f5f5f5" />
+        <Line type="monotone" dataKey="amount" stroke="#8884d8" activeDot={{r:8}} strokeWidth='6' yAxisId={0} name='Strategy Pnl($)' />
+        <Line type="monotone" dataKey="amountHold" stroke="#82ca9d" strokeWidth='2' yAxisId={1} name='Buy & Hold Benchmark Pnl($)' />
+        <Tooltip/>
+        <Legend/>
+      </LineChart>
       </ResponsiveContainer>
     </React.Fragment>
   );
