@@ -42,35 +42,48 @@ export default function Chart(props: ChartProps) {
             stroke={theme.palette.text.secondary}
             style={theme.typography.body2}                     
           > 
-          <Label              
-              position="bottom"                
-              fontSize="10">       
-              t            
-              </Label>
+            <Label position="bottom" fontSize="10">t</Label>
           </XAxis>
-          <YAxis
-            stroke={theme.palette.text.secondary}
-            style={theme.typography.body2}            
+          <YAxis            
+            orientation='left'            
+            tick={{fontSize:10}}
+            yAxisId='left'
           >
             <Label
               angle={270}
               position="left"
+              fill='#676767'
+              fontSize={14}            
               style={{
                 textAnchor: 'middle',
                 fill: theme.palette.text.primary,
                 ...theme.typography.body1,
               }}
             >
-              Accumulated Pnl($)
+            Strategy Pnl($)
             </Label>
           </YAxis>
-          <Line
-            isAnimationActive={false}
-            type="monotone"
-            dataKey="amount"
-            stroke={theme.palette.primary.main}
-            dot={false}
-          />
+          <YAxis            
+            orientation='right'
+            yAxisId='right'
+            tick={{fontSize:10}}
+          >
+            <Label
+              angle={270}
+              position="right"
+              fill='#676767'
+              fontSize={10}              
+              style={{
+                textAnchor: 'middle',
+                fill: theme.palette.text.primary,
+                ...theme.typography.body1,
+              }}
+            >
+            Buy & Hold Benchmark Pnl($)
+            </Label>
+          </YAxis>          
+          <Line yAxisId='left' data={data} type="monotone" dataKey='amount' stroke="#8884d8" activeDot={{r:8}} strokeWidth='6'/>
+          <Line yAxisId='right' data={data} type="monotone" dataKey='amount' stroke="#82ca9d" strokeWidth='6'/>
         </LineChart>
       </ResponsiveContainer>
     </React.Fragment>
