@@ -24,11 +24,11 @@ export default function Chart(props: ChartProps) {
   
   return (
     <React.Fragment>
-      <Typography component="h2" variant="body1" color="primary" gutterBottom>
+      <Typography component="h6" variant="body1" color="primary" gutterBottom>
       {label}
       </Typography>
       <ResponsiveContainer>
-      <LineChart width={400} height={400} data={data} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+      <LineChart width={400} height={200} data={data} >
         <XAxis dataKey="time" />
         <Tooltip />
         <CartesianGrid stroke="#f5f5f5" />

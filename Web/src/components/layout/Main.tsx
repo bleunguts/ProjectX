@@ -10,6 +10,7 @@ import { defineConfig } from 'vite';
 import { ChartData } from './Chart';
 import { BoltRounded } from '@mui/icons-material';
 import { strategyChartData } from './dummyStrategyChart';
+import Chart3D from './Chart3D';
 
 interface MainProps {
     posts: ReadonlyArray<string>;
@@ -36,13 +37,9 @@ export default function Main(props: MainProps) {
             <Divider />
             {/* Item 1*/}
             <Card
-                style={{
-                    width: 800,
-                }}>
+                style={{width: 800,}}>
                 <CardContent>
-                    <Typography style={{
-                        marginBottom: 12,
-                    }}>
+                    <Typography style={{}}>
                         'Single stock mean reversion signal backtesting, includes visual graphs and real market sourced historical pricing data',
                     </Typography>
                 </CardContent>
@@ -58,18 +55,31 @@ export default function Main(props: MainProps) {
                             p: 2,
                             display: 'flex',
                             flexDirection: 'column',
-                            height: 1000,
+                            height: 200,
                         }}
                     >              
-                    <Chart label='Long & Short Strategy Pnl' 
-                        data={strategyChartData}/>                                   
-                    <Typography style={{
-                        marginTop: 18,                        
+                    <Chart label='Long & Short Strategy Pnl' data={strategyChartData}/>                                   
+                    </Paper>
+                </CardContent>
+            </Card>
+            {/* Item 4*/}
+            <Card
+                style={{
+                    width: 800,
+                }}>
+                <CardContent>
+                    <Paper sx={{
+                            p: 2,
+                            display: 'flex',
+                            flexDirection: 'column',                            
+                        }}
+                    >   
+                    <Typography style={{                                       
                         fontStyle: 'italic',
                     }}>
                     Market inferred volatility (implied black scholes calc against live option prices)
                     </Typography>   
-                    <Chart label='Implied Volatility (twelvedata marketdata api)' 
+                    <Chart3D label='Vol Smile' 
                         data={[
                             createData('0.1', 0.25079345703125),
                             createData('0.15', 0.19720458984375),
@@ -94,17 +104,24 @@ export default function Main(props: MainProps) {
                     </Paper>
                 </CardContent>
             </Card>
-                    {/* Item 2*/}
-                    <Card
+            {/* Item 5*/}
+            <Card
                 style={{
                     width: 800,
                 }}>
                 <CardContent>
                     <Typography style={{
-                        marginBottom: 12,
-                    }}>
-                    Future Roadmap features:
-                    </Typography>                
+                        marginLeft: 12,
+                        marginBottom: 12,                        
+                    }} 
+                    align='left'>
+                    The Roadmap:
+                    </Typography>       
+                    <Typography style={{
+                        marginLeft: 12,
+                        marginBottom: 12,                        
+                    }} 
+                    align='left'>
                     {
                         [
                             "A way to rapid develop trading strategies and using back testing to validate it", 
@@ -116,7 +133,8 @@ export default function Main(props: MainProps) {
                         {x}
                         </li>
                         )                                        
-                    }                    
+                    }           
+                    </Typography>                  
                 </CardContent>
             </Card>
         </Grid>
