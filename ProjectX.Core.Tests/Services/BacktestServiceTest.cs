@@ -74,7 +74,7 @@ public class BacktestServiceTest
         Assert.That(enterTrade.TradeType, Is.EqualTo(PositionStatus.POSITION_LONG));
         Assert.That(enterTrade.PriceIn, Is.EqualTo(signals[enterTradeIndex].Price));
         Assert.That(enterTrade.NumTrades, Is.EqualTo(1));
-        Assert.That(enterTrade.PnlPerTrade, Is.EqualTo(Double.NaN));
+        Assert.That(enterTrade.PnlPerTrade, Is.EqualTo(0));
 
         var exitTrade = strategyPnls[exitTradeIndex];
         Assert.That(exitTrade.Date, Is.EqualTo(signals[exitTradeIndex].Date));
@@ -115,7 +115,7 @@ public class BacktestServiceTest
         Assert.That(enterTrade.TradeType, Is.EqualTo(PositionStatus.POSITION_SHORT));
         Assert.That(enterTrade.PriceIn, Is.EqualTo(signals[enterTradeIndex].Price));
         Assert.That(enterTrade.NumTrades, Is.EqualTo(1));
-        Assert.That(enterTrade.PnlPerTrade, Is.EqualTo(Double.NaN));
+        Assert.That(enterTrade.PnlPerTrade, Is.EqualTo(0));
 
         var exitTrade = strategyPnls[exitTradeIndex];
         Assert.That(exitTrade.Date, Is.EqualTo(signals[exitTradeIndex].Date));
