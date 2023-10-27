@@ -17,7 +17,7 @@ namespace ProjectX.Core.Services
     }
 
     [Export(typeof(IBlackScholesOptionsPricingModel)), PartCreationPolicy(CreationPolicy.NonShared)]    
-    public class BlackScholesOptionsPricer : IBlackScholesOptionsPricingModel
+    public class BlackScholesOptionsPricingModel : IBlackScholesOptionsPricingModel
     {
         public OptionsPricingByMaturityResults Price(OptionsPricingByMaturitiesRequest request)
         {
@@ -30,12 +30,12 @@ namespace ProjectX.Core.Services
                 double maturity = (i + 1.0) / 10.0;
 
                 // price option
-                double price = OptionHelper.BlackScholes(optionType, spot, strike, rate, carry, maturity, vol);
-                double delta = OptionHelper.BlackScholes_Delta(optionType, spot, strike, rate, carry, maturity, vol);
-                double gamma = OptionHelper.BlackScholes_Gamma(spot, strike, rate, carry, maturity, vol);
-                double theta = OptionHelper.BlackScholes_Theta(optionType, spot, strike, rate, carry, maturity, vol);
-                double rho = OptionHelper.BlackScholes_Rho(optionType, spot, strike, rate, carry, maturity, vol);
-                double vega = OptionHelper.BlackScholes_Vega(spot, strike, rate, carry, maturity, vol);
+                double price = OptionsCalculatorFunctions.BlackScholes(optionType, spot, strike, rate, carry, maturity, vol);
+                double delta = OptionsCalculatorFunctions.BlackScholes_Delta(optionType, spot, strike, rate, carry, maturity, vol);
+                double gamma = OptionsCalculatorFunctions.BlackScholes_Gamma(spot, strike, rate, carry, maturity, vol);
+                double theta = OptionsCalculatorFunctions.BlackScholes_Theta(optionType, spot, strike, rate, carry, maturity, vol);
+                double rho = OptionsCalculatorFunctions.BlackScholes_Rho(optionType, spot, strike, rate, carry, maturity, vol);
+                double vega = OptionsCalculatorFunctions.BlackScholes_Vega(spot, strike, rate, carry, maturity, vol);
 
                 // return price & greeks
                 var greeks = new OptionGreeksResult(
@@ -84,22 +84,22 @@ namespace ProjectX.Core.Services
                     switch (greekType)
                     {
                         case OptionGreeks.Delta:
-                            z = OptionHelper.BlackScholes_Delta(optionType, spot, strike, rate, carry, maturity, vol);
+                            z = OptionsCalculatorFunctions.BlackScholes_Delta(optionType, spot, strike, rate, carry, maturity, vol);
                             break;
                         case OptionGreeks.Gamma:
-                            z = OptionHelper.BlackScholes_Gamma(spot, strike, rate, carry, maturity, vol);
+                            z = OptionsCalculatorFunctions.BlackScholes_Gamma(spot, strike, rate, carry, maturity, vol);
                             break;
                         case OptionGreeks.Theta:
-                            z = OptionHelper.BlackScholes_Theta(optionType, spot, strike, rate, carry, maturity, vol);
+                            z = OptionsCalculatorFunctions.BlackScholes_Theta(optionType, spot, strike, rate, carry, maturity, vol);
                             break;
                         case OptionGreeks.Rho:
-                            z = OptionHelper.BlackScholes_Rho(optionType, spot, strike, rate, carry, maturity, vol);
+                            z = OptionsCalculatorFunctions.BlackScholes_Rho(optionType, spot, strike, rate, carry, maturity, vol);
                             break;
                         case OptionGreeks.Vega:
-                            z = OptionHelper.BlackScholes_Vega(spot, strike, rate, carry, maturity, vol);
+                            z = OptionsCalculatorFunctions.BlackScholes_Vega(spot, strike, rate, carry, maturity, vol);
                             break;
                         case OptionGreeks.Price:
-                            z = OptionHelper.BlackScholes(optionType, spot, strike, rate, carry, maturity, vol);
+                            z = OptionsCalculatorFunctions.BlackScholes(optionType, spot, strike, rate, carry, maturity, vol);
                             break;
                     }
                     if (!double.IsNaN(z))

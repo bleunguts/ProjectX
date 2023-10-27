@@ -6,7 +6,7 @@ namespace ProjectX.Core.Tests
 {
     public class BlackScholesOptionsPricerTest
     {
-        private readonly BlackScholesOptionsPricer _sut = new BlackScholesOptionsPricer();
+        private readonly BlackScholesOptionsPricingModel _sut = new BlackScholesOptionsPricingModel();
 
         [Test]
         public async Task WhenPricingBlackScholesOptionItShouldReturnValidResultsAsync()

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace ProjectX.Core.Analytics;
-public class OptionHelper
+public class OptionsCalculatorFunctions
 {
     private const double ONEOVERSQRT2PI = 0.39894228;
     private const double PI = 3.1415926;
