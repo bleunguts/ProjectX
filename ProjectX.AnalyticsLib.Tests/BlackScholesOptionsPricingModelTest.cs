@@ -1,12 +1,14 @@
-﻿using Newtonsoft.Json;
+﻿using Moq;
+using Newtonsoft.Json;
+using ProjectX.AnalyticsLib;
 using ProjectX.Core.Requests;
 using ProjectX.Core.Services;
 
 namespace ProjectX.Core.Tests
 {
-    public class BlackScholesOptionsPricerTest
-    {
-        private readonly BlackScholesOptionsPricingModel _sut = new BlackScholesOptionsPricingModel();
+    public class BlackScholesOptionsPricingModelTest
+    {        
+        private BlackScholesOptionsPricingModel _sut = new BlackScholesOptionsPricingModel(new BlackScholesOptionsPricingCalculator());
 
         [Test]
         public async Task WhenPricingBlackScholesOptionItShouldReturnValidResultsAsync()
