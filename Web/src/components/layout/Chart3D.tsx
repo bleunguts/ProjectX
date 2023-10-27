@@ -1,8 +1,9 @@
 import React from "react";
 import Plot from "react-plotly.js";
-import { FakeVolatilityData } from "./DummyData";
+import { Datum } from "plotly.js";
 
 export interface Chart3DProps {
+    zData: Datum[][],
     label: string,    
   }
 
@@ -16,7 +17,7 @@ export default function Chart3D(props: Chart3DProps) {
     
     const data = [
         {
-          z: FakeVolatilityData,
+          z: props.zData,
           type: 'surface'     
         },
       ];

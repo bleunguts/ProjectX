@@ -6,7 +6,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Paper from '@mui/material/Paper';
 import Chart from './Chart';
-import { FakeStrategyChartData } from './DummyData';
+import { FakeStrategyChartData, FakeVolatilityData } from './DummyData';
 import Chart3D from './Chart3D';
 
 interface MainProps {
@@ -76,7 +76,7 @@ export default function Main(props: MainProps) {
                     }}>
                     Market inferred volatility (implied black scholes calc against live option prices)
                     </Typography>   
-                    <Chart3D label='Vol Smile'/>                                                    
+                    <Chart3D label='Vol Smile' zData={FakeVolatilityData} />                                                    
                     </Paper>
                 </CardContent>
             </Card>

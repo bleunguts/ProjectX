@@ -25,7 +25,9 @@ public class BacktestServiceTest
     private readonly BacktestService _backtestService = new();
 
     public record ChartData(string time, double amount, double amountHold);
+
     [Test]
+    [Ignore("Once off tool to generate chart data for webui")]
     public async Task foo()
     {
         var smoothenedSignals = await new StockSignalService(new FMPStockMarketSource()).GetSignalUsingMovingAverageByDefault(ticker, new DateTime(2023,5,1), new DateTime(2023,9,25), 3);
@@ -37,7 +39,7 @@ public class BacktestServiceTest
         }
         var json = JsonConvert.SerializeObject(result);
         Console.WriteLine(json);
-        File.WriteAllText($"c:\\temp\\chart.json", json);
+        File.WriteAllText($"c:\\temp\\chart.json", json);        
     }
 
     // prevSignal > 2 enters short
