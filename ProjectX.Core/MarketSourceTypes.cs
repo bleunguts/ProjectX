@@ -6,6 +6,7 @@ namespace ProjectX.Core
     {
         Task<IEnumerable<MarketPrice>> GetPrices(string ticker, DateTime from, DateTime to);
         Task<IEnumerable<double?>> GetHurst(string ticker, DateTime from, DateTime to);
+        Task<IEnumerable<Quote>> GetQuote(string ticker, DateTime from, DateTime to);
     }
 
     public class MarketPrice : IQuote

@@ -40,7 +40,7 @@ namespace ProjectX.Core.Services
                 var current = signals[i];
 
                 double pnlDaily = 0.0;
-                double pnlPerTrade = 0.0;
+                double? pnlPerTrade = null;
                 double prevSignal = strategy.IsMomentum() ? (double)-prev.Signal : (double)prev.Signal;
                 double prevPnlCum = pnls[i - 1].PnLCum;
 
@@ -116,11 +116,11 @@ namespace ProjectX.Core.Services
                 double pnlDailyHold = notional * (double)((current.Price - prev.Price) / initialPrice);
                 double pnlCumHold = notional * (double)((current.Price - initialPrice) / initialPrice);
 
-                pnls.Add(StrategyPnlFactory.NewPnl(current.Date, current.Ticker, (double)current.Price, (double)current.Signal, pnlCum, pnlDaily, pnlPerTrade, pnlDailyHold, pnlCumHold, totalNumTrades, currentPosition));
+                pnls.Add(StrategyPnlFactory.NewPnl(current.Date, current.Ticker, (double)current.Price, (double)current.Signal, pnlCum, pnlDaily, pnlPerTrade ?? double.NaN, pnlDailyHold, pnlCumHold, totalNumTrades, currentPosition));
                 // exiting position has to be called at the end after adding pnlresults
                 if (exitingPosition) { currentPosition.ExitPosition(); }
             }
-
+            Console.WriteLine(currentPosition.PositionState.GetType());
             return pnls;
         }
 

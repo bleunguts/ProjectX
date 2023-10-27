@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.Options;
+using Moq;
 using Newtonsoft.Json;
 using ProjectX.Core.Services;
 using ProjectX.Core.Strategy;
@@ -30,7 +31,8 @@ public class BacktestServiceTest
     [Ignore("Once off tool to generate chart data for webui")]
     public async Task foo()
     {
-        var smoothenedSignals = await new StockSignalService(new FMPStockMarketSource()).GetSignalUsingMovingAverageByDefault(ticker, new DateTime(2023,5,1), new DateTime(2023,9,25), 3);
+        var options = Options.Create<StockSignalServiceOptions>(new StockSignalServiceOptions() { MoveringAverageImpl = MovingAverageImpl.MyImpl });
+        var smoothenedSignals = await new StockSignalService(new FMPStockMarketSource(), options).GetSignalUsingMovingAverageByDefault(ticker, new DateTime(2023,5,1), new DateTime(2023,9,25), 3);
         List<StrategyPnl> pnls = _backtestService.ComputeLongShortPnl(smoothenedSignals, 10_000, 0.8, 0.2, new TradingStrategy(TradingStrategyType.MeanReversion, false)).ToList();
         List<ChartData> result = new();
         foreach (StrategyPnl pn in pnls)
@@ -65,21 +67,22 @@ public class BacktestServiceTest
         var strategyPnls = _backtestService.ComputeLongShortPnl(signals, notional, signalIn, signalOut, strategy).ToList();
         strategyPnls.Print();
         (int enterTradeIndex, int exitTradeIndex) = strategyPnls.DeconstructTradeTimeline(PositionStatus.POSITION_LONG);
+        strategyPnls.PrintStrategyFor(enterTradeIndex, exitTradeIndex);
+
         var enterTrade = strategyPnls[enterTradeIndex];
         Assert.That(enterTrade.Date, Is.EqualTo(signals[enterTradeIndex].Date));
         Assert.That(enterTrade.TradeType, Is.EqualTo(PositionStatus.POSITION_LONG));
         Assert.That(enterTrade.PriceIn, Is.EqualTo(signals[enterTradeIndex].Price));
         Assert.That(enterTrade.NumTrades, Is.EqualTo(1));
-        Assert.That(enterTrade.PnlPerTrade, Is.EqualTo(0));
+        Assert.That(enterTrade.PnlPerTrade, Is.EqualTo(Double.NaN));
 
         var exitTrade = strategyPnls[exitTradeIndex];
         Assert.That(exitTrade.Date, Is.EqualTo(signals[exitTradeIndex].Date));
         Assert.That(exitTrade.TradeType, Is.EqualTo(PositionStatus.POSITION_LONG));
         Assert.That(exitTrade.PriceIn, Is.EqualTo(signals[enterTradeIndex].Price));
         Assert.That(exitTrade.NumTrades, Is.EqualTo(2));
-        Assert.That(exitTrade.PnlPerTrade, Is.GreaterThan(0).Or.LessThan(0));
-
-        strategyPnls.PrintStrategyFor(enterTradeIndex, exitTradeIndex);
+        // ONLY when the signal triggers an exit position will you get Pnl
+        Assert.That(exitTrade.PnlPerTrade, Is.GreaterThan(0).Or.LessThan(0));          
     }
 
     // prevSignal > 2 enters short
@@ -112,7 +115,7 @@ public class BacktestServiceTest
         Assert.That(enterTrade.TradeType, Is.EqualTo(PositionStatus.POSITION_SHORT));
         Assert.That(enterTrade.PriceIn, Is.EqualTo(signals[enterTradeIndex].Price));
         Assert.That(enterTrade.NumTrades, Is.EqualTo(1));
-        Assert.That(enterTrade.PnlPerTrade, Is.EqualTo(0));
+        Assert.That(enterTrade.PnlPerTrade, Is.EqualTo(Double.NaN));
 
         var exitTrade = strategyPnls[exitTradeIndex];
         Assert.That(exitTrade.Date, Is.EqualTo(signals[exitTradeIndex].Date));

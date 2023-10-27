@@ -24,6 +24,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 });
 
 builder.Services.TryAddScoped<IPricingTasksProcessor, PricingTasksProcessor>();
+builder.Services.TryAddScoped<IBlackScholesOptionsPricingCalculator, BlackScholesOptionsPricingCalculator>();
 builder.Services.TryAddScoped<IBlackScholesOptionsPricingModel, BlackScholesOptionsPricingModel>();
 builder.Services.AddSingleton<IFXSpotPricer,FXSpotPricer>();
 builder.Services.AddSingleton<IFXSpotPriceStream, RandomFXSpotPriceStream>();

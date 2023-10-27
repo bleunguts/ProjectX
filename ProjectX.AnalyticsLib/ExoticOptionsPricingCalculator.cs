@@ -20,6 +20,7 @@ public class ExoticOptionsPricingCalculator : IExoticOptionsPricingCalculator
 {
     private readonly IBlackScholesOptionsPricingCalculator _bs;
 
+    [ImportingConstructor]
     public ExoticOptionsPricingCalculator(IBlackScholesOptionsPricingCalculator blackScholesOptionsPricingCalculator)
     {
         _bs = blackScholesOptionsPricingCalculator;

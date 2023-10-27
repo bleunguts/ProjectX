@@ -1,4 +1,5 @@
 ﻿using Castle.Components.DictionaryAdapter.Xml;
+using Microsoft.Extensions.Options;
 using Moq;
 using ProjectX.Core.Services;
 using ProjectX.Core.Strategy;
@@ -51,19 +52,21 @@ namespace ProjectX.Core.Tests.Services
             new MarketPrice{ Date = new DateTime(2023, 12, 30), Close = 567, High=568, Low=566, Open=567, Volume=10000, Ticker = ticker},
             new MarketPrice{ Date = new DateTime(2023, 12, 31), Close = 567, High=568, Low=566, Open=567, Volume=10000, Ticker = ticker},
         }; 
+        private Mock<IOptions<StockSignalServiceOptions>> _options = new Mock<IOptions<StockSignalServiceOptions>>();
 
         [SetUp]
         public void SetUp()
         {
+            _options.Setup(x => x.Value.MoveringAverageImpl).Returns(MovingAverageImpl.MyImpl);
             _marketSource = new Mock<IStockMarketSource>();
             _marketSource.Setup(_ => _.GetPrices(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                         .ReturnsAsync(_marketPrices);
         }
-       
+
         [Test]
         public async Task WhenGettingStockSignalsShouldReturnMovingAveragedSmoothingOverRawValues()
-        {
-            var service = new StockSignalService(_marketSource.Object);
+        {            
+            var service = new StockSignalService(_marketSource.Object, _options.Object);
             var actual = (await service.GetSignalUsingMovingAverageByDefault(ticker, _startDate, _endDate, _movingWindow)).ToList();
             
             foreach(var p in actual)

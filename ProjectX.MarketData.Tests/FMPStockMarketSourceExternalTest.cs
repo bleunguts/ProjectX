@@ -4,6 +4,8 @@ using MatthiWare.FinancialModelingPrep.Model.CompanyValuation;
 using MatthiWare.FinancialModelingPrep.Model.StockTimeSeries;
 using NuGet.Frameworks;
 using ProjectX.Core;
+using ProjectX.Core.Strategy;
+using Skender.Stock.Indicators;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ProjectX.MarketData.Tests
@@ -41,6 +43,31 @@ namespace ProjectX.MarketData.Tests
                 Console.WriteLine($"Date: {data.Date}, Close:{data.Close}, Volume:{data.Volume}");
                 //Assert.That(data.Date.ToDateTime().IsBetween(new DateTime(2020, 1, 1), new DateTime(2020, 2, 1)), Is.True);
                 Assert.That(data.Close, Is.GreaterThan(0));
+            }
+        }
+
+        [Test]
+        [Ignore("Use to try out StockIndicator Api features")]
+        public async Task Demo()
+        {
+            var marketDataService = new FMPStockMarketSource();
+            var quotes = await marketDataService.GetQuote("ACAQ", new DateTime(2023, 1, 1), new DateTime(2023, 10, 1));
+            Assert.That(quotes.Count(), Is.GreaterThan(0));
+
+            var results = quotes.GetBollingerBands(5);
+            foreach(var result in results)
+            {
+                var signal = new PriceSignal() 
+                { 
+                    Ticker = "ACAQ", 
+                    Date = result.Date, 
+                    Price = Convert.ToDecimal(result.Sma), 
+                    PricePredicted = Convert.ToDecimal(result.Sma),
+                    Signal = Convert.ToDecimal(result.ZScore), 
+                    UpperBand = Convert.ToDecimal(result.UpperBand), 
+                    LowerBand = Convert.ToDecimal(result.LowerBand) 
+                };
+                Console.WriteLine(signal);
             }
         }
     }

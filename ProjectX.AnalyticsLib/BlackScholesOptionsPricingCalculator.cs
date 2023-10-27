@@ -23,6 +23,11 @@ namespace ProjectX.AnalyticsLib
     [Export(typeof(IBlackScholesOptionsPricingCalculator)), PartCreationPolicy(CreationPolicy.Shared)]
     public class BlackScholesOptionsPricingCalculator : IBlackScholesOptionsPricingCalculator
     {
+        [ImportingConstructor]
+        public BlackScholesOptionsPricingCalculator()
+        {
+            
+        }
         /// <summary>
         /// Generalized Black Scholes Model 
         /// Supports: 
