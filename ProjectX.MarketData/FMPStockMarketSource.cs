@@ -6,7 +6,7 @@ using MatthiWare.FinancialModelingPrep.Model;
 
 namespace ProjectX.MarketData;
 
-public class FMPStockMarketSource : IStockMarketSource
+public class FMPStockMarketSource : IStockMarketSource, IRealStockMarketSource
 {
     private readonly IFinancialModelingPrepApiClient _api;
 

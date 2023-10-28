@@ -2,6 +2,10 @@
 
 namespace ProjectX.Core
 {
+    public interface IRealStockMarketSource: IStockMarketSource
+    {
+    }
+
     public interface IStockMarketSource
     {
         Task<IEnumerable<MarketPrice>> GetPrices(string ticker, DateTime from, DateTime to);

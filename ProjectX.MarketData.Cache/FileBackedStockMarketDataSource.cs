@@ -1,4 +1,5 @@
 ﻿using JsonFlatFileDataStore;
+using Microsoft.Extensions.Options;
 using ProjectX.Core;
 using Skender.Stock.Indicators;
 
@@ -12,11 +13,11 @@ namespace ProjectX.MarketData.Cache
         private readonly string _filename;
         private readonly IStockMarketSource _marketDataSource;
 
-        public FileBackedStockMarketDataSource(IStockMarketSource marketDataSource, string filename = "projectx.json")
+        public FileBackedStockMarketDataSource(IStockMarketSource marketDataSource, IOptions<FileBackedStoreMarketDataSourceOptions> options)
         {
             // Open database (create new if file doesn't exist)
-            _filename = filename;
-            _store = new DataStore(filename);
+            _filename = options?.Value?.Filename ?? "projectx.json";
+            _store = new DataStore(_filename);
             _marketDataSource = marketDataSource;
         }
 

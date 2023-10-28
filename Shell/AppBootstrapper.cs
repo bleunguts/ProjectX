@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using ProjectX.Core;
 using ProjectX.Core.Services;
 using ProjectX.MarketData;
+using ProjectX.MarketData.Cache;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -40,8 +41,10 @@ namespace Shell
             batch.AddExportedValue<ILogger<eFXTradeExecutionService>>(new NullLogger<eFXTradeExecutionService>());
             batch.AddExportedValue<ILogger<GatewayApiClient>>(new NullLogger<GatewayApiClient>());
             var options = Microsoft.Extensions.Options.Options.Create(new GatewayApiClientOptions { BaseUrl = "https://localhost:7029" });
-            batch.AddExportedValue<IOptions<GatewayApiClientOptions>>(options);            
-            batch.AddExportedValue<IStockMarketSource>(new FMPStockMarketSource());            
+            batch.AddExportedValue<IOptions<GatewayApiClientOptions>>(options);
+            var options2 = Microsoft.Extensions.Options.Options.Create(new FileBackedStoreMarketDataSourceOptions { Filename = "cache.json"});            
+            batch.AddExportedValue<IStockMarketSource>(new FileBackedStockMarketDataSource(new FMPStockMarketSource(), options2));            
+            
             container.Compose(batch);                        
         }
 

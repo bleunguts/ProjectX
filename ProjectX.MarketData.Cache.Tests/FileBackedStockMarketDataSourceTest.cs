@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Options;
 using Moq;
 using ProjectX.Core;
 using Skender.Stock.Indicators;
@@ -35,7 +36,8 @@ namespace ProjectX.MarketData.Cache.Tests
             _marketData.Setup(x => x.GetHurst(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(Task.FromResult(hurst));
             _marketData.Setup(x => x.GetPrices(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(Task.FromResult(prices));
             _marketData.Setup(x => x.GetQuote(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(Task.FromResult(quotes));
-            _dataSource = new FileBackedStockMarketDataSource(_marketData.Object, "tests.json");
+            var options = Options.Create<FileBackedStoreMarketDataSourceOptions>(new FileBackedStoreMarketDataSourceOptions { Filename = "tests.json" });
+            _dataSource = new FileBackedStockMarketDataSource(_marketData.Object, options);
             _dataSource.CleanFile();
         }
 
