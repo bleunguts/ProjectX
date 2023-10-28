@@ -75,6 +75,8 @@ public partial class SingleViewModel : Screen
         H > 0.5 - momentum
     ";
     private string priceTrend = nameof(TradingStrategyType.MeanReversion);
+    private MovingAverageImpl _movingAverageImpl = MovingAverageImpl.BollingerBandsImpl;
+    private DataRowView _selectedRow;
 
     #region Bindable Properties    
     public string Ticker
@@ -153,6 +155,19 @@ public partial class SingleViewModel : Screen
         get { return priceTrend; }
         set { priceTrend = value; NotifyOfPropertyChange(() => PriceTrend); }
     }
+
+    public MovingAverageImpl MovingAverageImpl
+    {
+        get { return _movingAverageImpl; }
+        set { _movingAverageImpl = value; NotifyOfPropertyChange(() => MovingAverageImpl); }
+    }  
+
+    public DataRowView SelectedRow
+    {
+        get { return _selectedRow; }
+        set { _selectedRow = value; NotifyOfPropertyChange(() => SelectedRow); }
+    }
+
     #endregion
 
     #region Chart Properties     
@@ -195,6 +210,7 @@ public partial class SingleViewModel : Screen
     };
 
     #endregion
+
     public async Task Compute()
     {
         await Task.Run(async () =>
@@ -244,38 +260,65 @@ public partial class SingleViewModel : Screen
         HurstValue = l.Average().ToString("0.00");
     }
 
+    public async Task MovingAverageImplToggle()
+    {
+        MovingAverageImpl newState = _movingAverageImpl switch
+        {
+            MovingAverageImpl.MyImpl => MovingAverageImpl.BollingerBandsImpl,
+            MovingAverageImpl.BollingerBandsImpl => MovingAverageImpl.MyImpl,
+            _ => throw new NotImplementedException($"{nameof(_movingAverageImpl)} not implemented enum in code"),
+        };
+
+        MovingAverageImpl = newState;
+        var selectedRow = _selectedRow;
+        await Compute();
+
+        if(selectedRow == null) { return; }
+        (int movingWindow, double signalIn, double signalOut, bool IsReinvest, double pnl, double sharpe, int numTrades) = Extract(selectedRow);
+        await DisplayPnl(movingWindow, signalIn, signalOut, IsReinvest, pnl, sharpe, numTrades);
+    }
+
     public async void SelectedCellChanged(object sender, SelectedCellsChangedEventArgs e)
     {
         await Task.Run(async () =>
         {
             var selectedCells = e.AddedCells;
             if (selectedCells.Count - 1 <= 0) return;
-            DataRowView row = (DataRowView)selectedCells[selectedCells.Count - 1].Item;
-            int movingWindow = Convert.ToInt32(row[1]);
-            double signalIn = Convert.ToDouble(row[2]);
-            double signalOut = Convert.ToDouble(row[3]);
-            bool IsReinvest = false;
-
-            var smoothenedSignals = await _stockSignalService.GetSignalUsingMovingAverageByDefault(Ticker, FromDate, ToDate, movingWindow, MovingAverageImpl.BollingerBandsImpl);
-            List<StrategyPnl> pnls = _backtestService.ComputeLongShortPnl(smoothenedSignals, Notional, signalIn, signalOut, new TradingStrategy(TradingStrategyType.MeanReversion, IsReinvest)).ToList();
-            
-            var builder2 = new PnLTableBuilder();
-            builder2.SetRows(pnls);            
-            PnLTable = builder2.Build();            
-
-            // do the aggregate yearly stats        
-            var yearlyPnls = _backtestService.GetYearlyPnl(pnls);
-            var builder = new YearlyPnLTableBuilder();
-            builder.SetRows(yearlyPnls);
-            YearlyPnLTable = builder.Build();
-
-            double pnl = Math.Round(Convert.ToDouble(row["PnL"]), 0);
-            double sharpe = Math.Round(Convert.ToDouble(row["Sharpe"]), 3);
-            int numTrades = Convert.ToInt32(row["Num"]);
-            
-            IEnumerable<StrategyDrawdown> drawdownResults = _backtestService.CalculateDrawdown(pnls, Notional);
-            DisplayAccumulatedPnlAndDrawdownForStrategyView(pnls, drawdownResults, pnl, sharpe, numTrades);
+            DataRowView row = (DataRowView)selectedCells[selectedCells.Count - 1].Item;            
+            (int movingWindow, double signalIn, double signalOut, bool IsReinvest, double pnl, double sharpe, int numTrades) = Extract(row);
+            await DisplayPnl(movingWindow, signalIn, signalOut, IsReinvest, pnl, sharpe, numTrades);
         });
+    }
+
+    private static (int movingWindow, double signalIn, double signalOut, bool IsReinvest, double pnl, double sharpe, int numTrades) Extract(DataRowView row)
+    {
+        var movingWindow = Convert.ToInt32(row[1]);
+        var signalIn = Convert.ToDouble(row[2]);
+        var signalOut = Convert.ToDouble(row[3]);
+        var IsReinvest = false;
+        var pnl = Math.Round(Convert.ToDouble(row["PnL"]), 0);
+        var sharpe = Math.Round(Convert.ToDouble(row["Sharpe"]), 3);
+        var numTrades = Convert.ToInt32(row["Num"]);
+        return (movingWindow, signalIn, signalOut, IsReinvest, pnl, sharpe, numTrades);
+    }
+
+    private async Task DisplayPnl(int movingWindow, double signalIn, double signalOut, bool IsReinvest, double pnl, double sharpe, int numTrades)
+    {
+        var smoothenedSignals = await _stockSignalService.GetSignalUsingMovingAverageByDefault(Ticker, FromDate, ToDate, movingWindow, _movingAverageImpl);
+        List<StrategyPnl> pnls = _backtestService.ComputeLongShortPnl(smoothenedSignals, Notional, signalIn, signalOut, new TradingStrategy(TradingStrategyType.MeanReversion, IsReinvest)).ToList();
+        // main table populated
+        var builder2 = new PnLTableBuilder();
+        builder2.SetRows(pnls);
+        PnLTable = builder2.Build();
+
+        // aggregate yearly stats populated 
+        var yearlyPnls = _backtestService.GetYearlyPnl(pnls);
+        var builder = new YearlyPnLTableBuilder();
+        builder.SetRows(yearlyPnls);
+        YearlyPnLTable = builder.Build();       
+
+        IEnumerable<StrategyDrawdown> drawdownResults = _backtestService.CalculateDrawdown(pnls, Notional);
+        DisplayAccumulatedPnlAndDrawdownForStrategyView(pnls, drawdownResults, pnl, sharpe, numTrades);
     }
 
     /// <summary>
@@ -285,7 +328,7 @@ public partial class SingleViewModel : Screen
     {
         try
         {
-            var smoothenedSignals = await _stockSignalService.GetSignalUsingMovingAverageByDefault(Ticker, FromDate, ToDate, movingWindow, MovingAverageImpl.MyImpl);
+            var smoothenedSignals = await _stockSignalService.GetSignalUsingMovingAverageByDefault(Ticker, FromDate, ToDate, movingWindow, _movingAverageImpl);
             _signals = new BindableCollection<PriceSignal>(smoothenedSignals);
 
             var priceChart = PlotPriceChart(_signals);

@@ -75,7 +75,8 @@ public partial class SingleViewModel
 
         public override DataTable Build()
         {
-            return _dt;
+            _dt.DefaultView.Sort = "Date ASC";
+            return _dt.DefaultView.ToTable();            
         }
 
         public void SetRows(List<StrategyPnl> pnls)
