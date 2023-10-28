@@ -30,9 +30,8 @@ public class BacktestServiceTest
     [Test]
     [Ignore("Once off tool to generate chart data for webui")]
     public async Task foo()
-    {
-        var options = Options.Create<StockSignalServiceOptions>(new StockSignalServiceOptions() { MoveringAverageImpl = MovingAverageImpl.MyImpl });
-        var smoothenedSignals = await new StockSignalService(new FMPStockMarketSource(), options).GetSignalUsingMovingAverageByDefault(ticker, new DateTime(2023,5,1), new DateTime(2023,9,25), 3);
+    {        
+        var smoothenedSignals = await new StockSignalService(new FMPStockMarketSource()).GetSignalUsingMovingAverageByDefault(ticker, new DateTime(2023,5,1), new DateTime(2023,9,25), 3, MovingAverageImpl.MyImpl);
         List<StrategyPnl> pnls = _backtestService.ComputeLongShortPnl(smoothenedSignals, 10_000, 0.8, 0.2, new TradingStrategy(TradingStrategyType.MeanReversion, false)).ToList();
         List<ChartData> result = new();
         foreach (StrategyPnl pn in pnls)

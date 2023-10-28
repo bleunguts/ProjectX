@@ -13,17 +13,17 @@ namespace ProjectX.MarketData.Tests
 {
     public  class StockSignalServiceExternalTest
     {
-        private StockSignalService _signalService = new StockSignalService(new FMPStockMarketSource(), Options.Create<StockSignalServiceOptions>(new StockSignalServiceOptions() {MoveringAverageImpl = MovingAverageImpl.MyImpl}));        
+        private StockSignalService _signalService = new StockSignalService(new FMPStockMarketSource());        
 
         [Test]
         [Ignore("Tool to check result differences")]
         public async Task CompareMovingAverageImplementationFromBookVsFromStockIndicatorsLib()
         {
-            var myImpl = await _signalService.GetSignalUsingMovingAverageByDefault("ACAQ", new DateTime(2023, 9, 1), new DateTime(2023, 10, 1), 5);
+            var myImpl = await _signalService.GetSignalUsingMovingAverageByDefault("ACAQ", new DateTime(2023, 9, 1), new DateTime(2023, 10, 1), 5, MovingAverageImpl.MyImpl);
             Print(myImpl);
 
             Console.WriteLine("=======================================================================");
-            var libImpl = await _signalService.MovingAverageBollingerBandsImpl("ACAQ", new DateTime(2023, 9, 1), new DateTime(2023, 10, 1), 5);
+            var libImpl = await _signalService.GetSignalUsingMovingAverageByDefault("ACAQ", new DateTime(2023, 9, 1), new DateTime(2023, 10, 1), 5, MovingAverageImpl.BollingerBandsImpl);
             Print(libImpl);
         }
 

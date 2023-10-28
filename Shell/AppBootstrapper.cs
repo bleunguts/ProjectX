@@ -40,9 +40,7 @@ namespace Shell
             batch.AddExportedValue<ILogger<eFXTradeExecutionService>>(new NullLogger<eFXTradeExecutionService>());
             batch.AddExportedValue<ILogger<GatewayApiClient>>(new NullLogger<GatewayApiClient>());
             var options = Microsoft.Extensions.Options.Options.Create(new GatewayApiClientOptions { BaseUrl = "https://localhost:7029" });
-            batch.AddExportedValue<IOptions<GatewayApiClientOptions>>(options);
-            var options2 = Microsoft.Extensions.Options.Options.Create(new StockSignalServiceOptions { MoveringAverageImpl = MovingAverageImpl.BollingerBandsImpl });
-            batch.AddExportedValue<IOptions<StockSignalServiceOptions>>(options2);
+            batch.AddExportedValue<IOptions<GatewayApiClientOptions>>(options);            
             batch.AddExportedValue<IStockMarketSource>(new FMPStockMarketSource());            
             container.Compose(batch);                        
         }

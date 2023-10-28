@@ -182,7 +182,7 @@ public partial class SingleViewModel : Screen
         Name = axisLabel,
         Labeler = value => new DateTime((long)value).ToString("MM-dd"),
         NameTextSize = 14,
-        TextSize = 8,
+        TextSize = 12,
     };
 
     private static Axis YAxis(string axisLabel) => new()
@@ -190,7 +190,7 @@ public partial class SingleViewModel : Screen
         Name = axisLabel,
         Labeler = Labelers.SixRepresentativeDigits,
         NameTextSize = 14,
-        TextSize = 12,
+        TextSize = 12,                
         //MinLimit = 0,       
     };
 
@@ -256,7 +256,7 @@ public partial class SingleViewModel : Screen
             double signalOut = Convert.ToDouble(row[3]);
             bool IsReinvest = false;
 
-            var smoothenedSignals = await _stockSignalService.GetSignalUsingMovingAverageByDefault(Ticker, FromDate, ToDate, movingWindow);
+            var smoothenedSignals = await _stockSignalService.GetSignalUsingMovingAverageByDefault(Ticker, FromDate, ToDate, movingWindow, MovingAverageImpl.BollingerBandsImpl);
             List<StrategyPnl> pnls = _backtestService.ComputeLongShortPnl(smoothenedSignals, Notional, signalIn, signalOut, new TradingStrategy(TradingStrategyType.MeanReversion, IsReinvest)).ToList();
             
             var builder2 = new PnLTableBuilder();
@@ -285,7 +285,7 @@ public partial class SingleViewModel : Screen
     {
         try
         {
-            var smoothenedSignals = await _stockSignalService.GetSignalUsingMovingAverageByDefault(Ticker, FromDate, ToDate, movingWindow);
+            var smoothenedSignals = await _stockSignalService.GetSignalUsingMovingAverageByDefault(Ticker, FromDate, ToDate, movingWindow, MovingAverageImpl.MyImpl);
             _signals = new BindableCollection<PriceSignal>(smoothenedSignals);
 
             var priceChart = PlotPriceChart(_signals);
