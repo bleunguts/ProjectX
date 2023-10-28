@@ -13,6 +13,7 @@ namespace ProjectX.MarketData.Tests
     public class FMPStockMarketSourceExternalTest
     {      
         [Test]
+        [Ignore("Tool")]
         public async Task ExternalFoo()
         {
             var api = FinancialModelingPrepApiClientFactory.CreateClient(new FinancialModelingPrepOptions()
@@ -33,6 +34,7 @@ namespace ProjectX.MarketData.Tests
         }
 
         [Test]
+        [Ignore("Tool")]
         public async Task WhenCallingGetHistoricalPricesShouldReturnValidPricesAsync()
         {
             var marketDataService = new FMPStockMarketSource();
