@@ -23,37 +23,39 @@ namespace ProjectX.MarketData.Cache
         public async Task<IEnumerable<double?>> GetHurst(string ticker, DateTime from, DateTime to)
         {
             var key = Key(Category.Hurst, ticker, from, to);
-            IEnumerable<double?> hurstValues = await GetFromCacheIfExistsElseFetch< IEnumerable<double?>>(ticker, from, to, key, async () =>
+            return await GetFromCacheIfExistsElseFetch<IEnumerable<double?>>(ticker, from, to, key, async () =>
             {
-                IEnumerable<double?> hurstsFromSource = await _marketDataSource.GetHurst(ticker, from, to);
-                return hurstsFromSource;
+                return await _marketDataSource.GetHurst(ticker, from, to);
             });
-            return hurstValues;
         }
 
-        private async Task<T> GetFromCacheIfExistsElseFetch<T>(string ticker, DateTime from, DateTime to, string key, Func<Task<T>> value)
+        public async Task<IEnumerable<MarketPrice>> GetPrices(string ticker, DateTime from, DateTime to)
         {
-            var keys = _store.GetKeys(JsonFlatFileDataStore.ValueType.Item);
-            if (!keys.TryGetValue(key, out _))
+            var key = Key(Category.Prices, ticker, from, to);
+            return await GetFromCacheIfExistsElseFetch<IEnumerable<MarketPrice>>(ticker, from, to, key, async () =>
             {
-                // fetch from real source
-                T hurstsFromSource = await value();
+                return await _marketDataSource.GetPrices(ticker, from, to);
+            });
+        }
 
-                // store data into cache
-                _store.InsertItem(key, hurstsFromSource);
+        public async Task<IEnumerable<Quote>> GetQuote(string ticker, DateTime from, DateTime to)
+        {
+            var key = Key(Category.Quotes, ticker, from, to);
+            return await GetFromCacheIfExistsElseFetch<IEnumerable<Quote>>(ticker, from, to, key, async () =>
+            {
+                return await _marketDataSource.GetQuote(ticker, from, to);
+            });
+        }
+
+        private async Task<T> GetFromCacheIfExistsElseFetch<T>(string ticker, DateTime from, DateTime to, string key, Func<Task<T>> fetchFromSource)
+        {
+            if (!_store.GetKeys().TryGetValue(key, out _))
+            {                
+                T fromSource = await fetchFromSource();                
+                _store.InsertItem(key, fromSource);
             }
-            T hurstValues = _store.GetItem<T>(key);
-            return hurstValues;
-        }
-
-        public Task<IEnumerable<MarketPrice>> GetPrices(string ticker, DateTime from, DateTime to)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<Quote>> GetQuote(string ticker, DateTime from, DateTime to)
-        {
-            throw new NotImplementedException();
+            T values = _store.GetItem<T>(key);
+            return values;
         }
 
         static string Key(Category category, string ticker, DateTime from, DateTime to) => $"{category.ToString().ToLower()};{ticker};{from.ToString("yyyy-MM-dd")};{to.ToString("yyyy-MM-dd")}";
