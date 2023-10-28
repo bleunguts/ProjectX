@@ -276,6 +276,7 @@ public partial class SingleViewModel : Screen
         if(selectedRow == null) { return; }
         (int movingWindow, double signalIn, double signalOut, bool IsReinvest, double pnl, double sharpe, int numTrades) = Extract(selectedRow);
         await DisplayPnl(movingWindow, signalIn, signalOut, IsReinvest, pnl, sharpe, numTrades);
+        SelectedRow = selectedRow;
     }
 
     public async void SelectedCellChanged(object sender, SelectedCellsChangedEventArgs e)

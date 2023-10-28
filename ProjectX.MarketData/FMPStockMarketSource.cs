@@ -2,6 +2,7 @@
 using MatthiWare.FinancialModelingPrep;
 using ProjectX.Core;
 using Skender.Stock.Indicators;
+using MatthiWare.FinancialModelingPrep.Model;
 
 namespace ProjectX.MarketData;
 
@@ -21,7 +22,7 @@ public class FMPStockMarketSource : IStockMarketSource
     {
         var result = await _api.StockTimeSeries.GetHistoricalDailyPricesAsync(ticker, from.ToString("yyyy-MM-dd"), to.ToString("yyyy-MM-dd"));
         var response = result.Data;
-        ThrowIfBadResponse(ticker, from, to, response);
+        ThrowIfBadResponse(ticker, from, to, result);
         return response.Historical.Select(h => h.ToMarketPrice(ticker));
     }
     public async Task<IEnumerable<double?>> GetHurst(string ticker, DateTime from, DateTime to) 
@@ -34,12 +35,18 @@ public class FMPStockMarketSource : IStockMarketSource
     {
         var result = await _api.StockTimeSeries.GetHistoricalDailyPricesAsync(ticker, from.ToString("yyyy-MM-dd"), to.ToString("yyyy-MM-dd"));
         var response = result.Data;
-        ThrowIfBadResponse(ticker, from, to, response);
+        ThrowIfBadResponse(ticker, from, to, result);
         return response.Historical.Select(h => h.ToQuote());
     }
 
-    private void ThrowIfBadResponse(string ticker, DateTime from, DateTime to, HistoricalPriceResponse response)
+    private void ThrowIfBadResponse(string ticker, DateTime from, DateTime to, ApiResponse<HistoricalPriceResponse> result)
     {
+        if (result.HasError)
+        {
+            throw new Exception($"Error occured: {result.Error}");
+        }
+
+        var response = result.Data;
         if (response.Historical == null)
         {
             throw new Exception($"Cannot fetch any data for ticker {ticker} for periods {from.ToShortDateString()} to {to.ToShortDateString()} sourceProvider: {this}");

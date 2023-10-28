@@ -55,8 +55,7 @@ namespace ProjectX.Core.Services
             var quotes = await _marketSource.GetQuote(ticker, startDate, endDate);
             var bollingerBands = quotes
                                     .Use(CandlePart.Close)
-                                    .GetBollingerBands(movingWindow)
-                                    .RemoveWarmupPeriods();
+                                    .GetBollingerBands(movingWindow);                                    
             
             var computedSignals = new List<PriceSignal>();
             foreach (var b in bollingerBands)
