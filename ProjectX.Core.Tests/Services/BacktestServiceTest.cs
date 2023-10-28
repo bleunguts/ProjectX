@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using ProjectX.Core.Services;
 using ProjectX.Core.Strategy;
 using ProjectX.MarketData;
+using ProjectX.MarketData.Cache;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,24 +25,6 @@ public class BacktestServiceTest
     Dictionary<int, int> yearCounter = new Dictionary<int, int>();
 
     private readonly BacktestService _backtestService = new();
-
-    public record ChartData(string time, double amount, double amountHold);
-
-    [Test]
-    [Ignore("Once off tool to generate chart data for webui")]
-    public async Task foo()
-    {        
-        var smoothenedSignals = await new StockSignalService(new FMPStockMarketSource()).GetSignalUsingMovingAverageByDefault(ticker, new DateTime(2023,5,1), new DateTime(2023,9,25), 3, MovingAverageImpl.MyImpl);
-        List<StrategyPnl> pnls = _backtestService.ComputeLongShortPnl(smoothenedSignals, 10_000, 0.8, 0.2, new TradingStrategy(TradingStrategyType.MeanReversion, false)).ToList();
-        List<ChartData> result = new();
-        foreach (StrategyPnl pn in pnls)
-        {
-            result.Add(new ChartData(pn.Date.ToString("yyMMdd"), pn.PnLCum, pn.PnLCumHold));
-        }
-        var json = JsonConvert.SerializeObject(result);
-        Console.WriteLine(json);
-        File.WriteAllText($"c:\\temp\\chart.json", json);        
-    }
 
     // prevSignal > 2 enters short
     // prevSignal < -2 enters long

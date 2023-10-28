@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using ProjectX.Core.Services;
 using ProjectX.Core.Strategy;
+using ProjectX.MarketData.Cache;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -13,7 +14,8 @@ namespace ProjectX.MarketData.Tests
 {
     public  class StockSignalServiceExternalTest
     {
-        private StockSignalService _signalService = new StockSignalService(new FMPStockMarketSource());        
+        private static readonly FileBackedStockMarketDataSource _marketSource = new FileBackedStockMarketDataSource(new FMPStockMarketSource(), Options.Create<FileBackedStoreMarketDataSourceOptions>(new FileBackedStoreMarketDataSourceOptions { Filename = "externalTests.json" }));
+        private readonly StockSignalService _signalService = new StockSignalService(_marketSource);        
 
         [Test]
         [Ignore("Tool to check result differences")]
