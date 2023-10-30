@@ -120,12 +120,12 @@ public partial class SingleViewModel
         protected override DataColumn[] Headers => new[]
         {
              new DataColumn("Ticker", typeof(string)),
-             new DataColumn("Window", typeof(int)),
-             new DataColumn("SignalIn", typeof(double)),
-             new DataColumn("SignalOut", typeof(double)),
-             new DataColumn("Num", typeof(int)),
-             new DataColumn("PnL", typeof(double)),
-             new DataColumn("Sharpe", typeof(double)),
+             new DataColumn("Window", typeof(string)),
+             new DataColumn("SignalIn", typeof(string)),
+             new DataColumn("SignalOut", typeof(string)),
+             new DataColumn("Num", typeof(string)),
+             new DataColumn("PnL", typeof(string)),
+             new DataColumn("Sharpe", typeof(string)),
         };
 
         public void SetRows(IEnumerable<MatrixStrategyPnl> data)
@@ -135,8 +135,11 @@ public partial class SingleViewModel
 
         public override DataTable Build()
         {
-            _dt.DefaultView.Sort = "PnL DESC";
-            return _dt.DefaultView.ToTable();
+            var sorted = _dt.AsEnumerable()
+                            .OrderByDescending(row => Convert.ToDouble(row.Field<string>("PnL").Replace("$", "")))
+                            .AsDataView();
+
+            return sorted.ToTable();
         }
 
         static void FillRows(DataTable table, IEnumerable<MatrixStrategyPnl> rows)
@@ -161,6 +164,6 @@ public partial class SingleViewModel
         public abstract DataTable Build();
 
         protected static string FormatSharpe(double sharpe) => sharpe.ToString("N3");
-        protected static string FormatPnl(double pnl) => pnl.ToString("N0");
+        protected static string FormatPnl(double pnl) => "$" + pnl.ToString("N0");
     }
 }

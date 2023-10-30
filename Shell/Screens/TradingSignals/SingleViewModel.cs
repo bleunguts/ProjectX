@@ -109,25 +109,21 @@ public partial class SingleViewModel : Screen
         get { return yearlyPnLTable; }
         set { yearlyPnLTable = value; NotifyOfPropertyChange(() => YearlyPnLTable); }
     }
-
     public DataTable PnLRankingTable
     {
         get { return pnlRankingTable; }
         set { pnlRankingTable = value; NotifyOfPropertyChange(() => PnLRankingTable); }
     }
-
     public DataTable PnLTable
     {
         get { return pnlTable; }
         set { pnlTable = value; NotifyOfPropertyChange(() => PnLTable); }
     }
-
     public int Notional
     {
         get { return notional; }
         set { notional = value; NotifyOfPropertyChange(() => Notional); }
     }
-
     public ISeries[] Series1
     {
         get { return _series1; }
@@ -138,13 +134,11 @@ public partial class SingleViewModel : Screen
         get { return _series2; }
         set { _series2 = value; NotifyOfPropertyChange(() => Series2); }
     }
-
     public string HurstDesc
     {
         get { return _hurstDesc; }
         set { _hurstDesc = value; NotifyOfPropertyChange(() => HurstDesc); }
     }    
-
     public string HurstValue
     {
         get { return _hurstValue; }
@@ -155,19 +149,16 @@ public partial class SingleViewModel : Screen
         get { return priceTrend; }
         set { priceTrend = value; NotifyOfPropertyChange(() => PriceTrend); }
     }
-
     public MovingAverageImpl MovingAverageImpl
     {
         get { return _movingAverageImpl; }
         set { _movingAverageImpl = value; NotifyOfPropertyChange(() => MovingAverageImpl); }
     }  
-
     public DataRowView SelectedRow
     {
         get { return _selectedRow; }
         set { _selectedRow = value; NotifyOfPropertyChange(() => SelectedRow); }
     }
-
     #endregion
 
     #region Chart Properties     
@@ -297,7 +288,7 @@ public partial class SingleViewModel : Screen
         var signalIn = Convert.ToDouble(row[2]);
         var signalOut = Convert.ToDouble(row[3]);
         var IsReinvest = false;
-        var pnl = Math.Round(Convert.ToDouble(row["PnL"]), 0);
+        var pnl = Math.Round(Convert.ToDouble(row["PnL"].ToString().Replace("$","")), 0);
         var sharpe = Math.Round(Convert.ToDouble(row["Sharpe"]), 3);
         var numTrades = Convert.ToInt32(row["Num"]);
         return (movingWindow, signalIn, signalOut, IsReinvest, pnl, sharpe, numTrades);
@@ -431,7 +422,7 @@ public partial class SingleViewModel : Screen
         };
 
         var title = $"{Ticker}: P&L (Total PnL = {pnl}, Sharpe = {sharpe}, NumTrades = {numTrades}";
-        var yAxes = new[] { YAxis("Cummulated P&L") };
+        var yAxes = new[] { YAxis("Cummulated P&L ($)") };
 
         return (series, title, yAxes);
     }
