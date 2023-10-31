@@ -37,7 +37,7 @@ export default function Main(props: MainProps) {
                 style={{width: 800,}}>
                 <CardContent>
                     <Typography style={{}}>
-                        'Single stock mean reversion signal backtesting, includes visual graphs and real market sourced historical pricing data',
+                        {posts}
                     </Typography>
                 </CardContent>
             </Card>    
