@@ -12,7 +12,7 @@ ProjectX provides the following features to assist the optimization process:
 * captures live market data from reliable third party data sources such as FMP, Quandl
 
 _Desktop App Backtesting:_
-![Backtesting](Backtesting.JPG)
+![Backtesting](Backtesting.jpg)
 
 The supporting components relates to providing pricers to help explore arbitrage or advantagous opportunities, fine-tune pricing models, and understand market sentiment.
 ProjectX provies the following highly customizable and optimizable toolkit
@@ -26,10 +26,10 @@ ProjectX provies the following highly customizable and optimizable toolkit
 * FX Pricing & Order management System
 
 _Desktop App BS Option Pricing:_
-![Options](Options.JPG)
+![Options](Options.jpg)
 
 _Desktop App FX OMS:_
-![FXOMS](FXOMS.JPG)
+![FXOMS](FXOMS.jpg)
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 _Tech Stack:_
