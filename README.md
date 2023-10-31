@@ -32,6 +32,8 @@ _Desktop App BS Option Pricing:_
 _Desktop App FX OMS:_
 ![FXOMS](FXOMS.jpg)
 
+_Web React front end:_
+![Web](WebPortal.jpg)
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 _Tech Stack:_
 * C# 11, .NET 7, WPF, Caliburn.Micro, System.ComponentModel.Composition.Hosting.CompositionContainer (IoC), ReactiveX 6, Microsft Chart Controls,
