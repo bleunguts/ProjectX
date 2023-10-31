@@ -20,7 +20,7 @@ const sections = [
 const mainFeaturedPost = {
   title: 'Innovative trading signals platform',
   description:
-        "The purpose of Trading Signals is provide a platform for designing and optimization of trading strategies, and being able to exercise back testing on the strategies targeted to the personal investor.  My ethos is simple, clutter-free effective tooling to assist in personal trading strategies development.",
+        "The ethos is simple, clutter-free tool suite to assist in the designing, optimization and backtesting of trading strategies targeted for the personal investor based on stock price trends analysis.",
   image: 'https://source.unsplash.com/random?wallpapers',
   imageText: 'main image description',  
 };
@@ -31,7 +31,6 @@ const sidebar = {
     'Publishes FX prices using in-house pricing based on spreads sourced from the market or configurable by the user', 
 };
 
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 const bodyComponents = [
     'The key for a profitable strategy is the optimization methods that have been carried out and this app provides the toolkit to support this endeavour.',    
