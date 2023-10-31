@@ -13,6 +13,7 @@ ProjectX provides the following features to assist the optimization process:
 
 _Desktop App Backtesting:_
 ![Backtesting](Backtesting.jpg)
+Deep dive into backtesting strategies: [strategies](STRATEGIES.md)
 
 The supporting components relates to providing pricers to help explore arbitrage or advantagous opportunities, fine-tune pricing models, and understand market sentiment.
 ProjectX provies the following highly customizable and optimizable toolkit

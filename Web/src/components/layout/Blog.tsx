@@ -18,7 +18,7 @@ const sections = [
 ];
 
 const mainFeaturedPost = {
-  title: 'Innovative trading signals engineering platform',
+  title: 'Innovative trading signals platform',
   description:
         "The purpose of Trading Signals is provide a platform for designing and optimization of trading strategies, and being able to exercise back testing on the strategies targeted to the personal investor.  My ethos is simple, clutter-free effective tooling to assist in personal trading strategies development.",
   image: 'https://source.unsplash.com/random?wallpapers',

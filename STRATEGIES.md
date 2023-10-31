@@ -1,6 +1,5 @@
-Successful Trading System involves trading strategy development, backtesting, and risk management.
-Finding similar well-known trading strategies from public sources is easily accessible, the key for a profitable strategy is the optimization methods that have been carried out and this app provides the toolkit to support this endeavour.
-
+Trading Strategies
+======================
 There are two broad categories of trading strategies, mean-Reversion and momentum.
 
 Mean reversion exploits the fact that stock prices eventually return to long-term avverage price, we buy low and sell high (long-short strategy).  
@@ -31,8 +30,10 @@ Other tchnical indicators technical analysis include:
 * machine learning and neural networks 
 
 Here are some of the most popular trend indicators used by traders today: Moving Average Stock Indicators, Parabolic Stop and Reverse (SAR), Moving Average Convergence Divergence (MACD), Stochastic Oscilalator, Commodity Channel Index (CCI), Relative Strength Index (RS)
-https://tinyurl.com/4uayf4xd
+[website(https://www.etoro.com/stocks/indicators-guide/?utm_medium=SEM&utm_source=38638&utm_content=0&utm_serial=CAMP_20104650399%7CAG_151461666360%7CKW_%7CMT_%7CTarget_%7CTargetid_dsa-1934018671372%7CCreative_648717972466&utm_campaign=CAMP_20104650399%7CAG_151461666360%7CKW_%7CMT_%7CTarget_%7CTargetid_dsa-1934018671372%7CCreative_648717972466&utm_term=https%3A%2F%2Fwww.google.com%2F&gclid=CjwKCAjwyY6pBhA9EiwAMzmfwSVH8BZl7Zh10TUr_jAlf2D3fM8lVc1llDSIR-P9vjD1PJrCRfp-EhoCxkYQAvD_BwE)]
 
+Backtesting
+======================
 Backtesting allows understanding the strategy completelty and can help prove that you can reproduce its results by seeing how it would have performend in the past.
 Backtesting is based on long-short method to compute PnL.
 Backtesting uses Moving Average for a specified Moving Window (=number of prices/daily, e.g 3,14)
@@ -64,7 +65,8 @@ A ratio under 1.0 is considered sub-optimal.
 Implemented Hurst to identify regime (mean reverting, or momentum) to decide which strategy because applying mean reversion to IBM yields positive results, yet momentum yield negative pnl.
 Alternatively, (Markov-transition modelling)
 
-Coming Soon: 
+New strategies (coming soon)
+======================
 * Stop loss control and transaction costs PnL calculations.
 * Pairs uses Pair Type by Price Ratio correlation or via Spread, its a market neutral mean-reverting strategy uncorrelated to market direction.  
 	* A steady strategy to hedge sector and market risk
