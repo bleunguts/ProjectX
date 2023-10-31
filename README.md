@@ -12,7 +12,7 @@ ProjectX provides the following features to assist the optimization process:
 * captures live market data from reliable third party data sources such as FMP, Quandl
 
 _Desktop App Backtesting:_
-<img src="./Backtesting.jpg" width="50">
+<img src="./Backtesting.jpg" width="800">
 
 The supporting components relates to providing pricers to help explore arbitrage or advantagous opportunities, fine-tune pricing models, and understand market sentiment.
 ProjectX provies the following highly customizable and optimizable toolkit
