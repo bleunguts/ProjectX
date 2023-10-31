@@ -79,40 +79,7 @@ export default function Main(props: MainProps) {
                     <Chart3D label='Vol Smile' zData={FakeVolatilityData} />                                                    
                     </Paper>
                 </CardContent>
-            </Card>
-            {/* Item 5*/}
-            <Card
-                style={{
-                    width: 800,
-                }}>
-                <CardContent>
-                    <Typography style={{
-                        marginLeft: 12,
-                        marginBottom: 12,                        
-                    }} 
-                    align='left'>
-                    The Roadmap:
-                    </Typography>       
-                    <Typography style={{
-                        marginLeft: 12,
-                        marginBottom: 12,                        
-                    }} 
-                    align='left'>
-                    {
-                        [
-                            "A way to rapid develop trading strategies and using back testing to validate it", 
-                            "Show live FX prices from FX market data source as an additional column 'Reference Price'",
-                            "All pricing model calcs are Azure-enabled (leveraging existing AspNetCore BackgroundServices)",
-                            "Enhanced eTrader trade management screen shows PnL helps facilitate demo tradin",
-                        ].map((x) =>
-                        <li>
-                        {x}
-                        </li>
-                        )                                        
-                    }           
-                    </Typography>                  
-                </CardContent>
-            </Card>
+            </Card>          
         </Grid>
     );
 }

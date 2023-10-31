@@ -20,7 +20,7 @@ const sections = [
 const mainFeaturedPost = {
   title: 'Innovative trading signals platform',
   description:
-        "The ethos is simple, clutter-free tool suite to assist in the designing, optimization and backtesting of trading strategies targeted for the personal investor based on stock price trends analysis.",
+        "A comprehensive tool suite that backtests trading strategies based on price trends analysis.",
   image: 'https://source.unsplash.com/random?wallpapers',
   imageText: 'main image description',  
 };
@@ -33,7 +33,7 @@ const sidebar = {
 
 const defaultTheme = createTheme();
 const bodyComponents = [
-    'The key for a profitable strategy is the optimization methods that have been carried out and this app provides the toolkit to support this endeavour.',    
+    'The key to a profitable strategy is the optimization methods that have been carried out and this app provides the tools to visualize outcomes. Backtesting allows understanding the strategy completelty and can help prove that you can reproduce its results by seeing how it would have performend in the past using long-short method to compute PnL using Moving Average specified Moving Window (=number of prices/daily). We enter a new trade AFTER exiting the current position, enforces only one trade at most per trading day.',
 ];
 export default function Blog() {
   return (
