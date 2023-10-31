@@ -5,6 +5,7 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import FxTicker from './FxTicker';
+import StockNews from './StockNews';
 
 interface SidebarProps {  
   description: string;  
@@ -25,7 +26,8 @@ export default function Sidebar(props: SidebarProps) {
       <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
         Subscriptions
       </Typography>            
-      <FxTicker/>
+          <FxTicker />
+          <StockNews/>
     </Grid>
   );
 }
