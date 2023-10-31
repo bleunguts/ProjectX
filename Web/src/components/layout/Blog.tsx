@@ -20,7 +20,7 @@ const sections = [
 const mainFeaturedPost = {
   title: 'Innovative trading signals engineering platform',
   description:
-        "The purpose of Trading Signals is provide a platform for coming up with trading strategies, and being able to exercise back testing on the strategies for personal stock investments.  My ethos is simple, easy to use, and without clutter effective tooling for small scale personal home trading.",
+        "The purpose of Trading Signals is provide a platform for designing and optimization of trading strategies, and being able to exercise back testing on the strategies targeted to the personal investor.  My ethos is simple, clutter-free effective tooling to assist in personal trading strategies development.",
   image: 'https://source.unsplash.com/random?wallpapers',
   imageText: 'main image description',  
 };
@@ -34,8 +34,7 @@ const sidebar = {
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 const bodyComponents = [
-    'Single stock mean reversion signal backtesting, includes visual graphs and real market sourced historical pricing data',
-    'Pair stock mean reversion signal backtesting, includes visual graphs and real market sourced historical pricing data'
+    'The key for a profitable strategy is the optimization methods that have been carried out and this app provides the toolkit to support this endeavour.',    
 ];
 export default function Blog() {
   return (
@@ -51,7 +50,7 @@ export default function Blog() {
             ))}
           </Grid>
           <Grid container spacing={5} sx={{ mt: 3 }}>
-            <Main title="Features" posts={bodyComponents} />
+            <Main title="Mean-reversion strategies" posts={bodyComponents} />
             <Sidebar
               title={sidebar.title}
               description={sidebar.description}                           
