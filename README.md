@@ -1,4 +1,5 @@
 ![Web](WebPortal.jpg)
+
 ProjectX🌊 is a technical analysis centric app that can backtest popular trading strategies such as the Long-Short trading strategy designed for the personal trader. 
 I wrote ProjectX to collate my projects that I have built in github over the years option risk pricing C++, back testing strategies into a concise platform deliverable that showcases a decade plus of industry expertise in risk management and trading & execution systems.
 
