@@ -36,9 +36,6 @@
     <ClInclude Include="RandomWalk.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Utility.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ProjectX.AnalyticsCppLib.cpp">

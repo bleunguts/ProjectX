@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include "ProjectX.AnalyticsCppLib.h"
+#include "Parameters.h"
 #include <cmath>
 
 Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::MCValue(VanillaOptionParameters^ %OptionParams,
@@ -24,18 +25,18 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::MCValue(VanillaOpti
 			payOffBridge = new PayOffBridge(put);			
 			break;
 		}
-		default: 
-		{
-			throw gcnew System::String("Shouldnt get here");
-		}
+		default: 		
+			throw gcnew System::String("Shouldnt get here");				
 	}		
-	VanillaOption TheOption = VanillaOption(*payOffBridge, OptionParams->Expiry());
 
+	VanillaOption TheOption = VanillaOption(*payOffBridge, OptionParams->Expiry());
+	ParametersConstant vol = ParametersConstant(Vol);
+	ParametersConstant rate = ParametersConstant(r);
 	double Expiry = TheOption.GetExpiry();
-	double variance = MathFunctions::IntegralSquare(Vol, 0, Expiry);		
+	double variance = vol.IntegralSquare(0, Expiry);
 	double rootVariance = sqrt(variance);
 	double itoCorrection = -0.5 * variance;
-	double movedSpot = Spot * exp(MathFunctions::Integral(r, 0, Expiry) + itoCorrection);
+	double movedSpot = Spot * exp(rate.Integral(0, Expiry) + itoCorrection);
 	double thisSpot;
 	double runningSum = 0;
 
@@ -48,12 +49,11 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::MCValue(VanillaOpti
 	}
 
 	double mean = runningSum / NumberOfPaths;
-	mean *= exp(-MathFunctions::Integral(r, 0, Expiry));
+	mean *= exp(-rate.Integral(0, Expiry));
 
 	if (payOffBridge != NULL) {
 		delete payOffBridge;
 		payOffBridge = NULL;
 	}	
-
 	return mean;	
 }
