@@ -1,23 +1,28 @@
 
 using ProjectXAnalyticsCppLib;
+using System.Diagnostics;
 
 namespace ProjectX.AnalyticsCppLib.Tests
 {
     public class Tests
-    {        
+    {
         [Test]
         public void ShallBeAbleToPriceOptionWithCppOptionsPricingCalculator()
         {
             var calculator = new OptionsPricingCalculator();
-            
-            VanillaOption theOption = new();
-            double spot = 11.0;
-            Parameters vol = new Parameters();
-            Parameters r = new Parameters();
-            uint numberOfPaths = 10;            
 
-            double price = calculator.MCValue(ref theOption, spot, ref vol, ref r, numberOfPaths);                        
-            Assert.That(price, Is.EqualTo(11.0));            
+            VanillaOptionParameters theOption = new(OptionType.Call, 15.0, 0.9);
+            double spot = 10.0;
+            double vol = 0.3;
+            double r = 0.1;
+            uint numberOfPaths = 500;
+            var sw = Stopwatch.StartNew();
+            {
+                double price = calculator.MCValue(ref theOption, spot, vol, r, numberOfPaths);
+                Assert.That(Math.Round(price, 1), Is.EqualTo(0.2));
+                sw.Stop();
+                Console.WriteLine($"Completed {numberOfPaths} #MC paths in {sw.ElapsedMilliseconds} ms");
+            }
         }
     }
 }

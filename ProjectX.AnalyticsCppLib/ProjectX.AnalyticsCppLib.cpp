@@ -1,41 +1,60 @@
 #include "pch.h"
 
 #include "ProjectX.AnalyticsCppLib.h"
+#include <cmath>
 
-Double ProjectXAnalyticsCppLib::OptionsPricingCalculator::MCValue(VanillaOption^ %TheOption,
+Double ProjectXAnalyticsCppLib::OptionsPricingCalculator::MCValue(VanillaOptionParameters^ %OptionParams,
 	Double Spot,
-	Parameters^ %Vol,
-	Parameters^ %r,
-	UInt64 NumberOfPaths) 
-{
-	return Spot;
-}
+	Double Vol,
+	Double r,
+	UInt64 NumberOfPaths, 
+	RandomWalk^ randomWalk) 
+{			
+	PayOffBridge* payOffBridge = nullptr;
+	switch (OptionParams->OptionType()) 
+	{
+		case OptionType::Call: 
+		{
+			PayOffCall call = PayOffCall(OptionParams->Strike());
+			payOffBridge = new PayOffBridge(call);			
+			break;
+		}	
+		case OptionType::Put: 
+		{
+			PayOffPut put = PayOffPut(OptionParams->Strike());
+			payOffBridge = new PayOffBridge(put);			
+			break;
+		}
+		default: 
+		{
+			throw gcnew System::String("Shouldnt get here");
+		}
+	}		
+	VanillaOption TheOption = VanillaOption(*payOffBridge, OptionParams->Expiry());
 
-//double ProjectXAnalyticsCppLib::OptionsPricingCalculator::MCValue(const VanillaOption TheOption,
-//	double Spot,
-//	const Parameters Vol,
-//	const Parameters r,
-//	unsigned long NumberOfPaths)
-//{
-//	/*double Expiry = TheOption.GetExpiry();
-//	double variance = Vol.IntegralSquare(0, Expiry);
-//	double rootVariance = sqrt(variance);
-//	double itoCorrection = -0.5 * variance;
-//	double movedSpot = Spot * exp(r.Integral(0, Expiry) + itoCorrection);
-//	double thisSpot;
-//	double runningSum = 0;
-//
-//	for (unsigned long i = 0; i < NumberOfPaths; i++)
-//	{
-//		double thisGaussian = GetOneGaussianByBoxMuller();
-//		thisSpot = movedSpot * exp(rootVariance * thisGaussian);
-//		double thisPayOff = TheOption.OptionPayOff(thisSpot);
-//		runningSum += thisPayOff;
-//	}
-//
-//	double mean = runningSum / NumberOfPaths;
-//	mean *= exp(-r.Integral(0, Expiry));
-//
-//	return mean;*/
-//	return 0.0;
-//}
+	double Expiry = TheOption.GetExpiry();
+	double variance = MathFunctions::IntegralSquare(Vol, 0, Expiry);		
+	double rootVariance = sqrt(variance);
+	double itoCorrection = -0.5 * variance;
+	double movedSpot = Spot * exp(MathFunctions::Integral(r, 0, Expiry) + itoCorrection);
+	double thisSpot;
+	double runningSum = 0;
+
+	for (unsigned long i = 0; i < NumberOfPaths; i++)
+	{
+		double thisGaussian = randomWalk->GetOneGaussian();
+		thisSpot = movedSpot * exp(rootVariance * thisGaussian);
+		double thisPayOff = TheOption.OptionPayOff(thisSpot);
+		runningSum += thisPayOff;
+	}
+
+	double mean = runningSum / NumberOfPaths;
+	mean *= exp(-MathFunctions::Integral(r, 0, Expiry));
+
+	if (payOffBridge != NULL) {
+		delete payOffBridge;
+		payOffBridge = NULL;
+	}	
+
+	return mean;	
+}

@@ -24,6 +24,18 @@
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="VanillaOption.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PayOff.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Parameters.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RandomWalk.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ProjectX.AnalyticsCppLib.cpp">
@@ -33,6 +45,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PayOff.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VanillaOption.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Parameters.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RandomWalk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
