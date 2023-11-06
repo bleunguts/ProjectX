@@ -1,3 +1,5 @@
+![Web](WebPortal.jpg)
+
 ProjectX🌊 is a technical analysis centric app that can backtest popular trading strategies such as the Long-Short trading strategy designed for the personal trader. 
 I wrote ProjectX to collate my projects that I have built in github over the years option risk pricing C++, back testing strategies into a concise platform deliverable that showcases a decade plus of industry expertise in risk management and trading & execution systems.
 
@@ -32,8 +34,6 @@ _Desktop App BS Option Pricing:_
 _Desktop App FX OMS:_
 ![FXOMS](FXOMS.jpg)
 
-_Web React front end:_
-![Web](WebPortal.jpg)
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 _Tech Stack:_
 * C# 11, .NET 7, WPF, Caliburn.Micro, System.ComponentModel.Composition.Hosting.CompositionContainer (IoC), ReactiveX 6, Microsft Chart Controls,
