@@ -29,23 +29,19 @@ namespace ProjectXAnalyticsCppLib {
 		inline Double Expiry() { return m_expiry; };		
 	};	
 	
-	public ref class OptionsPricingCalculator
+	public ref class OptionsPricingCppCalculator
 	{
-	public:				
-		inline Double ProjectXAnalyticsCppLib::OptionsPricingCalculator::MCValue(VanillaOptionParameters^% TheOption,
-			Double Spot,
-			Double Vol,
-			Double r,
-			UInt64 NumberOfPaths) {
-			return MCValue(TheOption, Spot, Vol, r, NumberOfPaths, gcnew RandomWalk(RandomAlgorithm::BoxMuller));
-		};
-
 	private:
-		Double ProjectXAnalyticsCppLib::OptionsPricingCalculator::MCValue(VanillaOptionParameters^% TheOption,
+		RandomWalk^ m_randomWalk;
+	public:						
+		OptionsPricingCppCalculator(RandomWalk^ randomWalk) {
+			m_randomWalk = randomWalk;
+		}
+
+		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::MCValue(VanillaOptionParameters^% TheOption,
 			Double Spot,
 			Double Vol,
 			Double r,
-			UInt64 NumberOfPaths,
-			RandomWalk^ randomWalk);
+			UInt64 NumberOfPaths);
 	};
 }

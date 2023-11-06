@@ -3,12 +3,11 @@
 #include "ProjectX.AnalyticsCppLib.h"
 #include <cmath>
 
-Double ProjectXAnalyticsCppLib::OptionsPricingCalculator::MCValue(VanillaOptionParameters^ %OptionParams,
+Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::MCValue(VanillaOptionParameters^ %OptionParams,
 	Double Spot,
 	Double Vol,
 	Double r,
-	UInt64 NumberOfPaths, 
-	RandomWalk^ randomWalk) 
+	UInt64 NumberOfPaths) 
 {			
 	PayOffBridge* payOffBridge = nullptr;
 	switch (OptionParams->OptionType()) 
@@ -42,7 +41,7 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCalculator::MCValue(VanillaOptionP
 
 	for (unsigned long i = 0; i < NumberOfPaths; i++)
 	{
-		double thisGaussian = randomWalk->GetOneGaussian();
+		double thisGaussian = m_randomWalk->GetOneGaussian();
 		thisSpot = movedSpot * exp(rootVariance * thisGaussian);
 		double thisPayOff = TheOption.OptionPayOff(thisSpot);
 		runningSum += thisPayOff;

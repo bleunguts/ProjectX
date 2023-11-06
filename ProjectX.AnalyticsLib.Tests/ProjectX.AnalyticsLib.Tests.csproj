@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -20,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ProjectX.AnalyticsCppLib\ProjectX.AnalyticsCppLib.vcxproj" />
     <ProjectReference Include="..\ProjectX.AnalyticsLib\ProjectX.AnalyticsLib.csproj" />
   </ItemGroup>
 
