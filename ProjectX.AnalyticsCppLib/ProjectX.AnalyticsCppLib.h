@@ -1,27 +1,10 @@
 #pragma once
 #include "VanillaOption.h"
-#include "Parameters.h"
 #include "RandomWalk.h"
 
 using namespace System;
 
-namespace ProjectXAnalyticsCppLib {
-
-	public ref class MathFunctions abstract sealed
-	{
-	public:
-		static double IntegralSquare(double value, double time1, double time2) 
-		{
-			ParametersConstant p = ParametersConstant(value);
-			return p.IntegralSquare(time1, time2);
-		}
-		static double Integral(double value, double time1, double time2) 
-		{
-			ParametersConstant p = ParametersConstant(value);
-			return p.Integral(time1, time2);
-		}
-	};
-	
+namespace ProjectXAnalyticsCppLib {	
 	public enum class OptionType
 	{
 		Call, Put
