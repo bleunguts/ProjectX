@@ -15,9 +15,9 @@ namespace ProjectX.AnalyticsLib
         private readonly OptionsPricingCppCalculator _calculator;
         private readonly ulong _numOfMcPaths;
 
-        public OptionsPricingCppCalculatorWrapper(ulong numOfMcPaths = 1000)
+        public OptionsPricingCppCalculatorWrapper(ulong numOfMcPaths = 1000, RandomAlgorithm algo = RandomAlgorithm.BoxMuller)
         {
-            _calculator = new OptionsPricingCppCalculator(new RandomWalk(RandomAlgorithm.BoxMuller));
+            _calculator = new OptionsPricingCppCalculator(new RandomWalk(algo));
             _numOfMcPaths = numOfMcPaths;
         }
         public double BlackScholes(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
@@ -30,15 +30,12 @@ namespace ProjectX.AnalyticsLib
             return value;
         }
 
-        private static ProjectXAnalyticsCppLib.OptionType ToCppOptionType(OptionType optionType)
+        static ProjectXAnalyticsCppLib.OptionType ToCppOptionType(OptionType optionType) => optionType switch
         {
-            switch (optionType)
-            {
-                case OptionType.Call: return ProjectXAnalyticsCppLib.OptionType.Call;
-                case OptionType.Put: return ProjectXAnalyticsCppLib.OptionType.Put;
-            }
-            throw new NotImplementedException($"{nameof(optionType)} not supported");
-        }
+            OptionType.Call => ProjectXAnalyticsCppLib.OptionType.Call,
+            OptionType.Put => ProjectXAnalyticsCppLib.OptionType.Put,
+            _ => throw new NotImplementedException($"{nameof(optionType)} not supported"),
+        };
 
         public double BlackScholes_Delta(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {

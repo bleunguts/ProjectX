@@ -8,7 +8,7 @@ public class OptionsPricingCalculatorWrapperTest
     static IEnumerable<(IBlackScholesOptionsPricingCalculator calculator, double percentError)> VanillaOptionCalculators()
     {
         yield return (new BlackScholesOptionsPricingCalculator(), 42.0);
-        yield return (new OptionsPricingCppCalculatorWrapper(200_000), 1.3);
+        yield return (new OptionsPricingCppCalculatorWrapper(200_000, RandomAlgorithm.BoxMuller), 1.3);
     }
 
     // real numbers example http://financetrain.com/option-pricing-using-monte-carlo-simulation/
