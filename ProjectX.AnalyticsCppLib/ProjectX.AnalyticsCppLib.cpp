@@ -2,7 +2,7 @@
 
 #include "ProjectX.AnalyticsCppLib.h"
 #include "Parameters.h"
-#include "Utility.h"
+#include "BlackScholesFunctions.h"
 #include <cmath>
 
 Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::MCValue(VanillaOptionParameters^% OptionParams,
@@ -71,7 +71,7 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Delta(VanillaOption
 	double optionPrice = MCValue(TheOption, Spot, Vol, r, NumberOfPaths);
 
 	// Calculate delta using Black-Scholes formula	
-	double delta = BlackScholesDelta(Spot, TheOption->Strike(), r, TheOption->Expiry(), optionPrice, epsilon, Vol);
+	double delta = BlackScholesFunctions::BlackScholesDelta(Spot, TheOption->Strike(), r, TheOption->Expiry(), optionPrice, epsilon, Vol);
 	return delta;
 }
 
@@ -113,7 +113,7 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Gamma(VanillaOption
 	Double epsilon
 ) 
 {
-	double gamma = BlackScholesGamma(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol, epsilon);
+	double gamma = BlackScholesFunctions::BlackScholesGamma(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol, epsilon);
 	return gamma;
 }
 
@@ -161,7 +161,7 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Rho(VanillaOptionPa
 {
 	double optionPrice = MCValue(TheOption, Spot, Vol, r, NumberOfPaths);
 	
-	double rho = BlackScholesRho( Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
+	double rho = BlackScholesFunctions::BlackScholesRho( Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
 	return rho;
 }
 
@@ -187,7 +187,7 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::RhoMC(VanillaOption
 		double payoff = Math::Max(ST - K, 0.0);
 		double priceUp = Math::Exp(-(r + epsilon) * T) * payoff;
 
-		rhoSum += (priceUp - BlackScholes(S, K, r, T, sigma)) / (epsilon * r);
+		rhoSum += (priceUp - BlackScholesFunctions::BlackScholes(S, K, r, T, sigma)) / (epsilon * r);
 	}
 
 	return rhoSum / NumberOfPaths;
@@ -201,7 +201,7 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Theta(VanillaOption
 {
 	double optionPrice = MCValue(TheOption, Spot, Vol, r, NumberOfPaths);
 
-	double theta = BlackScholesTheta(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
+	double theta = BlackScholesFunctions::BlackScholesTheta(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
 	return theta;
 }
 Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::ThetaMC(
@@ -235,7 +235,7 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::ThetaMC(
 			payoff = Math::Max(ST - K, 0.0);
 			price = Math::Exp(-r * t) * payoff;
 		}		
-		Double PV = BlackScholes(S, K, r, T - t, sigma);
+		Double PV = BlackScholesFunctions::BlackScholes(S, K, r, T - t, sigma);
 		thetaSum += (price - PV);
 	}
 
@@ -252,7 +252,7 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Vega(VanillaOptionP
 {
 	double optionPrice = MCValue(TheOption, Spot, Vol, r, NumberOfPaths);
 
-	double vega = BlackScholesVega(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
+	double vega = BlackScholesFunctions::BlackScholesVega(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
 	return vega;
 }
 
@@ -278,7 +278,7 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::VegaMC(VanillaOptio
 		double payoff = Math::Max(ST - K, 0.0);
 		double priceUp = Math::Exp(-r * T) * payoff;
 
-		vegaSum += (priceUp - BlackScholes(S, K, r, T, sigma)) / epsilon;
+		vegaSum += (priceUp - BlackScholesFunctions::BlackScholes(S, K, r, T, sigma)) / epsilon;
 	}
 
 	return vegaSum / NumberOfPaths;
@@ -319,115 +319,3 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::ImpliedVolatilityMC
 	return Double::NaN;
 }
 
-Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholesDelta(
-		Double S, // Current stock price
-		Double K, // Strike price
-		Double r, // Risk-free interest rate
-		Double T, // Time to expiration			
-		Double optionPrice, // Option Price
-		Double epsilon, // Small change in stock price
-		Double sigma // Volatility
-)
-{
-	double d1 = (Math::Log(S / K) + (r + (Math::Pow(sigma, 2) / 2)) * T) / (sigma * Math::Sqrt(T));
-	double delta = Math::Exp(-r * T) * normcdf(d1);
-
-	return delta * optionPrice + (optionPrice - delta * optionPrice) / (S + epsilon - K) * (S - K);
-}
-
-// Black-Scholes formula to calculate the option price
-Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholesGamma(
-	Double S, // Current stock price
-	Double K, // Strike price
-	Double r, // Risk-free interest rate
-	Double T, // Time to expiration
-	Double sigma, // Volatility
-	Double epsilon // Small change in stock price
-)
-{
-	double optionPrice = BlackScholes(S, K, r, T, sigma);
-
-	double optionPriceUp = BlackScholes(S + epsilon, K, r, T, sigma);
-	double optionPriceDown = BlackScholes(S - epsilon, K, r, T, sigma);
-
-	double gamma = (optionPriceUp - 2 * optionPrice + optionPriceDown) / (epsilon * epsilon);
-
-	return gamma;
-}
-
-// Black-Scholes formula to calculate the option price
-Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholes(
-	Double S, // Current stock price
-	Double K, // Strike price
-	Double r, // Risk-free interest rate
-	Double T, // Time to expiration
-	Double sigma // Volatility
-)
-{
-	Double d1 = (Math::Log(S / K) + (r + (Math::Pow(sigma, 2) / 2)) * T) / (sigma * Math::Sqrt(T));
-	Double d2 = d1 - sigma * Math::Sqrt(T);
-
-	Double N_d1 = normcdf(d1);
-	Double N_d2 = normcdf(d2);
-
-	Double optionPrice = S * N_d1 - K * Math::Exp(-r * T) * N_d2;
-
-	return optionPrice;
-}
-
-
-Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholesRho(
-	Double S, // Current stock price
-	Double K, // Strike price
-	Double r, // Risk-free interest rate
-	Double T, // Time to expiration
-	Double sigma // Volatility
-)
-{
-	double d2 = (Math::Log(S / K) + (r - (Math::Pow(sigma, 2) / 2)) * T) / (sigma * Math::Sqrt(T));
-	return T * K * Math::Exp(-r * T) * normcdf(d2);
-}
-
-Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholesTheta(
-	Double S, // Current stock price
-	Double K, // Strike price
-	Double r, // Risk-free interest rate
-	Double T, // Time to expiration
-	Double sigma // Volatility
-)
-{
-	double d1 = (Math::Log(S / K) + (r + (Math::Pow(sigma, 2) / 2)) * T) / (sigma * Math::Sqrt(T));
-	double d2 = d1 - sigma * Math::Sqrt(T);
-
-	double N_d1 = normcdf(d1);
-	double N_d2 = normcdf(d2);
-	double N_prime_d1 = normpdf(d1);
-
-	double theta = -((S * N_prime_d1 * sigma) / (2.0 * Math::Sqrt(T))) - r * K * Math::Exp(-r * T) * N_d2;
-
-	return theta;
-}
-
-// Function to calculate the Black-Scholes Vega
-Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholesVega(
-	Double S, // Current stock price
-	Double K, // Strike price
-	Double r, // Risk-free interest rate
-	Double T, // Time to expiration
-	Double sigma // Volatility
-)
-{
-	double d1 = (Math::Log(S / K) + (r + (Math::Pow(sigma, 2) / 2)) * T) / (sigma * Math::Sqrt(T));
-
-	double N_prime_d1 = normpdf(d1);
-
-	double vega = S * Math::Sqrt(T) * N_prime_d1;
-
-	return vega;
-}
-
-// Function to generate a random number from a standard normal distribution
-Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::RandomStandardNormal()
-{
-	return Math::Sqrt(-2.0 * Math::Log(1.0 - random->NextDouble())) * Math::Sin(2.0 * Math::PI * random->NextDouble());
-}

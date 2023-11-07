@@ -31,4 +31,9 @@ static double normpdf(double x)
     return (1.0 / (Math::Sqrt(2.0 * Math::PI))) * Math::Exp(-0.5 * x * x);
 }
 
-
+// Function to generate a random number from a standard normal distribution
+static Double RandomStandardNormal()
+{
+    Random^ random = gcnew Random();
+    return Math::Sqrt(-2.0 * Math::Log(1.0 - random->NextDouble())) * Math::Sin(2.0 * Math::PI * random->NextDouble());
+}
