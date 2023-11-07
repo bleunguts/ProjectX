@@ -97,14 +97,25 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Gamma(VanillaOption
 	Double Spot,
 	Double Vol,
 	Double r,
-	Double epsilon,
-	UInt64 NumberOfPaths
+	Double epsilon
 ) 
 {
 	double gamma = BlackScholesGamma(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol, epsilon);
 	return gamma;
 }
 
+Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Rho(VanillaOptionParameters^% TheOption,
+	Double Spot,
+	Double Vol,
+	Double r,	
+	UInt64 NumberOfPaths
+) 
+{
+	double optionPrice = MCValue(TheOption, Spot, Vol, r, NumberOfPaths);
+	
+	double rho = BlackScholesRho( Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
+	return rho;
+}
 
 // Black-Scholes formula to calculate the option price
 Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholesGamma(
@@ -144,4 +155,17 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholes(
 	double optionPrice = S * N_d1 - K * Math::Exp(-r * T) * N_d2;
 
 	return optionPrice;
+}
+
+
+Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholesRho(
+	Double S, // Current stock price
+	Double K, // Strike price
+	Double r, // Risk-free interest rate
+	Double T, // Time to expiration
+	Double sigma // Volatility
+)
+{
+	double d2 = (Math::Log(S / K) + (r - (Math::Pow(sigma, 2) / 2)) * T) / (sigma * Math::Sqrt(T));
+	return T * K * Math::Exp(-r * T) * normcdf(d2);
 }

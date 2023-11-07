@@ -56,10 +56,23 @@ namespace ProjectXAnalyticsCppLib {
 			Double Spot,
 			Double Vol,
 			Double r,
-			Double epsilon,
+			Double epsilon			
+		);
+
+		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Rho(VanillaOptionParameters^% TheOption,
+			Double Spot,
+			Double Vol,
+			Double r,
 			UInt64 NumberOfPaths
 		);
 	private:
+		static Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholesRho(
+			Double S, // Current stock price
+			Double K, // Strike price
+			Double r, // Risk-free interest rate
+			Double T, // Time to expiration
+			Double sigma // Volatility
+		);
 		static Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholesDelta(VanillaOptionParameters^% TheOption,
 			Double Spot,
 			Double Vol,

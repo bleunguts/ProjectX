@@ -42,7 +42,7 @@ namespace ProjectX.AnalyticsLib
         {
             double epsilon = 0.01;
             var param = new VanillaOptionParameters(ToCppOptionType(OptionType.Call), strike, maturity);
-            return _calculator.Gamma(ref param, spot, volatility, rate, epsilon, _numOfMcPaths);
+            return _calculator.Gamma(ref param, spot, volatility, rate, epsilon);
         }
 
         public double BlackScholes_ImpliedVol(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double price)
@@ -52,7 +52,8 @@ namespace ProjectX.AnalyticsLib
 
         public double BlackScholes_Rho(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
-            throw new NotImplementedException();
+            var param = new VanillaOptionParameters(ToCppOptionType(OptionType.Call), strike, maturity);
+            return _calculator.Rho(ref param, spot, volatility, rate, _numOfMcPaths);
         }
 
         public double BlackScholes_Theta(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
