@@ -115,6 +115,13 @@ namespace ProjectXAnalyticsCppLib {
 			Double r,
 			UInt64 NumberOfPaths
 		);
+		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::ImpliedVolatility(
+			VanillaOptionParameters^% TheOption,
+			Double Spot,
+			Double r,
+			UInt64 NumberOfPaths,
+			Double optionPrice
+		);
 		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::ImpliedVolatilityMC(
 			VanillaOptionParameters^% TheOption,
 			Double Spot,

@@ -158,10 +158,8 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Rho(VanillaOptionPa
 	Double r,	
 	UInt64 NumberOfPaths
 ) 
-{
-	double optionPrice = MCValue(TheOption, Spot, Vol, r, NumberOfPaths);
-	
-	double rho = BlackScholesFunctions::BlackScholesRho( Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
+{	
+	double rho = BlackScholesFunctions::BlackScholesRho(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
 	return rho;
 }
 
@@ -199,8 +197,6 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Theta(VanillaOption
 	UInt64 NumberOfPaths
 ) 
 {
-	double optionPrice = MCValue(TheOption, Spot, Vol, r, NumberOfPaths);
-
 	double theta = BlackScholesFunctions::BlackScholesTheta(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
 	return theta;
 }
@@ -250,8 +246,6 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Vega(VanillaOptionP
 	UInt64 NumberOfPaths
 )
 {
-	double optionPrice = MCValue(TheOption, Spot, Vol, r, NumberOfPaths);
-
 	double vega = BlackScholesFunctions::BlackScholesVega(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
 	return vega;
 }
@@ -282,6 +276,39 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::VegaMC(VanillaOptio
 	}
 
 	return vegaSum / NumberOfPaths;
+}
+
+Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::ImpliedVolatility(
+	VanillaOptionParameters^% TheOption,
+	Double Spot,
+	Double r,	
+	UInt64 NumberOfPaths,
+	Double optionPrice
+) 
+{
+	double S = Spot;	
+	double T = TheOption->Expiry();
+	double K = TheOption->Strike();
+	double epsilon = 1e-6;  // Tolerance for convergence
+	double sigma = 0.2;     // Initial guess for implied volatility
+	int maxIterations = NumberOfPaths;  // Maximum number of iterations = 100
+
+	for (int i = 0; i < maxIterations; i++)
+	{
+		double price = BlackScholesFunctions::BlackScholes(S, K, r, T, sigma);
+		double vega = BlackScholesFunctions::BlackScholesVega(S, K, r, T, sigma);
+		double diff = price - optionPrice;
+
+		if (Math::Abs(diff) < epsilon)
+		{
+			return sigma;
+		}
+
+		sigma -= diff / vega;
+	}
+
+	// If the maximum number of iterations is reached, return NaN (no solution found).
+	return Double::NaN;
 }
 
 // Function to calculate implied volatility using a Monte Carlo simulation
