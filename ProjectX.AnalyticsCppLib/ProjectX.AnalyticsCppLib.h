@@ -34,21 +34,25 @@ namespace ProjectXAnalyticsCppLib {
 	private:
 		RandomWalk^ m_randomWalk;
 	public:						
-		OptionsPricingCppCalculator(RandomWalk^ randomWalk) {
+		OptionsPricingCppCalculator(RandomWalk^ randomWalk)
+		{
 			m_randomWalk = randomWalk;
-		}
-		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::MCValue(VanillaOptionParameters^% TheOption,
+		};
+		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::MCValue(
+			VanillaOptionParameters^% TheOption,
 			Double Spot,
 			Double Vol,
 			Double r,
 			UInt64 NumberOfPaths);
-		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Delta(VanillaOptionParameters^% TheOption,
+		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Delta(
+			VanillaOptionParameters^% TheOption,
 			Double Spot,
 			Double Vol,
 			Double r,			
 			UInt64 NumberOfPaths
 		);
-		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::DeltaMC(VanillaOptionParameters^% TheOption,
+		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::DeltaMC(
+			VanillaOptionParameters^% TheOption,
 			Double Spot,
 			Double Vol,
 			Double r,
@@ -59,27 +63,31 @@ namespace ProjectXAnalyticsCppLib {
 			Double Spot,
 			Double Vol,
 			Double r,
-			UInt64 NumberOfPaths // Number of Monte Carlo simulations
+			UInt64 NumberOfPaths 
 		);
-		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Gamma(VanillaOptionParameters^% TheOption,
+		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Gamma(
+			VanillaOptionParameters^% TheOption,
 			Double Spot,
 			Double Vol,
 			Double r,
 			Double epsilon			
 		);
-		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Rho(VanillaOptionParameters^% TheOption,
+		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Rho(
+			VanillaOptionParameters^% TheOption,
 			Double Spot,
 			Double Vol,
 			Double r,
 			UInt64 NumberOfPaths
 		);
-		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::RhoMC(VanillaOptionParameters^% TheOption,
+		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::RhoMC(
+			VanillaOptionParameters^% TheOption,
 			Double Spot,
 			Double Vol,
 			Double r,
 			UInt64 NumberOfPaths
 		);
-		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Theta(VanillaOptionParameters^% TheOption,
+		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Theta(
+			VanillaOptionParameters^% TheOption,
 			Double Spot,
 			Double Vol,
 			Double r,
@@ -93,25 +101,27 @@ namespace ProjectXAnalyticsCppLib {
 			UInt64 NumberOfPaths,	
 			Double timeStep // Time step for simulation
 		);
-		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Vega(VanillaOptionParameters^% TheOption,
+		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Vega(
+			VanillaOptionParameters^% TheOption,
 			Double Spot,
 			Double Vol,
 			Double r,
 			UInt64 NumberOfPaths
 		);
-		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::VegaMC(VanillaOptionParameters^% TheOption,
+		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::VegaMC(
+			VanillaOptionParameters^% TheOption,
 			Double Spot,
 			Double Vol,
 			Double r,
 			UInt64 NumberOfPaths
 		);
-		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::ImpliedVolatilityMC(VanillaOptionParameters^% TheOption,
+		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::ImpliedVolatilityMC(
+			VanillaOptionParameters^% TheOption,
 			Double Spot,			
 			Double r,
 			UInt64 NumberOfPaths,
 			Double optionPrice
-		);
-		static Random m_random;
+		);		
 	private:
 		static Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholes(
 			Double S, // Current stock price
@@ -127,12 +137,15 @@ namespace ProjectXAnalyticsCppLib {
 			Double T, // Time to expiration
 			Double sigma // Volatility
 		);
-		static Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholesDelta(VanillaOptionParameters^% TheOption,
-			Double Spot,
-			Double Vol,
-			Double r, 
-			Double optionPrice,
-			Double epsilon);
+		static Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholesDelta(
+			Double S, // Current stock price
+			Double K, // Strike price
+			Double r, // Risk-free interest rate
+			Double T, // Time to expiration		
+			Double sigma, // Volatility
+			Double optionPrice, // Option Price
+			Double epsilon // Small change in stock price
+		);
 		static Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholesGamma(
 			Double S, // Current stock price
 			Double K, // Strike price
@@ -155,7 +168,8 @@ namespace ProjectXAnalyticsCppLib {
 			Double T, // Time to expiration
 			Double sigma // Volatility
 		);
-		static Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::RandomStandardNormal();
+		static Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::RandomStandardNormal();		
+	private:
 		static Random^ random = gcnew Random();
 	};
 }

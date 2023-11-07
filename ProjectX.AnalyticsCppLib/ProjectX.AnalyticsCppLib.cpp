@@ -71,7 +71,7 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Delta(VanillaOption
 	double optionPrice = MCValue(TheOption, Spot, Vol, r, NumberOfPaths);
 
 	// Calculate delta using Black-Scholes formula	
-	double delta = BlackScholesDelta(TheOption, Spot, Vol, r, optionPrice, epsilon);
+	double delta = BlackScholesDelta(Spot, TheOption->Strike(), r, TheOption->Expiry(), optionPrice, epsilon, Vol);
 	return delta;
 }
 
@@ -319,18 +319,16 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::ImpliedVolatilityMC
 	return Double::NaN;
 }
 
-Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholesDelta(VanillaOptionParameters^% TheOption,
-	Double Spot,
-	Double Vol,
-	Double r,
-	Double optionPrice,
-	double epsilon)
+Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholesDelta(
+		Double S, // Current stock price
+		Double K, // Strike price
+		Double r, // Risk-free interest rate
+		Double T, // Time to expiration			
+		Double optionPrice, // Option Price
+		Double epsilon, // Small change in stock price
+		Double sigma // Volatility
+)
 {
-	double sigma = Vol;
-	double T = TheOption->Expiry();
-	double S = Spot;
-	double K = TheOption->Strike();
-
 	double d1 = (Math::Log(S / K) + (r + (Math::Pow(sigma, 2) / 2)) * T) / (sigma * Math::Sqrt(T));
 	double delta = Math::Exp(-r * T) * normcdf(d1);
 
