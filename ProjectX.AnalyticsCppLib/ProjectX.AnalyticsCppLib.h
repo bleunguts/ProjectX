@@ -43,5 +43,43 @@ namespace ProjectXAnalyticsCppLib {
 			Double Vol,
 			Double r,
 			UInt64 NumberOfPaths);
+
+		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Delta(VanillaOptionParameters^% TheOption,
+			Double Spot,
+			Double Vol,
+			Double r,
+			Double epsilon,
+			UInt64 NumberOfPaths
+		);
+
+		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Gamma(VanillaOptionParameters^% TheOption,
+			Double Spot,
+			Double Vol,
+			Double r,
+			Double epsilon,
+			UInt64 NumberOfPaths
+		);
+	private:
+		static Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholesDelta(VanillaOptionParameters^% TheOption,
+			Double Spot,
+			Double Vol,
+			Double r, 
+			Double optionPrice,
+			Double epsilon);
+		static Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholesGamma(
+			Double S, // Current stock price
+			Double K, // Strike price
+			Double r, // Risk-free interest rate
+			Double T, // Time to expiration
+			Double sigma, // Volatility
+			Double epsilon // Small change in stock price
+		);
+		static Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholes(
+			Double S, // Current stock price
+			Double K, // Strike price
+			Double r, // Risk-free interest rate
+			Double T, // Time to expiration
+			Double sigma // Volatility
+		);
 	};
 }

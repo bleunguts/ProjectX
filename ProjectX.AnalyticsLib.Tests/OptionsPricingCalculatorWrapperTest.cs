@@ -69,4 +69,182 @@ public class OptionsPricingCalculatorWrapperTest
         var deepOtmPrice = td.calculator.BlackScholes(Core.OptionType.Call, 2, 100, 0.1, 0.04, 2.0, 0.3);        
         Assert.That(deepOtmPrice, Is.EqualTo(0).Within(td.percentError).Percent);
     }
+
+    [TestCaseSource(nameof(VanillaOptionCalculators))]
+    public void WhenCalculatingDeltaForAnOption((IBlackScholesOptionsPricingCalculator calculator, double percentError) td)
+    {       
+        var spot = 100;
+        var strike = 100;
+        var r = 0.05;        
+        var maturity = 1.0;
+        var vol = 0.2;
+        var b = 0.0;
+
+        var call = td.calculator.BlackScholes(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
+        Console.WriteLine($"Price of call is {call}");
+        Assert.That(call, Is.EqualTo(10.4879).Within(td.percentError).Percent);    
+
+        var delta = td.calculator.BlackScholes_Delta(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
+        Console.WriteLine($"Delta of call {delta}");
+        Assert.That(delta, Is.EqualTo(6.3608).Within(td.percentError).Percent);
+    }
+
+    [TestCaseSource(nameof(VanillaOptionCalculators))]
+    public void WhenCalculatingGammaForAnOption((IBlackScholesOptionsPricingCalculator calculator, double percentError) td)
+    {
+        // stock with 6 months expiration, stock price is 100, strike price is 110, risk free interest rate 0.1 per year, continuous dividend yield 0.06 and volatility is 0.3 
+
+        // Generalised model we use b differently
+
+        // b = r: standard Black Scholes 1973 stock option model
+        // b = r - q: gives the Merton 19973 stock option model with contionuous dividend yield q
+
+        var spot = 100;
+        var strike = 110;
+        var r = 0.1;
+        var q = 0.06;
+        var b = r - q;
+        var maturity = 0.5;
+        var vol = 0.3;
+
+        var call = td.calculator.BlackScholes(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
+        Console.WriteLine($"Price of call is {call}");
+        Assert.That(call, Is.EqualTo(6.5312).Within(td.percentError).Percent);
+
+        var put = td.calculator.BlackScholes(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
+        Console.WriteLine($"Price of put is {put}");
+        Assert.That(put, Is.EqualTo(11.155).Within(td.percentError).Percent);
+
+        var gamma = td.calculator.BlackScholes_Gamma(spot, strike, r, b, maturity, vol);
+        Console.WriteLine($"Gamma of call/put {gamma}");
+        Assert.That(gamma, Is.EqualTo(0.01869).Within(td.percentError).Percent);
+    }
+
+
+    [TestCaseSource(nameof(VanillaOptionCalculators))]
+    public void WhenCalculatingThetaForAnOption((IBlackScholesOptionsPricingCalculator calculator, double percentError) td)    
+    {
+        // stock with 6 months expiration, stock price is 100, strike price is 110, risk free interest rate 0.1 per year, continuous dividend yield 0.06 and volatility is 0.3 
+
+        // Generalised model we use b differently
+
+        // b = r: standard Black Scholes 1973 stock option model
+        // b = r - q: gives the Merton 19973 stock option model with contionuous dividend yield q
+
+        var spot = 100;
+        var strike = 110;
+        var r = 0.1;
+        var q = 0.06;
+        var b = r - q;
+        var maturity = 0.5;
+        var vol = 0.3;
+
+        var call = td.calculator.BlackScholes(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
+        Console.WriteLine($"Price of call is {call}");
+        Assert.That(call, Is.EqualTo(5.2515).Within(td.percentError).Percent);
+
+        var put = td.calculator.BlackScholes(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
+        Console.WriteLine($"Price of put is {put}");
+        Assert.That(put, Is.EqualTo(12.8422).Within(td.percentError).Percent);
+
+        var theta = td.calculator.BlackScholes_Theta(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
+        Console.WriteLine($"Theta for a call is {theta}");
+        Assert.That(theta, Is.EqualTo(-8.9962).Within(td.percentError).Percent);
+
+        var thetaPut = td.calculator.BlackScholes_Theta(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
+        Console.WriteLine($"Theta for a Put is {thetaPut}");
+        Assert.That(thetaPut, Is.EqualTo(-4.3554).Within(td.percentError).Percent);
+    }
+
+    [TestCaseSource(nameof(VanillaOptionCalculators))]
+    public void WhenCalculatingRhoForAnoption((IBlackScholesOptionsPricingCalculator calculator, double percentError) td)    
+    {
+        // stock with 6 months expiration, stock price is 100, strike price is 110, risk free interest rate 0.1 per year, continuous dividend yield 0.06 and volatility is 0.3 
+
+        // Generalised model we use b differently
+
+        // b = r: standard Black Scholes 1973 stock option model
+        // b = r - q: gives the Merton 19973 stock option model with contionuous dividend yield q
+
+        var spot = 100;
+        var strike = 110;
+        var r = 0.1;
+        var q = 0.06;
+        var b = r - q;
+        var maturity = 0.5;
+        var vol = 0.3;
+
+        var call = td.calculator.BlackScholes(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
+        Console.WriteLine($"Price of call is {call}");
+        Assert.That(call, Is.EqualTo(5.2515).Within(td.percentError).Percent);
+
+        var put = td.calculator.BlackScholes(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
+        Console.WriteLine($"Price of put is {put}");
+        Assert.That(put, Is.EqualTo(12.8422).Within(td.percentError).Percent);
+
+        var rho = td.calculator.BlackScholes_Rho(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
+        Console.WriteLine($"Rho of call is {rho}");
+        Assert.That(rho, Is.EqualTo(16.8656).Within(td.percentError).Percent);
+
+        var rhoPut = td.calculator.BlackScholes_Rho(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
+        Console.WriteLine($"Rho of put is {rho}");
+        Assert.That(rhoPut, Is.EqualTo(-35.4519).Within(td.percentError).Percent);
+    }
+
+    [TestCaseSource(nameof(VanillaOptionCalculators))]
+    public void WhenCalculatingVegaForAnOption((IBlackScholesOptionsPricingCalculator calculator, double percentError) td)    
+    {
+        // stock with 6 months expiration, stock price is 100, strike price is 110, risk free interest rate 0.1 per year, continuous dividend yield 0.06 and volatility is 0.3 
+
+        // Generalised model we use b differently
+
+        // b = r: standard Black Scholes 1973 stock option model
+        // b = r - q: gives the Merton 19973 stock option model with contionuous dividend yield q
+
+        var spot = 100;
+        var strike = 110;
+        var r = 0.1;
+        var q = 0.06;
+        var b = r - q;
+        var maturity = 0.5;
+        var vol = 0.3;
+
+        var call = td.calculator.BlackScholes(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
+        Console.WriteLine($"Price of call is {call}");
+        Assert.That(call, Is.EqualTo(5.2515).Within(td.percentError).Percent);
+
+        var put = td.calculator.BlackScholes(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
+        Console.WriteLine($"Price of put is {put}");
+        Assert.That(put, Is.EqualTo(12.8422).Within(td.percentError).Percent);
+
+        var vega = td.calculator.BlackScholes_Vega(spot, strike, r, b, maturity, vol);
+        Console.WriteLine($"Vega of call/put is {vega}");
+        Assert.That(vega, Is.EqualTo(27.5649).Within(td.percentError).Percent);
+    }
+
+    [TestCaseSource(nameof(VanillaOptionCalculators))]
+    public void WhenCalculatingImpliedVol((IBlackScholesOptionsPricingCalculator calculator, double percentError) td)    
+    {
+        // stock with 6 months expiration, stock price is 100, strike price is 110, risk free interest rate 0.1 per year, continuous dividend yield 0.06 and volatility is 0.3 
+
+        // Generalised model we use b differently
+
+        // b = r: standard Black Scholes 1973 stock option model
+        // b = r - q: gives the Merton 19973 stock option model with contionuous dividend yield q
+
+        var spot = 100;
+        var strike = 110;
+        var r = 0.1;
+        var q = 0.06;
+        var b = r - q;
+
+        double[] prices = new double[] { 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6 };
+        for (int i = 0; i < 10; i++)
+        {
+            double maturity = (i + 1.0) / 10.0;
+            var price = prices[i];
+            var impliedVol = td.calculator.BlackScholes_ImpliedVol(Core.OptionType.Call, spot, strike, r, b, maturity, price);
+            Console.WriteLine($"ImpliedVol for price {price} and maturity {maturity} is {impliedVol}");
+        }
+    }
 }

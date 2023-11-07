@@ -28,23 +28,21 @@ namespace ProjectX.AnalyticsLib
             sw.Stop();
             Console.WriteLine($"BlackScholes with {_numOfMcPaths} paths took {sw.ElapsedMilliseconds} ms.");
             return value;
-        }
-
-        static ProjectXAnalyticsCppLib.OptionType ToCppOptionType(OptionType optionType) => optionType switch
-        {
-            OptionType.Call => ProjectXAnalyticsCppLib.OptionType.Call,
-            OptionType.Put => ProjectXAnalyticsCppLib.OptionType.Put,
-            _ => throw new NotImplementedException($"{nameof(optionType)} not supported"),
-        };
+        }        
 
         public double BlackScholes_Delta(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
-            throw new NotImplementedException();
+            double epsilon = 0.01;
+            var param = new VanillaOptionParameters(ToCppOptionType(optionType), strike, maturity);
+            var delta = _calculator.Delta(ref param, spot, volatility, rate, epsilon, _numOfMcPaths);
+            return delta;
         }
 
         public double BlackScholes_Gamma(double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
-            throw new NotImplementedException();
+            double epsilon = 0.01;
+            var param = new VanillaOptionParameters(ToCppOptionType(OptionType.Call), strike, maturity);
+            return _calculator.Gamma(ref param, spot, volatility, rate, epsilon, _numOfMcPaths);
         }
 
         public double BlackScholes_ImpliedVol(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double price)
@@ -66,5 +64,12 @@ namespace ProjectX.AnalyticsLib
         {
             throw new NotImplementedException();
         }
+
+        static ProjectXAnalyticsCppLib.OptionType ToCppOptionType(OptionType optionType) => optionType switch
+        {
+            OptionType.Call => ProjectXAnalyticsCppLib.OptionType.Call,
+            OptionType.Put => ProjectXAnalyticsCppLib.OptionType.Put,
+            _ => throw new NotImplementedException($"{nameof(optionType)} not supported"),
+        };
     }
 }
