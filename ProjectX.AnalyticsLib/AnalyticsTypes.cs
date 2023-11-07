@@ -7,6 +7,17 @@ using System.Threading.Tasks;
 
 namespace ProjectX.AnalyticsLib;
 
+public interface IBlackScholesOptionsGreeksCalculator
+{
+    double BlackScholes_PV(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility);
+    double BlackScholes_Delta(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility);
+    double BlackScholes_Gamma(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility);
+    double BlackScholes_ImpliedVol(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double price);
+    double BlackScholes_Rho(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility);
+    double BlackScholes_Theta(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility);
+    double BlackScholes_Vega(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double vol);
+}
+
 public interface IOptionsGreeksCalculator
 {
     double PV(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility);

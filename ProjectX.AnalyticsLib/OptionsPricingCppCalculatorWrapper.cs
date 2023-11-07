@@ -16,7 +16,7 @@ namespace ProjectX.AnalyticsLib
     {
     }
     [Export(typeof(IMonteCarloOptionsPricingCppCalculator)), PartCreationPolicy(CreationPolicy.Shared)]
-    public class OptionsPricingCppCalculatorWrapper : IMonteCarloOptionsPricingCppCalculator
+    public class OptionsPricingCppCalculatorWrapper : IMonteCarloOptionsPricingCppCalculator, IBlackScholesOptionsGreeksCalculator
     {        
         private readonly OptionsPricingCppCalculator _calculator;
         private readonly ulong _numOfMcPaths;
@@ -72,10 +72,10 @@ namespace ProjectX.AnalyticsLib
             return double.IsNaN(theta) ? 0.0 : theta;   
         }
 
-        public double Vega(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double vol)
+        public double Vega(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
             var param = new VanillaOptionParameters(ToNativeOptionType(optionType), strike, maturity);
-            return _calculator.VegaMC(ref param, spot, vol, rate, _numOfMcPaths);
+            return _calculator.VegaMC(ref param, spot, volatility, rate, _numOfMcPaths);
         }
 
         static ProjectXAnalyticsCppLib.OptionType ToNativeOptionType(OptionType optionType) => optionType switch
@@ -84,5 +84,47 @@ namespace ProjectX.AnalyticsLib
             OptionType.Put => ProjectXAnalyticsCppLib.OptionType.Put,
             _ => throw new NotImplementedException($"{nameof(optionType)} not supported"),
         };
+
+        double IBlackScholesOptionsGreeksCalculator.BlackScholes_PV(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
+        {
+            var param = new VanillaOptionParameters(ToNativeOptionType(optionType), strike, maturity);
+            return _calculator.MCValue(ref param, spot, volatility, rate, _numOfMcPaths);
+        }
+
+        double IBlackScholesOptionsGreeksCalculator.BlackScholes_Delta(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
+        {
+            var param = new VanillaOptionParameters(ToNativeOptionType(optionType), strike, maturity);
+            return _calculator.Delta(ref param, spot, volatility, rate, _numOfMcPaths);
+        }
+
+        double IBlackScholesOptionsGreeksCalculator.BlackScholes_Gamma(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
+        {
+            var param = new VanillaOptionParameters(ToNativeOptionType(optionType), strike, maturity);
+            return _calculator.Gamma(ref param, spot, volatility, rate, _numOfMcPaths);
+        }
+
+        double IBlackScholesOptionsGreeksCalculator.BlackScholes_ImpliedVol(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double price)
+        {
+            var param = new VanillaOptionParameters(ToNativeOptionType(optionType), strike, maturity);            
+            return _calculator.ImpliedVolatility(ref param, spot, rate, _numOfMcPaths, price);
+        }
+
+        double IBlackScholesOptionsGreeksCalculator.BlackScholes_Rho(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
+        {
+            var param = new VanillaOptionParameters(ToNativeOptionType(optionType), strike, maturity);
+            return _calculator.Rho(ref param, spot, volatility, rate, _numOfMcPaths);
+        }
+
+        double IBlackScholesOptionsGreeksCalculator.BlackScholes_Theta(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
+        {
+            var param = new VanillaOptionParameters(ToNativeOptionType(optionType), strike, maturity);
+            return _calculator.Theta(ref param, spot, volatility, rate, _numOfMcPaths);
+        }
+
+        double IBlackScholesOptionsGreeksCalculator.BlackScholes_Vega(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
+        {
+            var param = new VanillaOptionParameters(ToNativeOptionType(optionType), strike, maturity);
+            return _calculator.Vega(ref param, spot, volatility, rate, _numOfMcPaths);
+        }
     }
 }

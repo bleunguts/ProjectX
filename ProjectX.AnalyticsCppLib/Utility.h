@@ -1,6 +1,10 @@
 #pragma once
+#include <cmath>
+#include <random>
+
 using namespace System;
 
+// unused - using std:erfc instead
 static double Erf(double z)
 {
     double t = 1.0 / (1.0 + 0.5 * Math::Abs(z));
@@ -21,13 +25,13 @@ static double Erf(double z)
 
 // Function to calculate the cumulative distribution function of the standard normal distribution
 static double normcdf(double x)
-{
-    return 0.5 * (1.0 + Erf(x / Math::Sqrt(2.0)));
+{    
+    return 0.5 * (1.0 + std::erfc(x / Math::Sqrt(2.0)));
 };
 
 // Function to calculate the probability density function of the standard normal distribution
 static double normpdf(double x)
-{
+{        
     return (1.0 / (Math::Sqrt(2.0 * Math::PI))) * Math::Exp(-0.5 * x * x);
 }
 

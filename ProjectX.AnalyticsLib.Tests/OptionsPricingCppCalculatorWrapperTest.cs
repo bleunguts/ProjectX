@@ -44,26 +44,7 @@ public class OptionsPricingCppCalculatorWrapperTest
     }
 
     [TestCaseSource(nameof(VanillaOptionCalculators))]
-    public void WhenCalculatingDeltaForAnOption((IOptionsGreeksCalculator calculator, double percentError) td)
-    {       
-        var spot = 100;
-        var strike = 100;
-        var r = 0.05;        
-        var maturity = 1.0;
-        var vol = 0.2;
-        var b = 0.0;
-
-        var call = td.calculator.PV(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
-        Console.WriteLine($"Price of call is {call}");
-        Assert.That(call, Is.EqualTo(10.4879).Within(td.percentError).Percent);    
-
-        var delta = td.calculator.Delta(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
-        Console.WriteLine($"Delta of call {delta}");
-        Assert.That(delta, Is.EqualTo(0.0317).Within(1.5));
-    }
-
-    [TestCaseSource(nameof(VanillaOptionCalculators))]
-    public void WhenCalculatingGammaForAnOption((IOptionsGreeksCalculator calculator, double percentError) td)
+    public void WhenCalculatingAllGreeksForAnOptionShouldBeSimilarToCSharpVersion((IOptionsGreeksCalculator calculator, double percentError) td)
     {
         // stock with 6 months expiration, stock price is 100, strike price is 110, risk free interest rate 0.1 per year, continuous dividend yield 0.06 and volatility is 0.3 
 
@@ -80,6 +61,7 @@ public class OptionsPricingCppCalculatorWrapperTest
         var maturity = 0.5;
         var vol = 0.3;
 
+        // PV
         var call = td.calculator.PV(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Price of call is {call}");
         Assert.That(call, Is.EqualTo(6.5312).Within(td.percentError).Percent);
@@ -88,38 +70,21 @@ public class OptionsPricingCppCalculatorWrapperTest
         Console.WriteLine($"Price of put is {put}");
         Assert.That(put, Is.EqualTo(11.155).Within(td.percentError).Percent);
 
+        // Delta
+        var delta = td.calculator.Delta(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
+        Console.WriteLine($"Delta of call {delta}");
+        Assert.That(delta, Is.EqualTo(0.0317).Within(1.5));
+
+        var deltaPut = td.calculator.Delta(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
+        Console.WriteLine($"Delta of put {deltaPut}");
+        Assert.That(deltaPut, Is.EqualTo(0.0317).Within(1.5));
+
+        // Gamma
         var gamma = td.calculator.Gamma(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Gamma of call/put {gamma}");
         Assert.That(gamma, Is.EqualTo(0.038).Within(1));
-    }
 
-
-    [TestCaseSource(nameof(VanillaOptionCalculators))]
-    public void WhenCalculatingThetaForAnOption((IOptionsGreeksCalculator calculator, double percentError) td)    
-    {
-        // stock with 6 months expiration, stock price is 100, strike price is 110, risk free interest rate 0.1 per year, continuous dividend yield 0.06 and volatility is 0.3 
-
-        // Generalised model we use b differently
-
-        // b = r: standard Black Scholes 1973 stock option model
-        // b = r - q: gives the Merton 19973 stock option model with contionuous dividend yield q
-
-        var spot = 100;
-        var strike = 110;
-        var r = 0.1;
-        var q = 0.06;
-        var b = r - q;
-        var maturity = 0.5;
-        var vol = 0.3;
-
-        var call = td.calculator.PV(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
-        Console.WriteLine($"Price of call is {call}");
-        Assert.That(call, Is.EqualTo(6.5217).Within(td.percentError).Percent);
-
-        var put = td.calculator.PV(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
-        Console.WriteLine($"Price of put is {put}");
-        Assert.That(put, Is.EqualTo(11.1553).Within(td.percentError).Percent);
-
+        // Theta
         var theta = td.calculator.Theta(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Theta for a call is {theta}");
         Assert.That(theta, Is.EqualTo(-12.3338).Within(td.percentError).Percent);
@@ -127,34 +92,8 @@ public class OptionsPricingCppCalculatorWrapperTest
         var thetaPut = td.calculator.Theta(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Theta for a Put is {thetaPut}");
         Assert.That(thetaPut, Is.EqualTo(-12.3338).Within(td.percentError).Percent);
-    }
 
-    [TestCaseSource(nameof(VanillaOptionCalculators))]
-    public void WhenCalculatingRhoForAnoption((IOptionsGreeksCalculator calculator, double percentError) td)    
-    {
-        // stock with 6 months expiration, stock price is 100, strike price is 110, risk free interest rate 0.1 per year, continuous dividend yield 0.06 and volatility is 0.3 
-
-        // Generalised model we use b differently
-
-        // b = r: standard Black Scholes 1973 stock option model
-        // b = r - q: gives the Merton 19973 stock option model with contionuous dividend yield q
-
-        var spot = 100;
-        var strike = 110;
-        var r = 0.1;
-        var q = 0.06;
-        var b = r - q;
-        var maturity = 0.5;
-        var vol = 0.3;
-
-        var call = td.calculator.PV(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
-        Console.WriteLine($"Price of call is {call}");
-        Assert.That(call, Is.EqualTo(6.5562).Within(td.percentError).Percent);
-
-        var put = td.calculator.PV(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
-        Console.WriteLine($"Price of put is {put}");
-        Assert.That(put, Is.EqualTo(11.15532).Within(td.percentError).Percent);
-
+        // Rho
         var rho = td.calculator.Rho(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Rho of call is {rho}");
         Assert.That(rho, Is.EqualTo(-14.0376).Within(60));
@@ -162,34 +101,8 @@ public class OptionsPricingCppCalculatorWrapperTest
         var rhoPut = td.calculator.Rho(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Rho of put is {rho}");
         Assert.That(rhoPut, Is.EqualTo(19.5988).Within(60));
-    }
 
-    [TestCaseSource(nameof(VanillaOptionCalculators))]
-    public void WhenCalculatingVegaForAnOption((IOptionsGreeksCalculator calculator, double percentError) td)    
-    {
-        // stock with 6 months expiration, stock price is 100, strike price is 110, risk free interest rate 0.1 per year, continuous dividend yield 0.06 and volatility is 0.3 
-
-        // Generalised model we use b differently
-
-        // b = r: standard Black Scholes 1973 stock option model
-        // b = r - q: gives the Merton 19973 stock option model with contionuous dividend yield q
-
-        var spot = 100;
-        var strike = 110;
-        var r = 0.1;
-        var q = 0.06;
-        var b = r - q;
-        var maturity = 0.5;
-        var vol = 0.3;
-
-        var call = td.calculator.PV(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
-        Console.WriteLine($"Price of call is {call}");
-        Assert.That(call, Is.EqualTo(6.49988).Within(td.percentError).Percent);
-
-        var put = td.calculator.PV(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
-        Console.WriteLine($"Price of put is {put}");
-        Assert.That(put, Is.EqualTo(11.1553).Within(td.percentError).Percent);
-
+        // Vega
         var vega = td.calculator.Vega(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Vega of call/put is {vega}");
         Assert.That(vega, Is.EqualTo(27.7411).Within(10).Percent);
