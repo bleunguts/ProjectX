@@ -88,7 +88,7 @@ namespace ProjectX.AnalyticsLib
         double IBlackScholesOptionsGreeksCalculator.BlackScholes_PV(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
             var param = new VanillaOptionParameters(ToNativeOptionType(optionType), strike, maturity);
-            return _calculator.MCValue(ref param, spot, volatility, rate, _numOfMcPaths);
+            return _calculator.Value(ref param, spot, volatility, rate);
         }
 
         double IBlackScholesOptionsGreeksCalculator.BlackScholes_Delta(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)

@@ -44,6 +44,11 @@ namespace ProjectXAnalyticsCppLib {
 			Double Vol,
 			Double r,
 			UInt64 NumberOfPaths);
+		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Value(
+			VanillaOptionParameters^% TheOption,
+			Double Spot,
+			Double Vol,
+			Double r);
 		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Delta(
 			VanillaOptionParameters^% TheOption,
 			Double Spot,

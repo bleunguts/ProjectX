@@ -9,47 +9,47 @@ public class OptionsPricingCppCalculatorWrapperTest
         NumOfMcPaths = 250000, 
         RandomAlgo = RandomAlgorithm.BoxMuller 
     });
-    static IEnumerable<(IOptionsGreeksCalculator calculator, double percentError)> VanillaOptionCalculators()
+    static IEnumerable<(IOptionsGreeksCalculator calc, double percentError)> VanillaOptionCalculators()
     {
         yield return (new BlackScholesOptionsPricingCalculator(), 1.0);
         yield return (new OptionsPricingCppCalculatorWrapper(options), 50);
     }
     
     [TestCaseSource(nameof(VanillaOptionCalculators))]
-    public void WhenPricingACallOptionRealWorldExampleShouldReturnSimilarValuesToCSharpVersion((IOptionsGreeksCalculator calculator, double percentError) td)
+    public void WhenPricingACallOptionRealWorldExampleShouldReturnSimilarValuesToCSharpVersion((IOptionsGreeksCalculator calc, double percentError) td)
     {
         // Based on real number example http://financetrain.com/option-pricing-using-monte-carlo-simulation/
-        // Result approx 9.95
-        var realExamplePrice = td.calculator.PV(Core.OptionType.Call, 195.0, 200.0, 0.05, 0.0, 0.25, 0.3);
+        // Result approx 9.95        
+        var realExamplePrice = td.calc.PV(Core.OptionType.Call, 195.0, 200.0, 0.05, 0.0, 0.25, 0.3);
         Assert.That(realExamplePrice, Is.EqualTo(9.35).Within(15).Percent);        
     }    
     
     [TestCaseSource(nameof(VanillaOptionCalculators))]
-    public void WhenPricingACallOptionShouldBehaveSameAsCSharpVersion((IOptionsGreeksCalculator calculator, double percentError) td)
+    public void WhenPricingACallOptionShouldBehaveSameAsCSharpVersion((IOptionsGreeksCalculator calc, double percentError) td)
     {        
         // For a call option that is deep ITM price is gt 0 should be expensive
-        var deepItmPrice = td.calculator.PV(Core.OptionType.Call, 510, 100, 0.1, 0.04, 2.0, 0.3);
+        var deepItmPrice = td.calc.PV(Core.OptionType.Call, 510, 100, 0.1, 0.04, 2.0, 0.3);
         Assert.That(deepItmPrice, Is.EqualTo(370.45684).Within(td.percentError).Percent);
 
         // For a call option that is ITM price is gt 0 should be relative expensive
-        var itmPrice = td.calculator.PV(Core.OptionType.Call, 110, 100, 0.1, 0.04, 2.0, 0.3);
+        var itmPrice = td.calc.PV(Core.OptionType.Call, 110, 100, 0.1, 0.04, 2.0, 0.3);
         Assert.That(itmPrice, Is.EqualTo(24.16204).Within(td.percentError).Percent);
 
         // For a call option that is ATM price is gt 0 should be fair priced
-        var atmPrice = td.calculator.PV(Core.OptionType.Call, 100, 100, 0.1, 0.04, 2.0, 0.3);
+        var atmPrice =  td.calc.PV(Core.OptionType.Call, 100, 100, 0.1, 0.04, 2.0, 0.3);
         Assert.That(atmPrice, Is.EqualTo(17.9866).Within(td.percentError).Percent);
 
         // For a call option that is OTM price is cheaper
-        var otmPrice = td.calculator.PV(Core.OptionType.Call, 70, 100, 0.1, 0.04, 2.0, 0.3);
+        var otmPrice = td.calc.PV(Core.OptionType.Call, 70, 100, 0.1, 0.04, 2.0, 0.3);
         Assert.That(otmPrice, Is.EqualTo(4.62534).Within(td.percentError).Percent);
 
         // For a call option that is Deep OTM price is worthless
-        var deepOtmPrice = td.calculator.PV(Core.OptionType.Call, 2, 100, 0.1, 0.04, 2.0, 0.3);        
+        var deepOtmPrice = td.calc.PV(Core.OptionType.Call, 2, 100, 0.1, 0.04, 2.0, 0.3);        
         Assert.That(deepOtmPrice, Is.EqualTo(0).Within(td.percentError).Percent);
     }
 
-    [TestCaseSource(nameof(VanillaOptionCalculators))]
-    public void WhenCalculatingAllGreeksForAnOptionShouldBeSimilarToCSharpVersion((IOptionsGreeksCalculator calculator, double percentError) td)
+    [Test]
+    public void WhenCalculatingAllGreeksForAnOptionShouldBeSimilarToCSharpVersion()
     {
         // stock with 6 months expiration, stock price is 100, strike price is 110, risk free interest rate 0.1 per year, continuous dividend yield 0.06 and volatility is 0.3 
 
@@ -71,78 +71,84 @@ public class OptionsPricingCppCalculatorWrapperTest
         const double toleranceRho = 20_000; // needs investigation
         const double toleranceGamma = 2;
         const double toleranceVega = 7500; // needss investigation
-
-        IOptionsGreeksCalculator calculator = td.calculator;
-        IBlackScholesOptionsGreeksCalculator? bsCalculator = calculator as IBlackScholesOptionsGreeksCalculator;
+        
+        IOptionsGreeksCalculator calc = new BlackScholesOptionsPricingCalculator();
+        IOptionsGreeksCalculator mcCpp = new OptionsPricingCppCalculatorWrapper(options); 
+        IBlackScholesOptionsGreeksCalculator? bsCpp = (IBlackScholesOptionsGreeksCalculator) mcCpp;
 
         // PV       
-        var call = calculator.PV(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
+        var call = calc.PV(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Price of call is {call}");
-        Assert.That(call, Is.EqualTo(5.2515).Within(tolerancePV));
-        if (bsCalculator != null)
-            Console.WriteLine($"Price of call [BS] is {bsCalculator.BlackScholes_PV(Core.OptionType.Call, spot, strike, r, b, maturity, vol)}");
+        Assert.That(call, Is.EqualTo(5.2515).Within(tolerancePV));        
+        Console.WriteLine($"Price of call [MC++] is {mcCpp.PV(Core.OptionType.Call, spot, strike, r, b, maturity, vol)}");
+        Console.WriteLine($"Price of call [BS++] is {bsCpp.BlackScholes_PV(Core.OptionType.Call, spot, strike, r, b, maturity, vol)}");
 
-        var put = td.calculator.PV(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
+        var put = calc.PV(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Price of put is {put}");
-        Assert.That(put, Is.EqualTo(12.8422).Within(tolerancePV));
-        if (bsCalculator != null)
-            Console.WriteLine($"Price of put [BS] is {bsCalculator.BlackScholes_PV(Core.OptionType.Put, spot, strike, r, b, maturity, vol)}");
+        Assert.That(put, Is.EqualTo(12.8422).Within(tolerancePV));        
+        Console.WriteLine($"Price of put [MC++] is {mcCpp.PV(Core.OptionType.Put, spot, strike, r, b, maturity, vol)}");
+        Console.WriteLine($"Price of put [BS++] is {bsCpp.BlackScholes_PV(Core.OptionType.Put, spot, strike, r, b, maturity, vol)}");
 
         // Delta
-        var delta = td.calculator.Delta(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
+        var delta = calc.Delta(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Delta of call is {delta}");
-        Assert.That(delta, Is.EqualTo(0.0317).Within(toleranceDelta));
-        if (bsCalculator != null)
-            Console.WriteLine($"Delta of call [BS] is {bsCalculator.BlackScholes_Delta(Core.OptionType.Call, spot, strike, r, b, maturity, vol)}");
+        Assert.That(delta, Is.EqualTo(0.0317).Within(toleranceDelta));       
+        Console.WriteLine($"Delta of call [MC++] is {mcCpp.Delta(Core.OptionType.Call, spot, strike, r, b, maturity, vol)}");
+        Console.WriteLine($"Delta of call [BS++] is {bsCpp.BlackScholes_Delta(Core.OptionType.Call, spot, strike, r, b, maturity, vol)}");
 
-        var deltaPut = td.calculator.Delta(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
+        var deltaPut = calc.Delta(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Delta of put is {deltaPut}");
         Assert.That(deltaPut, Is.EqualTo(0.0317).Within(toleranceDelta));
-        if (bsCalculator != null)
-            Console.WriteLine($"Delta of put [BS] is {bsCalculator.BlackScholes_Delta(Core.OptionType.Put, spot, strike, r, b, maturity, vol)}");
+        Console.WriteLine($"Delta of put [MC++] is {mcCpp.Delta(Core.OptionType.Put, spot, strike, r, b, maturity, vol)}");
+        Console.WriteLine($"Delta of put [BS++] is {bsCpp.BlackScholes_Delta(Core.OptionType.Put, spot, strike, r, b, maturity, vol)}");
 
         // Gamma
-        var gamma = td.calculator.Gamma(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
+        var gamma = calc.Gamma(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Gamma of call/put {gamma}");
         Assert.That(gamma, Is.EqualTo(0.038).Within(toleranceGamma));
-        if (bsCalculator != null)
-            Console.WriteLine($"Gamma of call/put [BS] is {bsCalculator.BlackScholes_Gamma(Core.OptionType.Call, spot, strike, r, b, maturity, vol)}");
+        Console.WriteLine($"Gamma of call/put [MC++] is {mcCpp.Gamma(Core.OptionType.Call, spot, strike, r, b, maturity, vol)}");
+        Console.WriteLine($"Gamma of call/put [BS++] is {bsCpp.BlackScholes_Gamma(Core.OptionType.Call, spot, strike, r, b, maturity, vol)}");
 
         /*
          * TODO: Fix For Theta
          */
         // Theta
-        var theta = td.calculator.Theta(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
-        Console.WriteLine($"Theta for a call is {theta}");        
+        var theta = calc.Theta(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
+        Console.WriteLine($"Theta for a call is {theta}");
         //Assert.That(theta, Is.EqualTo(-12.3338).Within(td.percentError).Percent);
+        Console.WriteLine($"Theta for a call [MC++] is {mcCpp.Theta(Core.OptionType.Call, spot, strike, r, b, maturity, vol)}");
+        Console.WriteLine($"Theta for a call [BS++] is {bsCpp.BlackScholes_Theta(Core.OptionType.Call, spot, strike, r, b, maturity, vol)}");
 
-        var thetaPut = td.calculator.Theta(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
+
+        var thetaPut = calc.Theta(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Theta for a Put is {thetaPut}");
         //Assert.That(thetaPut, Is.EqualTo(-12.3338).Within(td.percentError).Percent);        
+        Console.WriteLine($"Theta for a put [MC++] is {mcCpp.Theta(Core.OptionType.Put, spot, strike, r, b, maturity, vol)}");
+        Console.WriteLine($"Theta for a put [BS++] is {bsCpp.BlackScholes_Theta(Core.OptionType.Put, spot, strike, r, b, maturity, vol)}");
 
         // Rho
-        var rho = td.calculator.Rho(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
+        var rho = calc.Rho(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Rho of call is {rho}");
-        Assert.That(rho, Is.EqualTo(-14.0376).Within(toleranceRho));
-        if (bsCalculator != null)
-            Console.WriteLine($"Rho of call [BS] is {bsCalculator.BlackScholes_Rho(Core.OptionType.Call, spot, strike, r, b, maturity, vol)}");
+        Assert.That(rho, Is.EqualTo(-14.0376).Within(toleranceRho));        
+        Console.WriteLine($"Rho of call [MC++] is {mcCpp.Rho(Core.OptionType.Call, spot, strike, r, b, maturity, vol)}");
+        Console.WriteLine($"Rho of call [BS++] is {bsCpp.BlackScholes_Rho(Core.OptionType.Call, spot, strike, r, b, maturity, vol)}");
 
-        var rhoPut = td.calculator.Rho(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
+        var rhoPut = calc.Rho(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Rho of put is {rho}");
         Assert.That(rhoPut, Is.EqualTo(19.5988).Within(toleranceRho));
-        if (bsCalculator != null)
-            Console.WriteLine($"Rho of put [BS] is {bsCalculator.BlackScholes_Rho(Core.OptionType.Put, spot, strike, r, b, maturity, vol)}");
+        Console.WriteLine($"Rho of put [MC++] is {mcCpp.Rho(Core.OptionType.Put, spot, strike, r, b, maturity, vol)}");
+        Console.WriteLine($"Rho of put [BS++] is {bsCpp.BlackScholes_Rho(Core.OptionType.Put, spot, strike, r, b, maturity, vol)}");
 
         // Vega
-        var vega = td.calculator.Vega(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
+        var vega = calc.Vega(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Vega of call/put is {vega}");
-        Assert.That(vega, Is.EqualTo(27.7411).Within(toleranceVega));
-        if (bsCalculator != null)
-            Console.WriteLine($"Vega of call/put [BS] is {bsCalculator.BlackScholes_Vega(Core.OptionType.Call, spot, strike, r, b, maturity, vol)}");
+        Assert.That(vega, Is.EqualTo(27.7411).Within(toleranceVega));       
+        Console.WriteLine($"Vega of call/put [MC++] is {mcCpp.Vega(Core.OptionType.Call, spot, strike, r, b, maturity, vol)}");
+        Console.WriteLine($"Vega of call/put [BS++] is {bsCpp.BlackScholes_Vega(Core.OptionType.Call, spot, strike, r, b, maturity, vol)}");
     }
 
     [TestCaseSource(nameof(VanillaOptionCalculators))]
-    public void WhenCalculatingImpliedVol((IOptionsGreeksCalculator calculator, double percentError) td)    
+    public void WhenCalculatingImpliedVol((IOptionsGreeksCalculator calc, double percentError) td)    
     {
         // stock with 6 months expiration, stock price is 100, strike price is 110, risk free interest rate 0.1 per year, continuous dividend yield 0.06 and volatility is 0.3 
 
@@ -175,7 +181,7 @@ public class OptionsPricingCppCalculatorWrapperTest
         {
             double maturity = (i + 1.0) / 10.0;
             var price = prices[i];
-            var impliedVol = td.calculator.ImpliedVol(Core.OptionType.Call, spot, strike, r, b, maturity, price);
+            var impliedVol = td.calc.ImpliedVol(Core.OptionType.Call, spot, strike, r, b, maturity, price);
             Console.WriteLine($"ImpliedVol for price {price} and maturity {maturity} is {impliedVol}");
             /*
                     ImpliedVol for price 0.15 and maturity 0.1 is 0.18365478515625

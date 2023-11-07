@@ -59,6 +59,15 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::MCValue(VanillaOpti
 	return mean;
 }
 
+Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Value(
+	VanillaOptionParameters^% TheOption,
+	Double Spot,
+	Double Vol,
+	Double r) 
+{
+	return BlackScholesFunctions::BlackScholes(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
+}
+
 Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Delta(VanillaOptionParameters^% TheOption,
 	Double Spot,
 	Double Vol,
