@@ -26,7 +26,7 @@ namespace ProjectX.AnalyticsLib
         {
             var algo = options?.Value?.RandomAlgo ?? RandomAlgorithm.BoxMuller;
             _calculator = new OptionsPricingCppCalculator(new RandomWalk(algo));
-            _numOfMcPaths = options?.Value?.NumOfMcPaths ?? 10_000;
+            _numOfMcPaths = options?.Value?.NumOfMcPaths ?? 1000;
         }
         public double PV(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
