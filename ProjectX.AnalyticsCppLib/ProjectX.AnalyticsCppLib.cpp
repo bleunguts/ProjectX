@@ -59,38 +59,51 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::MCValue(VanillaOpti
 	return mean;
 }
 
-Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholesDelta(VanillaOptionParameters^% TheOption,
-	Double Spot,
-	Double Vol,
-	Double r,
-	Double optionPrice,
-	double epsilon) 
-{
-	double sigma = Vol;
-	double T = TheOption->Expiry();
-	double S = Spot;
-	double K = TheOption->Strike();
-
-	double d1 = (Math::Log(S / K) + (r + (Math::Pow(sigma, 2) / 2)) * T) / (sigma * Math::Sqrt(T));
-	double delta = Math::Exp(-r * T) * normcdf(d1);
-
-	return delta * optionPrice + (optionPrice - delta * optionPrice) / (S + epsilon - K) * (S - K);
-}
-
 Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Delta(VanillaOptionParameters^% TheOption,
 	Double Spot,
 	Double Vol,
-	Double r,
-	Double epsilon,
+	Double r,	
 	UInt64 NumberOfPaths
 ) 
 {
+	double epsilon = 0.01; // Small change in stock price
 	// Calculate the option price using Monte Carlo simulation
 	double optionPrice = MCValue(TheOption, Spot, Vol, r, NumberOfPaths);
 
 	// Calculate delta using Black-Scholes formula	
 	double delta = BlackScholesDelta(TheOption, Spot, Vol, r, optionPrice, epsilon);
 	return delta;
+}
+
+Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::DeltaMC(VanillaOptionParameters^% TheOption,
+	Double Spot,
+	Double Vol,
+	Double r,	
+	UInt64 NumberOfPaths // Number of Monte Carlo simulations
+)
+{
+	double S = Spot;
+	double sigma = Vol;
+	double T = TheOption->Expiry();
+	double K = TheOption->Strike();
+	double epsilon = 0.01; // Small change in stock price
+	double deltaSum = 0.0;
+
+	for (int i = 0; i < NumberOfPaths; i++)
+	{
+		double randNorm = RandomStandardNormal();
+		double ST = S * Math::Exp((r - (Math::Pow(sigma, 2) / 2)) * T + sigma * Math::Sqrt(T) * randNorm);
+		double payoff = Math::Max(ST - K, 0.0);
+		double priceUp = Math::Exp(-r * T) * payoff;
+
+		ST = S * Math::Exp((r - (Math::Pow(sigma, 2) / 2)) * T - sigma * Math::Sqrt(T) * randNorm);
+		payoff = Math::Max(ST - K, 0.0);
+		double priceDown = Math::Exp(-r * T) * payoff;
+
+		deltaSum += (priceUp - priceDown) / (2.0 * epsilon);
+	}
+
+	return deltaSum / NumberOfPaths;
 }
 
 Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Gamma(VanillaOptionParameters^% TheOption,
@@ -103,6 +116,41 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Gamma(VanillaOption
 	double gamma = BlackScholesGamma(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol, epsilon);
 	return gamma;
 }
+
+
+// Function to calculate Gamma using Monte Carlo simulation
+Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::GammaMC(
+	VanillaOptionParameters^% TheOption,
+	Double Spot,
+	Double Vol,
+	Double r,		
+	UInt64 NumberOfPaths // Number of Monte Carlo simulations
+)
+{
+	double S = Spot;
+	double sigma = Vol;
+	double T = TheOption->Expiry();
+	double K = TheOption->Strike();
+	double epsilon = 0.01; // Small change in stock price
+	double gammaSum = 0.0;
+
+	for (int i = 0; i < NumberOfPaths; i++)
+	{
+		double randNorm = RandomStandardNormal();
+		double ST = S * Math::Exp((r - (Math::Pow(sigma, 2) / 2)) * T + sigma * Math::Sqrt(T) * randNorm);
+		double payoff = Math::Max(ST - K, 0.0);
+		double priceUp = Math::Exp(-r * T) * payoff;
+
+		ST = S * Math::Exp((r - (Math::Pow(sigma, 2) / 2)) * T - sigma * Math::Sqrt(T) * randNorm);
+		payoff = Math::Max(ST - K, 0.0);
+		double priceDown = Math::Exp(-r * T) * payoff;
+
+		gammaSum += ((priceUp - priceDown) / (2.0 * epsilon)) / (2.0 * S * epsilon);
+	}
+
+	return gammaSum / NumberOfPaths;
+}
+
 
 Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Rho(VanillaOptionParameters^% TheOption,
 	Double Spot,
@@ -117,6 +165,33 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Rho(VanillaOptionPa
 	return rho;
 }
 
+// Function to calculate Rho using Monte Carlo simulation
+Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::RhoMC(VanillaOptionParameters^% TheOption,
+	Double Spot,
+	Double Vol,
+	Double r,
+	UInt64 NumberOfPaths
+)
+{
+	double S = Spot;
+	double sigma = Vol;
+	double T = TheOption->Expiry();
+	double K = TheOption->Strike();
+	double epsilon = 0.01; // Small change in interest rate
+	double rhoSum = 0.0;
+
+	for (int i = 0; i < NumberOfPaths; i++)
+	{
+		double randNorm = RandomStandardNormal();
+		double ST = S * Math::Exp((r - (Math::Pow(sigma, 2) / 2)) * T + sigma * Math::Sqrt(T) * randNorm);
+		double payoff = Math::Max(ST - K, 0.0);
+		double priceUp = Math::Exp(-(r + epsilon) * T) * payoff;
+
+		rhoSum += (priceUp - BlackScholes(S, K, r, T, sigma)) / (epsilon * r);
+	}
+
+	return rhoSum / NumberOfPaths;
+}
 Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Theta(VanillaOptionParameters^% TheOption,
 	Double Spot,
 	Double Vol,
@@ -129,6 +204,44 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Theta(VanillaOption
 	double theta = BlackScholesTheta(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
 	return theta;
 }
+Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::ThetaMC(
+	VanillaOptionParameters^% TheOption,
+	Double Spot,
+	Double Vol,
+	Double r,
+	UInt64 NumberOfPaths,
+	Double timeStep // Time step for simulation
+)
+{
+	double S = Spot;
+	double sigma = Vol;
+	double T = TheOption->Expiry();
+	double K = TheOption->Strike();
+	double thetaSum = 0.0;
+
+	for (int i = 0; i < NumberOfPaths; i++)
+	{
+		double t = 0;
+		double ST = S;
+		double payoff = Math::Max(ST - K, 0.0);
+		double price = Math::Exp(-r * t) * payoff;
+
+		while (t < T)
+		{
+			double randNorm = RandomStandardNormal();
+			ST = ST * Math::Exp((r - (Math::Pow(sigma, 2) / 2)) * timeStep + sigma * Math::Sqrt(timeStep) * randNorm);
+			t += timeStep;
+
+			payoff = Math::Max(ST - K, 0.0);
+			price = Math::Exp(-r * t) * payoff;
+		}		
+		double PV = BlackScholes(S, K, r, Math::Round(T - t, 6, System::MidpointRounding::ToZero), sigma);
+		thetaSum += (price - PV);
+	}
+
+	return thetaSum / NumberOfPaths;
+}
+
 
 Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Vega(VanillaOptionParameters^% TheOption,
 	Double Spot,
@@ -141,6 +254,34 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Vega(VanillaOptionP
 
 	double vega = BlackScholesVega(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
 	return vega;
+}
+
+// Function to calculate Vega using Monte Carlo simulation
+Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::VegaMC(VanillaOptionParameters^% TheOption,
+	Double Spot,
+	Double Vol,
+	Double r,
+	UInt64 NumberOfPaths
+)
+{
+	double S = Spot;
+	double sigma = Vol;
+	double T = TheOption->Expiry();
+	double K = TheOption->Strike();
+	double epsilon = 0.01; // Small change in volatility
+	double vegaSum = 0.0;
+
+	for (int i = 0; i < NumberOfPaths; i++)
+	{
+		double randNorm = RandomStandardNormal();
+		double ST = S * Math::Exp((r - (Math::Pow(sigma + epsilon, 2) / 2)) * T + (sigma + epsilon) * Math::Sqrt(T) * randNorm);
+		double payoff = Math::Max(ST - K, 0.0);
+		double priceUp = Math::Exp(-r * T) * payoff;
+
+		vegaSum += (priceUp - BlackScholes(S, K, r, T, sigma)) / epsilon;
+	}
+
+	return vegaSum / NumberOfPaths;
 }
 
 // Function to calculate implied volatility using a Monte Carlo simulation
@@ -176,6 +317,24 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::ImpliedVolatilityMC
 
 	// If the maximum number of simulations is reached, return NaN (no solution found).
 	return Double::NaN;
+}
+
+Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholesDelta(VanillaOptionParameters^% TheOption,
+	Double Spot,
+	Double Vol,
+	Double r,
+	Double optionPrice,
+	double epsilon)
+{
+	double sigma = Vol;
+	double T = TheOption->Expiry();
+	double S = Spot;
+	double K = TheOption->Strike();
+
+	double d1 = (Math::Log(S / K) + (r + (Math::Pow(sigma, 2) / 2)) * T) / (sigma * Math::Sqrt(T));
+	double delta = Math::Exp(-r * T) * normcdf(d1);
+
+	return delta * optionPrice + (optionPrice - delta * optionPrice) / (S + epsilon - K) * (S - K);
 }
 
 // Black-Scholes formula to calculate the option price

@@ -45,9 +45,21 @@ namespace ProjectXAnalyticsCppLib {
 		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Delta(VanillaOptionParameters^% TheOption,
 			Double Spot,
 			Double Vol,
-			Double r,
-			Double epsilon,
+			Double r,			
 			UInt64 NumberOfPaths
+		);
+		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::DeltaMC(VanillaOptionParameters^% TheOption,
+			Double Spot,
+			Double Vol,
+			Double r,
+			UInt64 NumberOfPaths
+		);
+		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::GammaMC(
+			VanillaOptionParameters^% TheOption,
+			Double Spot,
+			Double Vol,
+			Double r,
+			UInt64 NumberOfPaths // Number of Monte Carlo simulations
 		);
 		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Gamma(VanillaOptionParameters^% TheOption,
 			Double Spot,
@@ -61,13 +73,33 @@ namespace ProjectXAnalyticsCppLib {
 			Double r,
 			UInt64 NumberOfPaths
 		);
+		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::RhoMC(VanillaOptionParameters^% TheOption,
+			Double Spot,
+			Double Vol,
+			Double r,
+			UInt64 NumberOfPaths
+		);
 		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Theta(VanillaOptionParameters^% TheOption,
 			Double Spot,
 			Double Vol,
 			Double r,
 			UInt64 NumberOfPaths
 		);
+		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::ThetaMC(
+			VanillaOptionParameters^% TheOption,
+			Double Spot,
+			Double Vol,
+			Double r,
+			UInt64 NumberOfPaths,	
+			Double timeStep // Time step for simulation
+		);
 		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Vega(VanillaOptionParameters^% TheOption,
+			Double Spot,
+			Double Vol,
+			Double r,
+			UInt64 NumberOfPaths
+		);
+		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::VegaMC(VanillaOptionParameters^% TheOption,
 			Double Spot,
 			Double Vol,
 			Double r,

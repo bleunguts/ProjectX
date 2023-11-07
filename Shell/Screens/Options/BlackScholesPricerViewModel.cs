@@ -163,7 +163,7 @@ namespace Shell.Screens.Options
         public async Task CalculatePrice()
         {            
             try
-            {              
+            {                
                 string? optionType = OptionInputTable.Rows[0]["Value"].ToString();
                 double spot = Convert.ToDouble(OptionInputTable.Rows[1]["Value"]);
                 double strike = Convert.ToDouble(OptionInputTable.Rows[2]["Value"]);
@@ -171,6 +171,7 @@ namespace Shell.Screens.Options
                 double carry = Convert.ToDouble(OptionInputTable.Rows[4]["Value"]);
                 double vol = Convert.ToDouble(OptionInputTable.Rows[5]["Value"]);
                 var request = new OptionsPricingByMaturitiesRequest(10, optionType.ToOptionType(), spot, strike, rate, carry, vol, CalculatorType);
+                OptionTable.Clear();
                 await _gatewayApiClient.SubmitPricingRequest(request, _cts.Token);                                            
             }
             catch (Exception ex)
