@@ -8,15 +8,15 @@ namespace ProjectX.Core.Tests
 {
     public class BlackScholesOptionsPricingModelTest
     {
-        private Mock<ICSharpBlackScholesOptionsPricingCalculator> _mockCSharpCalculator = new Mock<ICSharpBlackScholesOptionsPricingCalculator>();
+        private Mock<IPureBlackScholesOptionsPricingCalculator> _mockCSharpCalculator = new Mock<IPureBlackScholesOptionsPricingCalculator>();
         private BlackScholesOptionsPricingModel _sut;
         private Random _random = new Random();
 
         [SetUp]
         public void SetUp()
         {            
-            _sut = new BlackScholesOptionsPricingModel(_mockCSharpCalculator.Object, Mock.Of<ICPlusPlusBlackScholesOptionsPricingCalculator>());
-            _mockCSharpCalculator.Setup(m => m.BlackScholes(It.IsAny<OptionType>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>()))
+            _sut = new BlackScholesOptionsPricingModel(_mockCSharpCalculator.Object, Mock.Of<IMonteCarloOptionsPricingCppCalculator>());
+            _mockCSharpCalculator.Setup(m => m.PV(It.IsAny<OptionType>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>()))
                                  .Returns(() => RandomFloat(50, 60));
         }
 

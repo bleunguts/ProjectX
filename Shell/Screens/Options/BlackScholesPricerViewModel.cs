@@ -60,6 +60,7 @@ namespace Shell.Screens.Options
         private double zTick = 0.2;
         private CancellationTokenSource _cts = new();
         private OptionsPricingCalculatorType _calculatorType = OptionsPricingCalculatorType.OptionsPricer;
+        private string _calculatorTypeDesc;
 
         public BindableCollection<DataSeries3D> DataCollection { get; set; } = new BindableCollection<DataSeries3D>();        
         
@@ -100,6 +101,11 @@ namespace Shell.Screens.Options
             set { _calculatorType = value; NotifyOfPropertyChange(() => CalculatorType); }
         }
 
+        public string CalculatorTypeDesc
+        {
+            get { return _calculatorTypeDesc; }
+            set { _calculatorTypeDesc = value; NotifyOfPropertyChange(() => CalculatorTypeDesc); }
+        }
         #endregion
         protected override async void OnActivate()
         {
@@ -220,15 +226,24 @@ namespace Shell.Screens.Options
         }
 
         public void CalculatorTypeToggle()
-        {
+        {            
             var target = CalculatorType switch
             {
-                OptionsPricingCalculatorType.OptionsPricer => OptionsPricingCalculatorType.OptionsPricerCpp,
-                OptionsPricingCalculatorType.OptionsPricerCpp => OptionsPricingCalculatorType.OptionsPricer,
+                OptionsPricingCalculatorType.OptionsPricer => 
+                    (
+                        OptionsPricingCalculatorType.OptionsPricerCpp, 
+                        "MonteCarlo Options Pricer native C++"
+                    ),
+                OptionsPricingCalculatorType.OptionsPricerCpp => 
+                    (
+                        OptionsPricingCalculatorType.OptionsPricer, 
+                        "Vanilla BlackScholes Options Pricer C#"
+                    ),
                 _ => throw new NotImplementedException(),
             };
 
-            CalculatorType = target;
+            CalculatorType = target.Item1;
+            CalculatorTypeDesc = target.Item2;
         }
     }
 }

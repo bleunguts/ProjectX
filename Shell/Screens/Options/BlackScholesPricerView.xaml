@@ -18,6 +18,7 @@
                 <Button x:Name="CalculatePrice" Content="Calculate Price" Width="120" Margin="20 20 0 0" HorizontalAlignment="Left"/>
                 <TextBox x:Name="CalculatorType" Margin="5 20 0 0" Width="100" IsEnabled="False"/>
                 <Button x:Name="CalculatorTypeToggle" Width="25" Content=">" Margin="5 20 0 0"/>
+                <TextBlock x:Name="CalculatorTypeDesc" Margin="5 20 0 0" HorizontalAlignment="Right" VerticalAlignment="Center" TextAlignment="Center"/>
             </StackPanel>
             <TextBlock Text="Results for Option Prices:" Margin="0 20 0 2"/>
             <DataGrid ColumnWidth="*" CanUserAddRows="False" ItemsSource="{Binding OptionTable}"/>

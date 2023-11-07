@@ -18,10 +18,10 @@ public interface IExoticOptionsPricingCalculator
 [Export(typeof(IExoticOptionsPricingCalculator)), PartCreationPolicy(CreationPolicy.Shared)]
 public class ExoticOptionsPricingCalculator : IExoticOptionsPricingCalculator
 {
-    private readonly IBlackScholesOptionsPricingCalculator _bs;
+    private readonly IOptionsGreeksCalculator _bs;
 
     [ImportingConstructor]
-    public ExoticOptionsPricingCalculator(IBlackScholesOptionsPricingCalculator blackScholesOptionsPricingCalculator)
+    public ExoticOptionsPricingCalculator(IOptionsGreeksCalculator blackScholesOptionsPricingCalculator)
     {
         _bs = blackScholesOptionsPricingCalculator;
     }
@@ -34,7 +34,7 @@ public class ExoticOptionsPricingCalculator : IExoticOptionsPricingCalculator
     private double AmericanCall_BaroneAdesiWhaley(double spot, double strike, double rate, double carry, double maturity, double volatility)
     {
         // When b>=r the american call price is equal to the european clall price for generalized Black-Scholes Formula
-        if (carry >= rate) return _bs.BlackScholes(OptionType.Call, spot, strike, rate, carry, maturity, volatility);
+        if (carry >= rate) return _bs.PV(OptionType.Call, spot, strike, rate, carry, maturity, volatility);
 
         double sk = AmericanCall_NewtonRaphson(strike, rate, carry, maturity, volatility);
         double d1 = BlackScholesFns.d1_(spot, strike, carry, volatility, maturity);
@@ -43,14 +43,14 @@ public class ExoticOptionsPricingCalculator : IExoticOptionsPricingCalculator
         double A2 = sk / q2 * (1.0 - Math.Exp((carry - rate) * maturity) * BlackScholesFns.CummulativeNormal(d1));
 
         return spot < sk
-            ? _bs.BlackScholes(OptionType.Call, spot, strike, rate, carry, maturity, volatility) + A2 * Math.Pow(spot / sk, q2)
+            ? _bs.PV(OptionType.Call, spot, strike, rate, carry, maturity, volatility) + A2 * Math.Pow(spot / sk, q2)
             : spot - strike;
     }
 
     private double AmericanPut_BaroneAdesiWhaley(double spot, double strike, double rate, double carry, double maturity, double volatility)
     {
         // When b>=r the american call price is equal to the european clall price for generalized Black-Scholes Formula
-        if (carry >= rate) return _bs.BlackScholes(OptionType.Put, spot, strike, rate, carry, maturity, volatility);
+        if (carry >= rate) return _bs.PV(OptionType.Put, spot, strike, rate, carry, maturity, volatility);
 
         double sk = AmericanPut_NewtonRaphson(strike, rate, carry, maturity, volatility);
         double d1 = BlackScholesFns.d1_(spot, strike, carry, volatility, maturity);
@@ -58,7 +58,7 @@ public class ExoticOptionsPricingCalculator : IExoticOptionsPricingCalculator
         double A1 = -(sk / q1) * (1.0 - Math.Exp((carry - rate) * maturity)) * BlackScholesFns.CummulativeNormal(-d1);
 
         return spot > sk
-            ? _bs.BlackScholes(OptionType.Put, spot, strike, rate, carry, maturity, volatility) + A1 * Math.Pow(spot / sk, q1)
+            ? _bs.PV(OptionType.Put, spot, strike, rate, carry, maturity, volatility) + A1 * Math.Pow(spot / sk, q1)
             : strike - spot;
     }
 
@@ -98,7 +98,7 @@ public class ExoticOptionsPricingCalculator : IExoticOptionsPricingCalculator
         return spot;
 
         double lhs_(double spot_, double strike_) => spot_ - strike_;
-        double rhs_(double strike_, double rate_, double carry_, double maturity_, double volatility_, double q2_, double spot_, double d1_) => _bs.BlackScholes(OptionType.Call, spot_, strike_, rate_, carry_, maturity_, volatility_) + (1.0 - Math.Exp((carry_ - rate_) * maturity_) * BlackScholesFns.CummulativeNormal(d1_)) * spot_ / q2_;
+        double rhs_(double strike_, double rate_, double carry_, double maturity_, double volatility_, double q2_, double spot_, double d1_) => _bs.PV(OptionType.Call, spot_, strike_, rate_, carry_, maturity_, volatility_) + (1.0 - Math.Exp((carry_ - rate_) * maturity_) * BlackScholesFns.CummulativeNormal(d1_)) * spot_ / q2_;
         double bi_(double carry_, double rate_, double maturity_, double d1_, double q2_, double volatility_) =>
             Math.Exp((carry_ - rate_) * maturity_) * BlackScholesFns.CummulativeNormal(d1_) * (1.0 - 1.0 / q2_) +
             (1.0 - Math.Exp((carry_ - rate_) * maturity_) * BlackScholesFns.NormalDensity(d1_) / (volatility_ * Math.Sqrt(maturity_))) / q2_;
@@ -127,7 +127,7 @@ public class ExoticOptionsPricingCalculator : IExoticOptionsPricingCalculator
         return spot;
 
         double lhs_(double spot_, double strike_) => strike_ - spot_;
-        double rhs_(double strike_, double rate_, double carry_, double maturity_, double volatility_, double q1_, double spot_, double d1_) => _bs.BlackScholes(OptionType.Put, spot_, strike_, rate_, carry_, maturity_, volatility_) - (1.0 - Math.Exp((carry_ - rate_) * maturity_) * BlackScholesFns.CummulativeNormal(-d1_)) * spot_ / q1_;
+        double rhs_(double strike_, double rate_, double carry_, double maturity_, double volatility_, double q1_, double spot_, double d1_) => _bs.PV(OptionType.Put, spot_, strike_, rate_, carry_, maturity_, volatility_) - (1.0 - Math.Exp((carry_ - rate_) * maturity_) * BlackScholesFns.CummulativeNormal(-d1_)) * spot_ / q1_;
         double bi_(double carry_, double rate_, double maturity_, double d1_, double q1_, double volatility_) =>
             -Math.Exp((carry_ - rate_) * maturity_) * BlackScholesFns.CummulativeNormal(-d1_) * (1.0 - 1.0 / q1) -
           (1.0 + Math.Exp((carry_ - rate_) * maturity_) * BlackScholesFns.NormalDensity(-d1_) / (volatility_ * Math.Sqrt(maturity_))) / q1;

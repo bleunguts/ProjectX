@@ -20,11 +20,11 @@ namespace ProjectX.Core.Services
     [Export(typeof(IBlackScholesOptionsPricingModel)), PartCreationPolicy(CreationPolicy.NonShared)]    
     public class BlackScholesOptionsPricingModel : IBlackScholesOptionsPricingModel
     {
-        private readonly IBlackScholesOptionsPricingCalculator _bsCalculator;
-        private readonly IBlackScholesOptionsPricingCalculator _cppCalcualtor;
+        private readonly IOptionsGreeksCalculator _bsCalculator;
+        private readonly IOptionsGreeksCalculator _cppCalcualtor;
 
         [ImportingConstructor]
-        public BlackScholesOptionsPricingModel(ICSharpBlackScholesOptionsPricingCalculator calculator, ICPlusPlusBlackScholesOptionsPricingCalculator cppCalculator)
+        public BlackScholesOptionsPricingModel(IPureBlackScholesOptionsPricingCalculator calculator, IMonteCarloOptionsPricingCppCalculator cppCalculator)
         {
             _bsCalculator = calculator;
             _cppCalcualtor = cppCalculator;
@@ -40,12 +40,12 @@ namespace ProjectX.Core.Services
                 double maturity = (i + 1.0) / 10.0;
 
                 // price option
-                double price = Calc(calculatorType).BlackScholes(optionType, spot, strike, rate, carry, maturity, vol);
-                double delta = Calc(calculatorType).BlackScholes_Delta(optionType, spot, strike, rate, carry, maturity, vol);
-                double gamma = Calc(calculatorType).BlackScholes_Gamma(optionType, spot, strike, rate, carry, maturity, vol);
-                double theta = Calc(calculatorType).BlackScholes_Theta(optionType, spot, strike, rate, carry, maturity, vol);
-                double rho = Calc(calculatorType).BlackScholes_Rho(optionType, spot, strike, rate, carry, maturity, vol);
-                double vega = Calc(calculatorType).BlackScholes_Vega(optionType, spot, strike, rate, carry, maturity, vol);
+                double price = Calc(calculatorType).PV(optionType, spot, strike, rate, carry, maturity, vol);
+                double delta = Calc(calculatorType).Delta(optionType, spot, strike, rate, carry, maturity, vol);
+                double gamma = Calc(calculatorType).Gamma(optionType, spot, strike, rate, carry, maturity, vol);
+                double theta = Calc(calculatorType).Theta(optionType, spot, strike, rate, carry, maturity, vol);
+                double rho = Calc(calculatorType).Rho(optionType, spot, strike, rate, carry, maturity, vol);
+                double vega = Calc(calculatorType).Vega(optionType, spot, strike, rate, carry, maturity, vol);
 
                 // return price & greeks
                 var greeks = new OptionGreeksResult(
@@ -65,7 +65,7 @@ namespace ProjectX.Core.Services
             return new OptionsPricingByMaturityResults(request.Id, temp);            
         }
 
-        private IBlackScholesOptionsPricingCalculator Calc(OptionsPricingCalculatorType calculatorType)
+        private IOptionsGreeksCalculator Calc(OptionsPricingCalculatorType calculatorType)
         {
             switch(calculatorType)
             {
@@ -106,22 +106,22 @@ namespace ProjectX.Core.Services
                     switch (greekType)
                     {
                         case OptionGreeks.Delta:
-                            z = Calc(calculatorType).BlackScholes_Delta(optionType, spot, strike, rate, carry, maturity, vol);
+                            z = Calc(calculatorType).Delta(optionType, spot, strike, rate, carry, maturity, vol);
                             break;
                         case OptionGreeks.Gamma:
-                            z = Calc(calculatorType).BlackScholes_Gamma(optionType, spot, strike, rate, carry, maturity, vol);
+                            z = Calc(calculatorType).Gamma(optionType, spot, strike, rate, carry, maturity, vol);
                             break;
                         case OptionGreeks.Theta:
-                            z = Calc(calculatorType).BlackScholes_Theta(optionType, spot, strike, rate, carry, maturity, vol);
+                            z = Calc(calculatorType).Theta(optionType, spot, strike, rate, carry, maturity, vol);
                             break;
                         case OptionGreeks.Rho:
-                            z = Calc(calculatorType).BlackScholes_Rho(optionType, spot, strike, rate, carry, maturity, vol);
+                            z = Calc(calculatorType).Rho(optionType, spot, strike, rate, carry, maturity, vol);
                             break;
                         case OptionGreeks.Vega:
-                            z = Calc(calculatorType).BlackScholes_Vega(optionType, spot, strike, rate, carry, maturity, vol);
+                            z = Calc(calculatorType).Vega(optionType, spot, strike, rate, carry, maturity, vol);
                             break;
                         case OptionGreeks.Price:
-                            z = Calc(calculatorType).BlackScholes(optionType, spot, strike, rate, carry, maturity, vol);
+                            z = Calc(calculatorType).PV(optionType, spot, strike, rate, carry, maturity, vol);
                             break;
                     }
                     if (!double.IsNaN(z))

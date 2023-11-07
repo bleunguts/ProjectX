@@ -11,27 +11,27 @@ namespace ProjectX.Core.Tests
         public void WhenPricingACallOption()
         {
             // For a call option that is deep ITM price is gt 0 should be expensive
-            var deepItmPrice = _calculator.BlackScholes(OptionType.Call, 510, 100, 0.1, 0.04, 2.0, 0.3);
+            var deepItmPrice = _calculator.PV(OptionType.Call, 510, 100, 0.1, 0.04, 2.0, 0.3);
             Assert.Greater(deepItmPrice, 0);
             Assert.That(deepItmPrice, Is.EqualTo(370.4568).Within(1).Percent);
 
             // For a call option that is ITM price is gt 0 should be relative expensive
-            var itmPrice = _calculator.BlackScholes(OptionType.Call, 110, 100, 0.1, 0.04, 2.0, 0.3);
+            var itmPrice = _calculator.PV(OptionType.Call, 110, 100, 0.1, 0.04, 2.0, 0.3);
             Assert.Greater(itmPrice, 0);
             Assert.That(itmPrice, Is.EqualTo(24.1620).Within(1).Percent);
 
             // For a call option that is ATM price is gt 0 should be fair priced
-            var atmPrice = _calculator.BlackScholes(OptionType.Call, 100, 100, 0.1, 0.04, 2.0, 0.3);
+            var atmPrice = _calculator.PV(OptionType.Call, 100, 100, 0.1, 0.04, 2.0, 0.3);
             Assert.Greater(atmPrice, 0);
             Assert.That(atmPrice, Is.EqualTo(17.9866).Within(1).Percent);
 
             // For a call option that is OTM price is cheaper
-            var otmPrice = _calculator.BlackScholes(OptionType.Call, 70, 100, 0.1, 0.04, 2.0, 0.3);
+            var otmPrice = _calculator.PV(OptionType.Call, 70, 100, 0.1, 0.04, 2.0, 0.3);
             Assert.Greater(otmPrice, 0);
             Assert.That(otmPrice, Is.EqualTo(4.6253).Within(1).Percent);
 
             // For a call option that is Deep OTM price is worthless
-            var deepOtmPrice = _calculator.BlackScholes(OptionType.Call, 2, 100, 0.1, 0.04, 2.0, 0.3);
+            var deepOtmPrice = _calculator.PV(OptionType.Call, 2, 100, 0.1, 0.04, 2.0, 0.3);
             Assert.AreEqual(deepOtmPrice, 0);
             Assert.That(deepOtmPrice, Is.EqualTo(0).Within(1).Percent);
         }
@@ -54,15 +54,15 @@ namespace ProjectX.Core.Tests
             var maturity = 0.5;
             var vol = 0.3;
 
-            var call = _calculator.BlackScholes(OptionType.Call, spot, strike, r, b, maturity, vol);
+            var call = _calculator.PV(OptionType.Call, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Price of call is {call}");
             Assert.That(call, Is.EqualTo(5.2515).Within(1).Percent);
 
-            var put = _calculator.BlackScholes(OptionType.Put, spot, strike, r, b, maturity, vol);
+            var put = _calculator.PV(OptionType.Put, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Price of put is {put}");
             Assert.That(put, Is.EqualTo(12.8422).Within(1).Percent);
 
-            var gamma = _calculator.BlackScholes_Gamma(OptionType.Call, spot, strike, r, b, maturity, vol);
+            var gamma = _calculator.Gamma(OptionType.Call, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Gamma of call/put {gamma}");
             Assert.That(gamma, Is.EqualTo(0.01769).Within(1).Percent);
         }
@@ -85,19 +85,19 @@ namespace ProjectX.Core.Tests
             var maturity = 0.5;
             var vol = 0.3;
 
-            var call = _calculator.BlackScholes(OptionType.Call, spot, strike, r, b, maturity, vol);
+            var call = _calculator.PV(OptionType.Call, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Price of call is {call}");
             Assert.That(call, Is.EqualTo(5.2515).Within(1).Percent);
 
-            var put = _calculator.BlackScholes(OptionType.Put, spot, strike, r, b, maturity, vol);
+            var put = _calculator.PV(OptionType.Put, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Price of put is {put}");
             Assert.That(put, Is.EqualTo(12.8422).Within(1).Percent);
 
-            var theta = _calculator.BlackScholes_Theta(OptionType.Call, spot, strike, r, b, maturity, vol);
+            var theta = _calculator.Theta(OptionType.Call, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Theta for a call is {theta}");
             Assert.That(theta, Is.EqualTo(-8.9962).Within(1).Percent);
 
-            var thetaPut = _calculator.BlackScholes_Theta(OptionType.Put, spot, strike, r, b, maturity, vol);
+            var thetaPut = _calculator.Theta(OptionType.Put, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Theta for a Put is {thetaPut}");
             Assert.That(thetaPut, Is.EqualTo(-4.3554).Within(1).Percent);
         }
@@ -120,19 +120,19 @@ namespace ProjectX.Core.Tests
             var maturity = 0.5;
             var vol = 0.3;
 
-            var call = _calculator.BlackScholes(OptionType.Call, spot, strike, r, b, maturity, vol);
+            var call = _calculator.PV(OptionType.Call, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Price of call is {call}");
             Assert.That(call, Is.EqualTo(5.2515).Within(1).Percent);
 
-            var put = _calculator.BlackScholes(OptionType.Put, spot, strike, r, b, maturity, vol);
+            var put = _calculator.PV(OptionType.Put, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Price of put is {put}");
             Assert.That(put, Is.EqualTo(12.8422).Within(1).Percent);
 
-            var rho = _calculator.BlackScholes_Rho(OptionType.Call, spot, strike, r, b, maturity, vol);
+            var rho = _calculator.Rho(OptionType.Call, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Rho of call is {rho}");
             Assert.That(rho, Is.EqualTo(16.8656).Within(1).Percent);
 
-            var rhoPut = _calculator.BlackScholes_Rho(OptionType.Put, spot, strike, r, b, maturity, vol);
+            var rhoPut = _calculator.Rho(OptionType.Put, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Rho of put is {rho}");
             Assert.That(rhoPut, Is.EqualTo(-35.4519).Within(1).Percent);
         }
@@ -155,15 +155,15 @@ namespace ProjectX.Core.Tests
             var maturity = 0.5;
             var vol = 0.3;
 
-            var call = _calculator.BlackScholes(OptionType.Call, spot, strike, r, b, maturity, vol);
+            var call = _calculator.PV(OptionType.Call, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Price of call is {call}");
             Assert.That(call, Is.EqualTo(5.2515).Within(1).Percent);
 
-            var put = _calculator.BlackScholes(OptionType.Put, spot, strike, r, b, maturity, vol);
+            var put = _calculator.PV(OptionType.Put, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Price of put is {put}");
             Assert.That(put, Is.EqualTo(12.8422).Within(1).Percent);
 
-            var vega = _calculator.BlackScholes_Vega(OptionType.Call, spot, strike, r, b, maturity, vol);
+            var vega = _calculator.Vega(OptionType.Call, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Vega of call/put is {vega}");
             Assert.That(vega, Is.EqualTo(27.5649).Within(1).Percent);
         }
@@ -189,7 +189,7 @@ namespace ProjectX.Core.Tests
             {
                 double maturity = (i + 1.0) / 10.0;
                 var price = prices[i];
-                var impliedVol = _calculator.BlackScholes_ImpliedVol(OptionType.Call, spot, strike, r, b, maturity, price);
+                var impliedVol = _calculator.ImpliedVol(OptionType.Call, spot, strike, r, b, maturity, price);
                 Console.WriteLine($"ImpliedVol for price {price} and maturity {maturity} is {impliedVol}");
             }
         }

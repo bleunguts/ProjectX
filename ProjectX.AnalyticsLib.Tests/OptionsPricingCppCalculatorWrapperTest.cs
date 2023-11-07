@@ -2,49 +2,49 @@ using Microsoft.Extensions.Options;
 
 namespace ProjectX.AnalyticsLib.Tests;
 
-public class OptionsPricingCalculatorWrapperTest
+public class OptionsPricingCppCalculatorWrapperTest
 {
     static IOptions<OptionsPricingCppCalculatorWrapperOptions> options = Options.Create<OptionsPricingCppCalculatorWrapperOptions>(new OptionsPricingCppCalculatorWrapperOptions() {  NumOfMcPaths = 250_000, RandomAlgo = RandomAlgorithm.BoxMuller });
-    static IEnumerable<(IBlackScholesOptionsPricingCalculator calculator, double percentError)> VanillaOptionCalculators()
+    static IEnumerable<(IOptionsGreeksCalculator calculator, double percentError)> VanillaOptionCalculators()
     {
         yield return (new BlackScholesOptionsPricingCalculator(), 42.0);
         yield return (new OptionsPricingCppCalculatorWrapper(options), 1.75);
     }
     
     [TestCaseSource(nameof(VanillaOptionCalculators))]
-    public void WhenPricingACallOptionRealWorldExampleShouldReturnSimilarValuesToCSharpVersion((IBlackScholesOptionsPricingCalculator calculator, double percentError) td)
+    public void WhenPricingACallOptionRealWorldExampleShouldReturnSimilarValuesToCSharpVersion((IOptionsGreeksCalculator calculator, double percentError) td)
     {
         // Based on real number example 
-        var realExamplePrice = td.calculator.BlackScholes(Core.OptionType.Call, 195.0, 200.0, 0.05, 0.0, 0.25, 0.3);
+        var realExamplePrice = td.calculator.PV(Core.OptionType.Call, 195.0, 200.0, 0.05, 0.0, 0.25, 0.3);
         Assert.That(realExamplePrice, Is.EqualTo(10.5).Within(td.percentError).Percent);
     }
     
     [TestCaseSource(nameof(VanillaOptionCalculators))]
-    public void WhenPricingACallOptionShouldBehaveSameAsCSharpVersion((IBlackScholesOptionsPricingCalculator calculator, double percentError) td)
+    public void WhenPricingACallOptionShouldBehaveSameAsCSharpVersion((IOptionsGreeksCalculator calculator, double percentError) td)
     {        
         // For a call option that is deep ITM price is gt 0 should be expensive
-        var deepItmPrice = td.calculator.BlackScholes(Core.OptionType.Call, 510, 100, 0.1, 0.04, 2.0, 0.3);
+        var deepItmPrice = td.calculator.PV(Core.OptionType.Call, 510, 100, 0.1, 0.04, 2.0, 0.3);
         Assert.That(deepItmPrice, Is.EqualTo(428.751).Within(td.percentError).Percent);
 
         // For a call option that is ITM price is gt 0 should be relative expensive
-        var itmPrice = td.calculator.BlackScholes(Core.OptionType.Call, 110, 100, 0.1, 0.04, 2.0, 0.3);
+        var itmPrice = td.calculator.PV(Core.OptionType.Call, 110, 100, 0.1, 0.04, 2.0, 0.3);
         Assert.That(itmPrice, Is.EqualTo(33.9755).Within(td.percentError).Percent);
 
         // For a call option that is ATM price is gt 0 should be fair priced
-        var atmPrice = td.calculator.BlackScholes(Core.OptionType.Call, 100, 100, 0.1, 0.04, 2.0, 0.3);
+        var atmPrice = td.calculator.PV(Core.OptionType.Call, 100, 100, 0.1, 0.04, 2.0, 0.3);
         Assert.That(atmPrice, Is.EqualTo(26.0246).Within(td.percentError).Percent);
 
         // For a call option that is OTM price is cheaper
-        var otmPrice = td.calculator.BlackScholes(Core.OptionType.Call, 70, 100, 0.1, 0.04, 2.0, 0.3);
+        var otmPrice = td.calculator.PV(Core.OptionType.Call, 70, 100, 0.1, 0.04, 2.0, 0.3);
         Assert.That(otmPrice, Is.EqualTo(7.75053).Within(td.percentError).Percent);
 
         // For a call option that is Deep OTM price is worthless
-        var deepOtmPrice = td.calculator.BlackScholes(Core.OptionType.Call, 2, 100, 0.1, 0.04, 2.0, 0.3);        
+        var deepOtmPrice = td.calculator.PV(Core.OptionType.Call, 2, 100, 0.1, 0.04, 2.0, 0.3);        
         Assert.That(deepOtmPrice, Is.EqualTo(0).Within(td.percentError).Percent);
     }
 
     [TestCaseSource(nameof(VanillaOptionCalculators))]
-    public void WhenCalculatingDeltaForAnOption((IBlackScholesOptionsPricingCalculator calculator, double percentError) td)
+    public void WhenCalculatingDeltaForAnOption((IOptionsGreeksCalculator calculator, double percentError) td)
     {       
         var spot = 100;
         var strike = 100;
@@ -53,17 +53,17 @@ public class OptionsPricingCalculatorWrapperTest
         var vol = 0.2;
         var b = 0.0;
 
-        var call = td.calculator.BlackScholes(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
+        var call = td.calculator.PV(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Price of call is {call}");
         Assert.That(call, Is.EqualTo(10.4879).Within(td.percentError).Percent);    
 
-        var delta = td.calculator.BlackScholes_Delta(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
+        var delta = td.calculator.Delta(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Delta of call {delta}");
         Assert.That(delta, Is.EqualTo(0.0317).Within(1.5));
     }
 
     [TestCaseSource(nameof(VanillaOptionCalculators))]
-    public void WhenCalculatingGammaForAnOption((IBlackScholesOptionsPricingCalculator calculator, double percentError) td)
+    public void WhenCalculatingGammaForAnOption((IOptionsGreeksCalculator calculator, double percentError) td)
     {
         // stock with 6 months expiration, stock price is 100, strike price is 110, risk free interest rate 0.1 per year, continuous dividend yield 0.06 and volatility is 0.3 
 
@@ -80,22 +80,22 @@ public class OptionsPricingCalculatorWrapperTest
         var maturity = 0.5;
         var vol = 0.3;
 
-        var call = td.calculator.BlackScholes(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
+        var call = td.calculator.PV(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Price of call is {call}");
         Assert.That(call, Is.EqualTo(6.5312).Within(td.percentError).Percent);
 
-        var put = td.calculator.BlackScholes(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
+        var put = td.calculator.PV(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Price of put is {put}");
         Assert.That(put, Is.EqualTo(11.155).Within(td.percentError).Percent);
 
-        var gamma = td.calculator.BlackScholes_Gamma(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
+        var gamma = td.calculator.Gamma(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Gamma of call/put {gamma}");
         Assert.That(gamma, Is.EqualTo(0.038).Within(1));
     }
 
 
     [TestCaseSource(nameof(VanillaOptionCalculators))]
-    public void WhenCalculatingThetaForAnOption((IBlackScholesOptionsPricingCalculator calculator, double percentError) td)    
+    public void WhenCalculatingThetaForAnOption((IOptionsGreeksCalculator calculator, double percentError) td)    
     {
         // stock with 6 months expiration, stock price is 100, strike price is 110, risk free interest rate 0.1 per year, continuous dividend yield 0.06 and volatility is 0.3 
 
@@ -112,25 +112,25 @@ public class OptionsPricingCalculatorWrapperTest
         var maturity = 0.5;
         var vol = 0.3;
 
-        var call = td.calculator.BlackScholes(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
+        var call = td.calculator.PV(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Price of call is {call}");
         Assert.That(call, Is.EqualTo(6.5217).Within(td.percentError).Percent);
 
-        var put = td.calculator.BlackScholes(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
+        var put = td.calculator.PV(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Price of put is {put}");
         Assert.That(put, Is.EqualTo(11.1553).Within(td.percentError).Percent);
 
-        var theta = td.calculator.BlackScholes_Theta(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
+        var theta = td.calculator.Theta(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Theta for a call is {theta}");
         Assert.That(theta, Is.EqualTo(-12.3338).Within(td.percentError).Percent);
 
-        var thetaPut = td.calculator.BlackScholes_Theta(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
+        var thetaPut = td.calculator.Theta(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Theta for a Put is {thetaPut}");
         Assert.That(thetaPut, Is.EqualTo(-12.3338).Within(td.percentError).Percent);
     }
 
     [TestCaseSource(nameof(VanillaOptionCalculators))]
-    public void WhenCalculatingRhoForAnoption((IBlackScholesOptionsPricingCalculator calculator, double percentError) td)    
+    public void WhenCalculatingRhoForAnoption((IOptionsGreeksCalculator calculator, double percentError) td)    
     {
         // stock with 6 months expiration, stock price is 100, strike price is 110, risk free interest rate 0.1 per year, continuous dividend yield 0.06 and volatility is 0.3 
 
@@ -147,25 +147,25 @@ public class OptionsPricingCalculatorWrapperTest
         var maturity = 0.5;
         var vol = 0.3;
 
-        var call = td.calculator.BlackScholes(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
+        var call = td.calculator.PV(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Price of call is {call}");
         Assert.That(call, Is.EqualTo(6.5562).Within(td.percentError).Percent);
 
-        var put = td.calculator.BlackScholes(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
+        var put = td.calculator.PV(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Price of put is {put}");
         Assert.That(put, Is.EqualTo(11.15532).Within(td.percentError).Percent);
 
-        var rho = td.calculator.BlackScholes_Rho(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
+        var rho = td.calculator.Rho(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Rho of call is {rho}");
         Assert.That(rho, Is.EqualTo(-14.0376).Within(60));
 
-        var rhoPut = td.calculator.BlackScholes_Rho(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
+        var rhoPut = td.calculator.Rho(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Rho of put is {rho}");
         Assert.That(rhoPut, Is.EqualTo(19.5988).Within(60));
     }
 
     [TestCaseSource(nameof(VanillaOptionCalculators))]
-    public void WhenCalculatingVegaForAnOption((IBlackScholesOptionsPricingCalculator calculator, double percentError) td)    
+    public void WhenCalculatingVegaForAnOption((IOptionsGreeksCalculator calculator, double percentError) td)    
     {
         // stock with 6 months expiration, stock price is 100, strike price is 110, risk free interest rate 0.1 per year, continuous dividend yield 0.06 and volatility is 0.3 
 
@@ -182,21 +182,21 @@ public class OptionsPricingCalculatorWrapperTest
         var maturity = 0.5;
         var vol = 0.3;
 
-        var call = td.calculator.BlackScholes(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
+        var call = td.calculator.PV(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Price of call is {call}");
         Assert.That(call, Is.EqualTo(6.49988).Within(td.percentError).Percent);
 
-        var put = td.calculator.BlackScholes(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
+        var put = td.calculator.PV(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Price of put is {put}");
         Assert.That(put, Is.EqualTo(11.1553).Within(td.percentError).Percent);
 
-        var vega = td.calculator.BlackScholes_Vega(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
+        var vega = td.calculator.Vega(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Vega of call/put is {vega}");
         Assert.That(vega, Is.EqualTo(27.7411).Within(10).Percent);
     }
 
     [TestCaseSource(nameof(VanillaOptionCalculators))]
-    public void WhenCalculatingImpliedVol((IBlackScholesOptionsPricingCalculator calculator, double percentError) td)    
+    public void WhenCalculatingImpliedVol((IOptionsGreeksCalculator calculator, double percentError) td)    
     {
         // stock with 6 months expiration, stock price is 100, strike price is 110, risk free interest rate 0.1 per year, continuous dividend yield 0.06 and volatility is 0.3 
 
@@ -216,7 +216,7 @@ public class OptionsPricingCalculatorWrapperTest
         {
             double maturity = (i + 1.0) / 10.0;
             var price = prices[i];
-            var impliedVol = td.calculator.BlackScholes_ImpliedVol(Core.OptionType.Call, spot, strike, r, b, maturity, price);
+            var impliedVol = td.calculator.ImpliedVol(Core.OptionType.Call, spot, strike, r, b, maturity, price);
             Console.WriteLine($"ImpliedVol for price {price} and maturity {maturity} is {impliedVol}");
         }
     }
