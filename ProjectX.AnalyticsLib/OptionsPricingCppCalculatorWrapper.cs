@@ -67,7 +67,8 @@ namespace ProjectX.AnalyticsLib
         {
             double timeStep = 0.01;
             var param = new VanillaOptionParameters(ToCppOptionType(optionType), strike, maturity);
-            double theta = _calculator.Theta(ref param, spot, volatility, rate, _numOfMcPaths);
+            //double theta = _calculator.Theta(ref param, spot, volatility, rate, _numOfMcPaths);
+            double theta = _calculator.ThetaMC(ref param, spot, volatility, rate, _numOfMcPaths, timeStep);
             return double.IsNaN(theta) ? 0.0 : theta;   
         }
 

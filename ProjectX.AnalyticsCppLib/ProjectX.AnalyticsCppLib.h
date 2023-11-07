@@ -111,6 +111,7 @@ namespace ProjectXAnalyticsCppLib {
 			UInt64 NumberOfPaths,
 			Double optionPrice
 		);
+		static Random m_random;
 	private:
 		static Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholes(
 			Double S, // Current stock price
@@ -154,5 +155,7 @@ namespace ProjectXAnalyticsCppLib {
 			Double T, // Time to expiration
 			Double sigma // Volatility
 		);
+		static Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::RandomStandardNormal();
+		static Random^ random = gcnew Random();
 	};
 }

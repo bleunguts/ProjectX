@@ -213,29 +213,29 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::ThetaMC(
 	Double timeStep // Time step for simulation
 )
 {
-	double S = Spot;
-	double sigma = Vol;
-	double T = TheOption->Expiry();
-	double K = TheOption->Strike();
-	double thetaSum = 0.0;
+	Double S = Spot;
+	Double sigma = Vol;
+	Double T = TheOption->Expiry();
+	Double K = TheOption->Strike();
+	Double thetaSum = 0.0;
 
 	for (int i = 0; i < NumberOfPaths; i++)
 	{
-		double t = 0;
-		double ST = S;
-		double payoff = Math::Max(ST - K, 0.0);
-		double price = Math::Exp(-r * t) * payoff;
+		Double t = 0;
+		Double ST = S;
+		Double payoff = Math::Max(ST - K, 0.0);
+		Double price = Math::Exp(-r * t) * payoff;
 
 		while (t < T)
 		{
-			double randNorm = RandomStandardNormal();
+			Double randNorm = RandomStandardNormal();
 			ST = ST * Math::Exp((r - (Math::Pow(sigma, 2) / 2)) * timeStep + sigma * Math::Sqrt(timeStep) * randNorm);
 			t += timeStep;
 
 			payoff = Math::Max(ST - K, 0.0);
 			price = Math::Exp(-r * t) * payoff;
 		}		
-		double PV = BlackScholes(S, K, r, Math::Round(T - t, 6, System::MidpointRounding::ToZero), sigma);
+		Double PV = BlackScholes(S, K, r, T - t, sigma);
 		thetaSum += (price - PV);
 	}
 
@@ -366,13 +366,13 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholes(
 	Double sigma // Volatility
 )
 {
-	double d1 = (Math::Log(S / K) + (r + (Math::Pow(sigma, 2) / 2)) * T) / (sigma * Math::Sqrt(T));
-	double d2 = d1 - sigma * Math::Sqrt(T);
+	Double d1 = (Math::Log(S / K) + (r + (Math::Pow(sigma, 2) / 2)) * T) / (sigma * Math::Sqrt(T));
+	Double d2 = d1 - sigma * Math::Sqrt(T);
 
-	double N_d1 = normcdf(d1);
-	double N_d2 = normcdf(d2);
+	Double N_d1 = normcdf(d1);
+	Double N_d2 = normcdf(d2);
 
-	double optionPrice = S * N_d1 - K * Math::Exp(-r * T) * N_d2;
+	Double optionPrice = S * N_d1 - K * Math::Exp(-r * T) * N_d2;
 
 	return optionPrice;
 }
@@ -426,4 +426,10 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholesVega(
 	double vega = S * Math::Sqrt(T) * N_prime_d1;
 
 	return vega;
+}
+
+// Function to generate a random number from a standard normal distribution
+Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::RandomStandardNormal()
+{
+	return Math::Sqrt(-2.0 * Math::Log(1.0 - random->NextDouble())) * Math::Sin(2.0 * Math::PI * random->NextDouble());
 }
