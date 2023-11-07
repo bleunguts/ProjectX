@@ -7,8 +7,20 @@ using ProjectX.Core.Services;
 namespace ProjectX.Core.Tests
 {
     public class BlackScholesOptionsPricingModelTest
-    {        
-        private BlackScholesOptionsPricingModel _sut = new BlackScholesOptionsPricingModel(new BlackScholesOptionsPricingCalculator());
+    {
+        private Mock<ICSharpBlackScholesOptionsPricingCalculator> _mockCSharpCalculator = new Mock<ICSharpBlackScholesOptionsPricingCalculator>();
+        private BlackScholesOptionsPricingModel _sut;
+        private Random _random = new Random();
+
+        [SetUp]
+        public void SetUp()
+        {            
+            _sut = new BlackScholesOptionsPricingModel(_mockCSharpCalculator.Object, Mock.Of<ICPlusPlusBlackScholesOptionsPricingCalculator>());
+            _mockCSharpCalculator.Setup(m => m.BlackScholes(It.IsAny<OptionType>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>()))
+                                 .Returns(() => RandomFloat(50, 60));
+        }
+
+        private double RandomFloat(int min, int max) => _random.Next(min, max) + _random.NextDouble();
 
         [Test]
         public async Task WhenPricingBlackScholesOptionItShouldReturnValidResultsAsync()

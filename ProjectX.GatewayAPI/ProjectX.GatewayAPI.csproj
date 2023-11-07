@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ProjectX.AnalyticsCppLib\ProjectX.AnalyticsCppLib.vcxproj" />
     <ProjectReference Include="..\ProjectX.AnalyticsLib\ProjectX.AnalyticsLib.csproj" />
     <ProjectReference Include="..\ProjectX.Core\ProjectX.Core.csproj" />
     <ProjectReference Include="..\ProjectX.MarketData\ProjectX.MarketData.csproj" />

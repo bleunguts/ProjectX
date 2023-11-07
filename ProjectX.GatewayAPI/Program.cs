@@ -24,7 +24,8 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 });
 
 builder.Services.TryAddScoped<IPricingTasksProcessor, PricingTasksProcessor>();
-builder.Services.TryAddScoped<IBlackScholesOptionsPricingCalculator, BlackScholesOptionsPricingCalculator>();
+builder.Services.TryAddScoped<ICSharpBlackScholesOptionsPricingCalculator, BlackScholesOptionsPricingCalculator>();
+builder.Services.TryAddScoped<ICPlusPlusBlackScholesOptionsPricingCalculator, OptionsPricingCppCalculatorWrapper>();
 builder.Services.TryAddScoped<IBlackScholesOptionsPricingModel, BlackScholesOptionsPricingModel>();
 builder.Services.AddSingleton<IFXSpotPricer,FXSpotPricer>();
 builder.Services.AddSingleton<IFXSpotPriceStream, RandomFXSpotPriceStream>();
@@ -39,6 +40,11 @@ builder.Services.Configure<RandomFXSpotPriceStreamOptions>(options =>
 {
     options.RawSpreadInPips = Convert.ToDecimal(config.GetSection("FX")["RawSpreadInPips"]);
     options.IntervalBetweenSends = Convert.ToInt32(config.GetSection("FX")["IntervalBetweenSends"]);
+});
+builder.Services.Configure<OptionsPricingCppCalculatorWrapperOptions>(options =>
+{
+    options.NumOfMcPaths = Convert.ToUInt64(config.GetSection("OptionsPricer")["NumOfMcPaths"]);
+    options.RandomAlgo = (RandomAlgorithm) Enum.Parse(typeof(RandomAlgorithm), config.GetSection("OptionsPricer")["RandomAlgorithm"]);
 });
 
 builder.Services.AddHttpClient<IPricingResultsApiClient, PricingResultsApiClient>();

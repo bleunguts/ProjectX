@@ -1,7 +1,9 @@
-﻿using ProjectX.Core;
+﻿using Microsoft.Extensions.Options;
+using ProjectX.Core;
 using ProjectXAnalyticsCppLib;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -10,15 +12,21 @@ using OptionType = ProjectX.Core.OptionType;
 
 namespace ProjectX.AnalyticsLib
 {
-    public class OptionsPricingCppCalculatorWrapper : IBlackScholesOptionsPricingCalculator
+    public interface ICPlusPlusBlackScholesOptionsPricingCalculator : ICSharpBlackScholesOptionsPricingCalculator
+    {
+    }
+    [Export(typeof(ICPlusPlusBlackScholesOptionsPricingCalculator)), PartCreationPolicy(CreationPolicy.Shared)]
+    public class OptionsPricingCppCalculatorWrapper : ICPlusPlusBlackScholesOptionsPricingCalculator
     {        
         private readonly OptionsPricingCppCalculator _calculator;
         private readonly ulong _numOfMcPaths;
 
-        public OptionsPricingCppCalculatorWrapper(ulong numOfMcPaths = 1000, RandomAlgorithm algo = RandomAlgorithm.BoxMuller)
+        [ImportingConstructor]
+        public OptionsPricingCppCalculatorWrapper(IOptions<OptionsPricingCppCalculatorWrapperOptions> options)
         {
+            var algo = options?.Value?.RandomAlgo ?? RandomAlgorithm.BoxMuller;
             _calculator = new OptionsPricingCppCalculator(new RandomWalk(algo));
-            _numOfMcPaths = numOfMcPaths;
+            _numOfMcPaths = options?.Value?.NumOfMcPaths ?? 10_000;
         }
         public double BlackScholes(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {

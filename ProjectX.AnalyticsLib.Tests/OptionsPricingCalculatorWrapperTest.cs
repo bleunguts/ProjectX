@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Options;
 using ProjectXAnalyticsCppLib;
 using System.Diagnostics;
 
@@ -5,10 +6,11 @@ namespace ProjectX.AnalyticsLib.Tests;
 
 public class OptionsPricingCalculatorWrapperTest
 {
+    static IOptions<OptionsPricingCppCalculatorWrapperOptions> options = Options.Create<OptionsPricingCppCalculatorWrapperOptions>(new OptionsPricingCppCalculatorWrapperOptions() {  NumOfMcPaths = 250_000, RandomAlgo = RandomAlgorithm.BoxMuller });
     static IEnumerable<(IBlackScholesOptionsPricingCalculator calculator, double percentError)> VanillaOptionCalculators()
     {
         yield return (new BlackScholesOptionsPricingCalculator(), 42.0);
-        yield return (new OptionsPricingCppCalculatorWrapper(200_000, RandomAlgorithm.BoxMuller), 1.75);
+        yield return (new OptionsPricingCppCalculatorWrapper(options), 1.75);
     }
 
     // real numbers example http://financetrain.com/option-pricing-using-monte-carlo-simulation/

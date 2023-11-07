@@ -20,8 +20,12 @@ namespace ProjectX.AnalyticsLib
         double BlackScholes_Vega(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double vol);
     }
 
-    [Export(typeof(IBlackScholesOptionsPricingCalculator)), PartCreationPolicy(CreationPolicy.Shared)]
-    public class BlackScholesOptionsPricingCalculator : IBlackScholesOptionsPricingCalculator
+    public interface ICSharpBlackScholesOptionsPricingCalculator : IBlackScholesOptionsPricingCalculator 
+    { 
+    }
+
+    [Export(typeof(ICSharpBlackScholesOptionsPricingCalculator)), PartCreationPolicy(CreationPolicy.Shared)]
+    public class BlackScholesOptionsPricingCalculator : ICSharpBlackScholesOptionsPricingCalculator
     {
         [ImportingConstructor]
         public BlackScholesOptionsPricingCalculator()
