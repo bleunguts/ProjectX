@@ -24,9 +24,9 @@ ProjectX provies the following highly customizable and optimizable toolkit
 * Implied Vol Pricer to help understand market sentiment
 * Simple Bonds Pricer
 * CDS Pricer
-* Vanilla Options BS Pricer C++ better RNGs and normal distribution for stochastic component  (future support based on https://github.com/bleunguts/OptionsPricerCpp) 
-* QL.NET product pricer (future support experiment with popular opensource pricing library)
+* Vanilla Options MonteCarlo Options Pricer C++ with advanced RNGs and normal distribution for stochastic component
 * FX Pricing & Order management System
+* QL.NET product pricer (future support experiment with popular opensource pricing library)
 
 _Desktop App BS Option Pricing:_
 ![Options](Options.jpg)
