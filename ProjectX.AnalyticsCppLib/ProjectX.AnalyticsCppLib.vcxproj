@@ -127,6 +127,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BlackScholesFunctions.h" />
+    <ClInclude Include="MonteCarloOptionsPricer.h" />
     <ClInclude Include="Parameters.h" />
     <ClInclude Include="PayOff.h" />
     <ClInclude Include="pch.h" />
@@ -139,6 +140,7 @@
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="BlackScholesFunctions.cpp" />
+    <ClCompile Include="MonteCarloOptionsPricer.cpp" />
     <ClCompile Include="Parameters.cpp" />
     <ClCompile Include="PayOff.cpp" />
     <ClCompile Include="pch.cpp">
