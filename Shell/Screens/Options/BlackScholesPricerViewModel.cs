@@ -59,6 +59,7 @@ namespace Shell.Screens.Options
         private string zLabel = string.Empty;
         private double zTick = 0.2;
         private CancellationTokenSource _cts = new();
+        private OptionsPricingCalculatorType _calculatorType = OptionsPricingCalculatorType.OptionsPricer;
 
         public BindableCollection<DataSeries3D> DataCollection { get; set; } = new BindableCollection<DataSeries3D>();        
         
@@ -92,6 +93,13 @@ namespace Shell.Screens.Options
             get { return zTick; }
             set { zTick = value; NotifyOfPropertyChange(() => ZTick); }
         }
+
+        public OptionsPricingCalculatorType CalculatorType
+        {
+            get { return _calculatorType; }
+            set { _calculatorType = value; NotifyOfPropertyChange(() => CalculatorType); }
+        }
+
         #endregion
         protected override async void OnActivate()
         {
@@ -162,7 +170,7 @@ namespace Shell.Screens.Options
                 double rate = Convert.ToDouble(OptionInputTable.Rows[3]["Value"]);
                 double carry = Convert.ToDouble(OptionInputTable.Rows[4]["Value"]);
                 double vol = Convert.ToDouble(OptionInputTable.Rows[5]["Value"]);
-                var request = new OptionsPricingByMaturitiesRequest(10, optionType.ToOptionType(), spot, strike, rate, carry, vol);
+                var request = new OptionsPricingByMaturitiesRequest(10, optionType.ToOptionType(), spot, strike, rate, carry, vol, CalculatorType);
                 await _gatewayApiClient.SubmitPricingRequest(request, _cts.Token);                                            
             }
             catch (Exception ex)
@@ -186,7 +194,7 @@ namespace Shell.Screens.Options
                 double rate = Convert.ToDouble(OptionInputTable.Rows[3]["Value"]);
                 double carry = Convert.ToDouble(OptionInputTable.Rows[4]["Value"]);
                 double vol = Convert.ToDouble(OptionInputTable.Rows[5]["Value"]);
-                var request = new PlotOptionsPricingRequest(greekType, optionType!.ToOptionType(), strike, rate, carry, vol);
+                var request = new PlotOptionsPricingRequest(greekType, optionType!.ToOptionType(), strike, rate, carry, vol, CalculatorType);
                 request.ZLabel = zLabel;
                 request.ZDecimalPlaces = zDecimalPlaces;
                 request.ZTickDecimalPlaces = zTickDecimalPlaces;
@@ -208,6 +216,18 @@ namespace Shell.Screens.Options
             Zmax = 8;
             ZTick = 4;            
             DataCollection.Add(ds);
+        }
+
+        public void CalculatorTypeToggle()
+        {
+            var target = CalculatorType switch
+            {
+                OptionsPricingCalculatorType.OptionsPricer => OptionsPricingCalculatorType.OptionsPricerCpp,
+                OptionsPricingCalculatorType.OptionsPricerCpp => OptionsPricingCalculatorType.OptionsPricer,
+                _ => throw new NotImplementedException(),
+            };
+
+            CalculatorType = target;
         }
     }
 }

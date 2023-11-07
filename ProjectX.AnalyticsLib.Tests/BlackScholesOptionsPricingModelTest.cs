@@ -25,7 +25,7 @@ namespace ProjectX.Core.Tests
         [Test]
         public async Task WhenPricingBlackScholesOptionItShouldReturnValidResultsAsync()
         {
-            var request = new OptionsPricingByMaturitiesRequest(10, OptionType.Call, 100.0, 150.0, 1.0, 1.0, 0.3);
+            var request = new OptionsPricingByMaturitiesRequest(10, OptionType.Call, 100.0, 150.0, 1.0, 1.0, 0.3, OptionsPricingCalculatorType.OptionsPricer);
             
             Console.WriteLine($"JSON={JsonConvert.SerializeObject(request)}");
             var actual = _sut.Price(request);
@@ -38,7 +38,7 @@ namespace ProjectX.Core.Tests
         [Test]
         public void WhenPlottingGreeksZValuesAreValid()
         {                        
-            var plotOptionsResult = _sut.PlotGreeks(new PlotOptionsPricingRequest(OptionGreeks.Price, OptionType.Call, 100, 0.1, 0.04, 0.3));
+            var plotOptionsResult = _sut.PlotGreeks(new PlotOptionsPricingRequest(OptionGreeks.Price, OptionType.Call, 100, 0.1, 0.04, 0.3, OptionsPricingCalculatorType.OptionsPricer));
             var result = plotOptionsResult.PlotResults;
             AssertZValue(result.zmin, result.zmax, rounding: 1);
         }

@@ -10,8 +10,9 @@
         public double Rate { get; }
         public double Carry { get; }
         public double Vol { get; }
+        public OptionsPricingCalculatorType CalculatorType { get; }
 
-        public OptionsPricingByMaturitiesRequest(int timeSlices, OptionType optionType, double spot, double strike, double rate, double carry, double vol)
+        public OptionsPricingByMaturitiesRequest(int timeSlices, OptionType optionType, double spot, double strike, double rate, double carry, double vol, OptionsPricingCalculatorType calculatorType)
         {
             TimeSlices = timeSlices;
             OptionType = optionType;
@@ -20,9 +21,10 @@
             Rate = rate;
             Carry = carry;
             Vol = vol;
+            CalculatorType = calculatorType;
             Id = Guid.NewGuid();
         }
-        public void Deconstruct(out int timeSlices, out OptionType optionType, out double spot, out double strike, out double rate, out double carry, out double vol)
+        public void Deconstruct(out int timeSlices, out OptionType optionType, out double spot, out double strike, out double rate, out double carry, out double vol, out OptionsPricingCalculatorType calculatorType)
         {
             timeSlices = TimeSlices;
             optionType = OptionType;
@@ -31,6 +33,7 @@
             rate = Rate;
             carry = Carry;
             vol = Vol;
+            calculatorType = CalculatorType;
         }
     }
 }

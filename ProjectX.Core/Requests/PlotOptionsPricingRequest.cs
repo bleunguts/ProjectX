@@ -18,8 +18,9 @@ namespace ProjectX.Core.Requests
         public string ZLabel { get; set; }
         public int ZDecimalPlaces { get; set; }
         public int ZTickDecimalPlaces { get; set; }
+        public OptionsPricingCalculatorType CalculatorType { get; }
 
-        public PlotOptionsPricingRequest(OptionGreeks greekType, OptionType optionType, double strike, double rate, double carry, double vol) 
+        public PlotOptionsPricingRequest(OptionGreeks greekType, OptionType optionType, double strike, double rate, double carry, double vol, OptionsPricingCalculatorType calculatorType) 
         {
             GreekType = greekType;
             OptionType = optionType;
@@ -27,10 +28,11 @@ namespace ProjectX.Core.Requests
             Rate = rate;
             Carry = carry;
             Vol = vol;
+            CalculatorType = calculatorType;
             Id = Guid.NewGuid();
         }
 
-        public void Deconstruct(out OptionGreeks greekType, out OptionType optionType, out double strike, out double rate, out double carry, out double vol)
+        public void Deconstruct(out OptionGreeks greekType, out OptionType optionType, out double strike, out double rate, out double carry, out double vol, out OptionsPricingCalculatorType optionsPricingCalculatorType )
         {
             greekType = GreekType;
             optionType = OptionType;
@@ -38,6 +40,7 @@ namespace ProjectX.Core.Requests
             rate = Rate;
             carry = Carry;
             vol = Vol;
+            optionsPricingCalculatorType = CalculatorType;
         }
     }
 }

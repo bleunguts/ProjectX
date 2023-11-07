@@ -24,8 +24,8 @@ namespace ProjectX.GatewayAPI.Tests
 
             var demoRequests = new OptionsPricingByMaturitiesRequest[]
             {
-                new(10, OptionType.Call, 100.0, 150.0, 1.0, 1.0, 0.3),
-                new(10, OptionType.Put, 100.0, 150.0, 1.0, 1.0, 0.3),
+                new(10, OptionType.Call, 100.0, 150.0, 1.0, 1.0, 0.3, OptionsPricingCalculatorType.OptionsPricer),
+                new(10, OptionType.Put, 100.0, 150.0, 1.0, 1.0, 0.3, OptionsPricingCalculatorType.OptionsPricer),
             };
 
             await channel.SendRequestAsync(demoRequests[0]);
