@@ -40,10 +40,10 @@ namespace ProjectX.Core.Services
                 // price option
                 double price = _bs.BlackScholes(optionType, spot, strike, rate, carry, maturity, vol);
                 double delta = _bs.BlackScholes_Delta(optionType, spot, strike, rate, carry, maturity, vol);
-                double gamma = _bs.BlackScholes_Gamma(spot, strike, rate, carry, maturity, vol);
+                double gamma = _bs.BlackScholes_Gamma(optionType, spot, strike, rate, carry, maturity, vol);
                 double theta = _bs.BlackScholes_Theta(optionType, spot, strike, rate, carry, maturity, vol);
                 double rho = _bs.BlackScholes_Rho(optionType, spot, strike, rate, carry, maturity, vol);
-                double vega = _bs.BlackScholes_Vega(spot, strike, rate, carry, maturity, vol);
+                double vega = _bs.BlackScholes_Vega(optionType, spot, strike, rate, carry, maturity, vol);
 
                 // return price & greeks
                 var greeks = new OptionGreeksResult(
@@ -95,7 +95,7 @@ namespace ProjectX.Core.Services
                             z = _bs.BlackScholes_Delta(optionType, spot, strike, rate, carry, maturity, vol);
                             break;
                         case OptionGreeks.Gamma:
-                            z = _bs.BlackScholes_Gamma(spot, strike, rate, carry, maturity, vol);
+                            z = _bs.BlackScholes_Gamma(optionType, spot, strike, rate, carry, maturity, vol);
                             break;
                         case OptionGreeks.Theta:
                             z = _bs.BlackScholes_Theta(optionType, spot, strike, rate, carry, maturity, vol);
@@ -104,7 +104,7 @@ namespace ProjectX.Core.Services
                             z = _bs.BlackScholes_Rho(optionType, spot, strike, rate, carry, maturity, vol);
                             break;
                         case OptionGreeks.Vega:
-                            z = _bs.BlackScholes_Vega(spot, strike, rate, carry, maturity, vol);
+                            z = _bs.BlackScholes_Vega(optionType, spot, strike, rate, carry, maturity, vol);
                             break;
                         case OptionGreeks.Price:
                             z = _bs.BlackScholes(optionType, spot, strike, rate, carry, maturity, vol);

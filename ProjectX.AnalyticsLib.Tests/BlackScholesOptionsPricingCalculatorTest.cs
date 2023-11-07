@@ -62,7 +62,7 @@ namespace ProjectX.Core.Tests
             Console.WriteLine($"Price of put is {put}");
             Assert.That(put, Is.EqualTo(12.8422).Within(1).Percent);
 
-            var gamma = _calculator.BlackScholes_Gamma(spot, strike, r, b, maturity, vol);
+            var gamma = _calculator.BlackScholes_Gamma(OptionType.Call, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Gamma of call/put {gamma}");
             Assert.That(gamma, Is.EqualTo(0.01769).Within(1).Percent);
         }
@@ -163,7 +163,7 @@ namespace ProjectX.Core.Tests
             Console.WriteLine($"Price of put is {put}");
             Assert.That(put, Is.EqualTo(12.8422).Within(1).Percent);
 
-            var vega = _calculator.BlackScholes_Vega(spot, strike, r, b, maturity, vol);
+            var vega = _calculator.BlackScholes_Vega(OptionType.Call, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Vega of call/put is {vega}");
             Assert.That(vega, Is.EqualTo(27.5649).Within(1).Percent);
         }

@@ -37,13 +37,11 @@ namespace ProjectXAnalyticsCppLib {
 		OptionsPricingCppCalculator(RandomWalk^ randomWalk) {
 			m_randomWalk = randomWalk;
 		}
-
 		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::MCValue(VanillaOptionParameters^% TheOption,
 			Double Spot,
 			Double Vol,
 			Double r,
 			UInt64 NumberOfPaths);
-
 		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Delta(VanillaOptionParameters^% TheOption,
 			Double Spot,
 			Double Vol,
@@ -51,21 +49,44 @@ namespace ProjectXAnalyticsCppLib {
 			Double epsilon,
 			UInt64 NumberOfPaths
 		);
-
 		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Gamma(VanillaOptionParameters^% TheOption,
 			Double Spot,
 			Double Vol,
 			Double r,
 			Double epsilon			
 		);
-
 		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Rho(VanillaOptionParameters^% TheOption,
 			Double Spot,
 			Double Vol,
 			Double r,
 			UInt64 NumberOfPaths
 		);
+		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Theta(VanillaOptionParameters^% TheOption,
+			Double Spot,
+			Double Vol,
+			Double r,
+			UInt64 NumberOfPaths
+		);
+		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Vega(VanillaOptionParameters^% TheOption,
+			Double Spot,
+			Double Vol,
+			Double r,
+			UInt64 NumberOfPaths
+		);
+		Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::ImpliedVolatilityMC(VanillaOptionParameters^% TheOption,
+			Double Spot,			
+			Double r,
+			UInt64 NumberOfPaths,
+			Double optionPrice
+		);
 	private:
+		static Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholes(
+			Double S, // Current stock price
+			Double K, // Strike price
+			Double r, // Risk-free interest rate
+			Double T, // Time to expiration
+			Double sigma // Volatility
+		);
 		static Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholesRho(
 			Double S, // Current stock price
 			Double K, // Strike price
@@ -86,8 +107,15 @@ namespace ProjectXAnalyticsCppLib {
 			Double T, // Time to expiration
 			Double sigma, // Volatility
 			Double epsilon // Small change in stock price
+		);		
+		static Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholesTheta(
+			Double S, // Current stock price
+			Double K, // Strike price
+			Double r, // Risk-free interest rate
+			Double T, // Time to expiration
+			Double sigma // Volatility
 		);
-		static Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholes(
+		static Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::BlackScholesVega(
 			Double S, // Current stock price
 			Double K, // Strike price
 			Double r, // Risk-free interest rate

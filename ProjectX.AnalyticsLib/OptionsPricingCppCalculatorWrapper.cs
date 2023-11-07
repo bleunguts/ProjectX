@@ -38,32 +38,37 @@ namespace ProjectX.AnalyticsLib
             return delta;
         }
 
-        public double BlackScholes_Gamma(double spot, double strike, double rate, double carry, double maturity, double volatility)
+        public double BlackScholes_Gamma(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
             double epsilon = 0.01;
-            var param = new VanillaOptionParameters(ToCppOptionType(OptionType.Call), strike, maturity);
+            var param = new VanillaOptionParameters(ToCppOptionType(optionType), strike, maturity);
             return _calculator.Gamma(ref param, spot, volatility, rate, epsilon);
         }
 
         public double BlackScholes_ImpliedVol(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double price)
-        {
-            throw new NotImplementedException();
+        {            
+            // Calculate implied volatility using Monte Carlo simulation
+            var param = new VanillaOptionParameters(ToCppOptionType(optionType), strike, maturity);            
+            double impliedVol = _calculator.ImpliedVolatilityMC(ref param, spot, rate, _numOfMcPaths, price);
+            return impliedVol;
         }
 
         public double BlackScholes_Rho(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
-            var param = new VanillaOptionParameters(ToCppOptionType(OptionType.Call), strike, maturity);
+            var param = new VanillaOptionParameters(ToCppOptionType(optionType), strike, maturity);
             return _calculator.Rho(ref param, spot, volatility, rate, _numOfMcPaths);
         }
 
         public double BlackScholes_Theta(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
-            throw new NotImplementedException();
+            var param = new VanillaOptionParameters(ToCppOptionType(optionType), strike, maturity);
+            return _calculator.Theta(ref param, spot, volatility, rate, _numOfMcPaths);
         }
 
-        public double BlackScholes_Vega(double spot, double strike, double rate, double carry, double maturity, double vol)
+        public double BlackScholes_Vega(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double vol)
         {
-            throw new NotImplementedException();
+            var param = new VanillaOptionParameters(ToCppOptionType(optionType), strike, maturity);
+            return _calculator.Vega(ref param, spot, vol, rate, _numOfMcPaths);
         }
 
         static ProjectXAnalyticsCppLib.OptionType ToCppOptionType(OptionType optionType) => optionType switch

@@ -13,11 +13,11 @@ namespace ProjectX.AnalyticsLib
     {
         double BlackScholes(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility);
         double BlackScholes_Delta(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility);
-        double BlackScholes_Gamma(double spot, double strike, double rate, double carry, double maturity, double volatility);
+        double BlackScholes_Gamma(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility);
         double BlackScholes_ImpliedVol(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double price);
         double BlackScholes_Rho(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility);
         double BlackScholes_Theta(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility);
-        double BlackScholes_Vega(double spot, double strike, double rate, double carry, double maturity, double vol);
+        double BlackScholes_Vega(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double vol);
     }
 
     [Export(typeof(IBlackScholesOptionsPricingCalculator)), PartCreationPolicy(CreationPolicy.Shared)]
@@ -79,7 +79,7 @@ namespace ProjectX.AnalyticsLib
             return option.Value;
         }
 
-        public double BlackScholes_Gamma(double spot, double strike, double rate, double carry, double maturity, double volatility)
+        public double BlackScholes_Gamma(OptionType _, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
             double d1 = BlackScholesFns.d1_(spot, strike, carry, volatility, maturity);
 
@@ -137,7 +137,7 @@ namespace ProjectX.AnalyticsLib
             return option.Value;
         }
 
-        public double BlackScholes_Vega(double spot, double strike, double rate, double carry, double maturity, double vol)
+        public double BlackScholes_Vega(OptionType _, double spot, double strike, double rate, double carry, double maturity, double vol)
         {
             double d1 = BlackScholesFns.d1_(spot, strike, carry, vol, maturity);
             return spot * Math.Exp((carry - rate) * maturity) * BlackScholesFns.CummulativeNormal(d1) * Math.Sqrt(maturity);

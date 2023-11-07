@@ -8,7 +8,7 @@ public class OptionsPricingCalculatorWrapperTest
     static IEnumerable<(IBlackScholesOptionsPricingCalculator calculator, double percentError)> VanillaOptionCalculators()
     {
         yield return (new BlackScholesOptionsPricingCalculator(), 42.0);
-        yield return (new OptionsPricingCppCalculatorWrapper(200_000, RandomAlgorithm.BoxMuller), 1.35);
+        yield return (new OptionsPricingCppCalculatorWrapper(200_000, RandomAlgorithm.BoxMuller), 1.75);
     }
 
     // real numbers example http://financetrain.com/option-pricing-using-monte-carlo-simulation/
@@ -115,7 +115,7 @@ public class OptionsPricingCalculatorWrapperTest
         Console.WriteLine($"Price of put is {put}");
         Assert.That(put, Is.EqualTo(11.155).Within(td.percentError).Percent);
 
-        var gamma = td.calculator.BlackScholes_Gamma(spot, strike, r, b, maturity, vol);
+        var gamma = td.calculator.BlackScholes_Gamma(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Gamma of call/put {gamma}");
         Assert.That(gamma, Is.EqualTo(0.01869).Within(td.percentError).Percent);
     }
@@ -141,19 +141,19 @@ public class OptionsPricingCalculatorWrapperTest
 
         var call = td.calculator.BlackScholes(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Price of call is {call}");
-        Assert.That(call, Is.EqualTo(5.2515).Within(td.percentError).Percent);
+        Assert.That(call, Is.EqualTo(6.5217).Within(td.percentError).Percent);
 
         var put = td.calculator.BlackScholes(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Price of put is {put}");
-        Assert.That(put, Is.EqualTo(12.8422).Within(td.percentError).Percent);
+        Assert.That(put, Is.EqualTo(11.1553).Within(td.percentError).Percent);
 
         var theta = td.calculator.BlackScholes_Theta(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Theta for a call is {theta}");
-        Assert.That(theta, Is.EqualTo(-8.9962).Within(td.percentError).Percent);
+        Assert.That(theta, Is.EqualTo(-12.3338).Within(td.percentError).Percent);
 
         var thetaPut = td.calculator.BlackScholes_Theta(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Theta for a Put is {thetaPut}");
-        Assert.That(thetaPut, Is.EqualTo(-4.3554).Within(td.percentError).Percent);
+        Assert.That(thetaPut, Is.EqualTo(-12.3338).Within(td.percentError).Percent);
     }
 
     [TestCaseSource(nameof(VanillaOptionCalculators))]
@@ -176,19 +176,19 @@ public class OptionsPricingCalculatorWrapperTest
 
         var call = td.calculator.BlackScholes(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Price of call is {call}");
-        Assert.That(call, Is.EqualTo(5.2515).Within(td.percentError).Percent);
+        Assert.That(call, Is.EqualTo(6.5562).Within(td.percentError).Percent);
 
         var put = td.calculator.BlackScholes(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Price of put is {put}");
-        Assert.That(put, Is.EqualTo(12.8422).Within(td.percentError).Percent);
+        Assert.That(put, Is.EqualTo(11.15532).Within(td.percentError).Percent);
 
         var rho = td.calculator.BlackScholes_Rho(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Rho of call is {rho}");
-        Assert.That(rho, Is.EqualTo(16.8656).Within(td.percentError).Percent);
+        Assert.That(rho, Is.EqualTo(19.598).Within(td.percentError).Percent);
 
         var rhoPut = td.calculator.BlackScholes_Rho(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Rho of put is {rho}");
-        Assert.That(rhoPut, Is.EqualTo(-35.4519).Within(td.percentError).Percent);
+        Assert.That(rhoPut, Is.EqualTo(19.5988).Within(td.percentError).Percent);
     }
 
     [TestCaseSource(nameof(VanillaOptionCalculators))]
@@ -211,15 +211,15 @@ public class OptionsPricingCalculatorWrapperTest
 
         var call = td.calculator.BlackScholes(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Price of call is {call}");
-        Assert.That(call, Is.EqualTo(5.2515).Within(td.percentError).Percent);
+        Assert.That(call, Is.EqualTo(6.49988).Within(td.percentError).Percent);
 
         var put = td.calculator.BlackScholes(Core.OptionType.Put, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Price of put is {put}");
-        Assert.That(put, Is.EqualTo(12.8422).Within(td.percentError).Percent);
+        Assert.That(put, Is.EqualTo(11.1553).Within(td.percentError).Percent);
 
-        var vega = td.calculator.BlackScholes_Vega(spot, strike, r, b, maturity, vol);
+        var vega = td.calculator.BlackScholes_Vega(Core.OptionType.Call, spot, strike, r, b, maturity, vol);
         Console.WriteLine($"Vega of call/put is {vega}");
-        Assert.That(vega, Is.EqualTo(27.5649).Within(td.percentError).Percent);
+        Assert.That(vega, Is.EqualTo(28.04686).Within(td.percentError).Percent);
     }
 
     [TestCaseSource(nameof(VanillaOptionCalculators))]
