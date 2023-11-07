@@ -91,7 +91,7 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::DeltaMC(VanillaOpti
 
 	for (int i = 0; i < NumberOfPaths; i++)
 	{
-		double randNorm = RandomStandardNormal();
+		double randNorm = m_randomWalk->GetOneGaussian();;
 		double ST = S * Math::Exp((r - (Math::Pow(sigma, 2) / 2)) * T + sigma * Math::Sqrt(T) * randNorm);
 		double payoff = Math::Max(ST - K, 0.0);
 		double priceUp = Math::Exp(-r * T) * payoff;
@@ -136,7 +136,7 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::GammaMC(
 
 	for (int i = 0; i < NumberOfPaths; i++)
 	{
-		double randNorm = RandomStandardNormal();
+		double randNorm = m_randomWalk->GetOneGaussian();
 		double ST = S * Math::Exp((r - (Math::Pow(sigma, 2) / 2)) * T + sigma * Math::Sqrt(T) * randNorm);
 		double payoff = Math::Max(ST - K, 0.0);
 		double priceUp = Math::Exp(-r * T) * payoff;
@@ -180,7 +180,7 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::RhoMC(VanillaOption
 
 	for (int i = 0; i < NumberOfPaths; i++)
 	{
-		double randNorm = RandomStandardNormal();
+		double randNorm = m_randomWalk->GetOneGaussian();
 		double ST = S * Math::Exp((r - (Math::Pow(sigma, 2) / 2)) * T + sigma * Math::Sqrt(T) * randNorm);
 		double payoff = Math::Max(ST - K, 0.0);
 		double priceUp = Math::Exp(-(r + epsilon) * T) * payoff;
@@ -224,7 +224,7 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::ThetaMC(
 
 		while (t < T)
 		{
-			Double randNorm = RandomStandardNormal();
+			Double randNorm = m_randomWalk->GetOneGaussian();
 			ST = ST * Math::Exp((r - (Math::Pow(sigma, 2) / 2)) * timeStep + sigma * Math::Sqrt(timeStep) * randNorm);
 			t += timeStep;
 
@@ -267,7 +267,7 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::VegaMC(VanillaOptio
 
 	for (int i = 0; i < NumberOfPaths; i++)
 	{
-		double randNorm = RandomStandardNormal();
+		double randNorm = m_randomWalk->GetOneGaussian();
 		double ST = S * Math::Exp((r - (Math::Pow(sigma + epsilon, 2) / 2)) * T + (sigma + epsilon) * Math::Sqrt(T) * randNorm);
 		double payoff = Math::Max(ST - K, 0.0);
 		double priceUp = Math::Exp(-r * T) * payoff;
@@ -327,7 +327,7 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::ImpliedVolatilityMC
 
 	for (int i = 0; i < NumberOfPaths; i++)
 	{
-		double randNorm = RandomStandardNormal();
+		double randNorm = m_randomWalk->GetOneGaussian();
 		double ST = S * Math::Exp((r - (Math::Pow(sigma, 2) / 2)) * T + sigma * Math::Sqrt(T) * randNorm);
 		double payoff = Math::Max(ST - K, 0.0);
 		price = Math::Exp(-r * T) * payoff;
