@@ -7,19 +7,15 @@ using System.Text;
 using System.Threading.Tasks;
 using BlackScholesFns = ProjectX.Core.Analytics.BlackScholesFunctions;
 
-namespace ProjectX.AnalyticsLib;
+namespace ProjectX.AnalyticsLib.OptionsCalculators;
 
-public interface IPureBlackScholesOptionsPricingCalculator : IOptionsGreeksCalculator 
-{ 
-}
-
-[Export(typeof(IPureBlackScholesOptionsPricingCalculator)), PartCreationPolicy(CreationPolicy.Shared)]
-public class BlackScholesOptionsPricingCalculator : IPureBlackScholesOptionsPricingCalculator
+[Export(typeof(IBlackScholesCSharpPricer)), PartCreationPolicy(CreationPolicy.Shared)]
+public class BlackScholesOptionsPricer : IBlackScholesCSharpPricer
 {
     [ImportingConstructor]
-    public BlackScholesOptionsPricingCalculator()
+    public BlackScholesOptionsPricer()
     {
-        
+
     }
     /// <summary>
     /// Generalized Black Scholes Model 

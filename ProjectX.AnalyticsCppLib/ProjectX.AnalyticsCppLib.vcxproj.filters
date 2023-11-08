@@ -45,11 +45,11 @@
     <ClInclude Include="MonteCarloOptionsPricer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="OptionsPricerCpp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ProjectX.AnalyticsCppLib.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="AssemblyInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -72,6 +72,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MonteCarloOptionsPricer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OptionsPricerCpp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

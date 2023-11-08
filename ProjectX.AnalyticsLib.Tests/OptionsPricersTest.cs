@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using ProjectX.AnalyticsLib.OptionsCalculators;
 using ProjectXAnalyticsCppLib;
 using System.Runtime.ConstrainedExecution;
 
@@ -6,15 +7,15 @@ namespace ProjectX.AnalyticsLib.Tests;
 
 public class OptionsPricersTest
 {
-    static readonly IOptions<OptionsPricingCppCalculatorWrapperOptions> options = Options.Create<OptionsPricingCppCalculatorWrapperOptions>(new OptionsPricingCppCalculatorWrapperOptions() 
+    static readonly IOptions<OptionsPricerCppWrapperOptions> options = Options.Create<OptionsPricerCppWrapperOptions>(new OptionsPricerCppWrapperOptions() 
     {  
         NumOfMcPaths = 250000, 
         RandomAlgo = RandomAlgorithm.BoxMuller 
     });
     static IEnumerable<(IOptionsGreeksCalculator calc, double percentError)> VanillaOptionCalculators()
     {
-        yield return (new BlackScholesOptionsPricingCalculator(), 1.0);
-        yield return (new OptionsPricingCppCalculatorWrapper(options), 50);
+        yield return (new BlackScholesOptionsPricer(), 1.0);
+        yield return (new OptionsPricerCppWrapper(options), 50);
         yield return (new MonteCarloOptionsPricerCppWrapper(1000), 50);
     }
     
@@ -75,10 +76,10 @@ public class OptionsPricersTest
         const double toleranceVega = 7500; // needss investigation
 
         // https://www.macroption.com/black-scholes-formula/        
-        IOptionsGreeksCalculator calc = new BlackScholesOptionsPricingCalculator();
-        IOptionsGreeksCalculator mc = new OptionsPricingCppCalculatorWrapper(options); 
-        IBlackScholesOptionsGreeksCalculator bs = (IBlackScholesOptionsGreeksCalculator) mc;
-        IMonteCarloOptionsPricingCppCalculator mc2 = new MonteCarloOptionsPricerCppWrapper(1000);
+        IOptionsGreeksCalculator calc = new BlackScholesOptionsPricer();
+        IOptionsGreeksCalculator mc = new OptionsPricerCppWrapper(options); 
+        IBlackScholesOptionsGreeksPricer bs = (IBlackScholesOptionsGreeksPricer) mc;
+        IMonteCarloOptionsPricerCpp mc2 = new MonteCarloOptionsPricerCppWrapper(1000);
 
         // PV       
         var call = calc.PV(Core.OptionType.Call, spot, strike, r, b, maturity, vol);

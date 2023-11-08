@@ -7,7 +7,13 @@ using System.Threading.Tasks;
 
 namespace ProjectX.AnalyticsLib;
 
-public interface IBlackScholesOptionsGreeksCalculator
+public interface IMonteCarloOptionsPricerCpp : IOptionsGreeksCalculator
+{
+}
+public interface IBlackScholesCSharpPricer : IOptionsGreeksCalculator
+{
+}
+public interface IBlackScholesOptionsGreeksPricer
 {
     double BlackScholes_PV(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility);
     double BlackScholes_Delta(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility);

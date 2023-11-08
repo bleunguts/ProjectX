@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using ProjectX.AnalyticsLib;
+using ProjectX.AnalyticsLib.OptionsCalculators;
 using ProjectX.Core;
 using ProjectX.Core.Services;
 using ProjectX.GatewayAPI.BackgroundServices;
@@ -24,8 +25,8 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 });
 
 builder.Services.TryAddScoped<IPricingTasksProcessor, PricingTasksProcessor>();
-builder.Services.TryAddScoped<IPureBlackScholesOptionsPricingCalculator, BlackScholesOptionsPricingCalculator>();
-builder.Services.TryAddScoped<IMonteCarloOptionsPricingCppCalculator, OptionsPricingCppCalculatorWrapper>();
+builder.Services.TryAddScoped<IBlackScholesCSharpPricer, BlackScholesOptionsPricer>();
+builder.Services.TryAddScoped<IMonteCarloOptionsPricerCpp, OptionsPricerCppWrapper>();
 builder.Services.TryAddScoped<IBlackScholesOptionsPricingModel, BlackScholesOptionsPricingModel>();
 builder.Services.AddSingleton<IFXSpotPricer,FXSpotPricer>();
 builder.Services.AddSingleton<IFXSpotPriceStream, RandomFXSpotPriceStream>();
@@ -41,7 +42,7 @@ builder.Services.Configure<RandomFXSpotPriceStreamOptions>(options =>
     options.RawSpreadInPips = Convert.ToDecimal(config.GetSection("FX")["RawSpreadInPips"]);
     options.IntervalBetweenSends = Convert.ToInt32(config.GetSection("FX")["IntervalBetweenSends"]);
 });
-builder.Services.Configure<OptionsPricingCppCalculatorWrapperOptions>(options =>
+builder.Services.Configure<OptionsPricerCppWrapperOptions>(options =>
 {
     options.NumOfMcPaths = Convert.ToUInt64(config.GetSection("OptionsPricer")["NumOfMcPaths"]);
     options.RandomAlgo = (RandomAlgorithm) Enum.Parse(typeof(RandomAlgorithm), config.GetSection("OptionsPricer")["RandomAlgorithm"]);

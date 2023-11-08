@@ -1,11 +1,10 @@
 #include "pch.h"
-
-#include "ProjectX.AnalyticsCppLib.h"
+#include "OptionsPricerCpp.h"
 #include "Parameters.h"
 #include "BlackScholesFunctions.h"
 #include <cmath>
 
-Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::MCValue(VanillaOptionParameters^% OptionParams,
+Double ProjectXAnalyticsCppLib::OptionsPricerCpp::MCValue(VanillaOptionParameters^% OptionParams,
 	Double Spot,
 	Double Vol,
 	Double r,
@@ -59,21 +58,21 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::MCValue(VanillaOpti
 	return mean;
 }
 
-Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Value(
+Double ProjectXAnalyticsCppLib::OptionsPricerCpp::Value(
 	VanillaOptionParameters^% TheOption,
 	Double Spot,
 	Double Vol,
-	Double r) 
+	Double r)
 {
 	return BlackScholesFunctions::BlackScholes(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
 }
 
-Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Delta(VanillaOptionParameters^% TheOption,
+Double ProjectXAnalyticsCppLib::OptionsPricerCpp::Delta(VanillaOptionParameters^% TheOption,
 	Double Spot,
 	Double Vol,
-	Double r,	
+	Double r,
 	UInt64 NumberOfPaths
-) 
+)
 {
 	double epsilon = 0.01; // Small change in stock price
 	// Calculate the option price using Monte Carlo simulation
@@ -84,10 +83,10 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Delta(VanillaOption
 	return delta;
 }
 
-Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::DeltaMC(VanillaOptionParameters^% TheOption,
+Double ProjectXAnalyticsCppLib::OptionsPricerCpp::DeltaMC(VanillaOptionParameters^% TheOption,
 	Double Spot,
 	Double Vol,
-	Double r,	
+	Double r,
 	UInt64 NumberOfPaths // Number of Monte Carlo simulations
 )
 {
@@ -115,12 +114,12 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::DeltaMC(VanillaOpti
 	return deltaSum / NumberOfPaths;
 }
 
-Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Gamma(VanillaOptionParameters^% TheOption,
+Double ProjectXAnalyticsCppLib::OptionsPricerCpp::Gamma(VanillaOptionParameters^% TheOption,
 	Double Spot,
 	Double Vol,
 	Double r,
 	Double epsilon
-) 
+)
 {
 	double gamma = BlackScholesFunctions::BlackScholesGamma(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol, epsilon);
 	return gamma;
@@ -128,11 +127,11 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Gamma(VanillaOption
 
 
 // Function to calculate Gamma using Monte Carlo simulation
-Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::GammaMC(
+Double ProjectXAnalyticsCppLib::OptionsPricerCpp::GammaMC(
 	VanillaOptionParameters^% TheOption,
 	Double Spot,
 	Double Vol,
-	Double r,		
+	Double r,
 	UInt64 NumberOfPaths // Number of Monte Carlo simulations
 )
 {
@@ -161,19 +160,19 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::GammaMC(
 }
 
 
-Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Rho(VanillaOptionParameters^% TheOption,
+Double ProjectXAnalyticsCppLib::OptionsPricerCpp::Rho(VanillaOptionParameters^% TheOption,
 	Double Spot,
 	Double Vol,
-	Double r,	
+	Double r,
 	UInt64 NumberOfPaths
-) 
-{	
+)
+{
 	double rho = BlackScholesFunctions::BlackScholesRho(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
 	return rho;
 }
 
 // Function to calculate Rho using Monte Carlo simulation
-Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::RhoMC(VanillaOptionParameters^% TheOption,
+Double ProjectXAnalyticsCppLib::OptionsPricerCpp::RhoMC(VanillaOptionParameters^% TheOption,
 	Double Spot,
 	Double Vol,
 	Double r,
@@ -199,17 +198,17 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::RhoMC(VanillaOption
 
 	return rhoSum / NumberOfPaths;
 }
-Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Theta(VanillaOptionParameters^% TheOption,
+Double ProjectXAnalyticsCppLib::OptionsPricerCpp::Theta(VanillaOptionParameters^% TheOption,
 	Double Spot,
 	Double Vol,
 	Double r,
 	UInt64 NumberOfPaths
-) 
+)
 {
 	double theta = BlackScholesFunctions::BlackScholesTheta(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
 	return theta;
 }
-Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::ThetaMC(
+Double ProjectXAnalyticsCppLib::OptionsPricerCpp::ThetaMC(
 	VanillaOptionParameters^% TheOption,
 	Double Spot,
 	Double Vol,
@@ -239,7 +238,7 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::ThetaMC(
 
 			payoff = Math::Max(ST - K, 0.0);
 			price = Math::Exp(-r * t) * payoff;
-		}		
+		}
 		Double PV = BlackScholesFunctions::BlackScholes(S, K, r, T - t, sigma);
 		thetaSum += (price - PV);
 	}
@@ -248,7 +247,7 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::ThetaMC(
 }
 
 
-Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Vega(VanillaOptionParameters^% TheOption,
+Double ProjectXAnalyticsCppLib::OptionsPricerCpp::Vega(VanillaOptionParameters^% TheOption,
 	Double Spot,
 	Double Vol,
 	Double r,
@@ -260,7 +259,7 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::Vega(VanillaOptionP
 }
 
 // Function to calculate Vega using Monte Carlo simulation
-Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::VegaMC(VanillaOptionParameters^% TheOption,
+Double ProjectXAnalyticsCppLib::OptionsPricerCpp::VegaMC(VanillaOptionParameters^% TheOption,
 	Double Spot,
 	Double Vol,
 	Double r,
@@ -287,15 +286,15 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::VegaMC(VanillaOptio
 	return vegaSum / NumberOfPaths;
 }
 
-Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::ImpliedVolatility(
+Double ProjectXAnalyticsCppLib::OptionsPricerCpp::ImpliedVolatility(
 	VanillaOptionParameters^% TheOption,
 	Double Spot,
-	Double r,	
+	Double r,
 	UInt64 NumberOfPaths,
 	Double optionPrice
-) 
+)
 {
-	double S = Spot;	
+	double S = Spot;
 	double T = TheOption->Expiry();
 	double K = TheOption->Strike();
 	double epsilon = 1e-6;  // Tolerance for convergence
@@ -321,9 +320,9 @@ Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::ImpliedVolatility(
 }
 
 // Function to calculate implied volatility using a Monte Carlo simulation
-Double ProjectXAnalyticsCppLib::OptionsPricingCppCalculator::ImpliedVolatilityMC(VanillaOptionParameters^% TheOption,
-	Double Spot,	
-	Double r,	
+Double ProjectXAnalyticsCppLib::OptionsPricerCpp::ImpliedVolatilityMC(VanillaOptionParameters^% TheOption,
+	Double Spot,
+	Double r,
 	UInt64 NumberOfPaths,
 	Double optionPrice)
 {

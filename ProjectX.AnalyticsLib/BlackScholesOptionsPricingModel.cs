@@ -24,7 +24,7 @@ namespace ProjectX.Core.Services
         private readonly IOptionsGreeksCalculator _cppCalcualtor;
 
         [ImportingConstructor]
-        public BlackScholesOptionsPricingModel(IPureBlackScholesOptionsPricingCalculator calculator, IMonteCarloOptionsPricingCppCalculator cppCalculator)
+        public BlackScholesOptionsPricingModel(IBlackScholesCSharpPricer calculator, IMonteCarloOptionsPricerCpp cppCalculator)
         {
             _bsCalculator = calculator;
             _cppCalcualtor = cppCalculator;

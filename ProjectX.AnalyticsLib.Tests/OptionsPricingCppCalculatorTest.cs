@@ -16,7 +16,7 @@ public class OptionsPricingCppCalculatorTest
     [Test]
     public void ShallBeAbleToPriceOptionWithCppOptionsPricingCalculator()
     {
-        var calculator = new OptionsPricingCppCalculator(new RandomWalk(RandomAlgorithm.BoxMuller));
+        var calculator = new OptionsPricerCpp(new RandomWalk(RandomAlgorithm.BoxMuller));
 
         VanillaOptionParameters theOption = new(OptionType.Call, 200.0, 0.25);
         double spot = 195.0;
@@ -33,7 +33,7 @@ public class OptionsPricingCppCalculatorTest
     [Test]
     public void ShallBeAbleToThetaMCOnAnOption()
     {
-        var calculator = new OptionsPricingCppCalculator(new RandomWalk(RandomAlgorithm.BoxMuller));
+        var calculator = new OptionsPricerCpp(new RandomWalk(RandomAlgorithm.BoxMuller));
         VanillaOptionParameters theOption = new(OptionType.Call, 200.0, 0.95);
         double spot = 195.0;
         double vol = 0.30;

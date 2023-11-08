@@ -1,6 +1,27 @@
 #include "pch.h"
 #include "BlackScholesFunctions.h"
 
+// Black-Scholes formula to calculate the option price
+Double ProjectXAnalyticsCppLib::BlackScholesFunctions::BlackScholes(
+	Double S, // Current stock price
+	Double K, // Strike price
+	Double r, // Risk-free interest rate
+	Double T, // Time to expiration
+	Double sigma // Volatility
+)
+{
+	Double d1 = (Math::Log(S / K) + (r + (Math::Pow(sigma, 2) / 2)) * T) / (sigma * Math::Sqrt(T));
+	Double d2 = d1 - sigma * Math::Sqrt(T);
+
+	Double N_d1 = normcdf(d1);
+	Double N_d2 = normcdf(d2);
+
+	Double optionPrice = S * N_d1 - K * Math::Exp(-r * T) * N_d2;
+	Double putOptionPrice = -S * N_d1 + K * Math::Exp(-r * T) * N_d2;
+
+	return optionPrice;
+}
+
 Double ProjectXAnalyticsCppLib::BlackScholesFunctions::BlackScholesDelta(
 	Double S, // Current stock price
 	Double K, // Strike price
@@ -36,27 +57,6 @@ Double ProjectXAnalyticsCppLib::BlackScholesFunctions::BlackScholesGamma(
 
 	return gamma;
 }
-
-// Black-Scholes formula to calculate the option price
-Double ProjectXAnalyticsCppLib::BlackScholesFunctions::BlackScholes(
-	Double S, // Current stock price
-	Double K, // Strike price
-	Double r, // Risk-free interest rate
-	Double T, // Time to expiration
-	Double sigma // Volatility
-)
-{
-	Double d1 = (Math::Log(S / K) + (r + (Math::Pow(sigma, 2) / 2)) * T) / (sigma * Math::Sqrt(T));
-	Double d2 = d1 - sigma * Math::Sqrt(T);
-
-	Double N_d1 = normcdf(d1);
-	Double N_d2 = normcdf(d2);
-
-	Double optionPrice = S * N_d1 - K * Math::Exp(-r * T) * N_d2;
-
-	return optionPrice;
-}
-
 
 Double ProjectXAnalyticsCppLib::BlackScholesFunctions::BlackScholesRho(
 	Double S, // Current stock price

@@ -128,6 +128,7 @@
   <ItemGroup>
     <ClInclude Include="BlackScholesFunctions.h" />
     <ClInclude Include="MonteCarloOptionsPricer.h" />
+    <ClInclude Include="OptionsPricerCpp.h" />
     <ClInclude Include="Parameters.h" />
     <ClInclude Include="PayOff.h" />
     <ClInclude Include="pch.h" />
@@ -141,6 +142,7 @@
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="BlackScholesFunctions.cpp" />
     <ClCompile Include="MonteCarloOptionsPricer.cpp" />
+    <ClCompile Include="OptionsPricerCpp.cpp" />
     <ClCompile Include="Parameters.cpp" />
     <ClCompile Include="PayOff.cpp" />
     <ClCompile Include="pch.cpp">
@@ -149,7 +151,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="ProjectX.AnalyticsCppLib.cpp" />
     <ClCompile Include="RandomWalk.cpp" />
     <ClCompile Include="VanillaOption.cpp" />
   </ItemGroup>

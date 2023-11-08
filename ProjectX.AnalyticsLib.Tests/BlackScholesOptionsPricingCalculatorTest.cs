@@ -1,11 +1,11 @@
-﻿using ProjectX.AnalyticsLib;
+﻿using ProjectX.AnalyticsLib.OptionsCalculators;
 using ProjectX.Core.Analytics;
 
 namespace ProjectX.Core.Tests
 {
     public class BlackScholesOptionsPricingCalculatorTest
     {
-        private BlackScholesOptionsPricingCalculator _calculator = new BlackScholesOptionsPricingCalculator();
+        private BlackScholesOptionsPricer _calculator = new BlackScholesOptionsPricer();
         
         [Test]
         public void WhenPricingACallOption()

@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using ProjectX.AnalyticsLib;
+using ProjectX.AnalyticsLib.OptionsCalculators;
 using ProjectX.Core.Analytics;
 using ProjectX.Core.Services;
 using System;
@@ -12,7 +13,7 @@ namespace ProjectX.Core.Tests
 {
     public class ExoticOptionsPricingCalculatorTest
     {
-        private ExoticOptionsPricingCalculator _calculator = new ExoticOptionsPricingCalculator(new BlackScholesOptionsPricingCalculator());
+        private ExoticOptionsPricingCalculator _calculator = new ExoticOptionsPricingCalculator(new BlackScholesOptionsPricer());
 
         [Test]
         public void WhenPricingAnAmericanOption()

@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using OptionType = ProjectX.Core.OptionType;
 
-namespace ProjectX.AnalyticsLib;
+namespace ProjectX.AnalyticsLib.OptionsCalculators;
 
-public class MonteCarloOptionsPricerCppWrapper : IMonteCarloOptionsPricingCppCalculator
+public class MonteCarloOptionsPricerCppWrapper : IMonteCarloOptionsPricerCpp
 {
     private readonly MonteCarloOptionsPricer _pricer = new MonteCarloOptionsPricer();
     private readonly int _numberOfMcPaths;
@@ -38,7 +38,7 @@ public class MonteCarloOptionsPricerCppWrapper : IMonteCarloOptionsPricingCppCal
     }
 
     public double ImpliedVol(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double price)
-    {        
+    {
         return 0.0;
     }
 
