@@ -191,7 +191,22 @@ namespace ProjectX.Core.Tests
                 var price = prices[i];
                 var impliedVol = _calculator.ImpliedVol(OptionType.Call, spot, strike, r, b, maturity, price);
                 Console.WriteLine($"ImpliedVol for price {price} and maturity {maturity} is {impliedVol}");
+                Assert.That(impliedVol, Is.EqualTo(ExpectedVols[maturity]).Within(1).Percent);
             }
         }
+
+        static readonly Dictionary<double, double> ExpectedVols = new Dictionary<double, double>()
+        {
+            { 0.1, 0.18365478515625 },
+            { 0.2, 0.13409423828125 },
+            { 0.3, 0.11175537109375 },
+            { 0.4, 0.09808349609375 },
+            { 0.5, 0.08843994140625 },
+            { 0.6, 0.08099365234375 },
+            { 0.7, 0.07501220703125 },
+            { 0.8, 0.06988525390625 },
+            { 0.9, 0.06549072265625 },
+            { 1.0, 0.06158447265625 },
+        };
     }
 }

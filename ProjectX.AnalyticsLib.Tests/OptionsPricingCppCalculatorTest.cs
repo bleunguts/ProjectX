@@ -40,13 +40,13 @@ public class OptionsPricingCppCalculatorTest
         double r = 0.05;
         uint numberOfPaths = 1000;
 
-        double thetaMC = calculator.ThetaMC(ref theOption, spot, vol, r, numberOfPaths, 0.01);
+        double thetaMC = calculator.ThetaMC(ref theOption, spot, vol, r, numberOfPaths, 0.01);        
         Assert.That(thetaMC, Is.LessThan(0));
         Assert.That(Double.IsRealNumber(thetaMC), Is.True);
 
         double theta = calculator.Theta(ref theOption, spot, vol, r, numberOfPaths);
-        Assert.That(theta, Is.LessThan(0));
         Console.WriteLine($"Theta: MC={thetaMC} BlackScholes={theta}");
+        Assert.That(theta, Is.LessThan(0));
         Assert.That(theta, Is.EqualTo(thetaMC).Within(5));
     }
 
