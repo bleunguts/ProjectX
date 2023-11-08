@@ -20,14 +20,18 @@ namespace ProjectX.Core.Services
     [Export(typeof(IBlackScholesOptionsPricingModel)), PartCreationPolicy(CreationPolicy.NonShared)]    
     public class BlackScholesOptionsPricingModel : IBlackScholesOptionsPricingModel
     {
-        private readonly IOptionsGreeksCalculator _bsCalculator;
-        private readonly IOptionsGreeksCalculator _cppCalcualtor;
+        private readonly IOptionsGreeksCalculator _blackScholesCSharpPricer;
+        private readonly IOptionsGreeksCalculator _blackScholesCppPricer;
+        private readonly IOptionsGreeksCalculator _monteCarloOptionsPricerCpp;
+        private readonly IOptionsGreeksCalculator _monteCarloOptionsPricer2Cpp;
 
         [ImportingConstructor]
-        public BlackScholesOptionsPricingModel(IBlackScholesCSharpPricer calculator, IMonteCarloOptionsPricerCpp cppCalculator)
+        public BlackScholesOptionsPricingModel(IBlackScholesCSharpPricer csharpPricer, IBlackScholesCppPricer cppPricer, IMonteCarloCppOptionsPricer cppmcPricer, IMonteCarloCppOptionsPricer2 cppmcPricer2)
         {
-            _bsCalculator = calculator;
-            _cppCalcualtor = cppCalculator;
+            _blackScholesCSharpPricer = csharpPricer;
+            _blackScholesCppPricer = cppPricer;
+            _monteCarloOptionsPricerCpp = cppmcPricer;
+            _monteCarloOptionsPricer2Cpp = cppmcPricer2;
         }
         public OptionsPricingByMaturityResults Price(OptionsPricingByMaturitiesRequest request)
         {
@@ -67,14 +71,14 @@ namespace ProjectX.Core.Services
 
         private IOptionsGreeksCalculator Calc(OptionsPricingCalculatorType calculatorType)
         {
-            switch(calculatorType)
+            return calculatorType switch
             {
-                case OptionsPricingCalculatorType.OptionsPricer:
-                    return _bsCalculator;
-                case OptionsPricingCalculatorType.OptionsPricerCpp:
-                    return _cppCalcualtor;
-            }
-            throw new NotImplementedException(nameof(calculatorType));
+                OptionsPricingCalculatorType.OptionsPricer => _blackScholesCSharpPricer,
+                OptionsPricingCalculatorType.OptionsPricerCpp => _blackScholesCppPricer,
+                OptionsPricingCalculatorType.MonteCarloCppPricer2 => _monteCarloOptionsPricer2Cpp,
+                OptionsPricingCalculatorType.MonteCarloCppPricer => _monteCarloOptionsPricerCpp,
+                _ => throw new NotImplementedException(nameof(calculatorType)),
+            };
         }
 
         public PlotOptionsPricingResult PlotGreeks(PlotOptionsPricingRequest request)

@@ -24,15 +24,19 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.Converters.Add(new Array2DConverter());
 });
 
-builder.Services.TryAddScoped<IPricingTasksProcessor, PricingTasksProcessor>();
+// quant pricers
 builder.Services.TryAddScoped<IBlackScholesCSharpPricer, BlackScholesOptionsPricer>();
-builder.Services.TryAddScoped<IMonteCarloOptionsPricerCpp, OptionsPricerCppWrapper>();
+builder.Services.TryAddScoped<IBlackScholesCppPricer, BlackScholesCppOptionsPricerWrapper>();
+builder.Services.TryAddScoped<IMonteCarloCppOptionsPricer, MonteCarloCppOptionsPricerWrapper>();
+builder.Services.TryAddScoped<IMonteCarloCppOptionsPricer2, MonteCarloCppOptionsPricer2Wrapper>();
+// others
 builder.Services.TryAddScoped<IBlackScholesOptionsPricingModel, BlackScholesOptionsPricingModel>();
 builder.Services.AddSingleton<IFXSpotPricer,FXSpotPricer>();
 builder.Services.AddSingleton<IFXSpotPriceStream, RandomFXSpotPriceStream>();
 builder.Services.AddSingleton<IFXMarketService, FXMarketService>();
 builder.Services.AddSingleton<PricingTasksChannel>();
 builder.Services.AddSingleton<FXTasksChannel>();
+builder.Services.TryAddScoped<IPricingTasksProcessor, PricingTasksProcessor>();
 
 builder.Services.AddOptions();
 IConfiguration config = builder.Configuration;

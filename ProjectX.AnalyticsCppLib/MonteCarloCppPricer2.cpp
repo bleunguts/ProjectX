@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "MonteCarloOptionsPricer.h"
+#include "MonteCarloCppPricer2.h"
 
 // Function to calculate the cumulative distribution function of the standard normal distribution
 static double cumulative_normal(double x) 
@@ -12,7 +12,7 @@ static double random_double() {
     return rand() / (RAND_MAX + 1.0);
 }
 
-void ProjectXAnalyticsCppLib::MonteCarloOptionsPricer::Execute(
+void ProjectXAnalyticsCppLib::MonteCarloCppPricer2::Execute(
 	double S,
 	double K,
 	double r,

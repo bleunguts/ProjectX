@@ -4,13 +4,13 @@ using OptionType = ProjectX.Core.OptionType;
 
 namespace ProjectX.AnalyticsLib.OptionsCalculators;
 
-public class MonteCarloOptionsPricerCppWrapper : IMonteCarloOptionsPricerCpp
+public class MonteCarloCppOptionsPricer2Wrapper : IMonteCarloCppOptionsPricer2
 {
-    private readonly MonteCarloOptionsPricer _pricer = new MonteCarloOptionsPricer();
+    private readonly MonteCarloCppPricer2 _pricer = new();
     private readonly int _numberOfMcPaths;
     private long _timeTaken;
 
-    public MonteCarloOptionsPricerCppWrapper(int numberOfMcPaths = 1000)
+    public MonteCarloCppOptionsPricer2Wrapper(int numberOfMcPaths = 1000)
     {
         _numberOfMcPaths = numberOfMcPaths;
     }

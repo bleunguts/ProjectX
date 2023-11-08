@@ -3,7 +3,7 @@ using namespace System;
 
 namespace ProjectXAnalyticsCppLib 
 {
-	public ref class MonteCarloOptionsPricer 
+	public ref class MonteCarloCppPricer2
 	{
 	public:
 		void Execute(

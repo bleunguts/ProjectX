@@ -60,7 +60,7 @@ namespace Shell.Screens.Options
         private double zTick = 0.2;
         private CancellationTokenSource _cts = new();
         private OptionsPricingCalculatorType _calculatorType = OptionsPricingCalculatorType.OptionsPricer;
-        private string _calculatorTypeDesc;
+        private string _calculatorTypeDesc = "Default pricer";
 
         public BindableCollection<DataSeries3D> DataCollection { get; set; } = new BindableCollection<DataSeries3D>();        
         
@@ -230,15 +230,26 @@ namespace Shell.Screens.Options
             var target = CalculatorType switch
             {
                 OptionsPricingCalculatorType.OptionsPricer => 
-                    (
-                        OptionsPricingCalculatorType.OptionsPricerCpp, 
-                        "MonteCarlo Options Pricer native C++"
-                    ),
-                OptionsPricingCalculatorType.OptionsPricerCpp => 
-                    (
-                        OptionsPricingCalculatorType.OptionsPricer, 
-                        "Vanilla BlackScholes Options Pricer C#"
-                    ),
+                (
+                    OptionsPricingCalculatorType.OptionsPricerCpp, 
+                    "BlackScholes Options Pricer native C++"
+                ),
+                OptionsPricingCalculatorType.OptionsPricerCpp =>
+                (
+                    OptionsPricingCalculatorType.MonteCarloCppPricer,
+                    "MonteCarlo Pricing native C++"
+                ),
+                OptionsPricingCalculatorType.MonteCarloCppPricer =>
+               (
+                   OptionsPricingCalculatorType.MonteCarloCppPricer2,
+                    "MonteCarlo Pricing native C++ (faster)"
+               ),
+                OptionsPricingCalculatorType.MonteCarloCppPricer2 => 
+                (
+                    OptionsPricingCalculatorType.OptionsPricer, 
+                    "Vanilla BlackScholes Options Pricer C#"
+                ),
+
                 _ => throw new NotImplementedException(),
             };
 

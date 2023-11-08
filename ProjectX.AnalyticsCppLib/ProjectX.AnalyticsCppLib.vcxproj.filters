@@ -42,10 +42,13 @@
     <ClInclude Include="BlackScholesFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MonteCarloOptionsPricer.h">
+    <ClInclude Include="MonteCarloCppPricer2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OptionsPricerCpp.h">
+    <ClInclude Include="MonteCarloCppPricer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BlackScholesCppPricer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -71,10 +74,13 @@
     <ClCompile Include="BlackScholesFunctions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MonteCarloOptionsPricer.cpp">
+    <ClCompile Include="MonteCarloCppPricer2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OptionsPricerCpp.cpp">
+    <ClCompile Include="MonteCarloCppPricer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BlackScholesCppPricer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
