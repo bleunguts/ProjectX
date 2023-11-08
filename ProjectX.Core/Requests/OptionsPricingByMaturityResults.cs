@@ -3,11 +3,13 @@ using System.Linq;
 
 namespace ProjectX.Core.Requests
 {
+    public record AuditTrail(OptionsPricingCalculatorType CalculatorType);
     public record MaturityAndOptionGreeksResultPair(double Maturity, OptionGreeksResult OptionGreeks);
 
     public class OptionsPricingByMaturityResults : OptionsPricingResultsBase
     {
         public List<MaturityAndOptionGreeksResultPair> Results { get; }
+        public AuditTrail AuditTrail { get; }
 
         public int ResultsCount
         {
@@ -19,9 +21,10 @@ namespace ProjectX.Core.Requests
         }
         public MaturityAndOptionGreeksResultPair this[int index] => Results[index];        
     
-        public OptionsPricingByMaturityResults(Guid RequestId, List<MaturityAndOptionGreeksResultPair> results) : base(RequestId)
+        public OptionsPricingByMaturityResults(Guid RequestId, List<MaturityAndOptionGreeksResultPair> results, AuditTrail auditTrail) : base(RequestId)
         {
             Results = results;
+            AuditTrail = auditTrail;
         }
 
         public override string ToString() => $"{ResultsCount} results";       

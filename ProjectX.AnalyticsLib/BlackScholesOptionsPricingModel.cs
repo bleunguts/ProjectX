@@ -66,7 +66,7 @@ namespace ProjectX.Core.Services
             {
                 temp.Add(new MaturityAndOptionGreeksResultPair(result.Item1, result.Item2));
             }
-            return new OptionsPricingByMaturityResults(request.Id, temp);            
+            return new OptionsPricingByMaturityResults(request.Id, temp, new AuditTrail(calculatorType));            
         }
 
         private IOptionsGreeksCalculator Calc(OptionsPricingCalculatorType calculatorType)

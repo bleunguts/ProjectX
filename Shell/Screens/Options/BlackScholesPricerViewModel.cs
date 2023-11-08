@@ -6,6 +6,7 @@ using ProjectX.Core.Requests;
 using System;
 using System.ComponentModel.Composition;
 using System.Data;
+using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -26,16 +27,34 @@ namespace Shell.Screens.Options
             this._gatewayApiClient = gatewayApiClient;
             DisplayName = "Black-Scholes (Options)";
 
-            OptionTable.Columns.AddRange(new[]
+            static DataColumn[] optionTableHeaders()
             {
-                new DataColumn("Maturity", typeof(double)),
-                new DataColumn("Price", typeof(double)),
-                new DataColumn("Delta", typeof(double)),
-                new DataColumn("Gamma", typeof(double)),
-                new DataColumn("Theta", typeof(double)),
-                new DataColumn("Rho", typeof(double)),
-                new DataColumn("Vega", typeof(double)),
-            });
+                return new[]
+                {
+                    new DataColumn("Maturity", typeof(double)),
+                    new DataColumn("Price", typeof(double)),
+                    new DataColumn("Delta", typeof(double)),
+                    new DataColumn("Gamma", typeof(double)),
+                    new DataColumn("Theta", typeof(double)),
+                    new DataColumn("Rho", typeof(double)),
+                    new DataColumn("Vega", typeof(double)),
+                };
+            }
+            OptionTable.Columns.AddRange(optionTableHeaders());
+            OptionTable2.Columns.AddRange(optionTableHeaders());
+            static void AddSomeBlankData(DataTable optionTable)
+            {
+                double col = 0.1;
+                for (int i = 0; i <= 10; i++)
+                {
+                    var r = optionTable.NewRow();
+                    r[0] = col;
+                    optionTable.Rows.Add(r);
+                    col =+ (double)(i + 1) / 10;
+                }
+            }
+            AddSomeBlankData(OptionTable);
+            AddSomeBlankData(OptionTable2);
 
             OptionInputTable.Columns.AddRange(new[]
             {
@@ -48,8 +67,8 @@ namespace Shell.Screens.Options
             OptionInputTable.Rows.Add("Strike", 100, "Strike price");
             OptionInputTable.Rows.Add("Rate", 0.1, "Interest rate");
             OptionInputTable.Rows.Add("Carry", 0.04, "Cost of carry");
-            OptionInputTable.Rows.Add("Vol", 0.3, "Volatility");            
-        }
+            OptionInputTable.Rows.Add("Vol", 0.3, "Volatility");                     
+        }        
 
         #region Bindable Properties
         private DataTable optionInputTable = new();
@@ -61,6 +80,10 @@ namespace Shell.Screens.Options
         private CancellationTokenSource _cts = new();
         private OptionsPricingCalculatorType _calculatorType = OptionsPricingCalculatorType.OptionsPricer;
         private string _calculatorTypeDesc = "Default pricer";
+
+        private DataTable optionTable2 = new();
+        private OptionsPricingCalculatorType _calculatorType2 = OptionsPricingCalculatorType.OptionsPricerCpp;
+        private string _calculatorTypeDesc2 = "Default c++ pricer";
 
         public BindableCollection<DataSeries3D> DataCollection { get; set; } = new BindableCollection<DataSeries3D>();        
         
@@ -106,24 +129,43 @@ namespace Shell.Screens.Options
             get { return _calculatorTypeDesc; }
             set { _calculatorTypeDesc = value; NotifyOfPropertyChange(() => CalculatorTypeDesc); }
         }
+
+        public DataTable OptionTable2
+        {
+            get { return optionTable2; }
+            set { optionTable2 = value; NotifyOfPropertyChange(() => OptionTable2); }
+        }
+
+        public OptionsPricingCalculatorType CalculatorType2
+        {
+            get { return _calculatorType2; }
+            set { _calculatorType2 = value; NotifyOfPropertyChange(() => CalculatorType2); }
+        }
+
+        public string CalculatorTypeDesc2
+        {
+            get { return _calculatorTypeDesc2; }
+            set { _calculatorTypeDesc2 = value; NotifyOfPropertyChange(() => CalculatorTypeDesc2); }
+        }
         #endregion
         protected override async void OnActivate()
         {
             _cts = new CancellationTokenSource();
 
             await _gatewayApiClient.StartHubAsync();
-            _gatewayApiClient.HubConnection.On<OptionsPricingByMaturityResults>("PricingResults", pricingResult =>
+            _gatewayApiClient.HubConnection.On("PricingResults", (Action<OptionsPricingByMaturityResults>)(pricingResult =>
             {
                 Console.WriteLine($"Received Pricing Result: {pricingResult.ResultsCount} results, requestId: {pricingResult.RequestId}");
                 App.Current.Dispatcher.Invoke((System.Action)delegate
                 {
-                    OptionTable.Clear();
+                    DataTable optionTable = GetOptionTableToModify(pricingResult.AuditTrail.CalculatorType);
+                    optionTable.Clear();
                     foreach (var (maturity, riskResult) in pricingResult.Results)
                     {
-                        OptionTable.Rows.Add(maturity, riskResult.price, riskResult.delta, riskResult.gamma, riskResult.theta, riskResult.rho, riskResult.vega);
+                        optionTable.Rows.Add(maturity, riskResult.price, riskResult.delta, riskResult.gamma, riskResult.theta, riskResult.rho, riskResult.vega);
                     }
                 });
-            });
+            }));
 
             _gatewayApiClient.HubConnection.On<PlotOptionsPricingResult>("PlotResults", plotPricingResult =>
             {
@@ -156,7 +198,20 @@ namespace Shell.Screens.Options
             });
 
             base.OnActivate();
-        }
+            
+            DataTable GetOptionTableToModify(OptionsPricingCalculatorType c)
+            {                
+                if (c == CalculatorType)
+                {
+                    return OptionTable;
+                }
+                else if (c == CalculatorType2)
+                {
+                    return OptionTable2;
+                }
+                throw new Exception($"Can't find which option table to update based on {c}");
+            }
+        }       
 
         protected override async void OnDeactivate(bool close)
         {
@@ -165,26 +220,41 @@ namespace Shell.Screens.Options
             _cts.Cancel();
             await _gatewayApiClient.StopHubAsync();
         }
-
+        public async Task CalculatePrice2()
+        {
+            if(CalculatorType2 == CalculatorType)
+            {
+                MessageBox.Show("You must set different calculator types for comparison");
+                return;
+            }
+            OptionTable2.Clear();
+            await CalculatePrice(CalculatorType2);
+        }
         public async Task CalculatePrice()
-        {            
+        {
+            OptionTable.Clear();
+            await CalculatePrice(CalculatorType);
+        }
+        private async Task CalculatePrice(OptionsPricingCalculatorType calculatorType)
+        {
             try
-            {                
+            {
                 string? optionType = OptionInputTable.Rows[0]["Value"].ToString();
                 double spot = Convert.ToDouble(OptionInputTable.Rows[1]["Value"]);
                 double strike = Convert.ToDouble(OptionInputTable.Rows[2]["Value"]);
                 double rate = Convert.ToDouble(OptionInputTable.Rows[3]["Value"]);
                 double carry = Convert.ToDouble(OptionInputTable.Rows[4]["Value"]);
                 double vol = Convert.ToDouble(OptionInputTable.Rows[5]["Value"]);
-                var request = new OptionsPricingByMaturitiesRequest(10, optionType.ToOptionType(), spot, strike, rate, carry, vol, CalculatorType);
-                OptionTable.Clear();
-                await _gatewayApiClient.SubmitPricingRequest(request, _cts.Token);                                            
+                var request = new OptionsPricingByMaturitiesRequest(10, optionType.ToOptionType(), spot, strike, rate, carry, vol, calculatorType);
+                
+                await _gatewayApiClient.SubmitPricingRequest(request, _cts.Token);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Failed to send pricing request to backend to price\nReason:'{ex.Message}", "Calulate Price issue");
-            }            
+            }
         }
+
         public void PlotPrice() => Plot(OptionGreeks.Price, "Price", 1, 1);
         public void PlotDelta() => Plot(OptionGreeks.Delta, "Delta", 1, 1);
         public void PlotGamma() => Plot(OptionGreeks.Gamma, "Gamma", 2, 3);
@@ -224,14 +294,27 @@ namespace Shell.Screens.Options
             ZTick = 4;            
             DataCollection.Add(ds);
         }
+        public void CalculatorTypeToggle2()
+        {
+            (OptionsPricingCalculatorType next, string desc) = NextCalculator(CalculatorType2);
 
+            CalculatorType2 = next;
+            CalculatorTypeDesc2 = desc;
+        }
         public void CalculatorTypeToggle()
-        {            
-            var target = CalculatorType switch
+        {
+            (OptionsPricingCalculatorType next, string desc) = NextCalculator(CalculatorType);
+
+            CalculatorType = next;
+            CalculatorTypeDesc = desc;
+        }        
+        private static (OptionsPricingCalculatorType, string) NextCalculator(OptionsPricingCalculatorType calculatorType)
+        {
+            return calculatorType switch
             {
-                OptionsPricingCalculatorType.OptionsPricer => 
+                OptionsPricingCalculatorType.OptionsPricer =>
                 (
-                    OptionsPricingCalculatorType.OptionsPricerCpp, 
+                    OptionsPricingCalculatorType.OptionsPricerCpp,
                     "BlackScholes Options Pricer native C++"
                 ),
                 OptionsPricingCalculatorType.OptionsPricerCpp =>
@@ -244,17 +327,14 @@ namespace Shell.Screens.Options
                    OptionsPricingCalculatorType.MonteCarloCppPricer2,
                     "MonteCarlo Pricing native C++ (faster)"
                ),
-                OptionsPricingCalculatorType.MonteCarloCppPricer2 => 
+                OptionsPricingCalculatorType.MonteCarloCppPricer2 =>
                 (
-                    OptionsPricingCalculatorType.OptionsPricer, 
+                    OptionsPricingCalculatorType.OptionsPricer,
                     "Vanilla BlackScholes Options Pricer C#"
                 ),
 
                 _ => throw new NotImplementedException(),
             };
-
-            CalculatorType = target.Item1;
-            CalculatorTypeDesc = target.Item2;
         }
     }
 }

@@ -21,7 +21,8 @@ namespace ProjectX.Core.Tests
                 { 
                     new (1.0, new OptionGreeksResult(1.0, 1.0, 1.0, 1.0, 1.0, 1.0)),
                     new (3.0, new OptionGreeksResult(5.0, 1.0, 1.0, 1.0, 1.0, 5.0)) 
-                });
+                }, 
+                new AuditTrail(OptionsPricingCalculatorType.OptionsPricerCpp));
             var serialized = JsonConvert.SerializeObject(obj);
             Console.WriteLine($"Json: {serialized}");
             var deserialized = JsonConvert.DeserializeObject<OptionsPricingByMaturityResults>(serialized);
