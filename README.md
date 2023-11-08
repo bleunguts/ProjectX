@@ -21,13 +21,13 @@ The supporting components relates to providing pricers to help explore arbitrage
 ProjectX provies the following highly customizable and optimizable toolkit
 * ProjectX implements pricing models for FX products based on spreaded commisions, Options Pricing, Bonds Pricing, CDS Pricing
 * Vanilla Options Black Scholes Pricer (C#)
-* Implied Vol Pricer to help understand market sentiment
-* Simple Bonds Pricer
-* CDS Pricer
 * Vanilla Options MonteCarlo Options Pricer C++ with BoxMuller Guassian RNGs and normal distribution cdf for stochastic component
 * Vanilla Options BlackScholes Pricer (C++) lightning fast execution times to better support scalable valuation operations
 * FX Pricing & Order management System
 * QL.NET product pricer (future support experiment with popular opensource pricing library)
+* Simple Bonds Pricer (in concept development phase, explore value add)
+* CDS Pricer (in concept development phase,  explore value add)
+* Implied Vol Pricer to help understand market sentiment (in concept development phase,  explore value add)
 
 _Desktop App BS Option Pricing:_
 ![Options](Options.jpg)
