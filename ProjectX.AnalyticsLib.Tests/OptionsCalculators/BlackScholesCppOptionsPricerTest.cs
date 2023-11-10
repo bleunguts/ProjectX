@@ -4,6 +4,10 @@ using ProjectX.Core.Analytics;
 
 namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
 {
+    /// <summary>
+    /// Values based on excel spreadsheet calculator
+    /// https://goodcalculators.com/black-scholes-calculator/
+    /// </summary>
     public class BlackScholesCppOptionsPricerTest
     {        
         IOptionsGreeksCalculator _pricer = new BlackScholesCppOptionsPricerWrapper();
@@ -33,17 +37,30 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
             var calculator = GetCalculator(calculatorType);
             var call = calculator.PV(OptionType.Call, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Price of call is {call}");
-            Assert.That(call, Is.EqualTo(4.514243).Within(1).Percent);
+            Assert.That(call, Is.EqualTo(6.52078264).Within(1).Percent);
 
             var put = calculator.PV(OptionType.Put, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Price of put is {put}");
-            Assert.That(put, Is.EqualTo(14.026537).Within(1).Percent);
+            Assert.That(put, Is.EqualTo(11.15601933).Within(1).Percent);
 
             // Assert Call Put Parity
             // If call delta is +1 (deep in the money), put delta is 0 (far out of the money).
             // If call delta is 0, put delta is –1.
             // If call delta is +0.7, put delta is –0.3.
             Assert.That(call, Is.Not.EqualTo(put), "Call-Put Parity should be obeyed");
+        }
+
+        [TestCase(typeof(BlackScholesOptionsPricer))]
+        public void WhenComputingDelta(Type calculatorType)
+        {
+            var calculator = GetCalculator(calculatorType);
+            var delta = calculator.Delta(OptionType.Call, spot, strike, r, b, maturity, vol);
+            Console.WriteLine($"Delta for a call is {delta}");
+            Assert.That(delta, Is.EqualTo(0.347876).Within(1).Percent);
+
+            var deltaPut = calculator.Delta(OptionType.Put, spot, strike, r, b, maturity, vol);
+            Console.WriteLine($"Delta for a Put is {deltaPut}");
+            Assert.That(deltaPut, Is.EqualTo(-0.60335).Within(1).Percent);
         }
 
         [TestCase(typeof(BlackScholesOptionsPricer))]

@@ -14,7 +14,7 @@ namespace ProjectX.AnalyticsLib.OptionsCalculators
         private BlackScholesCppPricer _pricer = new BlackScholesCppPricer();
         public double PV(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
-            var param = new VanillaOptionParameters(optionType.ToNativeOptionType(), strike, maturity);
+            var param = new VanillaOptionParameters(optionType.ToNativeOptionType(), strike, maturity);            
             return _pricer.Value(ref param, spot, volatility, rate);
         }
 

@@ -47,6 +47,19 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
         }
 
         [TestCase(typeof(BlackScholesOptionsPricer))]
+        public void WhenComputingDelta(Type calculatorType)
+        {
+            var calculator = GetCalculator(calculatorType);
+            var delta = calculator.Delta(OptionType.Call, spot, strike, r, b, maturity, vol);
+            Console.WriteLine($"Delta for a call is {delta}");
+            Assert.That(delta, Is.EqualTo(0.347876).Within(1).Percent);
+
+            var deltaPut = calculator.Delta(OptionType.Put, spot, strike, r, b, maturity, vol);
+            Console.WriteLine($"Delta for a Put is {deltaPut}");
+            Assert.That(deltaPut, Is.EqualTo(-0.60335).Within(1).Percent);           
+        }
+
+        [TestCase(typeof(BlackScholesOptionsPricer))]
         public void WhenComputingGamma(Type calculatorType)
         {
             var calculator = GetCalculator(calculatorType);
@@ -74,7 +87,6 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
             // due to time decay
             Assert.That(theta, Is.LessThan(0), "Theta is always negative due to nature of time decay");
             Assert.That(thetaPut, Is.LessThan(0), "Theta is always negative due to nature of time decay");
-
         }
 
         [TestCase(typeof(BlackScholesOptionsPricer))]

@@ -10,8 +10,13 @@ Double ProjectXAnalyticsCppLib::BlackScholesCppPricer::Value(
 	Double Spot,
 	Double Vol,
 	Double r)
-{
-	return BlackScholesFunctions::BlackScholes(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
+{	
+	if(TheOption->OptionType() == OptionType::Call)
+		return BlackScholesFunctions::BlackScholesCall(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
+	if(TheOption->OptionType() == OptionType::Put)
+		return BlackScholesFunctions::BlackScholesPut(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
+
+	throw "Not supported option type";
 }
 
 Double ProjectXAnalyticsCppLib::BlackScholesCppPricer::Delta(VanillaOptionParameters^% TheOption,
@@ -24,8 +29,12 @@ Double ProjectXAnalyticsCppLib::BlackScholesCppPricer::Delta(VanillaOptionParame
 	double optionPrice = Value(TheOption, Spot, Vol, r);
 
 	// Calculate delta using Black-Scholes formula	
-	double delta = BlackScholesFunctions::BlackScholesDelta(Spot, TheOption->Strike(), r, TheOption->Expiry(), optionPrice, epsilon, Vol);
-	return delta;
+	if(TheOption->OptionType() == OptionType::Call)
+		return BlackScholesFunctions::BlackScholesDeltaCall(Spot, TheOption->Strike(), r, TheOption->Expiry(), optionPrice, epsilon, Vol);
+	if(TheOption->OptionType() == OptionType::Put) 
+		return BlackScholesFunctions::BlackScholesDeltaPut(Spot, TheOption->Strike(), r, TheOption->Expiry(), optionPrice, epsilon, Vol);
+
+	throw "Not supported option type";
 }
 
 Double ProjectXAnalyticsCppLib::BlackScholesCppPricer::Gamma(VanillaOptionParameters^% TheOption,
@@ -39,16 +48,18 @@ Double ProjectXAnalyticsCppLib::BlackScholesCppPricer::Gamma(VanillaOptionParame
 	return gamma;
 }
 
-
-
 Double ProjectXAnalyticsCppLib::BlackScholesCppPricer::Rho(VanillaOptionParameters^% TheOption,
 	Double Spot,
 	Double Vol,
 	Double r
 )
 {
-	double rho = BlackScholesFunctions::BlackScholesRho(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
-	return rho;
+	if(TheOption->OptionType() == OptionType::Call)
+		return BlackScholesFunctions::BlackScholesRhoCall(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
+	if(TheOption->OptionType() == OptionType::Put) 
+		return BlackScholesFunctions::BlackScholesRhoPut(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
+
+	throw "Not supported option type";
 }
 
 Double ProjectXAnalyticsCppLib::BlackScholesCppPricer::Theta(VanillaOptionParameters^% TheOption,
@@ -57,8 +68,12 @@ Double ProjectXAnalyticsCppLib::BlackScholesCppPricer::Theta(VanillaOptionParame
 	Double r	
 )
 {
-	double theta = BlackScholesFunctions::BlackScholesTheta(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
-	return theta;
+	if (TheOption->OptionType() == OptionType::Call)
+		return BlackScholesFunctions::BlackScholesThetaCall(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
+	if (TheOption->OptionType() == OptionType::Put)
+		return BlackScholesFunctions::BlackScholesThetaPut(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
+
+	throw "Not supported option type";
 }
 
 Double ProjectXAnalyticsCppLib::BlackScholesCppPricer::Vega(VanillaOptionParameters^% TheOption,
@@ -66,9 +81,8 @@ Double ProjectXAnalyticsCppLib::BlackScholesCppPricer::Vega(VanillaOptionParamet
 	Double Vol,
 	Double r
 )
-{
-	double vega = BlackScholesFunctions::BlackScholesVega(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
-	return vega;
+{	
+	return BlackScholesFunctions::BlackScholesVega(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);	
 }
 
 Double ProjectXAnalyticsCppLib::BlackScholesCppPricer::ImpliedVolatility(
@@ -87,7 +101,7 @@ Double ProjectXAnalyticsCppLib::BlackScholesCppPricer::ImpliedVolatility(
 
 	for (int i = 0; i < maxIterations; i++)
 	{
-		double price = BlackScholesFunctions::BlackScholes(S, K, r, T, sigma);
+		double price = BlackScholesFunctions::BlackScholesCall(S, K, r, T, sigma);
 		double vega = BlackScholesFunctions::BlackScholesVega(S, K, r, T, sigma);
 		double diff = price - optionPrice;
 

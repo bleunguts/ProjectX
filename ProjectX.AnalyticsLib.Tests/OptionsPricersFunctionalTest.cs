@@ -114,7 +114,9 @@ public class OptionsPricersFunctionalTest
         Console.WriteLine($"Delta of put [BS++] is {bs.Delta(Core.OptionType.Put, spot, strike, r, b, maturity, vol)}");
         Assert.That(deltaPut, Is.EqualTo(0.0317).Within(toleranceDelta));
         // Assert Call Put Parity
-        // If call delta is +1 (deep in the money), put delta is 0 (far out of the money). If call delta is 0, put delta is –1. If call delta is +0.7, put delta is –0.3.
+        // If call delta is +1 (deep in the money), put delta is 0 (far out of the money).
+        // If call delta is 0, put delta is –1.
+        // If call delta is +0.7, put delta is –0.3.
 
         // Gamma
         var gamma = calc.Gamma(Core.OptionType.Call, spot, strike, r, b, maturity, vol);

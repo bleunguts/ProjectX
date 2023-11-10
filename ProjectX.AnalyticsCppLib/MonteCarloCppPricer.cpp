@@ -145,7 +145,7 @@ Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::RhoMC(VanillaOptionParamete
 		double payoff = Math::Max(ST - K, 0.0);
 		double priceUp = Math::Exp(-(r + epsilon) * T) * payoff;
 
-		rhoSum += (priceUp - BlackScholesFunctions::BlackScholes(S, K, r, T, sigma)) / (epsilon * r);
+		rhoSum += (priceUp - BlackScholesFunctions::BlackScholesCall(S, K, r, T, sigma)) / (epsilon * r);
 	}
 
 	return rhoSum / NumberOfPaths;
@@ -182,7 +182,7 @@ Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::ThetaMC(
 			payoff = Math::Max(ST - K, 0.0);
 			price = Math::Exp(-r * t) * payoff;
 		}
-		Double PV = BlackScholesFunctions::BlackScholes(S, K, r, T - t, sigma);
+		Double PV = BlackScholesFunctions::BlackScholesCall(S, K, r, T - t, sigma);
 		thetaSum += (price - PV);
 	}
 
@@ -211,7 +211,7 @@ Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::VegaMC(VanillaOptionParamet
 		double payoff = Math::Max(ST - K, 0.0);
 		double priceUp = Math::Exp(-r * T) * payoff;
 
-		vegaSum += (priceUp - BlackScholesFunctions::BlackScholes(S, K, r, T, sigma)) / epsilon;
+		vegaSum += (priceUp - BlackScholesFunctions::BlackScholesCall(S, K, r, T, sigma)) / epsilon;
 	}
 
 	return vegaSum / NumberOfPaths;
