@@ -30,9 +30,8 @@ Double ProjectXAnalyticsCppLib::BlackScholesCppPricer::Delta(VanillaOptionParame
 
 	// Calculate delta using Black-Scholes formula	
 	if(TheOption->OptionType() == OptionType::Call)
-		return BlackScholesFunctions::BlackScholesDeltaCall(Spot, TheOption->Strike(), r, TheOption->Expiry(), optionPrice, epsilon, Vol);
-	if(TheOption->OptionType() == OptionType::Put) 
-		return BlackScholesFunctions::BlackScholesDeltaPut(Spot, TheOption->Strike(), r, TheOption->Expiry(), optionPrice, epsilon, Vol);
+		return BlackScholesFunctions::BlackScholesDeltaCall(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
+	if(TheOption->OptionType() == OptionType::Put)		return BlackScholesFunctions::BlackScholesDeltaPut(Spot, TheOption->Strike(), r, TheOption->Expiry(), Vol);
 
 	throw "Not supported option type";
 }

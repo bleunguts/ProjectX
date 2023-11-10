@@ -56,11 +56,11 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
             var calculator = GetCalculator(calculatorType);
             var delta = calculator.Delta(OptionType.Call, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Delta for a call is {delta}");
-            Assert.That(delta, Is.EqualTo(0.347876).Within(1).Percent);
+            Assert.That(delta, Is.EqualTo(0.45718497).Within(1).Percent);
 
             var deltaPut = calculator.Delta(OptionType.Put, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Delta for a Put is {deltaPut}");
-            Assert.That(deltaPut, Is.EqualTo(-0.60335).Within(1).Percent);
+            Assert.That(deltaPut, Is.EqualTo(-0.54281503).Within(1).Percent);
         }
 
         [TestCase(typeof(BlackScholesOptionsPricer))]

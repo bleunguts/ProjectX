@@ -38,18 +38,14 @@ namespace ProjectXAnalyticsCppLib {
 			Double K, // Strike price
 			Double r, // Risk-free interest rate
 			Double T, // Time to expiration		
-			Double sigma, // Volatility
-			Double optionPrice, // Option Price
-			Double epsilon // Small change in stock price
+			Double sigma // Volatility			
 		);
 		static Double ProjectXAnalyticsCppLib::BlackScholesFunctions::BlackScholesDeltaPut(
 			Double S, // Current stock price
 			Double K, // Strike price
 			Double r, // Risk-free interest rate
 			Double T, // Time to expiration		
-			Double sigma, // Volatility
-			Double optionPrice, // Option Price
-			Double epsilon // Small change in stock price
+			Double sigma // Volatility						
 		);
 		static Double ProjectXAnalyticsCppLib::BlackScholesFunctions::BlackScholesGamma(
 			Double S, // Current stock price
