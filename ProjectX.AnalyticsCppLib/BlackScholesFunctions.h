@@ -50,5 +50,17 @@ namespace ProjectXAnalyticsCppLib {
 			Double T, // Time to expiration
 			Double sigma // Volatility
 		);		
+		static Double ProjectXAnalyticsCppLib::BlackScholesFunctions::d1(
+			double S,
+			double K,
+			double r,
+			double sigma,
+			double T
+		);
+		static Double ProjectXAnalyticsCppLib::BlackScholesFunctions::d2(
+			double d1,
+			double sigma,
+			double T
+		);
 	};
 }

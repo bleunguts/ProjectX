@@ -50,5 +50,6 @@ namespace ProjectXAnalyticsCppLib
 			Double r,			
 			Double optionPrice
 		);	
+
 	};
 }

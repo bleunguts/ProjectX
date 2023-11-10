@@ -1,6 +1,16 @@
 #include "pch.h"
 #include "BlackScholesFunctions.h"
 
+Double ProjectXAnalyticsCppLib::BlackScholesFunctions::d1(double S, double K, double r, double sigma, double T) {
+	Double d1 = (Math::Log(S / K) + (r + (Math::Pow(sigma, 2) / 2)) * T) / (sigma * Math::Sqrt(T));
+	return d1;
+}
+
+Double ProjectXAnalyticsCppLib::BlackScholesFunctions::d2(double d1, double sigma, double T) {
+	Double d2 = d1 - sigma * Math::Sqrt(T);
+	return d2;
+}
+
 // Black-Scholes formula to calculate the option price
 Double ProjectXAnalyticsCppLib::BlackScholesFunctions::BlackScholes(
 	Double S, // Current stock price
@@ -9,9 +19,9 @@ Double ProjectXAnalyticsCppLib::BlackScholesFunctions::BlackScholes(
 	Double T, // Time to expiration
 	Double sigma // Volatility
 )
-{
-	Double d1 = (Math::Log(S / K) + (r + (Math::Pow(sigma, 2) / 2)) * T) / (sigma * Math::Sqrt(T));
-	Double d2 = d1 - sigma * Math::Sqrt(T);
+{	
+	Double d1 = BlackScholesFunctions::d1(S, K, r, sigma, T);
+	Double d2 = BlackScholesFunctions::d2(d1, sigma, T);
 
 	Double N_d1 = normcdf(d1);
 	Double N_d2 = normcdf(d2);
@@ -32,7 +42,7 @@ Double ProjectXAnalyticsCppLib::BlackScholesFunctions::BlackScholesDelta(
 	Double sigma // Volatility
 )
 {
-	double d1 = (Math::Log(S / K) + (r + (Math::Pow(sigma, 2) / 2)) * T) / (sigma * Math::Sqrt(T));
+	Double d1 = BlackScholesFunctions::d1(S,K,r,sigma,T);
 	double delta = Math::Exp(-r * T) * normcdf(d1);
 
 	return delta * optionPrice + (optionPrice - delta * optionPrice) / (S + epsilon - K) * (S - K);
@@ -78,8 +88,8 @@ Double ProjectXAnalyticsCppLib::BlackScholesFunctions::BlackScholesTheta(
 	Double sigma // Volatility
 )
 {
-	double d1 = (Math::Log(S / K) + (r + (Math::Pow(sigma, 2) / 2)) * T) / (sigma * Math::Sqrt(T));
-	double d2 = d1 - sigma * Math::Sqrt(T);
+	Double d1 = BlackScholesFunctions::d1(S,K,r,sigma,T);
+	Double d2 = BlackScholesFunctions::d2(d1, sigma, T);
 
 	double N_d1 = normcdf(d1);
 	double N_d2 = normcdf(d2);
@@ -99,7 +109,7 @@ Double ProjectXAnalyticsCppLib::BlackScholesFunctions::BlackScholesVega(
 	Double sigma // Volatility
 )
 {
-	double d1 = (Math::Log(S / K) + (r + (Math::Pow(sigma, 2) / 2)) * T) / (sigma * Math::Sqrt(T));
+	Double d1 = BlackScholesFunctions::d1(S,K,r,sigma,T);
 
 	double N_prime_d1 = normpdf(d1);
 
