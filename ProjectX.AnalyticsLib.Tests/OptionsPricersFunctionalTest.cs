@@ -15,11 +15,11 @@ public class OptionsPricersTest
     static IEnumerable<(IOptionsGreeksCalculator calc, double percentError)> VanillaOptionCalculators()
     {
         yield return (new BlackScholesOptionsPricer(), 1.0);
-        //yield return (new BlackScholesCppOptionsPricerWrapper(), 50);
-        //yield return (new MonteCarloCppOptionsPricerWrapper(options), 50);
-        //yield return (new MonteCarloCppOptionsPricer2Wrapper(1000), 50);
+        //yield return (new BlackScholesCppOptionsPricerWrapper(), 50);          // TODO Fix pricer
+        //yield return (new MonteCarloCppOptionsPricerWrapper(options), 50);     // TODO Fix pricer
+        //yield return (new MonteCarloCppOptionsPricer2Wrapper(1000), 50);       // TODO Fix pricer
     }
-    
+
     [TestCaseSource(nameof(VanillaOptionCalculators))]
     public void WhenPricingACallOptionShouldReturnRealisticOptionPrice((IOptionsGreeksCalculator calc, double percentError) td)
     {
