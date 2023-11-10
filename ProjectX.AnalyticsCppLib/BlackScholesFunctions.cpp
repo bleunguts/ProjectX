@@ -145,15 +145,19 @@ Double ProjectXAnalyticsCppLib::BlackScholesFunctions::BlackScholesThetaCall(
 	Double sigma // Volatility
 )
 {
+	double q = 0;
 	Double d1 = BlackScholesFunctions::d1(S,K,r,sigma,T);
 	Double d2 = BlackScholesFunctions::d2(d1, sigma, T);
-
+	
 	double N_d1 = normcdf(d1);
 	double N_d2 = normcdf(d2);
 	double N_prime_d1 = normpdf(d1);
 
-	double theta = -((S * N_prime_d1 * sigma) / (2.0 * Math::Sqrt(T))) - r * K * Math::Exp(-r * T) * N_d2;
+	double p1 = - (S * sigma * Math::Exp(-q * T)/(2 * Math::Sqrt(T)) * N_prime_d1);
+	double p2 = -r * K * Math::Exp(-r * T) * N_d2;
+	double p3 = q * S * Math::Exp(-q * T) * N_d1;
 
+	double theta = p1 + p2 + p3;
 	return theta;
 }
 
@@ -165,15 +169,19 @@ Double ProjectXAnalyticsCppLib::BlackScholesFunctions::BlackScholesThetaPut(
 	Double sigma // Volatility
 )
 {
+	double q = 0;
 	Double d1 = BlackScholesFunctions::d1(S, K, r, sigma, T);
 	Double d2 = BlackScholesFunctions::d2(d1, sigma, T);
 
-	double N_d1 = normcdf(d1);
-	double N_d2 = normcdf(d2);
+	double NNegative_d1 = normcdf(-d1);
+	double NNegative_d2 = normcdf(-d2);
 	double N_prime_d1 = normpdf(d1);
 
-	double theta = -((S * N_prime_d1 * sigma) / (2.0 * Math::Sqrt(T))) - r * K * Math::Exp(-r * T) * N_d2;
+	double p1 = -(S * sigma * Math::Exp(-q * T)) / (2 * Math::Sqrt(T)) * N_prime_d1;
+	double p2 = r * K * Math::Exp(-r * T) * NNegative_d2;
+	double p3 = -q * S * Math::Exp(-q * T) * NNegative_d1;
 
+	double theta = p1 + p2 + p3;
 	return theta;
 }
 
