@@ -7,38 +7,7 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
     public class BlackScholesOptionsPricerTest
     {        
         IOptionsGreeksCalculator _pricer = new BlackScholesOptionsPricer();
-        private IOptionsGreeksCalculator GetCalculator(Type calculatorType) => _pricer;
-
-        [TestCase(typeof(BlackScholesOptionsPricer))]       
-        public void WhenPricingACallOptionPVNumbersShouldBeSensible(Type calculatorType)
-        {
-            var calculator = GetCalculator(calculatorType);
-
-            // For a call option that is deep ITM price is gt 0 should be expensive
-            var deepItmPrice = calculator.PV(OptionType.Call, 510, 100, 0.1, 0.04, 2.0, 0.3);
-            Assert.Greater(deepItmPrice, 0);
-            Assert.That(deepItmPrice, Is.EqualTo(370.4568).Within(1).Percent);
-
-            // For a call option that is ITM price is gt 0 should be relative expensive
-            var itmPrice = calculator.PV(OptionType.Call, 110, 100, 0.1, 0.04, 2.0, 0.3);
-            Assert.Greater(itmPrice, 0);
-            Assert.That(itmPrice, Is.EqualTo(24.1620).Within(1).Percent);
-
-            // For a call option that is ATM price is gt 0 should be fair priced
-            var atmPrice = calculator.PV(OptionType.Call, 100, 100, 0.1, 0.04, 2.0, 0.3);
-            Assert.Greater(atmPrice, 0);
-            Assert.That(atmPrice, Is.EqualTo(17.9866).Within(1).Percent);
-
-            // For a call option that is OTM price is cheaper
-            var otmPrice = calculator.PV(OptionType.Call, 70, 100, 0.1, 0.04, 2.0, 0.3);
-            Assert.Greater(otmPrice, 0);
-            Assert.That(otmPrice, Is.EqualTo(4.6253).Within(1).Percent);
-
-            // For a call option that is Deep OTM price is worthless
-            var deepOtmPrice = calculator.PV(OptionType.Call, 2, 100, 0.1, 0.04, 2.0, 0.3);
-            Assert.AreEqual(deepOtmPrice, 0);
-            Assert.That(deepOtmPrice, Is.EqualTo(0).Within(1).Percent);
-        }
+        private IOptionsGreeksCalculator GetCalculator(Type calculatorType) => _pricer;        
 
         // stock with 6 months expiration, stock price is 100, strike price is 110, risk free interest rate 0.1 per year, continuous dividend yield 0.06 and volatility is 0.3 
 

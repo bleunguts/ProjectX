@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using ProjectX.AnalyticsLib;
 using ProjectX.AnalyticsLib.OptionsCalculators;
+using ProjectX.Core;
 using ProjectX.Core.Analytics;
 using ProjectX.Core.Services;
 using System;
@@ -9,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectX.Core.Tests
+namespace ProjectX.AnalyticsLib.Tests
 {
     public class ExoticOptionsPricingCalculatorTest
     {

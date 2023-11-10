@@ -9,12 +9,12 @@ namespace ProjectX.GatewayAPI.Processors
     public class PricingTasksProcessor : IPricingTasksProcessor
     {
         private readonly ILogger<PricingTasksProcessor> _logger;
-        private readonly IBlackScholesOptionsPricingModel _pricingModel;
+        private readonly IOptionsPricingModel _pricingModel;
         private readonly IPricingResultsApiClient _pricingResultsApiClient;
         private readonly ConcurrentDictionary<Guid, OptionsPricingByMaturityResults> _responses = new ConcurrentDictionary<Guid, OptionsPricingByMaturityResults>();
 
         public PricingTasksProcessor(ILogger<PricingTasksProcessor> logger, 
-            IBlackScholesOptionsPricingModel pricingModel,
+            IOptionsPricingModel pricingModel,
             IPricingResultsApiClient pricingResultsApiClient)
         {
             this._logger = logger;

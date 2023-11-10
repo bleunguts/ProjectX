@@ -11,14 +11,14 @@ using System.Threading.Tasks;
 
 namespace ProjectX.Core.Services
 {
-    public interface IBlackScholesOptionsPricingModel
+    public interface IOptionsPricingModel
     {        
         PlotOptionsPricingResult PlotGreeks(PlotOptionsPricingRequest pricingRequest);
         OptionsPricingByMaturityResults Price(OptionsPricingByMaturitiesRequest request);
     }
 
-    [Export(typeof(IBlackScholesOptionsPricingModel)), PartCreationPolicy(CreationPolicy.NonShared)]    
-    public class BlackScholesOptionsPricingModel : IBlackScholesOptionsPricingModel
+    [Export(typeof(IOptionsPricingModel)), PartCreationPolicy(CreationPolicy.NonShared)]    
+    public class OptionsPricingModel : IOptionsPricingModel
     {
         private readonly IOptionsGreeksCalculator _blackScholesCSharpPricer;
         private readonly IOptionsGreeksCalculator _blackScholesCppPricer;
@@ -26,7 +26,7 @@ namespace ProjectX.Core.Services
         private readonly IOptionsGreeksCalculator _monteCarloOptionsPricer2Cpp;
 
         [ImportingConstructor]
-        public BlackScholesOptionsPricingModel(IBlackScholesCSharpPricer csharpPricer, IBlackScholesCppPricer cppPricer, IMonteCarloCppOptionsPricer cppmcPricer, IMonteCarloCppOptionsPricer2 cppmcPricer2)
+        public OptionsPricingModel(IBlackScholesCSharpPricer csharpPricer, IBlackScholesCppPricer cppPricer, IMonteCarloCppOptionsPricer cppmcPricer, IMonteCarloCppOptionsPricer2 cppmcPricer2)
         {
             _blackScholesCSharpPricer = csharpPricer;
             _blackScholesCppPricer = cppPricer;

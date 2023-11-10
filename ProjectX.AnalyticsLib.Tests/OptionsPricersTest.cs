@@ -5,7 +5,6 @@ using System.Runtime.ConstrainedExecution;
 
 namespace ProjectX.AnalyticsLib.Tests;
 
-[Ignore("Cleanup later, not sure how this should look but the aim is to test business logic of  all pricers at once ")]
 public class OptionsPricersTest
 {
     static readonly IOptions<OptionsPricerCppWrapperOptions> options = Options.Create<OptionsPricerCppWrapperOptions>(new OptionsPricerCppWrapperOptions() 
@@ -16,9 +15,9 @@ public class OptionsPricersTest
     static IEnumerable<(IOptionsGreeksCalculator calc, double percentError)> VanillaOptionCalculators()
     {
         yield return (new BlackScholesOptionsPricer(), 1.0);
-        yield return (new BlackScholesCppOptionsPricerWrapper(), 50);
-        yield return (new MonteCarloCppOptionsPricerWrapper(options), 50);
-        yield return (new MonteCarloCppOptionsPricer2Wrapper(1000), 50);
+        //yield return (new BlackScholesCppOptionsPricerWrapper(), 50);
+        //yield return (new MonteCarloCppOptionsPricerWrapper(options), 50);
+        //yield return (new MonteCarloCppOptionsPricer2Wrapper(1000), 50);
     }
     
     [TestCaseSource(nameof(VanillaOptionCalculators))]
@@ -180,7 +179,6 @@ public class OptionsPricersTest
     }
 
     [TestCaseSource(nameof(VanillaOptionCalculators))]
-    [Ignore("Still need to figure this out")]
     public void WhenCalculatingImpliedVol((IOptionsGreeksCalculator calc, double percentError) td)    
     {
         // stock with 6 months expiration, stock price is 100, strike price is 110, risk free interest rate 0.1 per year, continuous dividend yield 0.06 and volatility is 0.3 

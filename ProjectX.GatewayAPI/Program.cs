@@ -30,7 +30,7 @@ builder.Services.TryAddScoped<IBlackScholesCppPricer, BlackScholesCppOptionsPric
 builder.Services.TryAddScoped<IMonteCarloCppOptionsPricer, MonteCarloCppOptionsPricerWrapper>();
 builder.Services.TryAddScoped<IMonteCarloCppOptionsPricer2, MonteCarloCppOptionsPricer2Wrapper>();
 // others
-builder.Services.TryAddScoped<IBlackScholesOptionsPricingModel, BlackScholesOptionsPricingModel>();
+builder.Services.TryAddScoped<IOptionsPricingModel, OptionsPricingModel>();
 builder.Services.AddSingleton<IFXSpotPricer,FXSpotPricer>();
 builder.Services.AddSingleton<IFXSpotPriceStream, RandomFXSpotPriceStream>();
 builder.Services.AddSingleton<IFXMarketService, FXMarketService>();

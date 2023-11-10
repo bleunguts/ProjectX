@@ -1,21 +1,22 @@
 ﻿using Moq;
 using Newtonsoft.Json;
 using ProjectX.AnalyticsLib;
+using ProjectX.Core;
 using ProjectX.Core.Requests;
 using ProjectX.Core.Services;
 
-namespace ProjectX.Core.Tests
+namespace ProjectX.AnalyticsLib.Tests
 {
-    public class BlackScholesOptionsPricingModelTest
+    public class OptionsPricingModelTest
     {
         private Mock<IBlackScholesCSharpPricer> _mockCSharpCalculator = new Mock<IBlackScholesCSharpPricer>();
-        private BlackScholesOptionsPricingModel _sut;
+        private OptionsPricingModel _sut;
         private Random _random = new Random();
 
         [SetUp]
         public void SetUp()
-        {            
-            _sut = new BlackScholesOptionsPricingModel(_mockCSharpCalculator.Object, Mock.Of<IBlackScholesCppPricer>(), Mock.Of<IMonteCarloCppOptionsPricer>(), Mock.Of<IMonteCarloCppOptionsPricer2>());
+        {
+            _sut = new OptionsPricingModel(_mockCSharpCalculator.Object, Mock.Of<IBlackScholesCppPricer>(), Mock.Of<IMonteCarloCppOptionsPricer>(), Mock.Of<IMonteCarloCppOptionsPricer2>());
             _mockCSharpCalculator.Setup(m => m.PV(It.IsAny<OptionType>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>()))
                                  .Returns(() => RandomFloat(50, 60));
         }
@@ -23,21 +24,21 @@ namespace ProjectX.Core.Tests
         private double RandomFloat(int min, int max) => _random.Next(min, max) + _random.NextDouble();
 
         [Test]
-        public async Task WhenPricingBlackScholesOptionItShouldReturnValidResultsAsync()
+        public async Task WhenPricingOptionsPricingByMaturitiesRequestItShouldReturnValidValues()
         {
             var request = new OptionsPricingByMaturitiesRequest(10, OptionType.Call, 100.0, 150.0, 1.0, 1.0, 0.3, OptionsPricingCalculatorType.OptionsPricer);
-            
+
             Console.WriteLine($"JSON={JsonConvert.SerializeObject(request)}");
             var actual = _sut.Price(request);
-            Assert.That(actual, Is.Not.Null);            
+            Assert.That(actual, Is.Not.Null);
             Assert.That(actual.ResultsCount, Is.EqualTo(10));
             Assert.That(actual[0].Maturity, Is.EqualTo(0.1));
-            Assert.That(actual[0].OptionGreeks.price, Is.Not.EqualTo(0));           
+            Assert.That(actual[0].OptionGreeks.price, Is.Not.EqualTo(0));
         }
 
         [Test]
         public void WhenPlottingGreeksZValuesAreValid()
-        {                        
+        {
             var plotOptionsResult = _sut.PlotGreeks(new PlotOptionsPricingRequest(OptionGreeks.Price, OptionType.Call, 100, 0.1, 0.04, 0.3, OptionsPricingCalculatorType.OptionsPricer));
             var result = plotOptionsResult.PlotResults;
             AssertZValue(result.zmin, result.zmax, rounding: 1);
@@ -51,6 +52,6 @@ namespace ProjectX.Core.Tests
 
             Assert.IsTrue(zmin < zmax);
             Assert.IsTrue(theZTick > 0);
-        }       
+        }
     }
 }
