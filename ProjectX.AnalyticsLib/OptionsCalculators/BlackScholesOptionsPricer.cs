@@ -24,6 +24,8 @@ public class BlackScholesOptionsPricer : IBlackScholesCSharpPricer
     /// * Stocks paying a continuous dividend yield
     /// * Options on Futures Contracts
     /// * Currency Options
+    /// Generalized Black-Scholes Model for stocks paying a coninuous dividend yield 
+    /// requires incorporating a cost-of-carry rate b into the BlackScholes formula
     /// </summary>
     /// <param name="optionType"></param>
     /// <param name="spot">spot price</param>
