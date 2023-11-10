@@ -103,7 +103,7 @@ Double ProjectXAnalyticsCppLib::BlackScholesFunctions::BlackScholesGamma(
 	Double d1 = BlackScholesFunctions::d1(S, K, r, sigma, T);	
 	Double N_d1 = normcdf(d1);
 	Double NPrime_d1 = normpdf(d1);
-	double gamma = Math::Exp(-q * T) / (S * sigma * Math::Sqrt(T));	
+	double gamma = Math::Exp(-q * T) / (S * sigma * Math::Sqrt(T)) * NPrime_d1;
 	return gamma;
 }
 
@@ -188,9 +188,9 @@ Double ProjectXAnalyticsCppLib::BlackScholesFunctions::BlackScholesVega(
 {
 	double q = 0;
 	Double d1 = BlackScholesFunctions::d1(S,K,r,sigma,T);
-	double N_d1 = normcdf(d1);
+	double NPrime_d1 = normpdf(d1);
 
-	double vega = S * Math::Exp(-q * T) * Math::Sqrt(T) * N_d1;
+	double vega = S * Math::Exp(-q * T) * Math::Sqrt(T) * NPrime_d1;
 	return vega / 100;
 }
 

@@ -69,10 +69,10 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
             var calculator = GetCalculator(calculatorType);
             var gamma = calculator.Gamma(OptionType.Call, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Gamma of call/put {gamma}");
-            Assert.That(gamma, Is.EqualTo(0.016940105).Within(1).Percent);
-            var gammaPut = calculator.Gamma(OptionType.Put, spot, strike, r, b, maturity, vol);
+            Assert.That(gamma, Is.EqualTo(0.018697).Within(1).Percent);
 
             // Gamma should be the same for call and put
+            var gammaPut = calculator.Gamma(OptionType.Put, spot, strike, r, b, maturity, vol);
             Assert.That(gamma, Is.EqualTo(gammaPut), "Gamma is put/call agnostic");
         }
 
@@ -91,7 +91,6 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
             // due to time decay
             Assert.That(theta, Is.LessThan(0), "Theta is always negative due to nature of time decay");
             Assert.That(thetaPut, Is.LessThan(0), "Theta is always negative due to nature of time decay");
-
         }
 
         [TestCase(typeof(BlackScholesOptionsPricer))]
@@ -121,7 +120,7 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
             Console.WriteLine($"Vega of call/put is {vega}");
             //Divide by 100 to get the resulting vega as option price change for one percentage point change in volatility
             Console.WriteLine($"Vega of call/put is {vega / 100} for 1% change in vol");
-            Assert.That(vega, Is.EqualTo(0.25410158).Within(1).Percent);
+            Assert.That(vega, Is.EqualTo(0.280468662).Within(1).Percent);
 
             // This is property of Vega that puts and calls are the same
             var vegaPut = calculator.Vega(OptionType.Call, spot, strike, r, b, maturity, vol);
