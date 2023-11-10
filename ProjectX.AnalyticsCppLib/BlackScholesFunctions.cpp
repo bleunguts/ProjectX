@@ -99,13 +99,11 @@ Double ProjectXAnalyticsCppLib::BlackScholesFunctions::BlackScholesGamma(
 	Double epsilon // Small change in stock price
 )
 {
-	double optionPrice = BlackScholesCall(S, K, r, T, sigma);
-
-	double optionPriceUp = BlackScholesCall(S + epsilon, K, r, T, sigma);
-	double optionPriceDown = BlackScholesCall(S - epsilon, K, r, T, sigma);
-
-	double gamma = (optionPriceUp - 2 * optionPrice + optionPriceDown) / (epsilon * epsilon);
-
+	Double q = 0; 
+	Double d1 = BlackScholesFunctions::d1(S, K, r, sigma, T);	
+	Double N_d1 = normcdf(d1);
+	Double NPrime_d1 = normpdf(d1);
+	double gamma = Math::Exp(-q * T) / (S * sigma * Math::Sqrt(T));	
 	return gamma;
 }
 
@@ -117,8 +115,11 @@ Double ProjectXAnalyticsCppLib::BlackScholesFunctions::BlackScholesRhoCall(
 	Double sigma // Volatility
 )
 {
-	double d2 = (Math::Log(S / K) + (r - (Math::Pow(sigma, 2) / 2)) * T) / (sigma * Math::Sqrt(T));
-	return T * K * Math::Exp(-r * T) * normcdf(d2);
+	Double d1 = BlackScholesFunctions::d1(S, K, r, sigma, T);
+	Double d2 = BlackScholesFunctions::d2(d1, sigma, T);
+	Double N_d2 = normcdf(d2);
+	double rho = (K * T * Math::Exp(-r * T) * N_d2) / 100;
+	return rho;
 }
 
 Double ProjectXAnalyticsCppLib::BlackScholesFunctions::BlackScholesRhoPut(
@@ -129,8 +130,11 @@ Double ProjectXAnalyticsCppLib::BlackScholesFunctions::BlackScholesRhoPut(
 	Double sigma // Volatility
 )
 {
-	double d2 = (Math::Log(S / K) + (r - (Math::Pow(sigma, 2) / 2)) * T) / (sigma * Math::Sqrt(T));
-	return T * K * Math::Exp(-r * T) * normcdf(d2);
+	Double d1 = BlackScholesFunctions::d1(S, K, r, sigma, T);
+	Double d2 = BlackScholesFunctions::d2(d1, sigma, T);
+	Double NNegative_d2 = normcdf(-d2);
+	double rho = - (K * T * Math::Exp(-r * T) * NNegative_d2);
+	return rho / 100;
 }
 
 Double ProjectXAnalyticsCppLib::BlackScholesFunctions::BlackScholesThetaCall(
@@ -182,12 +186,11 @@ Double ProjectXAnalyticsCppLib::BlackScholesFunctions::BlackScholesVega(
 	Double sigma // Volatility
 )
 {
+	double q = 0;
 	Double d1 = BlackScholesFunctions::d1(S,K,r,sigma,T);
+	double N_d1 = normcdf(d1);
 
-	double N_prime_d1 = normpdf(d1);
-
-	double vega = S * Math::Sqrt(T) * N_prime_d1;
-
-	return vega;
+	double vega = S * Math::Exp(-q * T) * Math::Sqrt(T) * N_d1;
+	return vega / 100;
 }
 
