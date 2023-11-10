@@ -4,9 +4,9 @@ using ProjectX.Core.Analytics;
 
 namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
 {
-    public class BlackScholesOptionsPricingCalculatorTest
+    public class BlackScholesCppOptionsPricerTest
     {        
-        IOptionsGreeksCalculator _pricer = new BlackScholesOptionsPricer();
+        IOptionsGreeksCalculator _pricer = new BlackScholesCppOptionsPricerWrapper();
         private IOptionsGreeksCalculator GetCalculator(Type calculatorType) => _pricer;
 
         [TestCase(typeof(BlackScholesOptionsPricer))]       
