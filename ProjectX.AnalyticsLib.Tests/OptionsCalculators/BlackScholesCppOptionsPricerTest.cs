@@ -23,7 +23,7 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
         static readonly double vol = 0.3;
 
         [TestCase(typeof(BlackScholesOptionsPricer))]
-        public void WhenCalculatingPVForAnOption(Type calculatorType)
+        public void WhenComputingPV(Type calculatorType)
         {
             var calculator = GetCalculator(calculatorType);
             var call = calculator.PV(OptionType.Call, spot, strike, r, b, maturity, vol);
@@ -42,7 +42,7 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
         }
 
         [TestCase(typeof(BlackScholesOptionsPricer))]
-        public void WhenCalculatingGammaForAnOption(Type calculatorType)
+        public void WhenComputingGamma(Type calculatorType)
         {
             var calculator = GetCalculator(calculatorType);
             var gamma = calculator.Gamma(OptionType.Call, spot, strike, r, b, maturity, vol);
@@ -56,7 +56,7 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
 
         [TestCase(typeof(BlackScholesOptionsPricer))]
 
-        public void WhenCalculatingThetaForAnOption(Type calculatorType)
+        public void WhenComputingTheta(Type calculatorType)
         {
             var calculator = GetCalculator(calculatorType);
             var theta = calculator.Theta(OptionType.Call, spot, strike, r, b, maturity, vol);
@@ -75,7 +75,7 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
 
         [TestCase(typeof(BlackScholesOptionsPricer))]
 
-        public void WhenCalculatingRhoForAnoption(Type calculatorType)
+        public void WhenComputingRho(Type calculatorType)
         {
             var calculator = GetCalculator(calculatorType);
 
@@ -95,7 +95,7 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
 
         [TestCase(typeof(BlackScholesOptionsPricer))]
 
-        public void WhenCalculatingVegaForAnOption(Type calculatorType)
+        public void WhenComputingVega(Type calculatorType)
         {
             var calculator = GetCalculator(calculatorType);
             var vega = calculator.Vega(OptionType.Call, spot, strike, r, b, maturity, vol);
@@ -111,7 +111,7 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
 
         [TestCase(typeof(BlackScholesOptionsPricer))]
 
-        public void WhenCalculatingImpliedVol(Type calculatorType)
+        public void WhenComputingImpliedVol(Type calculatorType)
         {
             var calculator = GetCalculator(calculatorType);
             Dictionary<double, double> ExpectedVols = new Dictionary<double, double>()

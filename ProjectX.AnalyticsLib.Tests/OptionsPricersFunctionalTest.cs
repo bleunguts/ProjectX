@@ -5,7 +5,7 @@ using System.Runtime.ConstrainedExecution;
 
 namespace ProjectX.AnalyticsLib.Tests;
 
-public class OptionsPricersTest
+public class OptionsPricersFunctionalTest
 {
     static readonly IOptions<OptionsPricerCppWrapperOptions> options = Options.Create<OptionsPricerCppWrapperOptions>(new OptionsPricerCppWrapperOptions() 
     {  
@@ -21,7 +21,7 @@ public class OptionsPricersTest
     }
 
     [TestCaseSource(nameof(VanillaOptionCalculators))]
-    public void WhenPricingACallOptionShouldReturnRealisticOptionPrice((IOptionsGreeksCalculator calc, double percentError) td)
+    public void WhenComputingPVShouldReturnRealisticOptionPrice((IOptionsGreeksCalculator calc, double percentError) td)
     {
         // Based on real number example http://financetrain.com/option-pricing-using-monte-carlo-simulation/
         // Result approx 9.95        
@@ -30,7 +30,7 @@ public class OptionsPricersTest
     }    
     
     [TestCaseSource(nameof(VanillaOptionCalculators))]
-    public void WhenPricingACallOptionShouldReturnRealisticValuesBasedOnMoneyness((IOptionsGreeksCalculator calc, double percentError) td)
+    public void WhenComputingPVShouldReturnRealisticValuesBasedOnMoneyness((IOptionsGreeksCalculator calc, double percentError) td)
     {        
         // For a call option that is deep ITM price is gt 0 should be expensive
         var deepItmPrice = td.calc.PV(Core.OptionType.Call, 510, 100, 0.1, 0.04, 2.0, 0.3);
@@ -55,7 +55,7 @@ public class OptionsPricersTest
 
     [Test]
     [Ignore("Still need to figure out how to best write this test")]       
-    public void WhenCalculatingGreeksShouldReturnRealisticValues()
+    public void WhenComputingGreeksShouldReturnRealisticValues()
     {
         // stock with 6 months expiration, stock price is 100, strike price is 110, risk free interest rate 0.1 per year, continuous dividend yield 0.06 and volatility is 0.3 
 
@@ -179,7 +179,7 @@ public class OptionsPricersTest
     }
 
     [TestCaseSource(nameof(VanillaOptionCalculators))]
-    public void WhenCalculatingImpliedVol((IOptionsGreeksCalculator calc, double percentError) td)    
+    public void WhenComputingImpliedVol((IOptionsGreeksCalculator calc, double percentError) td)    
     {
         // stock with 6 months expiration, stock price is 100, strike price is 110, risk free interest rate 0.1 per year, continuous dividend yield 0.06 and volatility is 0.3 
 
