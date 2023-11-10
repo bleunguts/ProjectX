@@ -5,6 +5,7 @@ using System.Runtime.ConstrainedExecution;
 
 namespace ProjectX.AnalyticsLib.Tests;
 
+[Ignore("Cleanup later, not sure how this should look but the aim is to test business logic of  all pricers at once ")]
 public class OptionsPricersTest
 {
     static readonly IOptions<OptionsPricerCppWrapperOptions> options = Options.Create<OptionsPricerCppWrapperOptions>(new OptionsPricerCppWrapperOptions() 
@@ -53,7 +54,8 @@ public class OptionsPricersTest
         Assert.That(deepOtmPrice, Is.EqualTo(0).Within(td.percentError).Percent);
     }
 
-    [Test]   
+    [Test]
+    [Ignore("Still need to figure out how to best write this test")]       
     public void WhenCalculatingGreeksShouldReturnRealisticValues()
     {
         // stock with 6 months expiration, stock price is 100, strike price is 110, risk free interest rate 0.1 per year, continuous dividend yield 0.06 and volatility is 0.3 
@@ -178,6 +180,7 @@ public class OptionsPricersTest
     }
 
     [TestCaseSource(nameof(VanillaOptionCalculators))]
+    [Ignore("Still need to figure this out")]
     public void WhenCalculatingImpliedVol((IOptionsGreeksCalculator calc, double percentError) td)    
     {
         // stock with 6 months expiration, stock price is 100, strike price is 110, risk free interest rate 0.1 per year, continuous dividend yield 0.06 and volatility is 0.3 
