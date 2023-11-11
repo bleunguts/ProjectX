@@ -19,6 +19,7 @@ namespace ProjectX.AnalyticsLib.OptionsCalculators
         private readonly MonteCarloCppPricer _calculator;
         private readonly BlackScholesCppPricer _blackScholes;
         private readonly ulong _numOfMcPaths;
+        private readonly Dictionary<ExecutionKey, GreekResults> _cache = new();
 
         [ImportingConstructor]
         public MonteCarloCppOptionsPricerWrapper(IOptions<OptionsPricerCppWrapperOptions> options)
@@ -28,24 +29,39 @@ namespace ProjectX.AnalyticsLib.OptionsCalculators
             _numOfMcPaths = options?.Value?.NumOfMcPaths ?? 1000;
             _blackScholes = new BlackScholesCppPricer();
         }
+
+        private GreekResults RunSimulation(ExecutionKey key, OptionType optionType, double spot, double strike, double rate, double maturity, double volatility)
+        {
+            if (!_cache.TryGetValue(key, out GreekResults? greekResult))
+            {
+                var param = new VanillaOptionParameters(optionType.ToNativeOptionType(), strike, maturity);
+                var result = _calculator.MCValue(ref param, spot, volatility, rate, _numOfMcPaths);
+
+                _cache.Add(key, result);
+                greekResult = result;
+            }
+            return greekResult;
+        }
+
         public double PV(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
-            var param = new VanillaOptionParameters(optionType.ToNativeOptionType(), strike, maturity);            
-            var result = _calculator.MCValue(ref param, spot, volatility, rate, _numOfMcPaths);            
-            return result.PV;
-        }
+            var key = Key(optionType, spot, strike, rate, carry, maturity, volatility);
+            GreekResults greekResult= RunSimulation(key, optionType, spot, strike, rate, maturity, volatility);
+            return greekResult.PV;
+        }        
 
         public double Delta(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
-            var param = new VanillaOptionParameters(optionType.ToNativeOptionType(), strike, maturity);
-            var result = _calculator.MCValue(ref param, spot, volatility, rate, _numOfMcPaths);
-            return result.Delta;
+            var key = Key(optionType, spot, strike, rate, carry, maturity, volatility);
+            GreekResults greekResult = RunSimulation(key, optionType, spot, strike, rate, maturity, volatility);
+            return greekResult.Delta;
         }
 
         public double Gamma(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
-            var param = new VanillaOptionParameters(optionType.ToNativeOptionType(), strike, maturity);
-            return _calculator.GammaMC(ref param, spot, volatility, rate, _numOfMcPaths);
+            var key = Key(optionType, spot, strike, rate, carry, maturity, volatility);
+            GreekResults greekResult = RunSimulation(key, optionType, spot, strike, rate, maturity, volatility);
+            return greekResult.Gamma;
         }
 
         public double ImpliedVol(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double price)
@@ -57,23 +73,50 @@ namespace ProjectX.AnalyticsLib.OptionsCalculators
 
         public double Rho(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
-            var param = new VanillaOptionParameters(optionType.ToNativeOptionType(), strike, maturity);
-            return _calculator.RhoMC(ref param, spot, volatility, rate, _numOfMcPaths);
+            var key = Key(optionType, spot, strike, rate, carry, maturity, volatility);
+            GreekResults greekResult = RunSimulation(key, optionType, spot, strike, rate, maturity, volatility);
+            return greekResult.Rho;
         }
 
         public double Theta(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
-            double timeStep = 0.01;
-            var param = new VanillaOptionParameters(optionType.ToNativeOptionType(), strike, maturity);
-            //double theta = _calculator.Theta(ref param, spot, volatility, rate, _numOfMcPaths);
-            double theta = _calculator.ThetaMC(ref param, spot, volatility, rate, _numOfMcPaths, timeStep);
-            return double.IsNaN(theta) ? 0.0 : theta;
+            var key = Key(optionType, spot, strike, rate, carry, maturity, volatility);
+            GreekResults greekResult = RunSimulation(key, optionType, spot, strike, rate, maturity, volatility);
+            return greekResult.Theta;
         }
 
         public double Vega(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
-            var param = new VanillaOptionParameters(optionType.ToNativeOptionType(), strike, maturity);
-            return _calculator.VegaMC(ref param, spot, volatility, rate, _numOfMcPaths);
-        }      
+            var key = Key(optionType, spot, strike, rate, carry, maturity, volatility);
+            GreekResults greekResult = RunSimulation(key, optionType, spot, strike, rate, maturity, volatility);
+            return greekResult.Vega;
+        }
+
+        private static ExecutionKey Key(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
+        {
+            return new ExecutionKey(optionType, spot, strike, rate, carry, maturity, volatility);
+        }
+
+        class ExecutionKey
+        {
+            public ExecutionKey(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
+            {
+                OptionType = optionType;
+                Spot = spot;
+                Strike = strike;
+                Rate = rate;
+                Carry = carry;
+                Maturity = maturity;
+                Volatility = volatility;
+            }
+
+            public OptionType OptionType { get; }
+            public double Spot { get; }
+            public double Strike { get; }
+            public double Rate { get; }
+            public double Carry { get; }
+            public double Maturity { get; }
+            public double Volatility { get; }
+        }
     }
 }
