@@ -16,7 +16,7 @@ public class MonteCarloCppPricerTest
     // n = 1000 paths
     // Result 10.5126 / 12.739
     [Test]
-    public void ShallBeAbleToPriceOptionWithCppOptionsPricingCalculator()
+    public void WhenValueShouldReturnValidPV()
     {
         VanillaOptionParameters theOption = new(OptionType.Call, 200.0, 0.25);
         double spot = 195.0;
@@ -24,10 +24,11 @@ public class MonteCarloCppPricerTest
         double r = 0.05;
         uint numberOfPaths = 250_000;
         var sw = Stopwatch.StartNew();
-        double price = mc.MCValue(ref theOption, spot, vol, r, numberOfPaths);
-        Assert.That(price, Is.EqualTo(10.5).Within(1).Percent);
-        sw.Stop();
+        var pv = mc.MCValue(ref theOption, spot, vol, r, numberOfPaths);        
+        sw.Stop();        
         Console.WriteLine($"Completed {numberOfPaths} #MC paths in {sw.ElapsedMilliseconds} ms");
+
+        Assert.That(pv, Is.EqualTo(10.5).Within(1).Percent);        
     }
 
     [Test]
