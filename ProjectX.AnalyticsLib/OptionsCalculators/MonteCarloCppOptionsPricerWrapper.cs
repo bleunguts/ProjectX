@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using OptionType = ProjectX.Core.OptionType;
@@ -31,10 +32,9 @@ namespace ProjectX.AnalyticsLib.OptionsCalculators
         {
             var param = new VanillaOptionParameters(optionType.ToNativeOptionType(), strike, maturity);
             var sw = Stopwatch.StartNew();
-            var value = _calculator.MCValue(ref param, spot, volatility, rate, _numOfMcPaths);
+            var result = _calculator.MCValue(ref param, spot, volatility, rate, _numOfMcPaths);
             sw.Stop();
-            //Console.WriteLine($"BlackScholes with {_numOfMcPaths} paths took {sw.ElapsedMilliseconds} ms.");
-            return value;
+            return result.PV;
         }
 
         public double Delta(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)

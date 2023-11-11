@@ -16,7 +16,7 @@ namespace ProjectXAnalyticsCppLib
 		{
 			m_randomWalk = randomWalk;
 		};
-		Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::MCValue(
+		GreekResults^ ProjectXAnalyticsCppLib::MonteCarloCppPricer::MCValue(
 			VanillaOptionParameters^% TheOption,
 			Double Spot,
 			Double Vol,

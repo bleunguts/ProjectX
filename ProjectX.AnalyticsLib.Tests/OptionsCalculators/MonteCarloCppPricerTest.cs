@@ -24,11 +24,11 @@ public class MonteCarloCppPricerTest
         double r = 0.05;
         uint numberOfPaths = 250_000;
         var sw = Stopwatch.StartNew();
-        var pv = mc.MCValue(ref theOption, spot, vol, r, numberOfPaths);        
+        var result = mc.MCValue(ref theOption, spot, vol, r, numberOfPaths);        
         sw.Stop();        
         Console.WriteLine($"Completed {numberOfPaths} #MC paths in {sw.ElapsedMilliseconds} ms");
 
-        Assert.That(pv, Is.EqualTo(10.5).Within(1).Percent);        
+        Assert.That(result.PV, Is.EqualTo(10.5).Within(1).Percent);        
     }
 
     [Test]

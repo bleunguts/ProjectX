@@ -4,7 +4,7 @@
 #include "BlackScholesFunctions.h"
 #include <cmath>
 
-Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::MCValue(VanillaOptionParameters^% OptionParams,
+ProjectXAnalyticsCppLib::GreekResults^ ProjectXAnalyticsCppLib::MonteCarloCppPricer::MCValue(VanillaOptionParameters^% OptionParams,
 	Double Spot,
 	Double Vol,
 	Double r,
@@ -56,7 +56,9 @@ Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::MCValue(VanillaOptionParame
 		delete payOffBridge;
 		payOffBridge = NULL;
 	}
-	return mean;
+
+	GreekResults^ results = gcnew GreekResults(mean, -1, -1, -1, -1, -1);
+	return results;
 }
 
 Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::DeltaMC(VanillaOptionParameters^% TheOption,
