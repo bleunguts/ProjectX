@@ -47,7 +47,7 @@ namespace ProjectX.AnalyticsLib.OptionsCalculators
         {
             var key = Key(spot, strike, rate, carry, maturity, volatility);
             GreekResults greekResult= RunSimulation(key, optionType, spot, strike, rate, maturity, volatility);
-            return greekResult.PV;
+            return optionType == OptionType.Call ? greekResult.PV : greekResult.PVPut;
         }        
 
         public double Delta(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)

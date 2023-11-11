@@ -6,9 +6,10 @@ namespace ProjectXAnalyticsCppLib {
 	public ref struct GreekResults
 	{
 	public:
-		GreekResults(Double pv, Double delta,Double deltaPut,  Double gamma, Double vega, Double rho, Double rhoPut, Double theta, Double thetaPut)
+		GreekResults(Double pv, Double pvPut, Double delta,Double deltaPut,  Double gamma, Double vega, Double rho, Double rhoPut, Double theta, Double thetaPut)
 		{
 			this->PV = pv;
+			this->PVPut = pvPut;
 			this->Delta = delta;
 			this->DeltaPut = deltaPut;
 			this->Gamma = gamma;
@@ -20,6 +21,7 @@ namespace ProjectXAnalyticsCppLib {
 		}
 	public:
 		Double PV;
+		Double PVPut;
 		Double Delta;
 		Double DeltaPut;
 		Double Gamma;

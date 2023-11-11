@@ -11,27 +11,17 @@ ProjectXAnalyticsCppLib::GreekResults^ ProjectXAnalyticsCppLib::MonteCarloCppPri
 	UInt64 NumberOfPaths)
 {
 	double K = OptionParams->Strike();
-	double T = OptionParams->Expiry();
-	PayOffBridge* payOffBridge = nullptr;
-	switch (OptionParams->OptionType())
-	{
-	case OptionType::Call:
-	{
-		PayOffCall call = PayOffCall(K);
-		payOffBridge = new PayOffBridge(call);
-		break;
-	}
-	case OptionType::Put:
-	{
-		PayOffPut put = PayOffPut(K);
-		payOffBridge = new PayOffBridge(put);
-		break;
-	}
-	default:
-		throw gcnew System::String("Shouldnt get here");
-	}
+	double T = OptionParams->Expiry();	
+	double dt = T / NumberOfPaths;
+	double q = 0;
 
-	VanillaOption TheOption = VanillaOption(*payOffBridge, T);
+	PayOffCall call = PayOffCall(K);
+	PayOffPut put = PayOffPut(K);
+	PayOffBridge callBridge = PayOffBridge(call);
+	PayOffBridge putBridge = PayOffBridge(put);
+	VanillaOption callOption = VanillaOption(callBridge, T);
+	VanillaOption putOption = VanillaOption(putBridge, T);
+
 	ParametersConstant vol = ParametersConstant(Vol);
 	ParametersConstant rate = ParametersConstant(r);
 	double variance = vol.IntegralSquare(0, T);
@@ -39,6 +29,7 @@ ProjectXAnalyticsCppLib::GreekResults^ ProjectXAnalyticsCppLib::MonteCarloCppPri
 	double itoCorrection = -0.5 * variance;
 	double movedSpot = Spot * exp(rate.Integral(0, T) + itoCorrection);
 	double thisSpot;
+
 	double sum_payoffs = 0.0;	
 	double sum_payoffsput = 0.0;	
 	double sum_delta = 0.0;
@@ -48,18 +39,17 @@ ProjectXAnalyticsCppLib::GreekResults^ ProjectXAnalyticsCppLib::MonteCarloCppPri
 	double sum_rho = 0.0;
 	double sum_rhoput = 0.0;
 	double sum_theta = 0.0;
-	double sum_thetaput = 0.0;
-	double dt = T / NumberOfPaths;
-	double q = 0;
+	double sum_thetaput = 0.0;	
 
 	for (unsigned long i = 0; i < NumberOfPaths; i++)
 	{
 		// PVs
 		double thisGaussian = m_randomWalk->GetOneGaussian();
 		thisSpot = movedSpot * exp(rootVariance * thisGaussian);
-		double thisPayOff = TheOption.OptionPayOff(thisSpot);
-		sum_payoffs += thisPayOff;
-		sum_payoffsput 
+		double callPayOff = callOption.OptionPayOff(thisSpot);
+		double putPayOff = putOption.OptionPayOff(thisSpot);
+		sum_payoffs += callPayOff;
+		sum_payoffsput += putPayOff;
 
 		// Greeks
 		double step = T - i * dt;
@@ -102,6 +92,8 @@ ProjectXAnalyticsCppLib::GreekResults^ ProjectXAnalyticsCppLib::MonteCarloCppPri
 
 	double mean = sum_payoffs / NumberOfPaths;
 	mean *= exp(-rate.Integral(0, T));
+	double meanPut = sum_payoffsput / NumberOfPaths;
+	meanPut *= exp(-rate.Integral(0, T));
 	double delta = sum_delta / NumberOfPaths;	
 	double gamma = sum_gamma / NumberOfPaths;
 	double vega = sum_vega / NumberOfPaths;
@@ -109,14 +101,9 @@ ProjectXAnalyticsCppLib::GreekResults^ ProjectXAnalyticsCppLib::MonteCarloCppPri
 	double theta = sum_theta / NumberOfPaths;
 	double delta_put = sum_deltaput / NumberOfPaths;
 	double rho_put = sum_rhoput / NumberOfPaths;
-	double theta_put = sum_thetaput / NumberOfPaths;	
+	double theta_put = sum_thetaput / NumberOfPaths;		
 
-	if (payOffBridge != NULL) {
-		delete payOffBridge;
-		payOffBridge = NULL;
-	}
-
-	GreekResults^ results = gcnew GreekResults(mean, delta, delta_put, gamma, vega, rho, rho_put, theta, theta_put);
+	GreekResults^ results = gcnew GreekResults(mean, meanPut, delta, delta_put, gamma, vega, rho, rho_put, theta, theta_put);
 	return results;
 }
 
