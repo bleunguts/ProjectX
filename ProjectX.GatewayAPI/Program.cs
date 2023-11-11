@@ -28,7 +28,6 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 builder.Services.TryAddScoped<IBlackScholesCSharpPricer, BlackScholesOptionsPricer>();
 builder.Services.TryAddScoped<IBlackScholesCppPricer, BlackScholesCppOptionsPricerWrapper>();
 builder.Services.TryAddScoped<IMonteCarloCppOptionsPricer, MonteCarloCppOptionsPricerWrapper>();
-builder.Services.TryAddScoped<IMonteCarloCppOptionsPricer2, MonteCarloCppOptionsPricer2Wrapper>();
 // others
 builder.Services.TryAddScoped<IOptionsPricingModel, OptionsPricingModel>();
 builder.Services.AddSingleton<IFXSpotPricer,FXSpotPricer>();

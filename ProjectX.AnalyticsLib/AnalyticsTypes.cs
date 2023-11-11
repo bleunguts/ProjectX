@@ -10,9 +10,6 @@ namespace ProjectX.AnalyticsLib;
 public interface IMonteCarloCppOptionsPricer : IOptionsGreeksCalculator
 {
 }
-public interface IMonteCarloCppOptionsPricer2 : IOptionsGreeksCalculator
-{
-}
 public interface IBlackScholesCSharpPricer : IOptionsGreeksCalculator
 {
 }

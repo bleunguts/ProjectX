@@ -22,16 +22,14 @@ namespace ProjectX.Core.Services
     {
         private readonly IOptionsGreeksCalculator _blackScholesCSharpPricer;
         private readonly IOptionsGreeksCalculator _blackScholesCppPricer;
-        private readonly IOptionsGreeksCalculator _monteCarloOptionsPricerCpp;
-        private readonly IOptionsGreeksCalculator _monteCarloOptionsPricer2Cpp;
+        private readonly IOptionsGreeksCalculator _monteCarloOptionsPricerCpp;        
 
         [ImportingConstructor]
-        public OptionsPricingModel(IBlackScholesCSharpPricer csharpPricer, IBlackScholesCppPricer cppPricer, IMonteCarloCppOptionsPricer cppmcPricer, IMonteCarloCppOptionsPricer2 cppmcPricer2)
+        public OptionsPricingModel(IBlackScholesCSharpPricer csharpPricer, IBlackScholesCppPricer cppPricer, IMonteCarloCppOptionsPricer cppmcPricer)
         {
             _blackScholesCSharpPricer = csharpPricer;
             _blackScholesCppPricer = cppPricer;
-            _monteCarloOptionsPricerCpp = cppmcPricer;
-            _monteCarloOptionsPricer2Cpp = cppmcPricer2;
+            _monteCarloOptionsPricerCpp = cppmcPricer;        
         }
         public OptionsPricingByMaturityResults Price(OptionsPricingByMaturitiesRequest request)
         {
@@ -74,8 +72,7 @@ namespace ProjectX.Core.Services
             return calculatorType switch
             {
                 OptionsPricingCalculatorType.OptionsPricer => _blackScholesCSharpPricer,
-                OptionsPricingCalculatorType.OptionsPricerCpp => _blackScholesCppPricer,
-                OptionsPricingCalculatorType.MonteCarloCppPricer2 => _monteCarloOptionsPricer2Cpp,
+                OptionsPricingCalculatorType.OptionsPricerCpp => _blackScholesCppPricer,                
                 OptionsPricingCalculatorType.MonteCarloCppPricer => _monteCarloOptionsPricerCpp,
                 _ => throw new NotImplementedException(nameof(calculatorType)),
             };

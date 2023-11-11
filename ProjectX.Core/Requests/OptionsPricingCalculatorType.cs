@@ -2,6 +2,6 @@
 {
     public enum OptionsPricingCalculatorType
     {
-        OptionsPricer, OptionsPricerCpp, MonteCarloCppPricer, MonteCarloCppPricer2
+        OptionsPricer, OptionsPricerCpp, MonteCarloCppPricer
     }
 }

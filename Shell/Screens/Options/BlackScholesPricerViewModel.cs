@@ -324,15 +324,9 @@ namespace Shell.Screens.Options
                 ),
                 OptionsPricingCalculatorType.MonteCarloCppPricer =>
                (
-                   OptionsPricingCalculatorType.MonteCarloCppPricer2,
-                    "MonteCarlo Pricing native C++ (faster)"
-               ),
-                OptionsPricingCalculatorType.MonteCarloCppPricer2 =>
-                (
                     OptionsPricingCalculatorType.OptionsPricer,
                     "Vanilla BlackScholes Options Pricer C#"
-                ),
-
+               ),
                 _ => throw new NotImplementedException(),
             };
         }

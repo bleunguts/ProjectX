@@ -16,7 +16,7 @@ namespace ProjectX.AnalyticsLib.Tests
         [SetUp]
         public void SetUp()
         {
-            _sut = new OptionsPricingModel(_mockCSharpCalculator.Object, Mock.Of<IBlackScholesCppPricer>(), Mock.Of<IMonteCarloCppOptionsPricer>(), Mock.Of<IMonteCarloCppOptionsPricer2>());
+            _sut = new OptionsPricingModel(_mockCSharpCalculator.Object, Mock.Of<IBlackScholesCppPricer>(), Mock.Of<IMonteCarloCppOptionsPricer>());
             _mockCSharpCalculator.Setup(m => m.PV(It.IsAny<OptionType>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>(), It.IsAny<double>()))
                                  .Returns(() => RandomFloat(50, 60));
         }

@@ -128,7 +128,6 @@
   <ItemGroup>
     <ClInclude Include="BlackScholesFunctions.h" />
     <ClInclude Include="BlackScholesCppPricer.h" />
-    <ClInclude Include="MonteCarloCppPricer2.h" />
     <ClInclude Include="MonteCarloCppPricer.h" />
     <ClInclude Include="Parameters.h" />
     <ClInclude Include="PayOff.h" />
@@ -143,7 +142,6 @@
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="BlackScholesFunctions.cpp" />
     <ClCompile Include="BlackScholesCppPricer.cpp" />
-    <ClCompile Include="MonteCarloCppPricer2.cpp" />
     <ClCompile Include="MonteCarloCppPricer.cpp" />
     <ClCompile Include="Parameters.cpp" />
     <ClCompile Include="PayOff.cpp" />
