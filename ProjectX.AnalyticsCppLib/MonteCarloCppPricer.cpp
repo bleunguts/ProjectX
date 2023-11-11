@@ -42,6 +42,9 @@ ProjectXAnalyticsCppLib::GreekResults^ ProjectXAnalyticsCppLib::MonteCarloCppPri
 	double sum_payoffs = 0.0;
 	double sum_delta = 0.0;
 	double sum_gamma = 0.0;
+	double sum_vega = 0.0;
+	double sum_rho = 0.0;
+	double sum_theta = 0.0;
 	double dt = T / NumberOfPaths;
 	double q = 0;
 
@@ -54,25 +57,42 @@ ProjectXAnalyticsCppLib::GreekResults^ ProjectXAnalyticsCppLib::MonteCarloCppPri
 
 		double step = T - i * dt;
 		double d1 = BlackScholesFunctions::d1(thisSpot, K, r, Vol, step);
+		Double d2 = BlackScholesFunctions::d2(d1, Vol, step);
 		Double N_d1 = normcdf(d1);
+		Double N_d2 = normcdf(d2);
 		Double NPrime_d1 = normpdf(d1);
+		Double NNegative_d2 = normcdf(-d2);
+
 		double delta_i = N_d1;
 		sum_delta += delta_i;
 		double gamma_i = Math::Exp(-q * step) / (thisSpot * Vol * Math::Sqrt(step)) * NPrime_d1;
 		sum_gamma += gamma_i;
+		double vega_i = thisSpot * Math::Exp(-q * step) * Math::Sqrt(step) * NPrime_d1 / 100;
+		sum_vega += vega_i;
+		double rho = -(K * step * Math::Exp(-r * step) * NNegative_d2);
+		sum_rho += rho;		
+
+		double p1 = -(thisSpot * Vol * Math::Exp(-q * step) / (2 * Math::Sqrt(step)) * NPrime_d1);
+		double p2 = -r * K * Math::Exp(-r * step) * N_d2;
+		double p3 = q * thisSpot * Math::Exp(-q * step) * N_d1;
+		double theta = p1 + p2 + p3;
+		sum_theta += theta;
 	}
 
 	double mean = sum_payoffs / NumberOfPaths;
 	mean *= exp(-rate.Integral(0, T));
 	double delta = sum_delta / NumberOfPaths;	
 	double gamma = sum_gamma / NumberOfPaths;
+	double vega = sum_vega / NumberOfPaths;
+	double rho = sum_rho / NumberOfPaths;
+	double theta = sum_theta / NumberOfPaths;
 
 	if (payOffBridge != NULL) {
 		delete payOffBridge;
 		payOffBridge = NULL;
 	}
 
-	GreekResults^ results = gcnew GreekResults(mean, delta, -1, -1, -1, -1);
+	GreekResults^ results = gcnew GreekResults(mean, delta, gamma, vega, rho, theta);
 	return results;
 }
 
