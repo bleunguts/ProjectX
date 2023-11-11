@@ -45,21 +45,21 @@ namespace ProjectX.AnalyticsLib.OptionsCalculators
 
         public double PV(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
-            var key = Key(optionType, spot, strike, rate, carry, maturity, volatility);
+            var key = Key(spot, strike, rate, carry, maturity, volatility);
             GreekResults greekResult= RunSimulation(key, optionType, spot, strike, rate, maturity, volatility);
             return greekResult.PV;
         }        
 
         public double Delta(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
-            var key = Key(optionType, spot, strike, rate, carry, maturity, volatility);
+            var key = Key(spot, strike, rate, carry, maturity, volatility);
             GreekResults greekResult = RunSimulation(key, optionType, spot, strike, rate, maturity, volatility);
-            return greekResult.Delta;
+            return optionType == OptionType.Call ? greekResult.Delta : greekResult.DeltaPut;
         }
 
         public double Gamma(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
-            var key = Key(optionType, spot, strike, rate, carry, maturity, volatility);
+            var key = Key(spot, strike, rate, carry, maturity, volatility);
             GreekResults greekResult = RunSimulation(key, optionType, spot, strike, rate, maturity, volatility);
             return greekResult.Gamma;
         }
@@ -73,50 +73,63 @@ namespace ProjectX.AnalyticsLib.OptionsCalculators
 
         public double Rho(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
-            var key = Key(optionType, spot, strike, rate, carry, maturity, volatility);
+            var key = Key(spot, strike, rate, carry, maturity, volatility);
             GreekResults greekResult = RunSimulation(key, optionType, spot, strike, rate, maturity, volatility);
-            return greekResult.Rho;
+            return optionType == OptionType.Call ? greekResult.Rho : greekResult.RhoPut;
         }
 
         public double Theta(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
-            var key = Key(optionType, spot, strike, rate, carry, maturity, volatility);
+            var key = Key(spot, strike, rate, carry, maturity, volatility);
             GreekResults greekResult = RunSimulation(key, optionType, spot, strike, rate, maturity, volatility);
-            return greekResult.Theta;
+            return optionType == OptionType.Call ? greekResult.Theta : greekResult.ThetaPut;
         }
 
         public double Vega(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
-            var key = Key(optionType, spot, strike, rate, carry, maturity, volatility);
+            var key = Key(spot, strike, rate, carry, maturity, volatility);
             GreekResults greekResult = RunSimulation(key, optionType, spot, strike, rate, maturity, volatility);
             return greekResult.Vega;
         }
 
-        private static ExecutionKey Key(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
+        private static ExecutionKey Key(double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
-            return new ExecutionKey(optionType, spot, strike, rate, carry, maturity, volatility);
+            return new ExecutionKey(spot, strike, rate, carry, maturity, volatility);
         }
 
         class ExecutionKey
         {
-            public ExecutionKey(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
-            {
-                OptionType = optionType;
+            public ExecutionKey(double spot, double strike, double rate, double carry, double maturity, double volatility)
+            {                
                 Spot = spot;
                 Strike = strike;
                 Rate = rate;
                 Carry = carry;
                 Maturity = maturity;
                 Volatility = volatility;
-            }
-
-            public OptionType OptionType { get; }
+            }            
             public double Spot { get; }
             public double Strike { get; }
             public double Rate { get; }
             public double Carry { get; }
             public double Maturity { get; }
             public double Volatility { get; }
+
+            public override bool Equals(object? obj)
+            {
+                return obj is ExecutionKey key &&
+                       Spot == key.Spot &&
+                       Strike == key.Strike &&
+                       Rate == key.Rate &&
+                       Carry == key.Carry &&
+                       Maturity == key.Maturity &&
+                       Volatility == key.Volatility;
+            }
+
+            public override int GetHashCode()
+            {
+                return HashCode.Combine(Spot, Strike, Rate, Carry, Maturity, Volatility);
+            }
         }
     }
 }

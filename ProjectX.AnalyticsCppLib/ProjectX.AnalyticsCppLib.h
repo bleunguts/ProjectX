@@ -6,22 +6,28 @@ namespace ProjectXAnalyticsCppLib {
 	public ref struct GreekResults
 	{
 	public:
-		GreekResults(Double pv, Double delta, Double gamma, Double vega, Double rho, Double theta)
+		GreekResults(Double pv, Double delta,Double deltaPut,  Double gamma, Double vega, Double rho, Double rhoPut, Double theta, Double thetaPut)
 		{
 			this->PV = pv;
 			this->Delta = delta;
+			this->DeltaPut = deltaPut;
 			this->Gamma = gamma;
 			this->Vega = vega;
 			this->Rho = rho;
+			this->RhoPut = rhoPut;
 			this->Theta = theta;
+			this->ThetaPut = thetaPut;
 		}
 	public:
 		Double PV;
 		Double Delta;
+		Double DeltaPut;
 		Double Gamma;
 		Double Vega;
 		Double Rho;
+		Double RhoPut;
 		Double Theta;
+		Double ThetaPut;
 	};
 
 	public enum class OptionType
