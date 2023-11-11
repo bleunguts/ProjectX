@@ -30,17 +30,16 @@ namespace ProjectX.AnalyticsLib.OptionsCalculators
         }
         public double PV(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
-            var param = new VanillaOptionParameters(optionType.ToNativeOptionType(), strike, maturity);
-            var sw = Stopwatch.StartNew();
-            var result = _calculator.MCValue(ref param, spot, volatility, rate, _numOfMcPaths);
-            sw.Stop();
+            var param = new VanillaOptionParameters(optionType.ToNativeOptionType(), strike, maturity);            
+            var result = _calculator.MCValue(ref param, spot, volatility, rate, _numOfMcPaths);            
             return result.PV;
         }
 
         public double Delta(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
             var param = new VanillaOptionParameters(optionType.ToNativeOptionType(), strike, maturity);
-            return _calculator.DeltaMC(ref param, spot, volatility, rate, _numOfMcPaths);
+            var result = _calculator.MCValue(ref param, spot, volatility, rate, _numOfMcPaths);
+            return result.Delta;
         }
 
         public double Gamma(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)

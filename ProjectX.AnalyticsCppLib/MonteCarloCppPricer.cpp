@@ -39,7 +39,11 @@ ProjectXAnalyticsCppLib::GreekResults^ ProjectXAnalyticsCppLib::MonteCarloCppPri
 	double itoCorrection = -0.5 * variance;
 	double movedSpot = Spot * exp(rate.Integral(0, T) + itoCorrection);
 	double thisSpot;
-	double sum_payoffs = 0;
+	double sum_payoffs = 0.0;
+	double sum_delta = 0.0;
+	double sum_gamma = 0.0;
+	double dt = T / NumberOfPaths;
+	double q = 0;
 
 	for (unsigned long i = 0; i < NumberOfPaths; i++)
 	{
@@ -47,17 +51,28 @@ ProjectXAnalyticsCppLib::GreekResults^ ProjectXAnalyticsCppLib::MonteCarloCppPri
 		thisSpot = movedSpot * exp(rootVariance * thisGaussian);
 		double thisPayOff = TheOption.OptionPayOff(thisSpot);
 		sum_payoffs += thisPayOff;
+
+		double step = T - i * dt;
+		double d1 = BlackScholesFunctions::d1(thisSpot, K, r, Vol, step);
+		Double N_d1 = normcdf(d1);
+		Double NPrime_d1 = normpdf(d1);
+		double delta_i = N_d1;
+		sum_delta += delta_i;
+		double gamma_i = Math::Exp(-q * step) / (thisSpot * Vol * Math::Sqrt(step)) * NPrime_d1;
+		sum_gamma += gamma_i;
 	}
 
 	double mean = sum_payoffs / NumberOfPaths;
 	mean *= exp(-rate.Integral(0, T));
+	double delta = sum_delta / NumberOfPaths;	
+	double gamma = sum_gamma / NumberOfPaths;
 
 	if (payOffBridge != NULL) {
 		delete payOffBridge;
 		payOffBridge = NULL;
 	}
 
-	GreekResults^ results = gcnew GreekResults(mean, -1, -1, -1, -1, -1);
+	GreekResults^ results = gcnew GreekResults(mean, delta, -1, -1, -1, -1);
 	return results;
 }
 

@@ -13,7 +13,7 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
     {
         static IOptions<OptionsPricerCppWrapperOptions> options = Options.Create<OptionsPricerCppWrapperOptions>(new OptionsPricerCppWrapperOptions
         {
-            NumOfMcPaths = (ulong)8e4,
+            NumOfMcPaths = (ulong)8e6,
             RandomAlgo =  RandomAlgorithm.BoxMuller
         });              
         IOptionsGreeksCalculator _pricer = new MonteCarloCppOptionsPricerWrapper(options);
