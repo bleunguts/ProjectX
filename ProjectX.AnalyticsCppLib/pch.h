@@ -9,5 +9,6 @@
 
 // add headers that you want to pre-compile here
 #include "Utility.h"
+#include "ProjectX.AnalyticsCppLib.h"
 
 #endif //PCH_H

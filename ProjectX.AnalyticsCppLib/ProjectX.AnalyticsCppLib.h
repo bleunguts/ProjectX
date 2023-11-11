@@ -3,6 +3,27 @@
 using namespace System;
 
 namespace ProjectXAnalyticsCppLib {		
+	public ref struct GreekResults
+	{
+	public:
+		GreekResults(Double pv, Double delta, Double gamma, Double vega, Double rho, Double theta)
+		{
+			this->PV = pv;
+			this->Delta = delta;
+			this->Gamma = gamma;
+			this->Vega = vega;
+			this->Rho = rho;
+			this->Theta = theta;
+		}
+	public:
+		Double PV;
+		Double Delta;
+		Double Gamma;
+		Double Vega;
+		Double Rho;
+		Double Theta;
+	};
+
 	public enum class OptionType
 	{
 		Call, Put
