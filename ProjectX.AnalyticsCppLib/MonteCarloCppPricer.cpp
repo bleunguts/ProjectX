@@ -74,7 +74,7 @@ ProjectXAnalyticsCppLib::GreekResults^ ProjectXAnalyticsCppLib::MonteCarloCppPri
 
 		double rho_i = (K * step * Math::Exp(-r * step) * N_d2) / 100;
 		sum_rho += rho_i;		
-		double rhoPut_i = -(K * step * Math::Exp(-r * step) * NNegative_d2);
+		double rhoPut_i = -(K * step * Math::Exp(-r * step) * NNegative_d2) / 100;
 		sum_rhoput += rhoPut_i;
 
 		double p1 = -(thisSpot * Vol * Math::Exp(-q * step) / (2 * Math::Sqrt(step)) * NPrime_d1);
@@ -82,11 +82,10 @@ ProjectXAnalyticsCppLib::GreekResults^ ProjectXAnalyticsCppLib::MonteCarloCppPri
 		double p3 = q * thisSpot * Math::Exp(-q * step) * N_d1;
 		double theta = p1 + p2 + p3;
 		sum_theta += theta;
-				
-		double p1_p = -(thisSpot * Vol * Math::Exp(-q * step)) / (2 * Math::Sqrt(step)) * NPrime_d1;
+						
 		double p2_p = r * K * Math::Exp(-r * step) * NNegative_d2;
 		double p3_p = -q * thisSpot * Math::Exp(-q * step) * NNegative_d1;
-		double thetaPut = p1_p + p2_p + p3_p;
+		double thetaPut = p1 + p2_p + p3_p;
 		sum_thetaput += thetaPut;
 	}
 
