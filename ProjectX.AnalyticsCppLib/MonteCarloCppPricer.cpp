@@ -10,18 +10,20 @@ Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::MCValue(VanillaOptionParame
 	Double r,
 	UInt64 NumberOfPaths)
 {
+	double K = OptionParams->Strike();
+	double T = OptionParams->Expiry();
 	PayOffBridge* payOffBridge = nullptr;
 	switch (OptionParams->OptionType())
 	{
 	case OptionType::Call:
 	{
-		PayOffCall call = PayOffCall(OptionParams->Strike());
+		PayOffCall call = PayOffCall(K);
 		payOffBridge = new PayOffBridge(call);
 		break;
 	}
 	case OptionType::Put:
 	{
-		PayOffPut put = PayOffPut(OptionParams->Strike());
+		PayOffPut put = PayOffPut(K);
 		payOffBridge = new PayOffBridge(put);
 		break;
 	}
@@ -29,27 +31,26 @@ Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::MCValue(VanillaOptionParame
 		throw gcnew System::String("Shouldnt get here");
 	}
 
-	VanillaOption TheOption = VanillaOption(*payOffBridge, OptionParams->Expiry());
+	VanillaOption TheOption = VanillaOption(*payOffBridge, T);
 	ParametersConstant vol = ParametersConstant(Vol);
 	ParametersConstant rate = ParametersConstant(r);
-	double Expiry = TheOption.GetExpiry();
-	double variance = vol.IntegralSquare(0, Expiry);
+	double variance = vol.IntegralSquare(0, T);
 	double rootVariance = sqrt(variance);
 	double itoCorrection = -0.5 * variance;
-	double movedSpot = Spot * exp(rate.Integral(0, Expiry) + itoCorrection);
+	double movedSpot = Spot * exp(rate.Integral(0, T) + itoCorrection);
 	double thisSpot;
-	double runningSum = 0;
+	double sum_payoffs = 0;
 
 	for (unsigned long i = 0; i < NumberOfPaths; i++)
 	{
 		double thisGaussian = m_randomWalk->GetOneGaussian();
 		thisSpot = movedSpot * exp(rootVariance * thisGaussian);
 		double thisPayOff = TheOption.OptionPayOff(thisSpot);
-		runningSum += thisPayOff;
+		sum_payoffs += thisPayOff;
 	}
 
-	double mean = runningSum / NumberOfPaths;
-	mean *= exp(-rate.Integral(0, Expiry));
+	double mean = sum_payoffs / NumberOfPaths;
+	mean *= exp(-rate.Integral(0, T));
 
 	if (payOffBridge != NULL) {
 		delete payOffBridge;
