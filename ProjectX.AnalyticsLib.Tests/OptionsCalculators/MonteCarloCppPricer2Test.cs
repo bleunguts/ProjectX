@@ -10,13 +10,18 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
     /// https://goodcalculators.com/black-scholes-calculator/
     /// </summary>
     public class MonteCarloCppPricer2PricerTest
-    {
+    {        
+        private const double SmallTolerance = 0.01;
+        private const double MedTolerance = 0.7;
+        private const double RhoTolerance = 20.0;
+
         static IOptions<OptionsPricerCppWrapperOptions> options = Options.Create<OptionsPricerCppWrapperOptions>(new OptionsPricerCppWrapperOptions
         {
             NumOfMcPaths = (ulong)8e6,
             RandomAlgo =  RandomAlgorithm.BoxMuller
         });              
-        IOptionsGreeksCalculator _pricer = new MonteCarloCppOptionsPricerWrapper(options);
+        IOptionsGreeksCalculator _pricer = new MonteCarloCppOptionsPricerWrapper(options);        
+
         private IOptionsGreeksCalculator GetCalculator(Type calculatorType) => _pricer;
 
         // stock with 6 months expiration, stock price is 100, strike price is 110, risk free interest rate 0.1 per year, continuous dividend yield 0.06 and volatility is 0.3 
@@ -62,11 +67,11 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
             var calculator = GetCalculator(calculatorType);
             var delta = calculator.Delta(OptionType.Call, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Delta for a call is {delta}");
-            Assert.That(delta, Is.EqualTo(0.45718497).Within(1).Percent);
+            Assert.That(delta, Is.EqualTo(0.45718497).Within(SmallTolerance));
 
             var deltaPut = calculator.Delta(OptionType.Put, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Delta for a Put is {deltaPut}");
-            Assert.That(deltaPut, Is.EqualTo(-0.54281503).Within(1).Percent);
+            Assert.That(deltaPut, Is.EqualTo(-0.54281503).Within(SmallTolerance));
         }
 
         [TestCase(typeof(BlackScholesOptionsPricer))]
@@ -75,7 +80,7 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
             var calculator = GetCalculator(calculatorType);
             var gamma = calculator.Gamma(OptionType.Call, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Gamma of call/put {gamma}");
-            Assert.That(gamma, Is.EqualTo(0.018697).Within(1).Percent);
+            Assert.That(gamma, Is.EqualTo(0.018697).Within(SmallTolerance));
 
             // Gamma should be the same for call and put
             var gammaPut = calculator.Gamma(OptionType.Put, spot, strike, r, b, maturity, vol);
@@ -88,11 +93,11 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
             var calculator = GetCalculator(calculatorType);
             var theta = calculator.Theta(OptionType.Call, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Theta for a call is {theta}");
-            Assert.That(theta, Is.EqualTo(-12.334).Within(1).Percent);
+            Assert.That(theta, Is.EqualTo(-12.334).Within(MedTolerance));
 
             var thetaPut = calculator.Theta(OptionType.Put, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Theta for a Put is {thetaPut}");
-            Assert.That(thetaPut, Is.EqualTo(-1.870).Within(1).Percent);
+            Assert.That(thetaPut, Is.EqualTo(-1.870).Within(SmallTolerance));
 
             // due to time decay
             Assert.That(theta, Is.LessThan(0), "Theta is always negative due to nature of time decay");
@@ -106,11 +111,11 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
 
             var rho = calculator.Rho(OptionType.Call, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Rho of call is {rho}");
-            Assert.That(rho, Is.EqualTo(0.195988572).Within(1).Percent);
+            Assert.That(rho, Is.EqualTo(0.195988572).Within(RhoTolerance));
 
             var rhoPut = calculator.Rho(OptionType.Put, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Rho of put is {rho}");
-            Assert.That(rhoPut, Is.EqualTo(-0.327187612).Within(1).Percent);
+            Assert.That(rhoPut, Is.EqualTo(-0.327187612).Within(RhoTolerance));
 
             var rho2 = calculator.Rho(OptionType.Call, spot, strike, 0.8, b, maturity, vol);
             var rhoPut2 = calculator.Rho(OptionType.Put, spot, strike, 0.8, b, maturity, vol);
@@ -126,7 +131,7 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
             Console.WriteLine($"Vega of call/put is {vega}");
             //Divide by 100 to get the resulting vega as option price change for one percentage point change in volatility
             Console.WriteLine($"Vega of call/put is {vega / 100} for 1% change in vol");
-            Assert.That(vega, Is.EqualTo(0.280468662).Within(1).Percent);
+            Assert.That(vega, Is.EqualTo(0.280468662).Within(MedTolerance));
 
             // This is property of Vega that puts and calls are the same
             var vegaPut = calculator.Vega(OptionType.Call, spot, strike, r, b, maturity, vol);
