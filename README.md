@@ -39,7 +39,7 @@ _Desktop App FX OMS:_
 _Tech Stack:_
 * C# 11, .NET 7, WPF, Caliburn.Micro, System.ComponentModel.Composition.Hosting.CompositionContainer (IoC), ReactiveX 6, Microsft Chart Controls,
 * C++ CLI interop, native C++, box muller RNG, std::erf cdf and pdf
-* ASPNET Core WebApi 6, SignalR, .NET Json Serialization & attribute validation, Background Services (Azure Ready), LiveCharts Skia
+* ASPNET Core WebApi 6, SignalR, .NET Json Serialization, Background Services (Azure Ready), LiveCharts Skia
 * React 8, Bootstrap,  Typescript, recharts,
 * StockIndicators Skender API,  NinjaTrader StockInidicator API, FinancialModellingPrep MarketData API, Quandl MarketData API
 * Trend indicator methods: Bollinger Bands, Moving Averages
