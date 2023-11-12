@@ -22,8 +22,8 @@ ProjectX provides the following highly customizable and optimizable toolkit
 * ProjectX implements pricing models for FX products based on spreaded commisions, Options Pricing.
 * Vanilla Options Black Scholes Pricer (C#)
 * Vanilla Options BlackScholes Pricer (C++) lightning fast execution times to better support scalable valuation operations
-* Vanilla Options MonteCarlo Options Pricer C++ with BoxMuller Guassian RNGs and normal distribution cdf, pdfs for modelling the stochastic functions of price volatilities
-* Vanilla Options MonteCarlo Herston Pricer C++ with model calibration which is an improvement to BSM model as it takes into account stochastic volality (future support)
+* Vanilla Options MonteCarlo Options Pricer C++ using BSM to value greeks & BoxMuller Guassian RNG, normal distribution cdf, pdfs for modelling the stochastic functions of price changes
+* Vanilla Options Heston MonteCarlo Pricer C++ an improvement to the BSM model as it takes into account stochastic volality (future support)
 * FX Pricing & Order management System
 * QL.NET product pricer (future support experiment with popular opensource pricing library)
 * Simple Bonds Pricer (in concept development phase, explore value add)
