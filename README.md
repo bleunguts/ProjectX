@@ -1,12 +1,12 @@
 ![Web](WebPortal.jpg)
 
 ProjectX🌊 is a technical analysis centric app that can backtest popular trading strategies such as the Long-Short trading strategy designed for the personal trader. 
-I wrote ProjectX to collate my projects that I have built in github over the years option risk pricing C++, back testing strategies into a concise platform deliverable that showcases a decade plus of industry expertise in risk management and trading & execution systems.
+I wrote ProjectX to collate my projects that I have built in github over the years option back testing strategies, risk pricing C++ into a concise platform deliverable that showcases a decade plus of industry expertise in risk management and trading & execution systems.
 
 We explore long-short strategy by using trend based mean reversion stock indicators; in this case the moving average stock indicator; a lagging indicator that can identify trends and reversals. 
 Finding similar well-known trading strategies from public sources is easily accessible, the key for a profitable strategy is the optimization methods that have been carried out and this app provides the toolkit to support this endeavour.
 
-The core compute engine is running on cloud-compatabile ASP.NETCore with a Desktop UI (WPF) and a Web Portal front end (React).
+The core compute engine is running on cloud-compatabile ASP.NET Core with a Desktop UI (WPF) and a Web Portal front end (React).
 
 Successful trading strategy development requires backtesting on historical real price data, 
 ProjectX provides the following features to assist the optimization process:
@@ -17,12 +17,12 @@ _Desktop App Backtesting:_
 ![Backtesting](Backtesting.jpg)
 Deep dive into backtesting strategies: [strategies](STRATEGIES.md)
 
-The supporting components relates to providing pricers to help explore arbitrage or advantagous opportunities, fine-tune pricing models, and understand market sentiment.
-ProjectX provies the following highly customizable and optimizable toolkit
-* ProjectX implements pricing models for FX products based on spreaded commisions, Options Pricing, Bonds Pricing, CDS Pricing
+The supporting components relates to providing pricers to help explore advantagous and potential arbitrage opportunities, fine-tune pricing models, and understand market sentiment.
+ProjectX provides the following highly customizable and optimizable toolkit
+* ProjectX implements pricing models for FX products based on spreaded commisions, Options Pricing.
 * Vanilla Options Black Scholes Pricer (C#)
-* Vanilla Options MonteCarlo Options Pricer C++ with BoxMuller Guassian RNGs and normal distribution cdf for stochastic component
 * Vanilla Options BlackScholes Pricer (C++) lightning fast execution times to better support scalable valuation operations
+* Vanilla Options MonteCarlo Options Pricer C++ with BoxMuller Guassian RNGs and normal distribution cdf, pdfs for modelling the stochastic functions of price volatilities
 * FX Pricing & Order management System
 * QL.NET product pricer (future support experiment with popular opensource pricing library)
 * Simple Bonds Pricer (in concept development phase, explore value add)
@@ -38,7 +38,8 @@ _Desktop App FX OMS:_
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 _Tech Stack:_
 * C# 11, .NET 7, WPF, Caliburn.Micro, System.ComponentModel.Composition.Hosting.CompositionContainer (IoC), ReactiveX 6, Microsft Chart Controls,
-* ASPNET Core WebApi 6, SignalR, .NET Json Serialization, Background Services (Azure Ready), LiveCharts Skia
+* C++ CLI interop, native C++, box muller RNG, std::erf cdf and pdf
+* ASPNET Core WebApi 6, SignalR, .NET Json Serialization & attribute validation, Background Services (Azure Ready), LiveCharts Skia
 * React 8, Bootstrap,  Typescript, recharts,
 * StockIndicators Skender API,  NinjaTrader StockInidicator API, FinancialModellingPrep MarketData API, Quandl MarketData API
 * Trend indicator methods: Bollinger Bands, Moving Averages

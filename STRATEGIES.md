@@ -15,17 +15,17 @@ Rule of thumb for trend-folowing strategies is to buy on the upwswing and sell o
 Momentum exploits the fact that accelaration of prices are due to earnings, market sentiment, news, greed or fear.  
 Momentum traders ignore predictions and believe any changes in fundaments (earnings, sales) will evenutally reflect on the price.
 
-Small moving window size and small SignalIn and SignalOut is tighter, leading to shorter holding period and more trade executions.
+Small moving window size and tight SignalIn and SignalOut lead to shorter holding period and more trade executions.
 SignalOut = SignalOut times standard deviations within a moving window to exit the position.
-SignalOut = 0 means wait for price return back to mean before exiting.
+SignalOut = 0 means waiting for price to return back to mean before exiting.
 
 Bollinger Band graph (MovingAverage), shows four lines of the graph (Original,Predicted,Upper,Lower) where PredictedPrice is just the moving average.  
 Z-Score is easier to interpret, it is just the signal graphed, it is calculated by how close (sd) you are to the mean.
 Graph modelling using moving average (z-score), linear regression.
 
-Other tchnical indicators technical analysis include: 
+Other technical indicators technical analysis include: 
 * Linear Regression where we project linearly a forecast of price movements based on moving window
-* Relative Strength Index (momentum indicator) oscilattes between 0 and 100, mocking volatility, > 70 is overbought and < 30 is oversold
+* Relative Strength Index (momentum indicator) oscilates between 0 and 100, mocking volatility, > 70 is overbought and < 30 is oversold
 * Williams %R (momentum indicator) oscillates between -100 to 0, mocking volatility, > -20 is overbought and < 80 is oversold
 * machine learning and neural networks 
 
@@ -34,12 +34,12 @@ Here are some of the most popular trend indicators used by traders today: Moving
 
 Backtesting
 ======================
-Backtesting allows understanding the strategy completelty and can help prove that you can reproduce its results by seeing how it would have performend in the past.
+Backtesting allows understanding the strategy completely and can help prove that you can reproduce its results by seeing how it would have performend in the past.
 Backtesting is based on long-short method to compute PnL.
 Backtesting uses Moving Average for a specified Moving Window (=number of prices/daily, e.g 3,14)
-Backtesting will only enter a new trade AFTER exiting the current position, enforces only one trade at most per tading day (tradeType, isTrade is used to implement this).
+Backtesting will only enter a new trade AFTER exiting the current position, enforcing one trade at most per tading day.
 
-Backtesting for prices between Start End.
+Backtesting for prices between Start End date intervals.
 Backtesting computes Pnl with inputs Signal In, Signal Out based on a strategy
 Backtesting methods include Mean Reversion, Momentum
 Backtesting includes hold stocks strategy to compare as a baseline (PnlCumHold), simply buying and holding the stock position for tbe duration. 

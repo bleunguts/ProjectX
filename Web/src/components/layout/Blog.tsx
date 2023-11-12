@@ -28,12 +28,12 @@ const mainFeaturedPost = {
 const sidebar = {
   title: 'FX Rates',
   description:
-    'Publishes FX prices using in-house pricing based on spreads sourced from the market or configurable by the user', 
+    'Publishes FX prices using in-house pricing based on user customizabled spreads', 
 };
 
 const defaultTheme = createTheme();
 const bodyComponents = [
-    'The key to a profitable strategy is the optimization methods that have been carried out and this app provides the tools to visualize outcomes. Backtesting allows understanding the strategy completelty and can help prove that you can reproduce its results by seeing how it would have performend in the past using long-short method to compute PnL using Moving Average specified Moving Window (=number of prices/daily). We enter a new trade AFTER exiting the current position, enforces only one trade at most per trading day.',
+    'The key to a profitable strategy is the optimization methods that have been carried out and this app provides the tools to visualize outcomes. Backtesting allows understanding the strategy completelty and can help prove that you can reproduce its results by seeing how it would have performend in the past using long-short method to compute PnL using Moving Average and a specified Moving Window (=number of prices/daily). We enter a new trade AFTER exiting the current position, enforces only one trade at most per trading day.',
 ];
 export default function Blog() {
   return (
