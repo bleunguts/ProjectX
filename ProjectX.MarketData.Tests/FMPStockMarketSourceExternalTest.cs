@@ -35,7 +35,7 @@ namespace ProjectX.MarketData.Tests
 
         [Test]
         [Ignore("Tool")]
-        public async Task WhenCallingGetHistoricalPricesShouldReturnValidPricesAsync()
+        public async Task WhenGettingHistoricalPricesFromFMP()
         {
             var marketDataService = new FMPStockMarketSource();
             var marketPrices = await marketDataService.GetPrices("ACAQ", new DateTime(2023, 1, 1), new DateTime(2023, 10, 1));
@@ -50,7 +50,7 @@ namespace ProjectX.MarketData.Tests
 
         [Test]
         [Ignore("Use to try out StockIndicator Api features")]
-        public async Task Demo()
+        public async Task WhenGettingBollingerBandsFromFMQ()
         {
             var marketDataService = new FMPStockMarketSource();
             var quotes = await marketDataService.GetQuote("ACAQ", new DateTime(2023, 1, 1), new DateTime(2023, 10, 1));
