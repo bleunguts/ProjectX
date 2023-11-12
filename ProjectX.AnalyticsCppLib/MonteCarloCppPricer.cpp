@@ -11,10 +11,7 @@ ProjectXAnalyticsCppLib::GreekResults^ ProjectXAnalyticsCppLib::MonteCarloCppPri
 	UInt64 NumberOfPaths)
 {
 	double K = OptionParams->Strike();
-	double T = OptionParams->Expiry();	
-	double dt = T / NumberOfPaths;
-	double q = 0;
-
+	double T = OptionParams->Expiry();
 	PayOffCall call = PayOffCall(K);
 	PayOffPut put = PayOffPut(K);
 	PayOffBridge callBridge = PayOffBridge(call);
@@ -29,7 +26,9 @@ ProjectXAnalyticsCppLib::GreekResults^ ProjectXAnalyticsCppLib::MonteCarloCppPri
 	double itoCorrection = -0.5 * variance;
 	double movedSpot = Spot * exp(rate.Integral(0, T) + itoCorrection);
 	double thisSpot;
-
+	
+	double dt = T / NumberOfPaths;
+	double q = 0;
 	double sum_payoffs = 0.0;	
 	double sum_payoffsput = 0.0;	
 	double sum_delta = 0.0;
@@ -45,54 +44,24 @@ ProjectXAnalyticsCppLib::GreekResults^ ProjectXAnalyticsCppLib::MonteCarloCppPri
 	{
 		// PVs
 		double thisGaussian = m_randomWalk->GetOneGaussian();
-		thisSpot = movedSpot * exp(rootVariance * thisGaussian);
-		double callPayOff = callOption.OptionPayOff(thisSpot);
-		double putPayOff = putOption.OptionPayOff(thisSpot);
-		sum_payoffs += callPayOff;
-		sum_payoffsput += putPayOff;
+		thisSpot = movedSpot * exp(rootVariance * thisGaussian);		
+		sum_payoffs += callOption.OptionPayOff(thisSpot);
+		sum_payoffsput += putOption.OptionPayOff(thisSpot);
 
 		// Greeks
-		double step = T - i * dt;
-		double d1 = BlackScholesFunctions::d1(thisSpot, K, r, Vol, step);
-		Double d2 = BlackScholesFunctions::d2(d1, Vol, step);
-		Double N_d1 = normcdf(d1);
-		Double N_d2 = normcdf(d2);
-		Double NPrime_d1 = normpdf(d1);
-		double NNegative_d1 = normcdf(-d1);
-		Double NNegative_d2 = normcdf(-d2);
-
-		double delta_i = N_d1;
-		sum_delta += delta_i;
-		double deltaPut_i = Math::Exp(-q * step) * (N_d1 - 1);
-		sum_deltaput += deltaPut_i;
-
-		double gamma_i = Math::Exp(-q * step) / (thisSpot * Vol * Math::Sqrt(step)) * NPrime_d1;
-		sum_gamma += gamma_i;
-
-		double vega_i = thisSpot * Math::Exp(-q * step) * Math::Sqrt(step) * NPrime_d1 / 100;
-		sum_vega += vega_i;
-
-		double rho_i = (K * step * Math::Exp(-r * step) * N_d2) / 100;
-		sum_rho += rho_i;		
-		double rhoPut_i = -(K * step * Math::Exp(-r * step) * NNegative_d2) / 100;
-		sum_rhoput += rhoPut_i;
-
-		double p1 = -(thisSpot * Vol * Math::Exp(-q * step) / (2 * Math::Sqrt(step)) * NPrime_d1);
-		double p2 = -r * K * Math::Exp(-r * step) * N_d2;
-		double p3 = q * thisSpot * Math::Exp(-q * step) * N_d1;
-		double theta = p1 + p2 + p3;
-		sum_theta += theta;
-						
-		double p2_p = r * K * Math::Exp(-r * step) * NNegative_d2;
-		double p3_p = -q * thisSpot * Math::Exp(-q * step) * NNegative_d1;
-		double thetaPut = p1 + p2_p + p3_p;
-		sum_thetaput += thetaPut;
+		double step = T - i * dt;		
+		sum_delta += BlackScholes_DeltaCall(thisSpot, K, r, q, Vol, step);;		
+		sum_deltaput += BlackScholes_DeltaPut(thisSpot, K, r, q, Vol, step);		
+		sum_gamma += BlackScholes_Gamma(thisSpot, K, r, q, Vol, step);		
+		sum_vega += BlackScholes_Vega(thisSpot, K, r, q, Vol, step);
+		sum_rho += BlackScholes_RhoCall(thisSpot, K, r, q, Vol, step);				
+		sum_rhoput += BlackScholes_RhoPut(thisSpot, K, r, q, Vol, step);		
+		sum_theta += BlackScholes_ThetaCall(thisSpot, K, r, q, Vol, step);								
+		sum_thetaput += BlackScholes_ThetaPut(thisSpot, K, r, q, Vol, step);;
 	}
 
-	double mean = sum_payoffs / NumberOfPaths;
-	mean *= exp(-rate.Integral(0, T));
-	double meanPut = sum_payoffsput / NumberOfPaths;
-	meanPut *= exp(-rate.Integral(0, T));
+	double mean = sum_payoffs / NumberOfPaths * exp(-rate.Integral(0, T));	
+	double meanPut = sum_payoffsput / NumberOfPaths * exp(-rate.Integral(0, T));
 	double delta = sum_delta / NumberOfPaths;	
 	double gamma = sum_gamma / NumberOfPaths;
 	double vega = sum_vega / NumberOfPaths;
@@ -101,9 +70,85 @@ ProjectXAnalyticsCppLib::GreekResults^ ProjectXAnalyticsCppLib::MonteCarloCppPri
 	double delta_put = sum_deltaput / NumberOfPaths;
 	double rho_put = sum_rhoput / NumberOfPaths;
 	double theta_put = sum_thetaput / NumberOfPaths;		
-
+	
 	GreekResults^ results = gcnew GreekResults(mean, meanPut, delta, delta_put, gamma, vega, rho, rho_put, theta, theta_put);
 	return results;
+}
+	
+Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::BlackScholes_DeltaCall(double S, double K, double r, double q, double sigma, double t) 
+{
+	double d1 = BlackScholesFunctions::d1(S, K, r, sigma, t);
+	Double N_d1 = normcdf(d1);
+	return Math::Exp(-q * t) * N_d1;
+}
+
+Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::BlackScholes_DeltaPut(double S, double K, double r, double q, double sigma, double t)
+{
+	double d1 = BlackScholesFunctions::d1(S, K, r, sigma, t);	
+	Double N_d1 = normcdf(d1);
+	return Math::Exp(-q * t)* (N_d1 - 1);
+}
+
+Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::BlackScholes_Gamma(double S, double K, double r, double q, double sigma, double t)
+{
+	double d1 = BlackScholesFunctions::d1(S, K, r, sigma, t);
+	Double NPrime_d1 = normpdf(d1);
+	return Math::Exp(-q * t) / (S * sigma * Math::Sqrt(t)) * NPrime_d1;
+}
+
+Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::BlackScholes_Vega(double S, double K, double r, double q, double sigma, double t)
+{
+	double d1 = BlackScholesFunctions::d1(S, K, r, sigma, t);
+	Double NPrime_d1 = normpdf(d1);
+	return S * Math::Exp(-q * t) * Math::Sqrt(t) * NPrime_d1 / 100;
+}
+
+Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::BlackScholes_RhoCall(double S, double K, double r, double q, double sigma, double t)
+{
+	double d1 = BlackScholesFunctions::d1(S, K, r, sigma, t);
+	Double d2 = BlackScholesFunctions::d2(d1, sigma, t);
+	Double N_d2 = normcdf(d2);
+	double rho = (K * t * Math::Exp(-r * t) * N_d2) / 100;
+	return rho;
+}
+
+Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::BlackScholes_RhoPut(double S, double K, double r, double q, double sigma, double t)
+{
+	double d1 = BlackScholesFunctions::d1(S, K, r, sigma, t);
+	Double d2 = BlackScholesFunctions::d2(d1, sigma, t);
+	Double NNegative_d2 = normcdf(-d2);
+	double rhoPut = -(K * t * Math::Exp(-r * t) * NNegative_d2) / 100;
+	return rhoPut;
+}
+
+Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::BlackScholes_ThetaCall(double S, double K, double r, double q, double sigma, double t)
+{
+	double d1 = BlackScholesFunctions::d1(S, K, r, sigma, t);
+	Double d2 = BlackScholesFunctions::d2(d1, sigma, t);
+	Double N_d1 = normcdf(d1);
+	Double N_d2 = normcdf(d2);
+	Double NPrime_d1 = normpdf(d1);
+
+	double p1 = -(S * sigma * Math::Exp(-q * t) / (2 * Math::Sqrt(t)) * NPrime_d1);
+	double p2 = -r * K * Math::Exp(-r * t) * N_d2;
+	double p3 = q * S * Math::Exp(-q * t) * N_d1;
+	double theta = p1 + p2 + p3;
+	return theta;
+}
+
+Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::BlackScholes_ThetaPut(double S, double K, double r, double q, double sigma, double t)
+{
+	double d1 = BlackScholesFunctions::d1(S, K, r, sigma, t);
+	Double d2 = BlackScholesFunctions::d2(d1, sigma, t);	
+	Double NPrime_d1 = normpdf(d1);
+	double NNegative_d1 = normcdf(-d1);
+	Double NNegative_d2 = normcdf(-d2);
+
+	double p1 = -(S * sigma * Math::Exp(-q * t) / (2 * Math::Sqrt(t)) * NPrime_d1);
+	double p2 = r * K * Math::Exp(-r * t) * NNegative_d2;
+	double p3 = -q * S * Math::Exp(-q * t) * NNegative_d1;
+	double thetaPut = p1 + p2 + p3;
+	return thetaPut;
 }
 
 // Function to calculate implied volatility using a Monte Carlo simulation

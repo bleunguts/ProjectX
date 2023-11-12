@@ -29,5 +29,14 @@ namespace ProjectXAnalyticsCppLib
 			UInt64 NumberOfPaths,
 			Double optionPrice
 		);
+	private:
+		Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::BlackScholes_DeltaCall(double S, double K, double r, double q, double sigma, double t);
+		Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::BlackScholes_DeltaPut(double S, double K, double r, double q, double sigma, double t);
+		Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::BlackScholes_Gamma(double S, double K, double r, double q, double sigma, double t);
+		Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::BlackScholes_Vega(double S, double K, double r, double q, double sigma, double t);
+		Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::BlackScholes_RhoCall(double S, double K, double r, double q, double sigma, double t);
+		Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::BlackScholes_RhoPut(double S, double K, double r, double q, double sigma, double t);
+		Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::BlackScholes_ThetaCall(double S, double K, double r, double q, double sigma, double t);
+		Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::BlackScholes_ThetaPut(double S, double K, double r, double q, double sigma, double t);
 	};
 }
