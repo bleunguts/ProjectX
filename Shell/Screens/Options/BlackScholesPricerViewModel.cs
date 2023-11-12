@@ -320,7 +320,7 @@ namespace Shell.Screens.Options
                 OptionsPricingCalculatorType.OptionsPricerCpp =>
                 (
                     OptionsPricingCalculatorType.MonteCarloCppPricer,
-                    "MonteCarlo Pricing native C++"
+                    "MonteCarlo Pricing native C++ (1e8 MC Paths)"
                 ),
                 OptionsPricingCalculatorType.MonteCarloCppPricer =>
                (
