@@ -4,7 +4,7 @@
 #include "BlackScholesFunctions.h"
 #include <cmath>
 
-ProjectXAnalyticsCppLib::GreekResults^ ProjectXAnalyticsCppLib::MonteCarloCppPricer::MCValue(VanillaOptionParameters^% OptionParams,
+GreekResults^ ProjectXAnalyticsCppLib::MonteCarloCppPricer::MCValue(VanillaOptionParameters^% OptionParams,
 	Double Spot,
 	Double Vol,
 	Double r,
@@ -185,4 +185,3 @@ Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::ImpliedVolatilityMC(Vanilla
 	// If the maximum number of simulations is reached, return NaN (no solution found).
 	return Double::NaN;
 }
-

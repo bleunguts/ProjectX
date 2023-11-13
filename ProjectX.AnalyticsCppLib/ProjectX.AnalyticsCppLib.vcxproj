@@ -129,6 +129,7 @@
     <ClInclude Include="BlackScholesFunctions.h" />
     <ClInclude Include="BlackScholesCppPricer.h" />
     <ClInclude Include="MonteCarloCppPricer.h" />
+    <ClInclude Include="MonteCarloHestonCppPricer.h" />
     <ClInclude Include="Parameters.h" />
     <ClInclude Include="PayOff.h" />
     <ClInclude Include="pch.h" />
@@ -143,6 +144,7 @@
     <ClCompile Include="BlackScholesFunctions.cpp" />
     <ClCompile Include="BlackScholesCppPricer.cpp" />
     <ClCompile Include="MonteCarloCppPricer.cpp" />
+    <ClCompile Include="MonteCarloHestonCppPricer.cpp" />
     <ClCompile Include="Parameters.cpp" />
     <ClCompile Include="PayOff.cpp" />
     <ClCompile Include="pch.cpp">

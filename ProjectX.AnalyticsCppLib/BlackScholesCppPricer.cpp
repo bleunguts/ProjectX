@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Parameters.h"
-#include "ProjectX.AnalyticsCppLib.h"
 #include "BlackScholesCppPricer.h"
 #include "BlackScholesFunctions.h"
 #include <cmath>

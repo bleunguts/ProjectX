@@ -22,7 +22,6 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
         });              
         IOptionsGreeksCalculator _pricer = new MonteCarloCppOptionsPricerWrapper(options);
         
-
         private IOptionsGreeksCalculator GetCalculator(Type calculatorType) => _pricer;
 
         // stock with 6 months expiration, stock price is 100, strike price is 110, risk free interest rate 0.1 per year, continuous dividend yield 0.06 and volatility is 0.3 

@@ -55,4 +55,21 @@ namespace ProjectXAnalyticsCppLib {
 		inline Double Strike() { return m_strike; };
 		inline Double Expiry() { return m_expiry; };		
 	};
+
+	public interface class IMonteCarloCppPricer
+	{
+		GreekResults^ MCValue(
+			VanillaOptionParameters^% TheOption,
+			Double Spot,
+			Double Vol,
+			Double r,
+			UInt64 NumberOfPaths);
+		Double ImpliedVolatilityMC(
+			VanillaOptionParameters^% TheOption,
+			Double Spot,
+			Double r,
+			UInt64 NumberOfPaths,
+			Double optionPrice
+		);
+	};
 }

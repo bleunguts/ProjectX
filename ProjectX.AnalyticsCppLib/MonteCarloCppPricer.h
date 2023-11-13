@@ -1,13 +1,13 @@
 #pragma once
-#include "ProjectX.AnalyticsCppLib.h"
 #include "VanillaOption.h"
 #include "RandomWalk.h"
 
 using namespace System;
+using namespace ProjectXAnalyticsCppLib;
 
 namespace ProjectXAnalyticsCppLib 
 {
-	public ref class MonteCarloCppPricer
+	public ref class MonteCarloCppPricer : IMonteCarloCppPricer
 	{
 	private:
 		RandomWalk^ m_randomWalk;
@@ -16,13 +16,13 @@ namespace ProjectXAnalyticsCppLib
 		{
 			m_randomWalk = randomWalk;
 		};
-		GreekResults^ ProjectXAnalyticsCppLib::MonteCarloCppPricer::MCValue(
+		virtual GreekResults^ ProjectXAnalyticsCppLib::MonteCarloCppPricer::MCValue(
 			VanillaOptionParameters^% TheOption,
 			Double Spot,
 			Double Vol,
 			Double r,
 			UInt64 NumberOfPaths);						
-		Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::ImpliedVolatilityMC(
+		virtual Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::ImpliedVolatilityMC(
 			VanillaOptionParameters^% TheOption,
 			Double Spot,
 			Double r,
@@ -37,6 +37,6 @@ namespace ProjectXAnalyticsCppLib
 		Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::BlackScholes_RhoCall(double S, double K, double r, double q, double sigma, double t);
 		Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::BlackScholes_RhoPut(double S, double K, double r, double q, double sigma, double t);
 		Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::BlackScholes_ThetaCall(double S, double K, double r, double q, double sigma, double t);
-		Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::BlackScholes_ThetaPut(double S, double K, double r, double q, double sigma, double t);
+		Double ProjectXAnalyticsCppLib::MonteCarloCppPricer::BlackScholes_ThetaPut(double S, double K, double r, double q, double sigma, double t);			
 	};
 }

@@ -1,5 +1,4 @@
 #pragma once
-#include "ProjectX.AnalyticsCppLib.h"
 
 using namespace System;
 
