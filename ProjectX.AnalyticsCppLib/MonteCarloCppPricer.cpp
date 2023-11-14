@@ -4,7 +4,7 @@
 #include "BlackScholesFunctions.h"
 #include <cmath>
 
-GreekResults^ ProjectXAnalyticsCppLib::MonteCarloCppPricer::MCValue(VanillaOptionParameters^% OptionParams,
+GreekResults ProjectXAnalyticsCppLib::MonteCarloCppPricer::MCValue(VanillaOptionParameters^% OptionParams,
 	Double Spot,
 	Double Vol,
 	Double r,
@@ -71,7 +71,7 @@ GreekResults^ ProjectXAnalyticsCppLib::MonteCarloCppPricer::MCValue(VanillaOptio
 	double rho_put = sum_rhoput / NumberOfPaths;
 	double theta_put = sum_thetaput / NumberOfPaths;		
 	
-	GreekResults^ results = gcnew GreekResults(mean, meanPut, delta, delta_put, gamma, vega, rho, rho_put, theta, theta_put);
+	GreekResults results = GreekResults(mean, meanPut, delta, delta_put, gamma, vega, rho, rho_put, theta, theta_put);
 	return results;
 }
 	

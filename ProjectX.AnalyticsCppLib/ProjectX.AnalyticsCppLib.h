@@ -1,13 +1,39 @@
 #pragma once
 
 using namespace System;
+using namespace System::Collections::Generic;
 
 namespace ProjectXAnalyticsCppLib {		
-	public ref struct GreekResults
+	public value struct Debug 
 	{
 	public:
-		GreekResults(Double pv, Double pvPut, Double delta,Double deltaPut,  Double gamma, Double vega, Double rho, Double rhoPut, Double theta, Double thetaPut)
+		Debug(int callsCount, int putsCount, List<double>^ rhos, Dictionary<double, List<double>^>^ spotGraph, int simulations)
 		{
+			this->callsCount = callsCount;
+			this->putsCount = putsCount;
+			this->rhos = rhos;
+			this->spotGraph = spotGraph;
+			this->totalSimulations;
+		}
+	public:
+		int callsCount;
+		int putsCount;
+		List<double>^ rhos;
+		Dictionary<double, List<double>^>^ spotGraph;
+		int totalSimulations;
+	};
+
+	public value struct GreekResults
+	{
+	public:
+		GreekResults(Double pv, Double pvPut, Debug debug) 
+		{
+			this->PV = pv;
+			this->PVPut = pvPut;
+			this->Debug = debug;
+		}
+		GreekResults(Double pv, Double pvPut, Double delta,Double deltaPut,  Double gamma, Double vega, Double rho, Double rhoPut, Double theta, Double thetaPut)
+		{	
 			this->PV = pv;
 			this->PVPut = pvPut;
 			this->Delta = delta;
@@ -21,15 +47,16 @@ namespace ProjectXAnalyticsCppLib {
 		}
 	public:
 		Double PV;
-		Double PVPut;
-		Double Delta;
-		Double DeltaPut;
-		Double Gamma;
-		Double Vega;
-		Double Rho;
-		Double RhoPut;
-		Double Theta;
-		Double ThetaPut;
+	 	Double PVPut;
+		Nullable<Double> Delta;
+		Nullable<Double> DeltaPut;
+		Nullable<Double> Gamma;
+		Nullable<Double> Vega;
+		Nullable<Double> Rho;
+		Nullable<Double> RhoPut;
+		Nullable<Double> Theta;
+		Nullable<Double> ThetaPut;
+		Nullable<Debug> Debug;		
 	};
 
 	public enum class OptionType
@@ -58,7 +85,7 @@ namespace ProjectXAnalyticsCppLib {
 
 	public interface class IMonteCarloCppPricer
 	{
-		GreekResults^ MCValue(
+		GreekResults MCValue(
 			VanillaOptionParameters^% TheOption,
 			Double Spot,
 			Double Vol,

@@ -40,35 +40,35 @@ namespace ProjectX.AnalyticsLib.OptionsCalculators
         {
             var key = Key(spot, strike, rate, carry, maturity, volatility);
             GreekResults greekResult = _cachedSimulation.RunSimulation(key, optionType, spot, strike, rate, maturity, volatility, _numOfMcPaths);
-            return optionType == OptionType.Call ? greekResult.Delta : greekResult.DeltaPut;
+            return optionType == OptionType.Call ? greekResult.Delta.Value : greekResult.DeltaPut.Value;
         }
 
         public double Gamma(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
             var key = Key(spot, strike, rate, carry, maturity, volatility);
             GreekResults greekResult = _cachedSimulation.RunSimulation(key, optionType, spot, strike, rate, maturity, volatility, _numOfMcPaths);
-            return greekResult.Gamma;
+            return greekResult.Gamma.Value;
         }  
 
         public double Rho(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
             var key = Key(spot, strike, rate, carry, maturity, volatility);
             GreekResults greekResult = _cachedSimulation.RunSimulation(key, optionType, spot, strike, rate, maturity, volatility, _numOfMcPaths);
-            return optionType == OptionType.Call ? greekResult.Rho : greekResult.RhoPut;
+            return optionType == OptionType.Call ? greekResult.Rho.Value : greekResult.RhoPut.Value;
         }
 
         public double Theta(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
             var key = Key(spot, strike, rate, carry, maturity, volatility);
             GreekResults greekResult = _cachedSimulation.RunSimulation(key, optionType, spot, strike, rate, maturity, volatility, _numOfMcPaths);
-            return optionType == OptionType.Call ? greekResult.Theta : greekResult.ThetaPut;
+            return optionType == OptionType.Call ? greekResult.Theta.Value : greekResult.ThetaPut.Value;
         }
 
         public double Vega(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
             var key = Key(spot, strike, rate, carry, maturity, volatility);
             GreekResults greekResult = _cachedSimulation.RunSimulation(key, optionType, spot, strike, rate, maturity, volatility, _numOfMcPaths);
-            return greekResult.Vega;
+            return greekResult.Vega.Value;
         }
         public double ImpliedVol(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double price)
         {

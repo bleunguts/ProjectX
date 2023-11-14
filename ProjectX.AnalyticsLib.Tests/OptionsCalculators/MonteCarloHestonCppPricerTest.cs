@@ -17,33 +17,35 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
         // 2019 rocketed to $2.97 would of lost 1.44 mio with notional of 2 mio
         // 2019 $1.39
 
-        static readonly double spot = 2;   // $2 
-        static readonly double strike = 2; // $2
+        static readonly double spot = 2.0;   // $2 
+        static readonly double strike = 2.0; // $2
         static readonly double r = 0.0319; // 3.19 %
         static readonly double q = 0;          
-        static readonly double T = 1; // 1 year to expiry
-        static readonly ulong n_TimeSteps = 420;
-        static readonly ulong m_Simulations = 400;
+        static readonly double T = 1.0; // 1 year to expiry
+        static readonly ulong n_TimeSteps = 200;
+        static readonly ulong m_Simulations = 200;
 
-        static readonly double v0 = 0.0102; // starting volatility
+        static readonly double v0 = 0.010201; // starting volatility
         static readonly double theta = 0.019; // Long-term mean volatility
         static readonly double kappa = 6.21; // speed of reversion
         static readonly double sigma = 0.61;   // vol of vol
-        static readonly double rho = 1;   // correlation between Spot and Vol brownian motions
+        static readonly double rho = -0.9;   // correlation between Spot and Vol brownian motions
 
         [TestCase(typeof(BlackScholesOptionsPricer))]
         public void WhenComputingPV(Type calculatorType)
         {
-            var volParams = new HestonStochasticVolalityParameters(v0, theta, kappa, kappa, rho);
+            var volParams = new HestonStochasticVolalityParameters(v0, theta, kappa, sigma, rho);
             var callOption = new VanillaOptionParameters(ProjectXAnalyticsCppLib.OptionType.Call, strike, T);
-            var call = calculator.MCValue(ref callOption, spot, r, q, n_TimeSteps, m_Simulations, ref volParams).PV;
+            var result = calculator.MCValue(ref callOption, spot, r, q, n_TimeSteps, m_Simulations, ref volParams);
+            var call = result.PV;
+            var put = result.PVPut;
             Console.WriteLine($"Price of call is {call}");
-            Assert.That(call, Is.EqualTo(0.1421).Within(0.8));
-
-            var putOption = new VanillaOptionParameters(ProjectXAnalyticsCppLib.OptionType.Put, strike, T);
-            var put = calculator.MCValue(ref putOption, spot, r, q, n_TimeSteps, m_Simulations, ref volParams).PVPut;
             Console.WriteLine($"Price of put is {put}");
-            Assert.That(put, Is.EqualTo(0.075).Within(0.08));
+            Console.WriteLine("DEBUG:");
+            Console.WriteLine($"callsCount={result.Debug.Value.callsCount} putsCount={result.Debug.Value.callsCount} sims={result.Debug.Value.callsCount}");
+            Console.WriteLine($"Rhos used=[{string.Join(",", result.Debug.Value.rhos.Distinct())}] for {result.Debug.Value.rhos.Count} calc paths");            
+            Assert.That(call, Is.EqualTo(0.1421).Within(0.2));            
+            Assert.That(put, Is.EqualTo(0.075).Within(0.08));            
 
             // Assert Call Put Parity
             // If call delta is +1 (deep in the money), put delta is 0 (far out of the money).

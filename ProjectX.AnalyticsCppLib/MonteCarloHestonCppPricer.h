@@ -25,7 +25,7 @@ namespace ProjectXAnalyticsCppLib
 	public ref class MonteCarloHestonCppPricer 
 	{
 	public:
-		GreekResults^ ProjectXAnalyticsCppLib::MonteCarloHestonCppPricer::MCValue(
+		GreekResults ProjectXAnalyticsCppLib::MonteCarloHestonCppPricer::MCValue(
 			VanillaOptionParameters^% TheOption,
 			Double spotInitial,
 			Double interestRate,

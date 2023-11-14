@@ -16,7 +16,7 @@ namespace ProjectX.AnalyticsLib.OptionsCalculators
 
         public GreekResults RunSimulation(ExecutionKey key, OptionType optionType, double spot, double strike, double rate, double maturity, double volatility, ulong numOfMcPaths)
         {
-            if (!_cache.TryGetValue(key, out GreekResults? greekResult))
+            if (!_cache.TryGetValue(key, out GreekResults greekResult))
             {
                 var param = new VanillaOptionParameters(optionType.ToNativeOptionType(), strike, maturity);
                 var result = _calculator.MCValue(ref param, spot, volatility, rate, numOfMcPaths);
