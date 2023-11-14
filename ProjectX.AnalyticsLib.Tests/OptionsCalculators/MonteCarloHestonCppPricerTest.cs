@@ -31,20 +31,27 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
         // b= r gives Black-Scholes model
         //static readonly double b = r - q; // cost of carry charge         
         static readonly double b = 0; // cost of carry charge         
-        static readonly double maturity = 0.5;
-        static readonly double vol = 0.3;
-        static readonly ulong _numPaths = 100;
+        static readonly double maturity = 0.5; // 6 months to expiration        
+        static readonly ulong numSteps = 1000;
+        static readonly ulong numPaths = 1000;
+
+        static readonly double v0 = Math.Pow(0.15, 2); // starting volatility
+        static readonly double theta = Math.Pow(0.15, 2); // Long-term mean volatility
+        static readonly double kappa = 0.5; // speed of reversion
+        static readonly double xi = 0.05;   // vol of vol
+        static readonly double rho = 0;   // correlation between Spot and Vol brownian motions
 
         [TestCase(typeof(BlackScholesOptionsPricer))]
         public void WhenComputingPV(Type calculatorType)
         {
+            var volParams = new HestonStochasticVolalityParameters(v0, theta, kappa, kappa, rho);
             var callOption = new VanillaOptionParameters(ProjectXAnalyticsCppLib.OptionType.Call, strike, maturity);
-            var call = calculator.MCValue(ref callOption, spot, vol, r, _numPaths);
+            var call = calculator.MCValue(ref callOption, spot, r, q, numSteps, numPaths, ref volParams).PV;
             Console.WriteLine($"Price of call is {call}");
             Assert.That(call, Is.EqualTo(6.52078264).Within(1).Percent);
 
             var putOption = new VanillaOptionParameters(ProjectXAnalyticsCppLib.OptionType.Put, strike, maturity);
-            var put = calculator.MCValue(ref putOption, spot, vol, r, _numPaths);
+            var put = calculator.MCValue(ref putOption, spot, r, q, numSteps, numPaths, ref volParams).PVPut;
             Console.WriteLine($"Price of put is {put}");
             Assert.That(put, Is.EqualTo(11.15601933).Within(1).Percent);
 
