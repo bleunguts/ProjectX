@@ -7,13 +7,13 @@ namespace ProjectXAnalyticsCppLib {
 	public value struct Debug 
 	{
 	public:
-		Debug(int callsCount, int putsCount, List<double>^ rhos, Dictionary<double, List<double>^>^ spotGraph, int simulations)
+		Debug(int calls, int puts, List<double>^ rhos, Dictionary<double, List<double>^>^ spots, int simulations)
 		{
-			this->callsCount = callsCount;
-			this->putsCount = putsCount;
+			this->callsCount = calls;
+			this->putsCount = puts;
 			this->rhos = rhos;
-			this->spotGraph = spotGraph;
-			this->totalSimulations;
+			this->spotGraph = spots;
+			this->totalSimulations = simulations;
 		}
 	public:
 		int callsCount;

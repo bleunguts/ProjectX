@@ -28,13 +28,14 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
         static readonly double v0 = 0.010201; // starting volatility
         static readonly double theta = 0.019; // Long-term mean volatility
         static readonly double kappa = 6.21; // speed of reversion
-        static readonly double sigma = 0.61;   // vol of vol
-        static readonly double rho = -0.9;   // correlation between Spot and Vol brownian motions
+        static readonly double sigma = 0.61;   // vol of vol        
+        static readonly double[] rhoProbabilities = new[] { 0.25, 0.5, 0.25 };
+        static readonly double[] rhoChoices = new[] { -0.5, -0.7, -0.9 };
 
         [TestCase(typeof(BlackScholesOptionsPricer))]
         public void WhenComputingPV(Type calculatorType)
-        {
-            var volParams = new HestonStochasticVolalityParameters(v0, theta, kappa, sigma, rho);
+        {            
+            HestonStochasticVolalityParameters volParams = new HestonStochasticVolalityParameters(v0, theta, kappa, sigma, rhoProbabilities, rhoChoices);
             var callOption = new VanillaOptionParameters(ProjectXAnalyticsCppLib.OptionType.Call, strike, T);
             var result = calculator.MCValue(ref callOption, spot, r, q, n_TimeSteps, m_Simulations, ref volParams);
             var call = result.PV;
@@ -42,8 +43,8 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
             Console.WriteLine($"Price of call is {call}");
             Console.WriteLine($"Price of put is {put}");
             Console.WriteLine("DEBUG:");
-            Console.WriteLine($"callsCount={result.Debug.Value.callsCount} putsCount={result.Debug.Value.callsCount} sims={result.Debug.Value.callsCount}");
-            Console.WriteLine($"Rhos used=[{string.Join(",", result.Debug.Value.rhos.Distinct())}] for {result.Debug.Value.rhos.Count} calc paths");            
+            Console.WriteLine($"callsCount={result.Debug?.callsCount} putsCount={result.Debug?.putsCount} sims={result.Debug?.totalSimulations}");
+            Console.WriteLine($"Rhos used=[{string.Join(",", result.Debug?.rhos?.Distinct())}] for {result.Debug?.rhos.Count} calc paths");            
             Assert.That(call, Is.EqualTo(0.1421).Within(0.2));            
             Assert.That(put, Is.EqualTo(0.075).Within(0.08));            
 
