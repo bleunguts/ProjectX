@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "MonteCarloHestonCppPricer.h"
 using namespace ProjectXAnalyticsCppLib;
+using namespace System::Collections::Generic;
 
 GreekResults^ ProjectXAnalyticsCppLib::MonteCarloHestonCppPricer::MCValue(
 	VanillaOptionParameters^% TheOption, 
@@ -22,8 +23,7 @@ GreekResults^ ProjectXAnalyticsCppLib::MonteCarloHestonCppPricer::MCValue(
 	double kappa = volParams->SpeedOfReversion;
 	double xi = volParams->VolOfVol;
 	double rho = volParams->Correlation;
-
-	double lambda = 0.02;  // lambda parameter for multidimensional Girsanov theorem
+	
 	std::normal_distribution<> N1(0, 1);
 	std::normal_distribution<> N3(0, 1);	
 	std::random_device random; // random device class instance, source of 'true' randomness for initializing random seed
@@ -33,46 +33,53 @@ GreekResults^ ProjectXAnalyticsCppLib::MonteCarloHestonCppPricer::MCValue(
 	double payoff_sumPut = 0.0;
 	double S;
 	double v;
-	double dt = T / numberOfSteps;
-	
+
+	// generate random parameters	
+	double dt = T / numberOfSteps;	 
+	Dictionary<double, List<double>^>^ spotGraph = gcnew Dictionary<double, List<double>^>();
 	for (int i = 0; i < numberOfSimulations; i++) 
-	{
-		S = S0;
-		v = v0;		
+	{				
+		S = S0;		
+		v = v0;
+		spotGraph[i] = gcnew List<double>();
 		for (int j = 0; j < numberOfSteps; j++) 
-		{						
-			double rhoSquared = Math::Pow(rho, 2);															
-			double step = T - j * dt;
-			double z1 = N1(randomGenerator); // dWv
-			double z2 = rho * z1 + Math::Sqrt(1 - rhoSquared) * N3(randomGenerator); // dWs brownian motion respect asset price
+		{																		
+			double dw_v = N1(randomGenerator) * Math::Sqrt(dt);
+			double dw_i = N3(randomGenerator) * Math::Sqrt(dt);
+			double dw_s = rho * dw_v + Math::Sqrt(1 - Math::Pow(rho, 2)) * dw_i; 
 			
-			double prevS = S;
-			double prevv = v;
-			// Current Stock Price for this path 
-			S = S + (r - q) * S * step + Math::Sqrt(v * step) * z1;
-			// Update Volatility for the next path
-			v = v + kappa * (theta - lambda) * step + xi * Math::Sqrt(v * step) * z2;
-			v = Math::Max(v, 0.0);
+			// update Volatility for the next time step
+			double dv_t = kappa * (theta - v) * dt + Math::Sqrt(v) * dw_v;
+			// calc incremental Stock Price for this time step
+			double dS_t = (r - q) * S * dt + Math::Sqrt(v) * S * dw_s;						
 
-			_ASSERT(Double::IsNaN(S) == false);
-			double payOffCall = Math::Max(S - K, 0.0);
-			double payOffPut = Math::Max(K - S, 0.0);
-
-			double limit = 1000000.0;
-			_ASSERT(payOffCall < limit && payOffCall > -limit);
-			_ASSERT(payOffPut < limit && payOffPut> -limit);
-			payoff_sum += payOffCall;
-			payoff_sumPut += payOffPut;
-
-			// Historical volatility, as well as implied volatility and volatility in general, can never be negative. 
-			// In other words, it can reach values from zero to positive infinite only.
-			_ASSERT(v >= 0);
-			_ASSERT(Double::IsNaN(v) == false);
+			S = S + dS_t;
+			v = v + Math::Max((double)dv_t, 0.0);									
+			
+			payoff_sum += Math::Max((double)S - (double)K, 0.0);
+			payoff_sumPut += Math::Max((double)K - (double)S, 0.0);
+			spotGraph[i]->Add(S);
+		}		
+	}
+	int callCounter = 0;
+	int putCounter = 0;
+	for each (List<double>^ spotBucket in spotGraph->Values) 
+	{
+		for each (double thisSpot in spotBucket) 
+		{
+			double call = Math::Max((double)thisSpot - (double)K, 0.0);
+			double put = Math::Max((double)K - (double)thisSpot, 0.0);
+			if (call != 0) {
+				callCounter++;
+			}
+			if (put != 0) {
+				putCounter++;
+			}
 		}
 	}
-	
-	double call = Math::Exp(-r * T) * payoff_sum / numberOfSimulations;
-	double put = Math::Exp(-r * T) * payoff_sumPut / numberOfSimulations;
+	int totalSimulations = numberOfSimulations * numberOfSteps;	
+	double call = Math::Exp(-r * T) * payoff_sum / totalSimulations;
+	double put = Math::Exp(-r * T) * payoff_sumPut / totalSimulations;
 
 	GreekResults^ results = gcnew GreekResults(call, put, Double::MinValue, Double::MinValue, Double::MinValue, Double::MinValue, Double::MinValue, Double::MinValue, Double::MinValue, Double::MinValue);
 	return results;

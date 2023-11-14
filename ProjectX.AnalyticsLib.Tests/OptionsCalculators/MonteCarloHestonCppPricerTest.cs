@@ -9,51 +9,41 @@ using OptionType = ProjectX.Core.OptionType;
 namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
 {    
     public class MonteCarloHestonCppPricerTest
-    {    
-        private const double TincyTolerance = 0.01;
-        private const double SmallTolerance = 0.2;
-        private const double MedTolerance = 0.8;
+    {        
+        private readonly MonteCarloHestonCppPricer calculator = new MonteCarloHestonCppPricer();                       
 
-        private readonly MonteCarloHestonCppPricer calculator = new MonteCarloHestonCppPricer();               
+        // Protect against fuel prices by buying Long Call
+        // 2009 fuel price was $1.9
+        // 2019 rocketed to $2.97 would of lost 1.44 mio with notional of 2 mio
+        // 2019 $1.39
 
-        // stock with 6 months expiration, stock price is 100, strike price is 110, risk free interest rate 0.1 per year, continuous dividend yield 0.06 and volatility is 0.3 
+        static readonly double spot = 2;   // $2 
+        static readonly double strike = 2; // $2
+        static readonly double r = 0.0319; // 3.19 %
+        static readonly double q = 0;          
+        static readonly double T = 1; // 1 year to expiry
+        static readonly ulong n_TimeSteps = 420;
+        static readonly ulong m_Simulations = 400;
 
-        // Generalised model we use b differently
-        // b = r: standard Black Scholes 1973 stock option model
-        // b = r - q: gives the Merton 19973 stock option model with contionuous dividend yield q
-        static readonly double spot = 100;
-        static readonly double strike = 110;
-        static readonly double r = 0.1;
-        static readonly double q = 0.06;  // continuous dividend yiled
-        // cost of carry
-        // b= 0 gives Black (1976) futures option model
-        // b= r-q gives Merton(1973) model
-        // b= r gives Black-Scholes model
-        //static readonly double b = r - q; // cost of carry charge         
-        static readonly double b = 0; // cost of carry charge         
-        static readonly double maturity = 0.5; // 6 months to expiration        
-        static readonly ulong numSteps = 1000;
-        static readonly ulong numPaths = 1000;
-
-        static readonly double v0 = Math.Pow(0.15, 2); // starting volatility
-        static readonly double theta = Math.Pow(0.15, 2); // Long-term mean volatility
-        static readonly double kappa = 0.5; // speed of reversion
-        static readonly double xi = 0.05;   // vol of vol
-        static readonly double rho = 0;   // correlation between Spot and Vol brownian motions
+        static readonly double v0 = 0.0102; // starting volatility
+        static readonly double theta = 0.019; // Long-term mean volatility
+        static readonly double kappa = 6.21; // speed of reversion
+        static readonly double sigma = 0.61;   // vol of vol
+        static readonly double rho = 1;   // correlation between Spot and Vol brownian motions
 
         [TestCase(typeof(BlackScholesOptionsPricer))]
         public void WhenComputingPV(Type calculatorType)
         {
             var volParams = new HestonStochasticVolalityParameters(v0, theta, kappa, kappa, rho);
-            var callOption = new VanillaOptionParameters(ProjectXAnalyticsCppLib.OptionType.Call, strike, maturity);
-            var call = calculator.MCValue(ref callOption, spot, r, q, numSteps, numPaths, ref volParams).PV;
+            var callOption = new VanillaOptionParameters(ProjectXAnalyticsCppLib.OptionType.Call, strike, T);
+            var call = calculator.MCValue(ref callOption, spot, r, q, n_TimeSteps, m_Simulations, ref volParams).PV;
             Console.WriteLine($"Price of call is {call}");
-            Assert.That(call, Is.EqualTo(6.52078264).Within(1).Percent);
+            Assert.That(call, Is.EqualTo(0.1421).Within(0.8));
 
-            var putOption = new VanillaOptionParameters(ProjectXAnalyticsCppLib.OptionType.Put, strike, maturity);
-            var put = calculator.MCValue(ref putOption, spot, r, q, numSteps, numPaths, ref volParams).PVPut;
+            var putOption = new VanillaOptionParameters(ProjectXAnalyticsCppLib.OptionType.Put, strike, T);
+            var put = calculator.MCValue(ref putOption, spot, r, q, n_TimeSteps, m_Simulations, ref volParams).PVPut;
             Console.WriteLine($"Price of put is {put}");
-            Assert.That(put, Is.EqualTo(11.15601933).Within(1).Percent);
+            Assert.That(put, Is.EqualTo(0.075).Within(0.08));
 
             // Assert Call Put Parity
             // If call delta is +1 (deep in the money), put delta is 0 (far out of the money).
