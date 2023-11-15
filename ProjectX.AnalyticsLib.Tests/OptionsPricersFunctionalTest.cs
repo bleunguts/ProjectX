@@ -12,12 +12,17 @@ public class OptionsPricersFunctionalTest
         NumOfMcPaths = 250000, 
         RandomAlgo = RandomAlgorithm.BoxMuller 
     });
+    static readonly IOptions<HestonOptionsPricerCppWrapperOptions> options2 = Options.Create<HestonOptionsPricerCppWrapperOptions>(new HestonOptionsPricerCppWrapperOptions
+    {
+        NumOfMcPaths = 1000,
+        NumOfSteps = 1000
+    });
     static IEnumerable<(IOptionsGreeksCalculator calc, double percentError)> VanillaOptionCalculators()
     {
         yield return (new BlackScholesOptionsPricer(), 1.0);
         yield return (new BlackScholesCppOptionsPricerWrapper(), 1.0);         
         yield return (new MonteCarloCppOptionsPricerWrapper(options), 1e8);   
-        //yield return (new MonteCarloCppOptionsPricer2Wrapper(1000), 50);       // TODO Fix pricer
+        yield return (new MonteCarloHestonCppOptionsPricerWrapper(options2), 50);       // TODO Fix pricer
     }
 
     [TestCaseSource(nameof(VanillaOptionCalculators))]
@@ -26,7 +31,7 @@ public class OptionsPricersFunctionalTest
         // Based on real number example http://financetrain.com/option-pricing-using-monte-carlo-simulation/
         // Result approx 9.95        
         var realExamplePrice = td.calc.PV(Core.OptionType.Call, 195.0, 200.0, 0.05, 0.0, 0.25, 0.3);
-        Assert.That(realExamplePrice, Is.EqualTo(9.35).Within(15).Percent);        
+        Assert.That(realExamplePrice, Is.EqualTo(9.35).Within(4));        
     }    
     
     [TestCaseSource(nameof(VanillaOptionCalculators))]

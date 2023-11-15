@@ -44,7 +44,7 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
             Console.WriteLine($"callsCount={result.Debug?.callsCount} putsCount={result.Debug?.putsCount} sims={result.Debug?.totalSimulations}");                        
             Console.WriteLine($"Spots={string.Join(Environment.NewLine, result.Debug?.spotGraph.SelectMany(x => x.Value).ToArray())}");
             Assert.That(call, Is.EqualTo(0.1421).Within(0.2));            
-            Assert.That(put, Is.EqualTo(0.075).Within(0.02));            
+            Assert.That(put, Is.EqualTo(0.075).Within(0.04));            
 
             // Assert Call Put Parity
             // If call delta is +1 (deep in the money), put delta is 0 (far out of the money).

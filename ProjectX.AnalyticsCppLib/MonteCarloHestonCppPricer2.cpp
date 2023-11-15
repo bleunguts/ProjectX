@@ -67,8 +67,8 @@ GreekResults ProjectXAnalyticsCppLib::MonteCarloHestonCppPricer2::MCValue(
 		double S = dS_t[numberOfSteps - 1];
 		double payoff_call = Math::Max((double)S - (double)K, 0.0);
 		double payoff_put = Math::Max((double)K - (double)S, 0.0);
-		double S_call = payoff_call * S;
-		double S_put = payoff_put * S;
+		double S_call = payoff_call;
+		double S_put = payoff_put;
 		payoff_sum += S_call;
 		payoff_sumPut += S_put;
 

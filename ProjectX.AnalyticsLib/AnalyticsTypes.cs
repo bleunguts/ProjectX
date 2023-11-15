@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace ProjectX.AnalyticsLib;
 
+public interface IMonteCarloHestonCppOptionsPricer : IOptionsGreeksCalculator
+{
+
+}
 public interface IMonteCarloCppOptionsPricer : IOptionsGreeksCalculator
 {
 }
