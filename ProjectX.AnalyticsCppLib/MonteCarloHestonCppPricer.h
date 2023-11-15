@@ -15,6 +15,14 @@ namespace ProjectXAnalyticsCppLib
 			this->RhoProbabilities = rhoProbabilities;
 			this->RhoChoices = rhoChoices;
 		}
+		HestonStochasticVolalityParameters(Double initialVolatility, Double longTermVolatility, Double speedOfReversion, Double volOfVol, Double rho)
+		{
+			this->InitialVolatility = initialVolatility;
+			this->LongTermVolatility = longTermVolatility;
+			this->SpeedOfReversion = speedOfReversion;
+			this->VolOfVol = volOfVol;
+			this->Rho = rho;			
+		}
 	public:
 		Double InitialVolatility;  // v0
 		Double LongTermVolatility; // theta
@@ -24,6 +32,7 @@ namespace ProjectXAnalyticsCppLib
 		// -0.7 is a standard correlation used in the Broadie paper
 		IEnumerable<Double>^ RhoProbabilities; // rho probabilitiees 
 		IEnumerable<Double>^ RhoChoices;
+		Double Rho; // straight Rho value
 	};
 
 	public ref class MonteCarloHestonCppPricer 

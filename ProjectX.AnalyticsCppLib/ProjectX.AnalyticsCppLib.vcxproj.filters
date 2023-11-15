@@ -51,6 +51,9 @@
     <ClInclude Include="MonteCarloHestonCppPricer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MonteCarloHestonCppPricer2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
@@ -81,6 +84,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MonteCarloHestonCppPricer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MonteCarloHestonCppPricer2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

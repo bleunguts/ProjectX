@@ -3,6 +3,7 @@
 
 using namespace ProjectXAnalyticsCppLib;
 using namespace System::Collections::Generic;
+using namespace std;
 
 GreekResults ProjectXAnalyticsCppLib::MonteCarloHestonCppPricer::MCValue(
 	VanillaOptionParameters^% TheOption, 
@@ -93,5 +94,3 @@ GreekResults ProjectXAnalyticsCppLib::MonteCarloHestonCppPricer::MCValue(
 	GreekResults results = GreekResults(call, put, debug);	
 	return results;
 }
-
-
