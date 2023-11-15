@@ -75,9 +75,10 @@ GreekResults ProjectXAnalyticsCppLib::MonteCarloHestonCppPricer::MCValue(
 
 			S = S + dS_t;
 			v = v + Math::Max((double)dv_t, 0.0);												
-		
-			payoff_sum += Math::Max((double)S - (double)K, 0.0);
-			payoff_sumPut += Math::Max((double)K - (double)S, 0.0);			
+			double payoff_call = Math::Max((double)S - (double)K, 0.0);
+			double payoff_put = Math::Max((double)K - (double)S, 0.0);
+			payoff_sum += payoff_call;
+			payoff_sumPut += payoff_put;
 		
 			// diagnostics
 			spotGraphDiag[i]->Add(S);

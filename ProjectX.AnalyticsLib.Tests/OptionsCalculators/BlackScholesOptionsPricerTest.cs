@@ -3,11 +3,11 @@ using ProjectX.Core;
 using ProjectX.Core.Analytics;
 
 namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
-{
+{    
     public class BlackScholesOptionsPricerTest
     {        
         IOptionsGreeksCalculator _pricer = new BlackScholesOptionsPricer();
-        private IOptionsGreeksCalculator GetCalculator(Type calculatorType) => _pricer;        
+        private IOptionsGreeksCalculator GetCalculator() => _pricer;        
 
         // stock with 6 months expiration, stock price is 100, strike price is 110, risk free interest rate 0.1 per year, continuous dividend yield 0.06 and volatility is 0.3 
 
@@ -27,10 +27,10 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
         static readonly double maturity = 0.5;
         static readonly double vol = 0.3;
 
-       
-        public void WhenComputingPV(Type calculatorType)
+        [Test]
+        public void WhenComputingPV()
         {
-            var calculator = GetCalculator(calculatorType);
+            var calculator = GetCalculator();
             var call = calculator.PV(OptionType.Call, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Price of call is {call}");
             Assert.That(call, Is.EqualTo(4.514243).Within(1).Percent);
@@ -46,10 +46,10 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
             Assert.That(call, Is.Not.EqualTo(put), "Call-Put Parity should be obeyed");
         }
 
-       
-        public void WhenComputingDelta(Type calculatorType)
+        [Test]
+        public void WhenComputingDelta()
         {
-            var calculator = GetCalculator(calculatorType);
+            var calculator = GetCalculator();
             var delta = calculator.Delta(OptionType.Call, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Delta for a call is {delta}");
             Assert.That(delta, Is.EqualTo(0.347876).Within(1).Percent);
@@ -59,10 +59,10 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
             Assert.That(deltaPut, Is.EqualTo(-0.60335).Within(1).Percent);           
         }
 
-       
-        public void WhenComputingGamma(Type calculatorType)
+        [Test]
+        public void WhenComputingGamma()
         {
-            var calculator = GetCalculator(calculatorType);
+            var calculator = GetCalculator();
             var gamma = calculator.Gamma(OptionType.Call, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Gamma of call/put {gamma}");
             Assert.That(gamma, Is.EqualTo(0.016865).Within(1).Percent);
@@ -72,10 +72,10 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
             Assert.That(gamma, Is.EqualTo(gammaPut), "Gamma is put/call agnostic");
         }
 
-       
-        public void WhenComputingTheta(Type calculatorType)
+        [Test]
+        public void WhenComputingTheta()
         {
-            var calculator = GetCalculator(calculatorType);
+            var calculator = GetCalculator();
             var theta = calculator.Theta(OptionType.Call, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Theta for a call is {theta}");
             Assert.That(theta, Is.EqualTo(-7.13819).Within(1).Percent);
@@ -89,10 +89,10 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
             Assert.That(thetaPut, Is.LessThan(0), "Theta is always negative due to nature of time decay");
         }
 
-       
-        public void WhenComputingRho(Type calculatorType)
+        [Test]
+        public void WhenComputingRho()
         {
-            var calculator = GetCalculator(calculatorType);
+            var calculator = GetCalculator();
 
             var rho = calculator.Rho(OptionType.Call, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Rho of call is {rho}");
@@ -108,10 +108,10 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
             Assert.That(rho2, Is.GreaterThan(rhoPut2), "Call options should have higher value than put due to interest rates");
         }
 
-       
-        public void WhenComputingVega(Type calculatorType)
+        [Test]
+        public void WhenComputingVega()
         {
-            var calculator = GetCalculator(calculatorType);
+            var calculator = GetCalculator();
             var vega = calculator.Vega(OptionType.Call, spot, strike, r, b, maturity, vol);
             Console.WriteLine($"Vega of call/put is {vega}");
             //Divide by 100 to get the resulting vega as option price change for one percentage point change in volatility
@@ -123,10 +123,10 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
             Assert.That(vega, Is.EqualTo(vegaPut), "Vega is call/put agnostic");                       
         }
 
-       
-        public void WhenComputingImpliedVol(Type calculatorType)
+        [Test]
+        public void WhenComputingImpliedVol()
         {
-            var calculator = GetCalculator(calculatorType);
+            var calculator = GetCalculator();
             Dictionary<double, double> ExpectedVols = new Dictionary<double, double>()
             {
                 { 0.1, 0.19012451171875 },

@@ -30,8 +30,8 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
         static readonly double kappa = 6.21; // speed of reversion
         static readonly double sigma = 0.61;   // vol of vol        
         static readonly double rho = -0.7;     // correlation between brownian motions spot and vol
-       
-        public void WhenComputingPV(Type calculatorType)
+        [Test]
+        public void WhenComputingPV()
         {            
             HestonStochasticVolalityParameters volParams = new HestonStochasticVolalityParameters(v0, theta, kappa, sigma, rho);
             var callOption = new VanillaOptionParameters(ProjectXAnalyticsCppLib.OptionType.Call, strike, T);

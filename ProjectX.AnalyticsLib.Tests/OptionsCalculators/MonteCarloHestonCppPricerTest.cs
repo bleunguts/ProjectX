@@ -32,8 +32,8 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
         static readonly double[] rhoProbabilities = new[] { 0.25, 0.5, 0.25 };
         static readonly double[] rhoChoices = new[] { -0.5, -0.7, -0.9 };
 
-       
-        public void WhenComputingPV(Type calculatorType)
+        [Test]
+        public void WhenComputingPV()
         {            
             HestonStochasticVolalityParameters volParams = new HestonStochasticVolalityParameters(v0, theta, kappa, sigma, rhoProbabilities, rhoChoices);
             var callOption = new VanillaOptionParameters(ProjectXAnalyticsCppLib.OptionType.Call, strike, T);
