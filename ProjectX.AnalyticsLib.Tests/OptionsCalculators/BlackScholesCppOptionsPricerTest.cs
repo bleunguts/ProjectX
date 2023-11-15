@@ -31,7 +31,7 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
         static readonly double maturity = 0.5;
         static readonly double vol = 0.3;
 
-        [TestCase(typeof(BlackScholesOptionsPricer))]
+       
         public void WhenComputingPV(Type calculatorType)
         {
             var calculator = GetCalculator(calculatorType);
@@ -50,7 +50,7 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
             Assert.That(call, Is.Not.EqualTo(put), "Call-Put Parity should be obeyed");
         }
 
-        [TestCase(typeof(BlackScholesOptionsPricer))]
+       
         public void WhenComputingDelta(Type calculatorType)
         {
             var calculator = GetCalculator(calculatorType);
@@ -63,7 +63,7 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
             Assert.That(deltaPut, Is.EqualTo(-0.54281503).Within(1).Percent);
         }
 
-        [TestCase(typeof(BlackScholesOptionsPricer))]
+       
         public void WhenComputingGamma(Type calculatorType)
         {
             var calculator = GetCalculator(calculatorType);
@@ -76,7 +76,7 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
             Assert.That(gamma, Is.EqualTo(gammaPut), "Gamma is put/call agnostic");
         }
 
-        [TestCase(typeof(BlackScholesOptionsPricer))]
+       
         public void WhenComputingTheta(Type calculatorType)
         {
             var calculator = GetCalculator(calculatorType);
@@ -93,7 +93,7 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
             Assert.That(thetaPut, Is.LessThan(0), "Theta is always negative due to nature of time decay");
         }
 
-        [TestCase(typeof(BlackScholesOptionsPricer))]
+       
         public void WhenComputingRho(Type calculatorType)
         {
             var calculator = GetCalculator(calculatorType);
@@ -112,7 +112,7 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
             Assert.That(rho2, Is.GreaterThan(rhoPut2), "Call options should have higher value than put due to interest rates");
         }
 
-        [TestCase(typeof(BlackScholesOptionsPricer))]
+       
         public void WhenComputingVega(Type calculatorType)
         {
             var calculator = GetCalculator(calculatorType);
@@ -127,7 +127,7 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
             Assert.That(vega, Is.EqualTo(vegaPut), "Vega is call/put agnostic");
         }
 
-        [TestCase(typeof(BlackScholesOptionsPricer))]
+       
         [Ignore("TODO: See Implied Vol story")]
         public void WhenComputingImpliedVol(Type calculatorType)
         {

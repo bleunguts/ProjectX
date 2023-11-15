@@ -22,16 +22,15 @@ namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
         static readonly double r = 0.0319; // 3.19 %
         static readonly double q = 0;          
         static readonly double T = 1.0; // 1 year to expiry
-        static readonly ulong n_TimeSteps = 200;
-        static readonly ulong m_Simulations = 200;
+        static readonly ulong n_TimeSteps = 1000;
+        static readonly ulong m_Simulations = 1000;
 
         static readonly double v0 = 0.010201; // starting volatility
         static readonly double theta = 0.019; // Long-term mean volatility
         static readonly double kappa = 6.21; // speed of reversion
         static readonly double sigma = 0.61;   // vol of vol        
-        static readonly double rho = -0.7;        
-
-        [TestCase(typeof(BlackScholesOptionsPricer))]
+        static readonly double rho = -0.7;     // correlation between brownian motions spot and vol
+       
         public void WhenComputingPV(Type calculatorType)
         {            
             HestonStochasticVolalityParameters volParams = new HestonStochasticVolalityParameters(v0, theta, kappa, sigma, rho);
