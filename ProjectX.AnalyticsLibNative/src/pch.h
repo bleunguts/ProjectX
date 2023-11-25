@@ -9,6 +9,10 @@
 
 // add headers that you want to pre-compile here
 #include "Utility.h"
-#include "ProjectX.AnalyticsCppLib.h"
+#include "types/Debug.h"
+#include "types/GreekResults.h"
+#include "types/OptionType.h"
+#include "types/VanillaOptionsParameters.h"
+#include "BlackScholesFunctions.h"
 
 #endif //PCH_H

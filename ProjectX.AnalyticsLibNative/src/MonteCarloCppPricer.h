@@ -1,13 +1,30 @@
 #pragma once
+#include "pch.h"
 #include "VanillaOption.h"
 #include "RandomWalk.h"
 #include "PayOff.h"
 #include "Parameters.h"
 #include "BlackScholesFunctions.h"
-#include "ProjectX.AnalyticsCppLib.h"
 
 namespace ProjectXAnalyticsCppLib 
 {
+	class IMonteCarloCppPricer
+	{
+		virtual GreekResults MCValue(
+			VanillaOptionParameters& TheOption,
+			double Spot,
+			double Vol,
+			double r,
+			uint64_t NumberOfPaths) = 0;
+		virtual double ImpliedVolatilityMC(
+			VanillaOptionParameters& TheOption,
+			double Spot,
+			double r,
+			uint64_t NumberOfPaths,
+			double optionPrice
+		) = 0;
+	};
+
 	class MonteCarloCppPricer : IMonteCarloCppPricer
 	{
 	private:

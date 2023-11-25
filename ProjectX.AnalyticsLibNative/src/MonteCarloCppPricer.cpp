@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "MonteCarloCppPricer.h"
-
 #include <cmath>
 
 using namespace ProjectXAnalyticsCppLib;

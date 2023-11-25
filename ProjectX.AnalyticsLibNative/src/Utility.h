@@ -4,7 +4,8 @@
 #include <algorithm>
 #include <random>
 using namespace std;
-class Math
+
+static class Math
 {
 public:	
 	inline static double Log(double v) {
@@ -25,7 +26,9 @@ public:
 	inline static double Abs(double v) {
 		return abs(v);
 	};
-	inline static const double PI = M_PI;
+	inline static double PI() {
+		return M_PI;
+	};
 };
 
 // Function to calculate the cumulative distribution function of the standard normal distribution using std c++ libs
@@ -37,7 +40,7 @@ static double normcdf(double x)
 // Function to calculate the probability density function of the standard normal distribution
 static double normpdf(double x)
 {
-	return (1.0 / (Math::Sqrt(2.0 * Math::PI))) * Math::Exp(-0.5 * x * x);
+	return (1.0 / (Math::Sqrt(2.0 * Math::PI()))) * Math::Exp(-0.5 * x * x);
 };
 
 // Function to do Cholesky decomposition

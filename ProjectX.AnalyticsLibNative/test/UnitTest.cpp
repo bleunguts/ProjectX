@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "..\ProjectX.AnalyticsLibNative.h"
+#include "..\src\ProjectX.AnalyticsLibNative.h"
 
 TEST(ApiTest, ExecuteAPI)
 {
