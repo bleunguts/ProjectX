@@ -18,6 +18,8 @@ set(Headers
 "BlackScholesFunctions.h"
 "MonteCarloCppPricer.h"
 "BlackScholesCppPricer.h"
+"MonteCarloHestonCppPricer.h"
+"MonteCarloHestonCppPricer2.h"
 )
 set(Sources 
 "API.cpp"
@@ -29,5 +31,7 @@ set(Sources
 "BlackScholesFunctions.cpp"
 "MonteCarloCppPricer.cpp"
 "BlackScholesCppPricer.cpp"
+"MonteCarloHestonCppPricer.cpp"
+"MonteCarloHestonCppPricer2.cpp"
 )
-add_library (ProjectX.AnalyticsLibNative SHARED ${Sources} ${Headers})
+add_library (ProjectX.AnalyticsLibNative SHARED ${Sources} ${Headers} "types/HestonStochasticVolatilityParameters.h")

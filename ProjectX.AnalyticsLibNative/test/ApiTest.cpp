@@ -2,15 +2,20 @@
 #include "ApiTest.h"
 #include <gtest/gtest.h>
 
-double spot = 100;
-double strike = 110;
-double expiry = 0.5;
-double vol = 0.3;
-double r = 0.1;
-double b = 0.0;
-VanillaOptionParameters callOption = VanillaOptionParameters(OptionType::Call, strike, expiry);
-VanillaOptionParameters putOption = VanillaOptionParameters(OptionType::Put, strike, expiry);
-double mktprice = 3.7432065872239662;
+namespace ApiTestConstants 
+{
+	double spot = 100;
+	double strike = 110;
+	double expiry = 0.5;
+	double vol = 0.3;
+	double r = 0.1;
+	double b = 0.0;
+	VanillaOptionParameters callOption = VanillaOptionParameters(OptionType::Call, strike, expiry);
+	VanillaOptionParameters putOption = VanillaOptionParameters(OptionType::Put, strike, expiry);
+	double mktprice = 3.7432065872239662;
+}
+
+using namespace ApiTestConstants;
 
 TEST_F(ApiTest, ExecuteAPI)
 {	

@@ -1,3 +1,4 @@
+#pragma once
 #include "../src/API.h"
 #include <gtest/gtest.h>
 

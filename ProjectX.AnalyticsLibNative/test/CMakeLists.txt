@@ -19,6 +19,8 @@ target_link_libraries(GTest::GTest INTERFACE gtest_main)
 set(sources
 	ApiTest.cpp
 	ApiTest.h
+	HestonPricerTest.cpp
+	HestonPricerTest.h
 )
 
 add_executable(${PROJECT_TEST_NAME} ${sources})
