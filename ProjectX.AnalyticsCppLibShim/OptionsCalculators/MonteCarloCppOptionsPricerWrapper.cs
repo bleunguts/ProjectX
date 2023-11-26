@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
+using ProjectX.AnalyticsCppLibShim;
+using ProjectX.AnalyticsLib.Shared;
 using ProjectX.Core;
 using ProjectXAnalyticsCppLib;
 using System;

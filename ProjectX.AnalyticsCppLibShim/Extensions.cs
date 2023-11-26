@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectX.AnalyticsLib
+namespace ProjectX.AnalyticsCppLibShim
 {
     public static class Extensions
     {

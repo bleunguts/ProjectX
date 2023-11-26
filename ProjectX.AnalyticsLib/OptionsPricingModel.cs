@@ -1,4 +1,4 @@
-﻿using ProjectX.AnalyticsLib;
+﻿using ProjectX.AnalyticsLib.Shared;
 using ProjectX.Core.Analytics;
 using ProjectX.Core.Requests;
 using System;

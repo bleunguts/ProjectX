@@ -1,6 +1,6 @@
 ﻿using Moq;
 using Newtonsoft.Json;
-using ProjectX.AnalyticsLib;
+using ProjectX.AnalyticsLib.Shared;
 using ProjectX.Core;
 using ProjectX.Core.Requests;
 using ProjectX.Core.Services;

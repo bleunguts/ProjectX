@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using ProjectX.AnalyticsLib.OptionsCalculators;
+using ProjectX.AnalyticsLib.Shared;
 using ProjectX.Core;
-using ProjectX.Core.Analytics;
 
 namespace ProjectX.AnalyticsLib.Tests.OptionsCalculators
 {

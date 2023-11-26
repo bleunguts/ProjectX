@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
 using ProjectX.AnalyticsLib.OptionsCalculators;
+using ProjectX.AnalyticsLib.Shared;
 using ProjectXAnalyticsCppLib;
 using System.Runtime.ConstrainedExecution;
 

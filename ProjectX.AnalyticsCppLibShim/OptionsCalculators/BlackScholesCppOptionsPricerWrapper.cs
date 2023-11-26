@@ -1,4 +1,6 @@
-﻿using ProjectX.Core;
+﻿using ProjectX.AnalyticsCppLibShim;
+using ProjectX.AnalyticsLib.Shared;
+using ProjectX.Core;
 using ProjectXAnalyticsCppLib;
 using System;
 using System.Collections.Generic;

@@ -1,4 +1,5 @@
-﻿using ProjectXAnalyticsCppLib;
+﻿using ProjectX.AnalyticsCppLibShim;
+using ProjectXAnalyticsCppLib;
 using OptionType = ProjectX.Core.OptionType;
 
 namespace ProjectX.AnalyticsLib.OptionsCalculators
