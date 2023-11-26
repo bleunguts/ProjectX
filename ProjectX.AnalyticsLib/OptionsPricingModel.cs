@@ -4,6 +4,7 @@ using ProjectX.Core.Requests;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices.Marshalling;
 using System.Text;
@@ -35,7 +36,8 @@ namespace ProjectX.Core.Services
         {
             (int timeSlices, OptionType optionType, double spot, double strike, double rate, double carry, double vol, OptionsPricingCalculatorType calculatorType) = request;
             
-            var results = new List<(double, OptionGreeksResult)>();
+            var results = new List<(double, OptionGreeksResult)>();                  
+            var timeIt = Stopwatch.StartNew();
             for (int i = 0; i < timeSlices; i++)
             {
                 // break out into 10 time slices until maturity
@@ -57,14 +59,15 @@ namespace ProjectX.Core.Services
                     theta,
                     rho,
                     vega);                
-                results.Add((maturity, greeks));
+                results.Add((maturity, greeks));                
             }
-            var temp = new List<MaturityAndOptionGreeksResultPair>();
+            timeIt.Stop();
+            var resultPairs = new List<MaturityAndOptionGreeksResultPair>();
             foreach (var result in results)
             {
-                temp.Add(new MaturityAndOptionGreeksResultPair(result.Item1, result.Item2));
+                resultPairs.Add(new MaturityAndOptionGreeksResultPair(result.Item1, result.Item2));
             }
-            return new OptionsPricingByMaturityResults(request.Id, temp, new AuditTrail(calculatorType));            
+            return new OptionsPricingByMaturityResults(request.Id, resultPairs, new AuditTrail(calculatorType, timeIt.ElapsedMilliseconds));            
         }
 
         private IOptionsGreeksCalculator Calc(OptionsPricingCalculatorType calculatorType)

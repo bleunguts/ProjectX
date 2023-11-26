@@ -26,7 +26,7 @@ namespace ProjectX.GatewayAPI.Controllers
         [HttpPost("bsPrice")]
         public void PricingResultsTaskCompletedAsync(OptionsPricingByMaturityResults results)
         {
-            _logger.LogInformation($"OptionsPricingResults bsPrice TaskCompleted. RequestId:{results.RequestId}, There  are {results.ResultsCount} option results and maturity pairs");
+            _logger.LogInformation($"OptionsPricingResults bsPrice TaskCompleted. RequestId:{results.RequestId}, There are {results.ResultsCount} option results and maturity pairs and it took {results.AuditTrail.ElapsedMilliseconds} ms to price.");
             _hubContext.Clients.All.PricingResults(results);
         }
 

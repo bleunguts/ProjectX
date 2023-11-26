@@ -155,7 +155,7 @@ namespace Shell.Screens.Options
             await _gatewayApiClient.StartHubAsync();
             _gatewayApiClient.HubConnection.On("PricingResults", (Action<OptionsPricingByMaturityResults>)(pricingResult =>
             {
-                Console.WriteLine($"Received Pricing Result: {pricingResult.ResultsCount} results, requestId: {pricingResult.RequestId}");
+                Console.WriteLine($"Received Pricing Result: {pricingResult.ResultsCount} results, requestId: {pricingResult.RequestId}, time: {pricingResult.AuditTrail.ElapsedMilliseconds} ms");
                 App.Current.Dispatcher.Invoke((System.Action)delegate
                 {
                     DataTable optionTable = GetOptionTableToModify(pricingResult.AuditTrail.CalculatorType);

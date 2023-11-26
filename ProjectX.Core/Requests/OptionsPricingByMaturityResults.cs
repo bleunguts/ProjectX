@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace ProjectX.Core.Requests
 {
-    public record AuditTrail(OptionsPricingCalculatorType CalculatorType);
+    public record AuditTrail(OptionsPricingCalculatorType CalculatorType, long ElapsedMilliseconds);
     public record MaturityAndOptionGreeksResultPair(double Maturity, OptionGreeksResult OptionGreeks);
 
     public class OptionsPricingByMaturityResults : OptionsPricingResultsBase
