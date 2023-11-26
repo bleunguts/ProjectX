@@ -1,5 +1,7 @@
 ﻿#pragma once
-#define _USE_MATH_DEFINES
+#ifndef _USE_MATH_DEFINES
+	#define _USE_MATH_DEFINES
+#endif
 #include <cmath>
 #include <algorithm>
 #include <random>
@@ -27,7 +29,7 @@ public:
 		return abs(v);
 	};
 	inline static double PI() {
-		return M_PI;
+		return 3.14159265358979323846;
 	};
 };
 

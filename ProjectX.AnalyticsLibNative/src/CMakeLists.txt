@@ -8,7 +8,7 @@ project ("ProjectX.AnalyticsLibNative")
 
 # Add source to this project's dll.
 set(Headers 
-"ProjectX.AnalyticsLibNative.h"
+"API.h"
 "pch.h"
 "Utility.h" 
 "Parameters.h"
@@ -19,7 +19,7 @@ set(Headers
 "MonteCarloCppPricer.h"
 )
 set(Sources 
-"ProjectX.AnalyticsLibNative.cpp"
+"API.cpp"
 "pch.cpp"
 "Parameters.cpp"
 "Payoff.cpp"

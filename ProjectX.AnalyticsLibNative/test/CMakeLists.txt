@@ -17,7 +17,8 @@ add_library(GTest::GTest INTERFACE IMPORTED)
 target_link_libraries(GTest::GTest INTERFACE gtest_main)
 
 set(sources
-	UnitTest.cpp
+	ApiTest.cpp
+	ApiTest.h
 )
 
 add_executable(${PROJECT_TEST_NAME} ${sources})
