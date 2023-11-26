@@ -91,7 +91,7 @@ GreekResults ProjectXAnalyticsCppLib::MonteCarloHestonCppPricer::MCValue(
 	double call = Math::Exp(-r * T) * payoff_sum / totalSimulations;
 	double put = Math::Exp(-r * T) * payoff_sumPut / totalSimulations;
 
-	Debug debug = Debug(callCountDiag, putCountDiag, rhosDiag, spotGraphDiag, totalSimulations);	
+	Debug debug = Debug::Build(callCountDiag, putCountDiag, rhosDiag, spotGraphDiag, totalSimulations);	
 	GreekResults results = GreekResults(call, put, debug);	
 	return results;
 }

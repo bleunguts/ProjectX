@@ -11,6 +11,7 @@ set(Headers
 "API.h"
 "pch.h"
 "Utility.h" 
+"types/Debug.h"
 "Parameters.h"
 "Payoff.h"
 "VanillaOption.h"
@@ -24,6 +25,7 @@ set(Headers
 set(Sources 
 "API.cpp"
 "pch.cpp"
+"types/Debug.cpp"
 "Parameters.cpp"
 "Payoff.cpp"
 "VanillaOption.cpp"
@@ -34,4 +36,4 @@ set(Sources
 "MonteCarloHestonCppPricer.cpp"
 "MonteCarloHestonCppPricer2.cpp"
 )
-add_library (ProjectX.AnalyticsLibNative SHARED ${Sources} ${Headers} "types/HestonStochasticVolatilityParameters.h")
+add_library (ProjectX.AnalyticsLibNative SHARED ${Sources} ${Headers} )
