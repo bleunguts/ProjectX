@@ -18,8 +18,8 @@ public struct Debug
 {
     public int callsCount;
     public int putsCount;
-    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)] public string rhos;
-    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)] public string spotGraph;
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10000)] public string rhos;
+    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10000)] public string spotGraph;
     public int totalSimulations;
 }
 

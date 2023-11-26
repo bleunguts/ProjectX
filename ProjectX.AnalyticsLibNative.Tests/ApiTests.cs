@@ -94,6 +94,8 @@ public class ApiTests
         var value = _api.MonteCarlo_PV(callOption, Spot, Vol, r, 1000);
         Console.WriteLine($"PV: {value.PV}");
         Console.WriteLine($"PVPut: {value.PVPut}");
+
+        // doesnt output rhos in debug log
         Console.WriteLine($"Rhos:");
         Console.WriteLine(value.Debug.rhos);
         Console.WriteLine($"Spots:");
