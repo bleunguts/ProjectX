@@ -4,41 +4,6 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-public enum OptionType { Call, Put };
-
-[StructLayout(LayoutKind.Sequential)]
-public struct VanillaOptionParameters
-{
-    public OptionType OptionType;
-    public double Strike;
-    public double Expiry;
-}
-[StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
-public struct Debug
-{
-    public int callsCount;
-    public int putsCount;
-    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10000)] public string rhos;
-    [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 10000)] public string spotGraph;
-    public int totalSimulations;
-}
-
-[StructLayout(LayoutKind.Sequential)]
-public struct GreekResults
-{
-    public double PV;
-    public double PVPut;
-    public double Delta;
-    public double DeltaPut;
-    public double Gamma;
-    public double Vega;
-    public double Rho;
-    public double RhoPut;
-    public double Theta;
-    public double ThetaPut;
-    public Debug Debug;
-}
-
 // https://mark-borg.github.io/blog/2017/interop/#:~:text=Platform%20Invocation%20(PInvoke%20for%20short,from%20within%20a%20C%23%20program.
 // https://stackoverflow.com/questions/315051/using-a-class-defined-in-a-c-dll-in-c-sharp-code
 public class API
