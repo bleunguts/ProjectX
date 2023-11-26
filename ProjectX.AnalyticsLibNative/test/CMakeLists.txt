@@ -1,7 +1,9 @@
 cmake_minimum_required (VERSION 3.8)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(PROJECT_TEST_NAME UnitTests)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(PROJECT_TEST_NAME tests)
+
 set( gtest_force_shared_crt ON CACHE BOOL "Always use msvcrt.dll" FORCE)
 include(FetchContent)
 FetchContent_Declare(
@@ -22,7 +24,7 @@ set(sources
 	HestonPricerTest.h
 )
 
-add_executable(${PROJECT_TEST_NAME} ${sources} "HestonPricerTestConstants.h")
+add_executable(${PROJECT_TEST_NAME} ${sources})
 target_link_libraries(${PROJECT_TEST_NAME} 
 	PUBLIC 
 	gtest_main

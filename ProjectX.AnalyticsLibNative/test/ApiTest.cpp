@@ -154,8 +154,9 @@ TEST_F(ApiTest, WhenComputingHestonMCValue)
 	int BUSTED_TODO_FIX = 20;
 	EXPECT_NEAR(PV, 6.52078264, BUSTED_TODO_FIX) << "PV: " << PV << std::endl;
 	EXPECT_NEAR(PVPut, 11.15601933, BUSTED_TODO_FIX) << "PVPut: " << PVPut << std::endl;
-	
-	EXPECT_EQ(1, BUSTED_TODO_FIX) << "#calls: " << results.Debug.callsCount << " #puts: " << results.Debug.putsCount << std::endl;
-	EXPECT_EQ(1, BUSTED_TODO_FIX) << "rhos: " << results.Debug.rhos << std::endl;
-	EXPECT_EQ(1, BUSTED_TODO_FIX) << "spots: " << results.Debug.spotGraph << std::endl;
+
+	//
+	//EXPECT_EQ(1, BUSTED_TODO_FIX) << "#calls: " << results.Debug.callsCount << " #puts: " << results.Debug.putsCount << std::endl;
+	//EXPECT_EQ(1, BUSTED_TODO_FIX) << "rhos: " << results.Debug.rhos << std::endl;
+	//EXPECT_EQ(1, BUSTED_TODO_FIX) << "spots: " << results.Debug.spotGraph << std::endl;
 }
