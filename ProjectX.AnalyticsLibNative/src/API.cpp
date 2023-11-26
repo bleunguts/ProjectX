@@ -7,6 +7,36 @@
 using namespace std;
 using namespace ProjectXAnalyticsCppLib;
 
+API* CreateAPI()
+{
+	return new API();
+}
+
+void DisposeAPI(API* a_pObject)
+{
+	if (a_pObject != NULL)
+	{
+		delete a_pObject;
+		a_pObject = NULL;
+	}
+}
+
+double CallExecute(API* a_pObject)
+{
+	if (a_pObject != NULL)
+	{
+		double spot = 100;
+		double strike = 110;
+		double expiry = 0.5;
+		double vol = 0.3;
+		double r = 0.1;		
+		VanillaOptionParameters callOption = VanillaOptionParameters(OptionType::Call, strike, expiry);		
+
+		double pv = a_pObject->BlackScholes_PV(callOption, spot, vol, r);
+		return pv;
+	}
+}
+
 API::API()
 {
 	m_blackScholesCppPricer = new BlackScholesCppPricer();	

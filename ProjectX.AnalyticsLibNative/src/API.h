@@ -32,3 +32,10 @@ private:
 	BlackScholesCppPricer* m_blackScholesCppPricer;
 	MonteCarloCppPricer* m_monteCarloCppPricer;
 };
+
+extern "C"
+{
+	extern PROJECT_API API* CreateAPI();
+	extern PROJECT_API void DisposeAPI(API* a_pObject);
+	extern PROJECT_API double CallExecute(API* a_pObject);
+};
