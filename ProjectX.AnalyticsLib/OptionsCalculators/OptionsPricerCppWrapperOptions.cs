@@ -1,6 +1,5 @@
 ﻿namespace ProjectX.AnalyticsLib.OptionsCalculators
 {
-
     public class OptionsPricerCppWrapperOptions
     {
         public ulong NumOfMcPaths { get; set; }
