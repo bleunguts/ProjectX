@@ -6,118 +6,85 @@
 using namespace std;
 using namespace ProjectXAnalyticsCppLib;
 
+API::API()
+{
+	m_blackScholesCppPricer = new BlackScholesCppPricer();
+};
+
+API::~API()
+{
+	if (m_blackScholesCppPricer == NULL)
+	{
+		delete m_blackScholesCppPricer;
+	}
+};
+
 void API::execute(void)
 {
 	cout << "Hello world";
 }
 
-double API::Value(
+double API::BlackScholes_PV(
 	VanillaOptionParameters& TheOption,
 	double Spot,
 	double Vol,
 	double r)
 {		
-	if (TheOption.OptionType() == OptionType::Call)
-		return BlackScholesFunctions::BlackScholesCall(Spot, TheOption.Strike(), r, TheOption.Expiry(), Vol);
-	if (TheOption.OptionType() == OptionType::Put)
-		return BlackScholesFunctions::BlackScholesPut(Spot, TheOption.Strike(), r, TheOption.Expiry(), Vol);
-
-	throw "Not supported option type";
+	return m_blackScholesCppPricer->Value(TheOption, Spot, Vol, r);
 }
 
-double API::Delta(VanillaOptionParameters& TheOption,
+double API::BlackScholes_Delta(VanillaOptionParameters& TheOption,
 	double Spot,
 	double Vol,
 	double r
 )
 {
-	double epsilon = 0.01; // Small change in stock price	
-	double optionPrice = Value(TheOption, Spot, Vol, r);
-
-	// Calculate delta using Black-Scholes formula	
-	if (TheOption.OptionType() == OptionType::Call)
-		return BlackScholesFunctions::BlackScholesDeltaCall(Spot, TheOption.Strike(), r, TheOption.Expiry(), Vol);
-	if (TheOption.OptionType() == OptionType::Put)		return BlackScholesFunctions::BlackScholesDeltaPut(Spot, TheOption.Strike(), r, TheOption.Expiry(), Vol);
-
-	throw "Not supported option type";
+	return m_blackScholesCppPricer->Delta(TheOption, Spot, Vol, r);
 }
 
-double API::Gamma(VanillaOptionParameters& TheOption,
+double API::BlackScholes_Gamma(VanillaOptionParameters& TheOption,
 	double Spot,
 	double Vol,
 	double r,
 	double epsilon
 )
 {
-	double gamma = BlackScholesFunctions::BlackScholesGamma(Spot, TheOption.Strike(), r, TheOption.Expiry(), Vol, epsilon);
-	return gamma;
+	return m_blackScholesCppPricer->Gamma(TheOption, Spot, Vol, r, epsilon);
 }
 
-double API::Rho(VanillaOptionParameters& TheOption,
+double API::BlackScholes_Rho(VanillaOptionParameters& TheOption,
 	double Spot,
 	double Vol,
 	double r
 )
 {
-	if (TheOption.OptionType() == OptionType::Call)
-		return BlackScholesFunctions::BlackScholesRhoCall(Spot, TheOption.Strike(), r, TheOption.Expiry(), Vol);
-	if (TheOption.OptionType() == OptionType::Put)
-		return BlackScholesFunctions::BlackScholesRhoPut(Spot, TheOption.Strike(), r, TheOption.Expiry(), Vol);
-
-	throw "Not supported option type";
+	return m_blackScholesCppPricer->Rho(TheOption, Spot, Vol, r);
 }
 
-double API::Theta(VanillaOptionParameters& TheOption,
+double API::BlackScholes_Theta(VanillaOptionParameters& TheOption,
 	double Spot,
 	double Vol,
 	double r
 )
 {
-	if (TheOption.OptionType() == OptionType::Call)
-		return BlackScholesFunctions::BlackScholesThetaCall(Spot, TheOption.Strike(), r, TheOption.Expiry(), Vol);
-	if (TheOption.OptionType() == OptionType::Put)
-		return BlackScholesFunctions::BlackScholesThetaPut(Spot, TheOption.Strike(), r, TheOption.Expiry(), Vol);
-
-	throw "Not supported option type";
+	return m_blackScholesCppPricer->Theta(TheOption, Spot, Vol, r);
 }
 
-double API::Vega(VanillaOptionParameters& TheOption,
+double API::BlackScholes_Vega(VanillaOptionParameters& TheOption,
 	double Spot,
 	double Vol,
 	double r
 )
 {
-	return BlackScholesFunctions::BlackScholesVega(Spot, TheOption.Strike(), r, TheOption.Expiry(), Vol);
+	return m_blackScholesCppPricer->Vega(TheOption, Spot, Vol, r);
 }
 
-double API::ImpliedVolatility(
+double API::BlackScholes_ImpliedVolatility(
 	VanillaOptionParameters& TheOption,
 	double Spot,
 	double r,
 	double optionPrice
 )
 {
-	double S = Spot;
-	double T = TheOption.Expiry();
-	double K = TheOption.Strike();
-	double epsilon = 1e-6;  // Tolerance for convergence
-	double sigma = 0.2;     // Initial guess for implied volatility
-	int maxIterations = 100;  // Maximum number of iterations = 100
-
-	for (int i = 0; i < maxIterations; i++)
-	{
-		double price = BlackScholesFunctions::BlackScholesCall(S, K, r, T, sigma);
-		double vega = BlackScholesFunctions::BlackScholesVega(S, K, r, T, sigma);
-		double diff = price - optionPrice;
-
-		if (Math::Abs(diff) < epsilon)
-		{
-			return sigma;
-		}
-
-		sigma -= diff / vega;
-	}
-
-	// If the maximum number of iterations is reached, return NaN (no solution found).
-	return NAN;
+	return m_blackScholesCppPricer->ImpliedVolatility(TheOption, Spot, r, optionPrice);
 }

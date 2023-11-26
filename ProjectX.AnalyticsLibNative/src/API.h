@@ -3,61 +3,26 @@
 
 #pragma once
 #include "pch.h"
+#include "BlackScholesCppPricer.h"
 #include <iostream>
 
-#ifdef BUILD_DLL
-#define PROJECT_API __declspec(dllexport)
-#else
-#define PROJECT_API __declspec(dllimport)
-#endif
 using namespace ProjectXAnalyticsCppLib;
 
 class PROJECT_API API
 {
 public:
-    API() {};
-    virtual ~API() {};
-    void execute(void);
-	double Value(
-		VanillaOptionParameters& TheOption,
-		double Spot,
-		double Vol,
-		double r);
-	double Delta(
-		VanillaOptionParameters& TheOption,
-		double Spot,
-		double Vol,
-		double r
-	);
-	double Gamma(
-		VanillaOptionParameters& TheOption,
-		double Spot,
-		double Vol,
-		double r,
-		double epsilon
-	);
-	double Vega(
-		VanillaOptionParameters& TheOption,
-		double Spot,
-		double Vol,
-		double r
-	);
-	double Theta(
-		VanillaOptionParameters& TheOption,
-		double Spot,
-		double Vol,
-		double r
-	);
-	double Rho(
-		VanillaOptionParameters& TheOption,
-		double Spot,
-		double Vol,
-		double r
-	);
-	double ImpliedVolatility(
-		VanillaOptionParameters& TheOption,
-		double Spot,
-		double r,
-		double optionPrice
-	);
+	API();	
+	virtual ~API();
+	void execute(void);
+	inline double BlackScholes_PV(VanillaOptionParameters& TheOption,double Spot,double Vol,double r);
+	inline double BlackScholes_Delta(VanillaOptionParameters& TheOption,double Spot,double Vol,double r);
+	inline double BlackScholes_Gamma(VanillaOptionParameters& TheOption,double Spot,double Vol,double r,
+		double epsilon);
+	inline double BlackScholes_Vega(VanillaOptionParameters& TheOption,double Spot,double Vol,double r);
+	inline double BlackScholes_Theta(VanillaOptionParameters& TheOption,double Spot,double Vol,double r);
+	inline double BlackScholes_Rho(VanillaOptionParameters& TheOption,double Spot,double Vol,double r);
+	inline double BlackScholes_ImpliedVolatility(VanillaOptionParameters& TheOption,double Spot,double r,
+		double optionPrice);
+private:
+	BlackScholesCppPricer* m_blackScholesCppPricer;
 };

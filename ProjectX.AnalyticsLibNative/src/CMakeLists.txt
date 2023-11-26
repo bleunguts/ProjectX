@@ -17,6 +17,7 @@ set(Headers
 "RandomWalk.h"
 "BlackScholesFunctions.h"
 "MonteCarloCppPricer.h"
+"BlackScholesCppPricer.h"
 )
 set(Sources 
 "API.cpp"
@@ -27,5 +28,6 @@ set(Sources
 "RandomWalk.cpp"
 "BlackScholesFunctions.cpp"
 "MonteCarloCppPricer.cpp"
+"BlackScholesCppPricer.cpp"
 )
-add_library (ProjectX.AnalyticsLibNative SHARED ${Sources} ${Headers} "types/Debug.h" "types/VanillaOptionsParameters.h")
+add_library (ProjectX.AnalyticsLibNative SHARED ${Sources} ${Headers})
