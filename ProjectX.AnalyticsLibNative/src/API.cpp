@@ -2,13 +2,16 @@
 //
 #include "pch.h"
 #include "API.h"
+#include "RandomWalk.h"
 
 using namespace std;
 using namespace ProjectXAnalyticsCppLib;
 
 API::API()
 {
-	m_blackScholesCppPricer = new BlackScholesCppPricer();
+	m_blackScholesCppPricer = new BlackScholesCppPricer();	
+	RandomWalk w = RandomWalk(RandomAlgorithm::BoxMuller);
+	m_monteCarloCppPricer = new MonteCarloCppPricer(w);
 };
 
 API::~API()
@@ -16,6 +19,10 @@ API::~API()
 	if (m_blackScholesCppPricer == NULL)
 	{
 		delete m_blackScholesCppPricer;
+	}
+	if (m_monteCarloCppPricer == NULL)
+	{
+		delete m_monteCarloCppPricer;
 	}
 };
 
@@ -87,4 +94,19 @@ double API::BlackScholes_ImpliedVolatility(
 )
 {
 	return m_blackScholesCppPricer->ImpliedVolatility(TheOption, Spot, r, optionPrice);
+}
+
+GreekResults API::MonteCarlo_PV(VanillaOptionParameters& TheOption, double Spot, double Vol, double r,
+	unsigned int NumberOfPaths) 
+{
+	return m_monteCarloCppPricer->MCValue(TheOption, Spot, Vol, r, NumberOfPaths);
+}
+
+double API::MonteCarlo_ImpliedVolatility(VanillaOptionParameters& TheOption,
+	double Spot,
+	double r,
+	unsigned int NumberOfPaths,
+	double optionPrice)
+{
+	return m_monteCarloCppPricer->ImpliedVolatilityMC(TheOption, Spot, r, NumberOfPaths, optionPrice);
 }

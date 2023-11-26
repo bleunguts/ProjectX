@@ -15,12 +15,12 @@ namespace ProjectXAnalyticsCppLib
 			double Spot,
 			double Vol,
 			double r,
-			uint64_t NumberOfPaths) = 0;
+			unsigned int NumberOfPaths) = 0;
 		virtual double ImpliedVolatilityMC(
 			VanillaOptionParameters& TheOption,
 			double Spot,
 			double r,
-			uint64_t NumberOfPaths,
+			unsigned int NumberOfPaths,
 			double optionPrice
 		) = 0;
 	};
@@ -28,25 +28,22 @@ namespace ProjectXAnalyticsCppLib
 	class MonteCarloCppPricer : IMonteCarloCppPricer
 	{
 	private:
-		RandomWalk& m_randomWalk;
+		RandomWalk m_randomWalk;
 	public:
-		MonteCarloCppPricer(RandomWalk& randomWalk) 
-			: m_randomWalk(randomWalk)
-		{			
-		};
-		virtual GreekResults MCValue(
+		MonteCarloCppPricer() : m_randomWalk(RandomWalk(RandomAlgorithm::BoxMuller)) {};
+		MonteCarloCppPricer(RandomWalk randomWalk) : m_randomWalk(randomWalk) {};
+		GreekResults MCValue(
 			VanillaOptionParameters& TheOption,
 			double Spot,
 			double Vol,
 			double r,
-			unsigned int NumberOfPaths);						
-		virtual double ImpliedVolatilityMC(
+			unsigned int NumberOfPaths) override;						
+		double ImpliedVolatilityMC(
 			VanillaOptionParameters& TheOption,
 			double Spot,
 			double r,
 			unsigned int NumberOfPaths,
-			double optionPrice
-		);
+			double optionPrice) override;
 	private:
 		double BlackScholes_DeltaCall(double S, double K, double r, double q, double sigma, double t);
 		double BlackScholes_DeltaPut(double S, double K, double r, double q, double sigma, double t);

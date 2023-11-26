@@ -7,15 +7,13 @@ enum class RandomAlgorithm
 };
 
 class RandomWalk {
-private: 
-	RandomAlgorithm m_Algorithm;
 public:
-	RandomWalk(RandomAlgorithm algo)
-	{
-		m_Algorithm = algo;
-	};	
+	RandomWalk() : m_Algorithm(RandomAlgorithm::BoxMuller) {}
+	RandomWalk(RandomAlgorithm algo) : m_Algorithm(algo) {}
 	double GetOneGaussian();
 private:
 	double GetOneGaussianBySummation();
 	double GetOneGaussianByBoxMuller();
+private:
+	RandomAlgorithm m_Algorithm;
 };

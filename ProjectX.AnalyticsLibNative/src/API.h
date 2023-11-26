@@ -4,6 +4,7 @@
 #pragma once
 #include "pch.h"
 #include "BlackScholesCppPricer.h"
+#include "MonteCarloCppPricer.h"
 #include <iostream>
 
 using namespace ProjectXAnalyticsCppLib;
@@ -23,6 +24,11 @@ public:
 	inline double BlackScholes_Rho(VanillaOptionParameters& TheOption,double Spot,double Vol,double r);
 	inline double BlackScholes_ImpliedVolatility(VanillaOptionParameters& TheOption,double Spot,double r,
 		double optionPrice);
+	inline GreekResults MonteCarlo_PV(VanillaOptionParameters& TheOption, double Spot, double Vol, double r, 
+		unsigned int NumberOfPaths);
+	inline double API::MonteCarlo_ImpliedVolatility(VanillaOptionParameters& TheOption, double Spot, double r, unsigned int NumberOfPaths,
+		double optionPrice);
 private:
 	BlackScholesCppPricer* m_blackScholesCppPricer;
+	MonteCarloCppPricer* m_monteCarloCppPricer;
 };

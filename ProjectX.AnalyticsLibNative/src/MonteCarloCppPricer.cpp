@@ -171,6 +171,7 @@ double ProjectXAnalyticsCppLib::MonteCarloCppPricer::ImpliedVolatilityMC(Vanilla
 		double ST = S * Math::Exp((r - (Math::Pow(sigma, 2) / 2)) * T + sigma * Math::Sqrt(T) * randNorm);
 		double payoff = Math::Max(ST - K, 0.0);
 		price = Math::Exp(-r * T) * payoff;
+		//C = SP e-dt N(d1) - ST e-rt N(d2)
 
 		vega = (price - optionPrice) / epsilon;
 
