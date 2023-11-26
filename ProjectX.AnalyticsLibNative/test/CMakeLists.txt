@@ -22,7 +22,7 @@ set(sources
 	HestonPricerTest.h
 )
 
-add_executable(${PROJECT_TEST_NAME} ${sources})
+add_executable(${PROJECT_TEST_NAME} ${sources} "HestonPricerTestConstants.h")
 target_link_libraries(${PROJECT_TEST_NAME} 
 	PUBLIC 
 	gtest_main

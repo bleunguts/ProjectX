@@ -128,3 +128,34 @@ TEST_F(ApiTest, WhenComputingImpliedVolForMonteCarlo)
 	//EXPECT_NEAR(impliedVol, 0.2, 0.0001) << "impliedVol: " << impliedVol << std::endl;
 	EXPECT_EQ(true, true); // TODO: Fix Implied Vol; 
 }
+
+TEST_F(ApiTest, WhenComputingHestonMCValue) 
+{
+	double spot = 2.0;   // $2 
+	double strike = 2.0; // $2
+	double r = 0.0319; // 3.19 %
+	double q = 0;
+	double T = 1.0; // 1 year to expiry
+	unsigned int n_TimeSteps = 200;
+	unsigned int m_Simulations = 200;
+
+	double v0 = 0.010201; // starting volatility
+	double theta = 0.019; // Long-term mean volatility
+	double kappa = 6.21; // speed of reversion
+	double sigma = 0.61;   // vol of vol        	
+
+	VanillaOptionParameters callOption = VanillaOptionParameters(OptionType::Call, strike, T);
+	double rho = -0.7;     // correlation between brownian motions spot and vol	
+	HestonStochasticVolalityParameters volParams2 = HestonStochasticVolalityParameters{ v0, theta, kappa, sigma, rho };
+
+	GreekResults results = api->Heston_MCValue(callOption, spot, r, q, n_TimeSteps, m_Simulations, volParams2);
+	double PV = results.PV;
+	double PVPut = results.PVPut;
+	int BUSTED_TODO_FIX = 20;
+	EXPECT_NEAR(PV, 6.52078264, BUSTED_TODO_FIX) << "PV: " << PV << std::endl;
+	EXPECT_NEAR(PVPut, 11.15601933, BUSTED_TODO_FIX) << "PVPut: " << PVPut << std::endl;
+	
+	EXPECT_EQ(1, BUSTED_TODO_FIX) << "#calls: " << results.Debug.callsCount << " #puts: " << results.Debug.putsCount << std::endl;
+	EXPECT_EQ(1, BUSTED_TODO_FIX) << "rhos: " << results.Debug.rhos << std::endl;
+	EXPECT_EQ(1, BUSTED_TODO_FIX) << "spots: " << results.Debug.spotGraph << std::endl;
+}

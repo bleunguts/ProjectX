@@ -94,11 +94,21 @@ double MonteCarlo_ImpliedVolatility(API* a_pObject, VanillaOptionParameters& The
 	throw "Fatal error: disposed api pointer";
 }
 
+GreekResults Heston_MCValue(API* a_pObject, VanillaOptionParameters& TheOption, double spotInitial, double interestRate, double dividendYield, unsigned int numberOfSteps, unsigned int numberOfSimulations, HestonStochasticVolalityParameters& volParams)
+{
+	if (a_pObject != NULL)
+	{
+		return a_pObject->Heston_MCValue(TheOption, spotInitial, interestRate, dividendYield, numberOfSteps, numberOfSimulations, volParams);
+	}
+	throw "Fatal error: disposed api pointer";
+}
+
 API::API()
 {
 	m_blackScholesCppPricer = new BlackScholesCppPricer();	
 	RandomWalk w = RandomWalk(RandomAlgorithm::BoxMuller);
 	m_monteCarloCppPricer = new MonteCarloCppPricer(w);
+	m_hestonCppPricer = new MonteCarloHestonCppPricer2();
 };
 
 API::~API()
@@ -196,4 +206,11 @@ double API::MonteCarlo_ImpliedVolatility(VanillaOptionParameters& TheOption,
 	double optionPrice)
 {
 	return m_monteCarloCppPricer->ImpliedVolatilityMC(TheOption, Spot, r, NumberOfPaths, optionPrice);
+}
+
+GreekResults API::Heston_MCValue(VanillaOptionParameters& TheOption, double spotInitial, double interestRate,
+	double dividendYield, unsigned int numberOfSteps, unsigned int numberOfSimulations,
+	HestonStochasticVolalityParameters& volParams)
+{
+	return m_hestonCppPricer->MCValue(TheOption, spotInitial, interestRate, dividendYield, numberOfSteps, numberOfSimulations, volParams);
 }

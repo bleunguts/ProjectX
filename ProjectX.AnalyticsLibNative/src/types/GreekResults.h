@@ -9,11 +9,9 @@ namespace ProjectXAnalyticsCppLib {
 			: PV(0), PVPut(0), Delta(0), DeltaPut(0), Gamma(0), Vega(0), Rho(0), RhoPut(0), Theta(0), ThetaPut(0)
 		{
 		};
-		GreekResults(double pv, double pvPut, Debug debug)
-		{
-			this->PV = pv;
-			this->PVPut = pvPut;
-			this->Debug = debug;
+		GreekResults(double pv, double pvPut, Debug debug) 
+			: PV(pv), PVPut(pvPut), Delta(0), DeltaPut(0), Gamma(0), Vega(0), Rho(0), RhoPut(0), Theta(0), ThetaPut(0), Debug(debug)
+		{			
 		};
 		GreekResults(double pv, double pvPut, double delta, double deltaPut, double gamma, double vega, double rho, double rhoPut, double theta, double thetaPut)
 		{

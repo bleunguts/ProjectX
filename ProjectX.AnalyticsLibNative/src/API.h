@@ -5,6 +5,7 @@
 #include "pch.h"
 #include "BlackScholesCppPricer.h"
 #include "MonteCarloCppPricer.h"
+#include "MonteCarloHestonCppPricer2.h"
 #include <iostream>
 
 using namespace ProjectXAnalyticsCppLib;
@@ -28,9 +29,13 @@ public:
 		unsigned int NumberOfPaths);
 	inline double API::MonteCarlo_ImpliedVolatility(VanillaOptionParameters& TheOption, double Spot, double r, unsigned int NumberOfPaths,
 		double optionPrice);
+	inline GreekResults Heston_MCValue(VanillaOptionParameters& TheOption,double spotInitial,double interestRate,
+		double dividendYield, unsigned int numberOfSteps,unsigned int numberOfSimulations, 
+		HestonStochasticVolalityParameters& volParams);
 private:
 	BlackScholesCppPricer* m_blackScholesCppPricer;
 	MonteCarloCppPricer* m_monteCarloCppPricer;
+	MonteCarloHestonCppPricer2* m_hestonCppPricer;
 };
 
 extern "C"
@@ -46,4 +51,5 @@ extern "C"
 	extern PROJECT_API double BlackScholes_ImpliedVolatility(API* a_pObject, VanillaOptionParameters& TheOption, double Spot, double r, double optionPrice);
 	extern PROJECT_API GreekResults MonteCarlo_PV(API* a_pObject, VanillaOptionParameters& TheOption, double Spot, double Vol, double r,unsigned int NumberOfPaths);
 	extern PROJECT_API double MonteCarlo_ImpliedVolatility(API* a_pObject, VanillaOptionParameters& TheOption, double Spot, double r, unsigned int NumberOfPaths,double optionPrice);
+	extern PROJECT_API GreekResults Heston_MCValue(API* a_pObject, VanillaOptionParameters& TheOption, double spotInitial, double interestRate, double dividendYield, unsigned int numberOfSteps, unsigned int numberOfSimulations,HestonStochasticVolalityParameters& volParams);
 };

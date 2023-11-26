@@ -31,14 +31,20 @@ std::string CSV(const map<double, vector<double>> m)
     return s.str();
 }
 
+ProjectXAnalyticsCppLib::Debug::Debug(int calls, int puts, char r[10000], char s[10000], int simulations) : callsCount(0), putsCount(0), totalSimulations(0), rhos(), spotGraph()
+{   
+    strncpy_s(this->rhos, _countof(this->rhos), r, MAX);
+    strncpy_s(this->spotGraph, _countof(this->spotGraph), s, MAX);
+};
+
 Debug ProjectXAnalyticsCppLib::Debug::Build(int calls, int puts, const std::vector<double> rhos, const std::map<double, std::vector<double>> spots, int simulations)
 {   
     std::string rhoString = CSV(rhos);
     std::string spotString = CSV(spots);
     
-    char r[10000] = {};
-    char s[10000] = {};
-    size_t MAX = (10000 - 1); // maximum number of chars
+    char r[SIZE] = {};
+    char s[SIZE] = {};
+
     std::copy(rhoString.begin(), (rhoString.size() >= MAX ? rhoString.begin() + MAX : rhoString.end()), r);
     std::copy(spotString.begin(), (spotString.size() >= MAX ? spotString.begin() + MAX : spotString.end()), s);
     
