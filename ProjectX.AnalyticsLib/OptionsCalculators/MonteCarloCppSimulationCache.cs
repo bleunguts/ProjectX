@@ -3,13 +3,13 @@ using OptionType = ProjectX.Core.OptionType;
 
 namespace ProjectX.AnalyticsLib.OptionsCalculators
 {
-    public class MonteCarloSimulationCache
+    public class MonteCarloCppSimulationCache
     {
         private IMonteCarloCppPricer _calculator { get; }
        
         private readonly Dictionary<ExecutionKey, GreekResults> _cache = new();
 
-        public MonteCarloSimulationCache(IMonteCarloCppPricer pricer)
+        public MonteCarloCppSimulationCache(IMonteCarloCppPricer pricer)
         {
             _calculator = pricer;
         }

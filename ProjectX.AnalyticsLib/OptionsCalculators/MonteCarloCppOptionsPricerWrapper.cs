@@ -77,7 +77,7 @@ namespace ProjectX.AnalyticsLib.OptionsCalculators
     public class MonteCarloCppOptionsPricerWrapper: IMonteCarloCppOptionsPricer
     {
         private readonly MonteCarloCppPricer _calculator;
-        private readonly MonteCarloSimulationCache _cachedSimulation;
+        private readonly MonteCarloCppSimulationCache _cachedSimulation;
         private readonly ulong _numOfMcPaths;
 
         [ImportingConstructor]
@@ -86,7 +86,7 @@ namespace ProjectX.AnalyticsLib.OptionsCalculators
             var algo = options?.Value?.RandomAlgo ?? RandomAlgorithm.BoxMuller;
             _numOfMcPaths = options?.Value?.NumOfMcPaths ?? 1000;
             _calculator = new MonteCarloCppPricer(new RandomWalk(algo));
-            _cachedSimulation = new MonteCarloSimulationCache(_calculator);
+            _cachedSimulation = new MonteCarloCppSimulationCache(_calculator);
         }        
 
         public double PV(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)
@@ -136,9 +136,9 @@ namespace ProjectX.AnalyticsLib.OptionsCalculators
             var param = new VanillaOptionParameters(optionType.ToNativeOptionType(), strike, maturity);
             return _calculator.ImpliedVolatilityMC(ref param, spot, rate, _numOfMcPaths, price);
         }
-        private static MonteCarloSimulationCache.ExecutionKey Key(double spot, double strike, double rate, double carry, double maturity, double volatility)
+        private static MonteCarloCppSimulationCache.ExecutionKey Key(double spot, double strike, double rate, double carry, double maturity, double volatility)
         {
-            return MonteCarloSimulationCache.Key(spot, strike, rate, carry, maturity, volatility);
+            return MonteCarloCppSimulationCache.Key(spot, strike, rate, carry, maturity, volatility);
         }
     }
 }
