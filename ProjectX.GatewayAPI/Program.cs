@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using ProjectX.AnalyticsLib;
 using ProjectX.AnalyticsLib.OptionsCalculators;
 using ProjectX.AnalyticsLib.Shared;
+using ProjectX.AnalyticsLibNativeShim;
 using ProjectX.Core;
 using ProjectX.Core.Services;
 using ProjectX.GatewayAPI.BackgroundServices;
@@ -45,11 +46,6 @@ builder.Services.Configure<RandomFXSpotPriceStreamOptions>(options =>
 {
     options.RawSpreadInPips = Convert.ToDecimal(config.GetSection("FX")["RawSpreadInPips"]);
     options.IntervalBetweenSends = Convert.ToInt32(config.GetSection("FX")["IntervalBetweenSends"]);
-});
-builder.Services.Configure<OptionsPricerCppWrapperOptions>(options =>
-{
-    options.NumOfMcPaths = Convert.ToUInt64(config.GetSection("OptionsPricer")["NumOfMcPaths"]);
-    options.RandomAlgo = (RandomAlgorithm) Enum.Parse(typeof(RandomAlgorithm), config.GetSection("OptionsPricer")["RandomAlgorithm"]);
 });
 
 builder.Services.AddHttpClient<IPricingResultsApiClient, PricingResultsApiClient>();

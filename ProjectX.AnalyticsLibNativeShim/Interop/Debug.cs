@@ -1,7 +1,7 @@
-﻿namespace ProjectX.AnalyticsLibNativeShim;
+﻿namespace ProjectX.AnalyticsLibNativeShim.Interop;
 using System.Runtime.InteropServices;
 
-[StructLayout(LayoutKind.Sequential, CharSet=CharSet.Ansi)]
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
 public struct Debug
 {
     public int callsCount;

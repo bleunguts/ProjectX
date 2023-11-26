@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ProjectX.AnalyticsCppLib\ProjectX.AnalyticsCppLib.vcxproj" />
     <ProjectReference Include="..\ProjectX.AnalyticsLib.Shared\ProjectX.AnalyticsLib.Shared.csproj" />
     <ProjectReference Include="..\ProjectX.Core\ProjectX.Core.csproj" />
   </ItemGroup>

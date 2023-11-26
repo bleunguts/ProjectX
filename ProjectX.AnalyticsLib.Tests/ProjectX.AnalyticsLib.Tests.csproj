@@ -20,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ProjectX.AnalyticsCppLibShim\ProjectX.AnalyticsCppLibShim.csproj" />
     <ProjectReference Include="..\ProjectX.AnalyticsLib\ProjectX.AnalyticsLib.csproj" />
   </ItemGroup>
 

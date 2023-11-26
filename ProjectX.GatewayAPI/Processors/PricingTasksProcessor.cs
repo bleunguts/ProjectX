@@ -3,6 +3,7 @@ using ProjectX.Core.Requests;
 using ProjectX.Core.Services;
 using ProjectX.GatewayAPI.ExternalServices;
 using System.Collections.Concurrent;
+using System.Reflection.Metadata.Ecma335;
 
 namespace ProjectX.GatewayAPI.Processors
 {
@@ -34,22 +35,45 @@ namespace ProjectX.GatewayAPI.Processors
                 if (pricingRequest is PlotOptionsPricingRequest)
                 {
                     return _pricingModel.PlotGreeks((PlotOptionsPricingRequest)pricingRequest);
-                }                          
-                
+                }                                          
                 throw new NotSupportedException($"type {pricingRequest.GetType()} is not supported.");
             }).ContinueWith(r =>
             {
+                ThrowIfTaskFailed(r.IsFaulted, r.Exception);
+
                 var pricingResult = r.Result;
-                if(pricingResult is OptionsPricingByMaturityResults)
+                ThrowIfResultIsInvalid(pricingResult);
+
+                if (pricingResult is OptionsPricingByMaturityResults)
                 {
                     return _pricingResultsApiClient.PostResultAsync((OptionsPricingByMaturityResults)pricingResult);
                 }
-                if(pricingResult is PlotOptionsPricingResult)
+                if (pricingResult is PlotOptionsPricingResult)
                 {
                     return _pricingResultsApiClient.PostResultAsync((PlotOptionsPricingResult)pricingResult);
                 }
                 throw new NotSupportedException($"type {pricingResult.GetType()} is not supported.");
             }, cancellationToken);
+        }
+
+        private void ThrowIfResultIsInvalid(object? pricingResult)
+        {
+            if (pricingResult != null) return;
+            
+            _logger.LogError("PricingModel processing returned null.");
+            throw new ApplicationException("PricingModel processing returned null.");
+        }
+
+        private void ThrowIfTaskFailed(bool isFaulted, Exception ex)
+        {
+            if (!isFaulted) return;
+            if (ex == null) return;
+
+            while (ex is AggregateException && ex.InnerException != null)
+                ex = ex.InnerException;
+
+            _logger.LogError(ex, "PricingModel processing processing threw an error.");
+            throw new ApplicationException("PricingModel processing threw an error.", ex);
         }
     }
 }

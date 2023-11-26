@@ -1,4 +1,5 @@
 using ProjectX.AnalyticsLibNativeShim;
+using ProjectX.AnalyticsLibNativeShim.Interop;
 
 namespace ProjectX.AnalyticsLibNative.Tests;
 
