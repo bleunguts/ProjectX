@@ -22,7 +22,7 @@ public class ApiTests
     [SetUp]
     public void Setup()
     {
-        _api = new API();
+        _api = API.Instance;
     }
     #endregion
 

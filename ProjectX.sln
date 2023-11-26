@@ -41,6 +41,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProjectX.AnalyticsLibNative
 		ProjectX.AnalyticsLibNative\CMakePresets.json = ProjectX.AnalyticsLibNative\CMakePresets.json
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{406DF674-C576-4678-9B50-630275B73318}"
+	ProjectSection(SolutionItems) = preProject
+		ProjectX.AnalyticsLibNative\src\CMakeLists.txt = ProjectX.AnalyticsLibNative\src\CMakeLists.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -248,6 +253,7 @@ Global
 		{78869F42-D008-43E0-AE01-4A36E03A9B89} = {291F2E1A-D783-4A45-955B-6C39A801C658}
 		{A91A79D7-55B1-4D85-B500-6B53D0C42886} = {291F2E1A-D783-4A45-955B-6C39A801C658}
 		{66D0F4A6-3505-4275-90AA-8B95E76EFB41} = {291F2E1A-D783-4A45-955B-6C39A801C658}
+		{406DF674-C576-4678-9B50-630275B73318} = {CB887621-9DE5-49ED-BE4C-7B170A43F062}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8123A31C-36EE-481E-9ED7-0EB9D36F17CD}

@@ -28,5 +28,5 @@ public interface IOptionsGreeksCalculator
     double ImpliedVol(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double price);
     double Rho(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility);
     double Theta(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility);
-    double Vega(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double vol);
+    double Vega(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility);
 }

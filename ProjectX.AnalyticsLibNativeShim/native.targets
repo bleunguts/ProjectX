@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <PropertyGroup>
+	   <SourcePath>..\3rdParty\ProjectX.AnalyticsLibNative.*</SourcePath>
+  </PropertyGroup>
+  <Target Name="CopyBinaries" AfterTargets="BeforeBuild">
+    <Message Text="Including native binaries for $(Configuration)|$(Platform)" />
+     <!-- Copy Analytics native dll -->
+	  <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+		  <Content Include="$(SourcePath)">
+			  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		  </Content>
+	  </ItemGroup>
+	  <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+		  <Content Include="$(SourcePath)">
+			  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		  </Content>
+	  </ItemGroup>
+	<ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+		<Content Include="$(SourcePath)">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+	<ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+		<Content Include="$(SourcePath)">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+	<ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+		<Content Include="$(SourcePath)">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+	<ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+		<Content Include="$(SourcePath)">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>     
+  </Target>
+</Project>
