@@ -36,6 +36,14 @@ private:
 extern "C"
 {
 	extern PROJECT_API API* CreateAPI();
-	extern PROJECT_API void DisposeAPI(API* a_pObject);
-	extern PROJECT_API double CallExecute(API* a_pObject);
+	extern PROJECT_API void DisposeAPI(API* a_pObject);	
+	extern PROJECT_API double BlackScholes_PV(API* a_pObject, VanillaOptionParameters& TheOption, double Spot, double Vol, double r);
+	extern PROJECT_API double BlackScholes_Delta(API* a_pObject, VanillaOptionParameters& TheOption, double Spot, double Vol, double r);
+	extern PROJECT_API double BlackScholes_Gamma(API* a_pObject, VanillaOptionParameters& TheOption, double Spot, double Vol, double r, double epsilon);
+	extern PROJECT_API double BlackScholes_Vega(API* a_pObject, VanillaOptionParameters& TheOption, double Spot, double Vol, double r);
+	extern PROJECT_API double BlackScholes_Theta(API* a_pObject, VanillaOptionParameters& TheOption, double Spot, double Vol, double r);
+	extern PROJECT_API double BlackScholes_Rho(API* a_pObject, VanillaOptionParameters& TheOption, double Spot, double Vol, double r);
+	extern PROJECT_API double BlackScholes_ImpliedVolatility(API* a_pObject, VanillaOptionParameters& TheOption, double Spot, double r, double optionPrice);
+	extern PROJECT_API GreekResults MonteCarlo_PV(API* a_pObject, VanillaOptionParameters& TheOption, double Spot, double Vol, double r,unsigned int NumberOfPaths);
+	extern PROJECT_API double MonteCarlo_ImpliedVolatility(API* a_pObject, VanillaOptionParameters& TheOption, double Spot, double r, unsigned int NumberOfPaths,double optionPrice);
 };

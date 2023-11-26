@@ -25,8 +25,19 @@ public class ApiTests
     }
 
     [Test]
-    public void foo()
+    public void WhenCallingBSMPV()
     {
-        _api.Execute();
+        var Spot = 100;
+        var Vol = 0.3;
+        var r = 0.1;
+        var callOption = new VanillaOptionParameters()
+        {
+            OptionType = OptionType.Call,
+            Strike = 110,
+            Expiry = 0.5
+        };
+        
+        var pv = _api.BlackScholes_PV(callOption, Spot, Vol, r);
+        Console.WriteLine($"PV: {pv}");
     }
 }

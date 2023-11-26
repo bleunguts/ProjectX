@@ -3,6 +3,15 @@
 using System;
 using System.Runtime.InteropServices;
 
+public enum OptionType { Call, Put };
+[StructLayout(LayoutKind.Sequential)]
+public struct VanillaOptionParameters
+{
+    public OptionType OptionType;
+    public double Strike;
+    public double Expiry;
+}
+
 // https://mark-borg.github.io/blog/2017/interop/#:~:text=Platform%20Invocation%20(PInvoke%20for%20short,from%20within%20a%20C%23%20program.
 // https://stackoverflow.com/questions/315051/using-a-class-defined-in-a-c-dll-in-c-sharp-code
 public class API
@@ -14,18 +23,19 @@ public class API
     static public extern void DisposeAPI(IntPtr pClassNameObject);
 
     [DllImport("ProjectX.AnalyticsLibNative")]
-    static public extern double CallExecute(IntPtr pClassNameObject);    
-
-    public void Execute()
+    static public extern double BlackScholes_PV(IntPtr pClassNameObject, ref VanillaOptionParameters TheOption, double Spot, double Vol, double r);
+    
+    public double BlackScholes_PV(VanillaOptionParameters TheOption, double Spot, double Vol, double r)
     {
-        SafeExecute((pAPI) =>
+        var value = SafeExecute((pAPI) =>
         {
-            var value = CallExecute(pAPI);
-            Console.WriteLine($"PV = {value}");
-        });        
+            return BlackScholes_PV(pAPI, ref TheOption, Spot, Vol, r);                        
+        });
+
+        return value;   
     }
 
-    private void SafeExecute(Action<nint> action)
+    private static T SafeExecute<T>(Func<nint, T> action)
     {
         IntPtr pAPI = IntPtr.Zero;
         try
@@ -33,12 +43,13 @@ public class API
             //use the functions
             pAPI = CreateAPI();
 
-            action(pAPI);
+            return action(pAPI);
 
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error occured {ex.Message}");
+            throw;
         }
         finally
         {

@@ -21,20 +21,77 @@ void DisposeAPI(API* a_pObject)
 	}
 }
 
-double CallExecute(API* a_pObject)
+double BlackScholes_PV(API* a_pObject, VanillaOptionParameters& TheOption, double Spot, double Vol, double r)
+{
+	if (a_pObject != NULL) 
+	{
+		return a_pObject->BlackScholes_PV(TheOption, Spot, Vol, r);
+	}
+	throw "Fatal error: disposed api pointer";
+}
+double BlackScholes_Delta(API* a_pObject, VanillaOptionParameters& TheOption, double Spot, double Vol, double r)
 {
 	if (a_pObject != NULL)
 	{
-		double spot = 100;
-		double strike = 110;
-		double expiry = 0.5;
-		double vol = 0.3;
-		double r = 0.1;		
-		VanillaOptionParameters callOption = VanillaOptionParameters(OptionType::Call, strike, expiry);		
-
-		double pv = a_pObject->BlackScholes_PV(callOption, spot, vol, r);
-		return pv;
+		return a_pObject->BlackScholes_Delta(TheOption, Spot, Vol, r);
 	}
+	throw "Fatal error: disposed api pointer";
+}
+double BlackScholes_Gamma(API* a_pObject, VanillaOptionParameters& TheOption, double Spot, double Vol, double r, double epsilon)
+{
+	if (a_pObject != NULL)
+	{
+		return a_pObject->BlackScholes_Gamma(TheOption, Spot, Vol, r, epsilon);
+	}
+	throw "Fatal error: disposed api pointer";
+}
+double BlackScholes_Vega(API* a_pObject, VanillaOptionParameters& TheOption, double Spot, double Vol, double r)
+{
+	if (a_pObject != NULL)
+	{
+		return a_pObject->BlackScholes_Vega(TheOption, Spot, Vol, r);
+	}
+	throw "Fatal error: disposed api pointer";
+}
+double BlackScholes_Theta(API* a_pObject, VanillaOptionParameters& TheOption, double Spot, double Vol, double r)
+{
+	if (a_pObject != NULL)
+	{
+		return a_pObject->BlackScholes_Theta(TheOption, Spot, Vol, r);
+	}
+	throw "Fatal error: disposed api pointer";
+}
+double BlackScholes_Rho(API* a_pObject, VanillaOptionParameters& TheOption, double Spot, double Vol, double r)
+{
+	if (a_pObject != NULL)
+	{
+		return a_pObject->BlackScholes_Rho(TheOption, Spot, Vol, r);
+	}
+	throw "Fatal error: disposed api pointer";
+}
+double BlackScholes_ImpliedVolatility(API* a_pObject, VanillaOptionParameters& TheOption, double Spot, double r, double optionPrice)
+{
+	if (a_pObject != NULL)
+	{
+		return a_pObject->BlackScholes_ImpliedVolatility(TheOption, Spot, r, optionPrice);
+	}
+	throw "Fatal error: disposed api pointer";
+}
+GreekResults MonteCarlo_PV(API* a_pObject, VanillaOptionParameters& TheOption, double Spot, double Vol, double r, unsigned int NumberOfPaths)
+{
+	if (a_pObject != NULL)
+	{
+		return a_pObject->MonteCarlo_PV(TheOption, Spot, Vol, r, NumberOfPaths);
+	}
+	throw "Fatal error: disposed api pointer";
+}
+double MonteCarlo_ImpliedVolatility(API* a_pObject, VanillaOptionParameters& TheOption, double Spot, double r, unsigned int NumberOfPaths, double optionPrice)
+{
+	if (a_pObject != NULL)
+	{
+		return a_pObject->MonteCarlo_ImpliedVolatility(TheOption, Spot, r, NumberOfPaths, optionPrice);
+	}
+	throw "Fatal error: disposed api pointer";
 }
 
 API::API()
