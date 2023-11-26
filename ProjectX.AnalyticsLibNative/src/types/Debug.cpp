@@ -6,7 +6,7 @@
 using namespace std;
 using namespace ProjectXAnalyticsCppLib;
 
-std::string CSV(vector<double> v)
+std::string CSV(const vector<double> v)
 {
     std::stringstream s;        // creating stringstream object
 
@@ -19,7 +19,7 @@ std::string CSV(vector<double> v)
     return s.str();
 }
 
-std::string CSV(map<double, vector<double>> m)
+std::string CSV(const map<double, vector<double>> m)
 {
     std::stringstream s;        // creating stringstream object
 
@@ -31,14 +31,17 @@ std::string CSV(map<double, vector<double>> m)
     return s.str();
 }
 
-Debug& ProjectXAnalyticsCppLib::Debug::Build(int calls, int puts, std::vector<double> rhos, std::map<double, std::vector<double>> spots, int simulations)
+Debug ProjectXAnalyticsCppLib::Debug::Build(int calls, int puts, const std::vector<double> rhos, const std::map<double, std::vector<double>> spots, int simulations)
 {   
     std::string rhoString = CSV(rhos);
     std::string spotString = CSV(spots);
-    char r[256] = "";
-    char s[256] = "";    
-    strcpy_s(r, rhoString.c_str());
-    strcpy_s(s, spotString.c_str());
+    
+    char r[10000] = {};
+    char s[10000] = {};
+    size_t MAX = (10000 - 1); // maximum number of chars
+    std::copy(rhoString.begin(), (rhoString.size() >= MAX ? rhoString.begin() + MAX : rhoString.end()), r);
+    std::copy(spotString.begin(), (spotString.size() >= MAX ? spotString.begin() + MAX : spotString.end()), s);
+    
 	Debug dbg = Debug(calls, puts, r, s, simulations);
 	return dbg;
 }

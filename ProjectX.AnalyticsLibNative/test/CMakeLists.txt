@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.8)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(PROJECT_TEST_NAME UnitTests)
-
+set( gtest_force_shared_crt ON CACHE BOOL "Always use msvcrt.dll" FORCE)
 include(FetchContent)
 FetchContent_Declare(
   googletest
@@ -32,4 +32,5 @@ target_link_libraries(${PROJECT_TEST_NAME}
 add_test(
 	NAME ApiTest
 	COMMAND ${PROJECT_TEST_NAME}
+	WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
 )

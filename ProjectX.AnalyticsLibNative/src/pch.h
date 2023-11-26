@@ -14,7 +14,6 @@
 #include "types/OptionType.h"
 #include "types/VanillaOptionsParameters.h"
 #include "types/HestonStochasticVolatilityParameters.h"
-#include "BlackScholesFunctions.h"
 
 #endif //PCH_H
 

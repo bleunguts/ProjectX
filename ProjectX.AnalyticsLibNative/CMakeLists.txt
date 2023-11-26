@@ -13,6 +13,5 @@ endif()
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 project ("ProjectX.AnalyticsLibNative")
 
-set(gtest_force_shared_crt on)
 add_subdirectory(src)
 add_subdirectory(test)

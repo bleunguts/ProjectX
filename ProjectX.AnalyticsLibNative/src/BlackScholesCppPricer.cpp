@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "BlackScholesCppPricer.h"
+#include "BlackScholesFunctions.h"
 
 double ProjectXAnalyticsCppLib::BlackScholesCppPricer::Value(
 	VanillaOptionParameters& TheOption,

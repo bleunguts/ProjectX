@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ProjectX.AnalyticsLibNative.Tests": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}
