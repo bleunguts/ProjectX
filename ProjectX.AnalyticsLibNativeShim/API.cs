@@ -18,15 +18,23 @@ public class API
 
     public void Execute()
     {
+        SafeExecute((pAPI) =>
+        {
+            var value = CallExecute(pAPI);
+            Console.WriteLine($"PV = {value}");
+        });        
+    }
+
+    private void SafeExecute(Action<nint> action)
+    {
         IntPtr pAPI = IntPtr.Zero;
         try
         {
             //use the functions
             pAPI = CreateAPI();
 
-            var value = CallExecute(pAPI);
-            Console.WriteLine($"PV = {value}");
-            
+            action(pAPI);
+
         }
         catch (Exception ex)
         {
@@ -35,6 +43,6 @@ public class API
         finally
         {
             DisposeAPI(pAPI);
-        }        
+        }
     }
 }
