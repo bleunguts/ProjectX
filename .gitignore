@@ -364,3 +364,4 @@ FodyWeavers.xsd
 
 # native c++ files
 ProjectX*Native*.*
+*.so

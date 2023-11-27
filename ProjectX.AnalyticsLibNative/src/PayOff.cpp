@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "PayOff.h"
-#include <minmax.h>
+//#include <minmax.h>
 using namespace ProjectXAnalyticsCppLib;
 
 ProjectXAnalyticsCppLib::PayOffCall::PayOffCall(double Strike_) : Strike(Strike_)

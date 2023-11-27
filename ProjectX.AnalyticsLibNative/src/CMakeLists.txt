@@ -10,7 +10,7 @@ project ("ProjectX.AnalyticsLibNative")
 # Add source to this project's dll.
 set(Headers 
 "API.h"
-#"pch.h"
+"pch.h"
 "Utility.h" 
 "types/Debug.h"
 "types/GreekResults.h"
@@ -18,7 +18,7 @@ set(Headers
 "types/VanillaOptionsParameters.h"
 "types/HestonStochasticVolatilityParameters.h"
 "Parameters.h"
-"Payoff.h"
+"PayOff.h"
 "VanillaOption.h"
 "RandomWalk.h"
 "BlackScholesFunctions.h"
@@ -29,10 +29,10 @@ set(Headers
 )
 set(Sources 
 "API.cpp"
-#"pch.cpp"
+"pch.cpp"
 "types/Debug.cpp"
 "Parameters.cpp"
-"Payoff.cpp"
+"PayOff.cpp"
 "VanillaOption.cpp"
 "RandomWalk.cpp"
 "BlackScholesFunctions.cpp"

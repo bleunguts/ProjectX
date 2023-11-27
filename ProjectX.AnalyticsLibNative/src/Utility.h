@@ -7,7 +7,7 @@
 #include <random>
 using namespace std;
 
-static class Math
+class Math
 {
 public:	
 	inline static double Log(double v) {

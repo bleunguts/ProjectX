@@ -1,12 +1,12 @@
 #pragma once
-#include "MonteCarloHestonCppPricer.h"
+#include "pch.h"
 
 namespace ProjectXAnalyticsCppLib
 {
 	class PROJECT_API MonteCarloHestonCppPricer2
 	{
 	public:
-		GreekResults ProjectXAnalyticsCppLib::MonteCarloHestonCppPricer2::MCValue(
+		GreekResults MCValue(
 			VanillaOptionParameters& TheOption,
 			double spotInitial,
 			double interestRate,

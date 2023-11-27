@@ -2,7 +2,6 @@
 # project specific logic here.
 #
 cmake_minimum_required (VERSION 3.8)
-add_definitions(-DBUILD_DLL)
 
 # Enable Hot Reload for MSVC compilers if supported.
 if (POLICY CMP0141)

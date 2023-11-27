@@ -27,7 +27,7 @@ public:
 		double optionPrice);
 	inline GreekResults MonteCarlo_PV(VanillaOptionParameters& TheOption, double Spot, double Vol, double r, 
 		unsigned int NumberOfPaths);
-	inline double API::MonteCarlo_ImpliedVolatility(VanillaOptionParameters& TheOption, double Spot, double r, unsigned int NumberOfPaths,
+	inline double MonteCarlo_ImpliedVolatility(VanillaOptionParameters& TheOption, double Spot, double r, unsigned int NumberOfPaths,
 		double optionPrice);
 	inline GreekResults Heston_MCValue(VanillaOptionParameters& TheOption,double spotInitial,double interestRate,
 		double dividendYield, unsigned int numberOfSteps,unsigned int numberOfSimulations, 
@@ -51,5 +51,5 @@ extern "C"
 	extern PROJECT_API double BlackScholes_ImpliedVolatility(API* a_pObject, VanillaOptionParameters& TheOption, double Spot, double r, double optionPrice);
 	extern PROJECT_API GreekResults MonteCarlo_PV(API* a_pObject, VanillaOptionParameters& TheOption, double Spot, double Vol, double r,unsigned int NumberOfPaths);
 	extern PROJECT_API double MonteCarlo_ImpliedVolatility(API* a_pObject, VanillaOptionParameters& TheOption, double Spot, double r, unsigned int NumberOfPaths,double optionPrice);
-	extern PROJECT_API GreekResults Heston_MCValue(API* a_pObject, VanillaOptionParameters& TheOption, double spotInitial, double interestRate, double dividendYield, unsigned int numberOfSteps, unsigned int numberOfSimulations,HestonStochasticVolalityParameters& volParams);
+	//extern PROJECT_API GreekResults Heston_MCValue(API* a_pObject, VanillaOptionParameters& TheOption, double spotInitial, double interestRate, double dividendYield, unsigned int numberOfSteps, unsigned int numberOfSimulations,HestonStochasticVolalityParameters& volParams);
 };

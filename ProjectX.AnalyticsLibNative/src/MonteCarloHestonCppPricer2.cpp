@@ -1,5 +1,6 @@
-#include "pch.h";
+#include "pch.h"
 #include "MonteCarloHestonCppPricer2.h"
+
 using namespace ProjectXAnalyticsCppLib;
 using namespace std;
 

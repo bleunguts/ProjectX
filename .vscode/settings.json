@@ -1,4 +1,19 @@
 {
     "dotnet.defaultSolution": "ProjectX_.sln",
-    "cmake.sourceDirectory": "/home/billy/GitHub/ProjectX/ProjectX.AnalyticsLibNative"
+    "cmake.sourceDirectory": "/home/billy/GitHub/ProjectX/ProjectX.AnalyticsLibNative",
+    "files.associations": {
+        "*.tcc": "cpp",
+        "random": "cpp",
+        "iostream": "cpp",
+        "array": "cpp",
+        "deque": "cpp",
+        "forward_list": "cpp",
+        "list": "cpp",
+        "string": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp",
+        "vector": "cpp",
+        "string_view": "cpp",
+        "initializer_list": "cpp"
+    }
 }

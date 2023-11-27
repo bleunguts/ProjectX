@@ -8,6 +8,7 @@
 #define PCH_H
 
 // add headers that you want to pre-compile here
+#include "macros.h"
 #include "Utility.h"
 #include "types/Debug.h"
 #include "types/GreekResults.h"
@@ -16,9 +17,3 @@
 #include "types/HestonStochasticVolatilityParameters.h"
 
 #endif //PCH_H
-
-#ifdef BUILD_DLL
-#define PROJECT_API __declspec(dllexport)
-#else
-#define PROJECT_API __declspec(dllimport)
-#endif

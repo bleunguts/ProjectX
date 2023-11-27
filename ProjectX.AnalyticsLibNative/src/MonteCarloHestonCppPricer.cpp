@@ -39,14 +39,14 @@ GreekResults ProjectXAnalyticsCppLib::MonteCarloHestonCppPricer::MCValue(
 
 	// use well known distribution for rho correlation between spot and vol stochastic processes
 	std::vector<double> rho_probabilities;
-	for each (double prob in volParams.RhoProbabilities) 
+	for (auto & element : volParams.RhoProbabilities) 
 	{
-		rho_probabilities.push_back(prob);
-	}
+    	rho_probabilities.push_back(element);
+	}	
 	std::vector<double> rho_choices;
-	for each (double choice in volParams.RhoChoices) 
+	for (auto & element : volParams.RhoChoices) 
 	{
-		rho_choices.push_back(choice);
+    	rho_choices.push_back(element);
 	}	
 	std::discrete_distribution<int> distribution{ rho_probabilities.begin(), rho_probabilities.end() };
 

@@ -3,6 +3,7 @@
 #include <sstream>
 #include <iostream>
 #include <string>
+#include <cstring>
 using namespace std;
 using namespace ProjectXAnalyticsCppLib;
 
@@ -32,9 +33,9 @@ std::string CSV(const map<double, vector<double>> m)
 }
 
 ProjectXAnalyticsCppLib::Debug::Debug(int calls, int puts, char r[10000], char s[10000], int simulations) : callsCount(0), putsCount(0), totalSimulations(0), rhos(), spotGraph()
-{   
-    strncpy_s(this->rhos, _countof(this->rhos), r, MAX);
-    strncpy_s(this->spotGraph, _countof(this->spotGraph), s, MAX);
+{       
+    strncpy(this->rhos, r, MAX);
+    strncpy(this->spotGraph, s, MAX);
 };
 
 Debug ProjectXAnalyticsCppLib::Debug::Build(int calls, int puts, const std::vector<double> rhos, const std::map<double, std::vector<double>> spots, int simulations)
