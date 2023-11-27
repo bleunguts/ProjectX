@@ -90,9 +90,9 @@ public class Startup
 
         app.UseHttpsRedirection();        
 
-        app.UseAuthorization();
-
         app.UseRouting();
+
+        app.UseAuthorization();
 
         app.UseEndpoints(endpoints =>
         {
