@@ -1,0 +1,4 @@
+{
+    "dotnet.defaultSolution": "ProjectX_.sln",
+    "cmake.sourceDirectory": "/home/billy/GitHub/ProjectX/ProjectX.AnalyticsLibNative"
+}
