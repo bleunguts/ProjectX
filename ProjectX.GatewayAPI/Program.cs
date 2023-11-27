@@ -96,6 +96,7 @@ public class Startup
 
         app.UseEndpoints(endpoints =>
         {
+            endpoints.Map("/", () => "Hello there.");
             endpoints.MapControllers();
             endpoints.MapHub<StreamHub>("/streamHub");
         });                
