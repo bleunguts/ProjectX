@@ -99,6 +99,17 @@ public class Startup
             endpoints.Map("/", () => "Hello there.");
             endpoints.MapControllers();
             endpoints.MapHub<StreamHub>("/streamHub");
-        });                
+        });
+
+        var appLifetime = app.ApplicationServices.GetService<IHostApplicationLifetime>();
+        appLifetime.ApplicationStopping.Register(() =>
+        {
+            var nativeApi = app.ApplicationServices.GetService<IAPI>();
+            if (nativeApi != null)
+            {
+                Console.WriteLine("Releasing native libraries");
+                nativeApi.Shutdown();
+            }
+        });        
     }
 }
