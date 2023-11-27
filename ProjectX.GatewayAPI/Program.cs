@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
@@ -14,58 +15,89 @@ using ProjectX.GatewayAPI.Processors;
 using ProjectX.MarketData;
 using System.Runtime.CompilerServices;
 
+//https://learn.microsoft.com/en-us/aspnet/core/migration/50-to-60?view=aspnetcore-8.0&tabs=visual-studio#smhm
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.Converters.Add(new Array2DConverter());
-});
-builder.Services.ConfigureHttpJsonOptions(options =>
-{
-    options.SerializerOptions.Converters.Add(new Array2DConverter());
-});
+var startup = new Startup(builder.Configuration);
 
-// quant pricers
-builder.Services.TryAddScoped<IBlackScholesCSharpPricer, BlackScholesOptionsPricer>();
-builder.Services.TryAddScoped<IBlackScholesCppPricer, BlackScholesCppOptionsPricerWrapper>();
-builder.Services.TryAddScoped<IMonteCarloCppOptionsPricer, MonteCarloCppOptionsPricerWrapper>();
-// others
-builder.Services.TryAddScoped<IOptionsPricingModel, OptionsPricingModel>();
-builder.Services.AddSingleton<IFXSpotPricer,FXSpotPricer>();
-builder.Services.AddSingleton<IFXSpotPriceStream, RandomFXSpotPriceStream>();
-builder.Services.AddSingleton<IFXMarketService, FXMarketService>();
-builder.Services.AddSingleton<PricingTasksChannel>();
-builder.Services.AddSingleton<FXTasksChannel>();
-builder.Services.TryAddScoped<IPricingTasksProcessor, PricingTasksProcessor>();
-
-builder.Services.AddOptions();
-IConfiguration config = builder.Configuration;
-builder.Services.Configure<ApiClientOptions>(options => options.BaseAddress = config.GetSection("ExternalServices")["ProjectXUrl"]);
-builder.Services.Configure<RandomFXSpotPriceStreamOptions>(options =>
-{
-    options.RawSpreadInPips = Convert.ToDecimal(config.GetSection("FX")["RawSpreadInPips"]);
-    options.IntervalBetweenSends = Convert.ToInt32(config.GetSection("FX")["IntervalBetweenSends"]);
-});
-
-builder.Services.AddHttpClient<IPricingResultsApiClient, PricingResultsApiClient>();
-builder.Services.AddHostedService<PricingTasksService>();
-builder.Services.AddHostedService<FXPricingService>();
-builder.Services.AddSignalR(config => config.EnableDetailedErrors = true)
-                .AddMessagePackProtocol();              
+startup.ConfigureServices(builder.Services);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.UseRouting();
-
-app.UseEndpoints(endpoints => endpoints.MapHub<StreamHub>("/streamHub"));
+startup.Configure(app, app.Environment);
 
 app.Run();
+
+public class Startup
+{
+    public Startup(IConfiguration configuration)
+    {
+        Configuration = configuration;
+    }
+
+    public IConfiguration Configuration { get; }
+
+    public void ConfigureServices(IServiceCollection services)
+    {
+        // Add services to the container.
+        services.AddControllers().AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.Converters.Add(new Array2DConverter());
+        });
+        services.ConfigureHttpJsonOptions(options =>
+        {
+            options.SerializerOptions.Converters.Add(new Array2DConverter());
+        });
+
+        // quant pricers
+        services.TryAddSingleton<IAPI, API>();
+        services.TryAddScoped<IBlackScholesCSharpPricer, BlackScholesOptionsPricer>();
+        services.TryAddScoped<IBlackScholesCppPricer, BlackScholesCppOptionsPricerWrapper>();
+        services.TryAddScoped<IMonteCarloCppOptionsPricer, MonteCarloCppOptionsPricerWrapper>();
+        // others
+        services.TryAddScoped<IOptionsPricingModel, OptionsPricingModel>();
+        services.AddSingleton<IFXSpotPricer, FXSpotPricer>();
+        services.AddSingleton<IFXSpotPriceStream, RandomFXSpotPriceStream>();
+        services.AddSingleton<IFXMarketService, FXMarketService>();
+        services.AddSingleton<PricingTasksChannel>();
+        services.AddSingleton<FXTasksChannel>();
+        services.TryAddScoped<IPricingTasksProcessor, PricingTasksProcessor>();
+
+        services.AddOptions();        
+        services.Configure<ApiClientOptions>(options => options.BaseAddress = Configuration.GetSection("ExternalServices")["ProjectXUrl"]);
+        services.Configure<RandomFXSpotPriceStreamOptions>(options =>
+        {
+            options.RawSpreadInPips = Convert.ToDecimal(Configuration.GetSection("FX")["RawSpreadInPips"]);
+            options.IntervalBetweenSends = Convert.ToInt32(Configuration.GetSection("FX")["IntervalBetweenSends"]);
+        });
+
+        services.AddHttpClient<IPricingResultsApiClient, PricingResultsApiClient>();
+        services.AddHostedService<PricingTasksService>();
+        services.AddHostedService<FXPricingService>();
+        services.AddSignalR(config => config.EnableDetailedErrors = true)
+                        .AddMessagePackProtocol();
+    }
+
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();            
+        }
+
+        // Configure the HTTP request pipeline.
+
+        app.UseHttpsRedirection();        
+
+        app.UseAuthorization();
+
+        app.UseRouting();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+            endpoints.MapHub<StreamHub>("/streamHub");
+        });                
+    }
+}

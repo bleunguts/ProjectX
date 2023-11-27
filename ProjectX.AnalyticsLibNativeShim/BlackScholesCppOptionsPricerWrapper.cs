@@ -13,12 +13,12 @@ namespace ProjectX.AnalyticsLibNativeShim
 {
     public class BlackScholesCppOptionsPricerWrapper : IBlackScholesCppPricer
     {
-        private API _api;
+        private readonly IAPI _api;
         private const double epsilon = 1e-6;
         
-        public BlackScholesCppOptionsPricerWrapper() 
+        public BlackScholesCppOptionsPricerWrapper(IAPI api) 
         {
-            _api = API.Instance;
+            _api = api;
         }
 
         public double Delta(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility) 

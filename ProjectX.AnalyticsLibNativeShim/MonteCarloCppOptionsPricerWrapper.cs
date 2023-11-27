@@ -8,12 +8,12 @@ namespace ProjectX.AnalyticsLibNativeShim
 {
     public class MonteCarloCppOptionsPricerWrapper : IMonteCarloCppOptionsPricer
     {
-        private API _api;
-        private ulong _numberOfPaths;
+        private readonly IAPI _api;
+        private readonly ulong _numberOfPaths;
         
-        public MonteCarloCppOptionsPricerWrapper()
+        public MonteCarloCppOptionsPricerWrapper(IAPI api)
         {
-            _api = API.Instance;
+            _api = api;
             _numberOfPaths = 1000;
         }
         public double Delta(OptionType optionType, double spot, double strike, double rate, double carry, double maturity, double volatility)

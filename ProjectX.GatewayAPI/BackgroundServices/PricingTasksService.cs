@@ -20,7 +20,7 @@ public class PricingTasksService : BackgroundService
         this._logger = logger;
         this._pricingTasksChannel = pricingTasksChannel;
         this._serviceProvider = serviceProvider;
-        this._hostApplicationLifetime = hostApplicationLifetime;
+        this._hostApplicationLifetime = hostApplicationLifetime;        
     }
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {

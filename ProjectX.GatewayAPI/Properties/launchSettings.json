@@ -1,4 +1,24 @@
-﻿{
+{
+  "profiles": {
+    "https": {
+      "commandName": "Project",
+      "launchUrl": "pricingTasks",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:7029;http://localhost:5095"
+    },
+    "WSL": {
+      "commandName": "WSL2",
+      "launchUrl": "https://localhost:7029/pricingTasks",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "https://localhost:7029;http://localhost:5095"
+      },
+      "distributionName": ""
+    }
+  },
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
@@ -6,17 +26,6 @@
     "iisExpress": {
       "applicationUrl": "http://localhost:5596",
       "sslPort": 44392
-    }
-  },
-  "profiles": {    
-    "https": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,      
-      "launchUrl": "pricingTasks",
-      "applicationUrl": "https://localhost:7029;http://localhost:5095",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
     }
   }
 }

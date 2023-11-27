@@ -3,34 +3,27 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using ProjectX.AnalyticsLibNative.Tests;
 using ProjectX.AnalyticsLibNativeShim.Interop;
+
+public interface IAPI
+{
+    double BlackScholes_Delta(VanillaOptionParameters TheOption, double Spot, double Vol, double r);
+    double BlackScholes_Gamma(VanillaOptionParameters TheOption, double Spot, double Vol, double r, double epsilon);
+    double BlackScholes_ImpliedVolatility(VanillaOptionParameters TheOption, double Spot, double r, double optionPrice);
+    double BlackScholes_PV(VanillaOptionParameters TheOption, double Spot, double Vol, double r);
+    double BlackScholes_Rho(VanillaOptionParameters TheOption, double Spot, double Vol, double r);
+    double BlackScholes_Theta(VanillaOptionParameters TheOption, double Spot, double Vol, double r);
+    double BlackScholes_Vega(VanillaOptionParameters TheOption, double Spot, double Vol, double r);
+    double MonteCarlo_ImpliedVolatility(VanillaOptionParameters TheOption, double Spot, double r, ulong NumberOfPaths, double optionPrice);
+    GreekResults MonteCarlo_PV(VanillaOptionParameters TheOption, double Spot, double Vol, double r, ulong NumberOfPaths);
+    void Shutdown();
+}
 
 // https://mark-borg.github.io/blog/2017/interop/#:~:text=Platform%20Invocation%20(PInvoke%20for%20short,from%20within%20a%20C%23%20program.
 // https://stackoverflow.com/questions/315051/using-a-class-defined-in-a-c-dll-in-c-sharp-code
-public class API
+public class API : IAPI
 {
-    #region Singleton
-    private static API instance = null;
-    private static readonly object padlock = new object();
-    private API()
-    {
-    }
-
-    public static API Instance
-    {
-        get
-        {
-            lock (padlock)
-            {
-                if (instance == null)
-                {
-                    instance = new API();
-                }
-                return instance;
-            }
-        }
-    }
-    #endregion 
     [DllImport("ProjectX.AnalyticsLibNative")]
     static private extern IntPtr CreateAPI();
 
@@ -56,15 +49,15 @@ public class API
     [DllImport("ProjectX.AnalyticsLibNative")]
     static private extern double MonteCarlo_ImpliedVolatility(IntPtr a_pObject, ref VanillaOptionParameters TheOption, double Spot, double r, ulong NumberOfPaths, double optionPrice);
 
-    public double BlackScholes_PV(VanillaOptionParameters TheOption, double Spot, double Vol, double r) => 
+    public double BlackScholes_PV(VanillaOptionParameters TheOption, double Spot, double Vol, double r) =>
         (double)SafeExecute((pAPI) => BlackScholes_PV(pAPI, ref TheOption, Spot, Vol, r));
-    public double BlackScholes_Delta(VanillaOptionParameters TheOption, double Spot, double Vol, double r) => 
+    public double BlackScholes_Delta(VanillaOptionParameters TheOption, double Spot, double Vol, double r) =>
         (double)SafeExecute((pAPI) => BlackScholes_Delta(pAPI, ref TheOption, Spot, Vol, r));
-    public double BlackScholes_Gamma(VanillaOptionParameters TheOption, double Spot, double Vol, double r, double epsilon) => 
+    public double BlackScholes_Gamma(VanillaOptionParameters TheOption, double Spot, double Vol, double r, double epsilon) =>
         (double)SafeExecute((pAPI) => BlackScholes_Gamma(pAPI, ref TheOption, Spot, Vol, r, epsilon));
-    public double BlackScholes_Theta(VanillaOptionParameters TheOption, double Spot, double Vol, double r) => 
+    public double BlackScholes_Theta(VanillaOptionParameters TheOption, double Spot, double Vol, double r) =>
         (double)SafeExecute((pAPI) => BlackScholes_Theta(pAPI, ref TheOption, Spot, Vol, r));
-    public double BlackScholes_Rho(VanillaOptionParameters TheOption, double Spot, double Vol, double r) => 
+    public double BlackScholes_Rho(VanillaOptionParameters TheOption, double Spot, double Vol, double r) =>
         (double)SafeExecute((pAPI) => BlackScholes_Rho(pAPI, ref TheOption, Spot, Vol, r));
     public double BlackScholes_Vega(VanillaOptionParameters TheOption, double Spot, double Vol, double r) =>
         (double)SafeExecute((pAPI) => BlackScholes_Vega(pAPI, ref TheOption, Spot, Vol, r));
@@ -95,5 +88,10 @@ public class API
         {
             DisposeAPI(pAPI);
         }
+    }
+
+    public void Shutdown()
+    {        
+        Utils.UnloadImportedDll("ProjectX.AnalyticsLibNative");        
     }
 }

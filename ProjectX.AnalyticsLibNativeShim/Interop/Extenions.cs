@@ -12,7 +12,7 @@ public static class Extenions
         };
     }
 
-    public static VanillaOptionParameters ToOption(this API api, ProjectX.Core.OptionType optionType, double strike, double maturity)
+    public static VanillaOptionParameters ToOption(this IAPI api, ProjectX.Core.OptionType optionType, double strike, double maturity)
     {
         return new VanillaOptionParameters()
         {
