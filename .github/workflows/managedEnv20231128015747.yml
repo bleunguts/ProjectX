@@ -19,6 +19,7 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
+    - run: dotnet build ProjectX_.sln
     - name: Azure login
       uses: azure/login@v1
       with:
