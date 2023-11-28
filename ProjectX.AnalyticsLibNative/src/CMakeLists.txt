@@ -49,3 +49,8 @@ add_custom_command(TARGET ProjectX.AnalyticsLibNative POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
         "$<TARGET_FILE:ProjectX.AnalyticsLibNative>"
         "${CMAKE_SOURCE_DIR}/../3rdParty")
+
+add_custom_command(TARGET ProjectX.AnalyticsLibNative POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+        "$<TARGET_FILE:ProjectX.AnalyticsLibNative>"
+        "${CMAKE_SOURCE_DIR}/tests")

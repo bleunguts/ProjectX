@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Dev\projects\GitHub\ProjectX\ProjectX.AnalyticsLibNative\build\_deps\googletest-subbuild\CMakeFiles\a44bc20bca9c941ad3bece1e88b6fe07\googletest-populate-mkdir.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Dev\projects\GitHub\ProjectX\ProjectX.AnalyticsLibNative\build\_deps\googletest-subbuild\CMakeFiles\a44bc20bca9c941ad3bece1e88b6fe07\googletest-populate-download.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Dev\projects\GitHub\ProjectX\ProjectX.AnalyticsLibNative\build\_deps\googletest-subbuild\CMakeFiles\a44bc20bca9c941ad3bece1e88b6fe07\googletest-populate-update.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Dev\projects\GitHub\ProjectX\ProjectX.AnalyticsLibNative\build\_deps\googletest-subbuild\CMakeFiles\a44bc20bca9c941ad3bece1e88b6fe07\googletest-populate-patch.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Dev\projects\GitHub\ProjectX\ProjectX.AnalyticsLibNative\build\_deps\googletest-subbuild\CMakeFiles\a44bc20bca9c941ad3bece1e88b6fe07\googletest-populate-configure.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Dev\projects\GitHub\ProjectX\ProjectX.AnalyticsLibNative\build\_deps\googletest-subbuild\CMakeFiles\a44bc20bca9c941ad3bece1e88b6fe07\googletest-populate-build.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Dev\projects\GitHub\ProjectX\ProjectX.AnalyticsLibNative\build\_deps\googletest-subbuild\CMakeFiles\a44bc20bca9c941ad3bece1e88b6fe07\googletest-populate-install.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Dev\projects\GitHub\ProjectX\ProjectX.AnalyticsLibNative\build\_deps\googletest-subbuild\CMakeFiles\a44bc20bca9c941ad3bece1e88b6fe07\googletest-populate-test.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Dev\projects\GitHub\ProjectX\ProjectX.AnalyticsLibNative\build\_deps\googletest-subbuild\CMakeFiles\3566ec5a021c816bbab20502ac134af9\googletest-populate-complete.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Dev\projects\GitHub\ProjectX\ProjectX.AnalyticsLibNative\build\_deps\googletest-subbuild\CMakeFiles\a6db3eb3c3a91d896786170d1ba8208d\googletest-populate.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Dev\projects\GitHub\ProjectX\ProjectX.AnalyticsLibNative\build\_deps\googletest-subbuild\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Dev\projects\GitHub\ProjectX\ProjectX.AnalyticsLibNative\build\_deps\googletest-subbuild\CMakeFiles\googletest-populate" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{7B2613ED-42B3-3D9C-8820-45416384AD48}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
