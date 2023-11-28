@@ -21,8 +21,11 @@ jobs:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
     - name: "CMake native libs"
       run: |
-          cmake -S ./ProjectX.AnalyticsLibNative -B ./ProjectX.AnalyticsLibNative/build -D CMAKE_BUILD_TYPE=Release
-          cmake --build ./ProjectX.AnalyticsLibNative/build
+           cmake -S ./ProjectX.AnalyticsLibNative -B ./ProjectX.AnalyticsLibNative/out -DCMAKE_INSTALL_PREFIX=./ProjectX.AnalyticsLibNative/out/install/linux-base
+           cmake --build ./ProjectX.AnalyticsLibNative/out  
+    - run: ls ./ProjectX.AnalyticsLibNative/out/bin    
+    - run: cp ./ProjectX.AnalyticsLibNative/out/bin/ProjectX.AnalyticsLibNative.so ./3rdParty
+    - run: ls ./3rdParty
     - name: "Build sln"
       run: |
            dotnet restore
