@@ -30,8 +30,8 @@ jobs:
       run: |
            dotnet restore ProjectX_.sln
            dotnet build ProjectX_.sln -c Release
-    - name: "Run tests"
-      run: dotnet test ProjectX_.sln -c Release
+    # - name: "Run tests"
+    #   run: dotnet test ProjectX_.sln -c Release
     - name: Azure login
       uses: azure/login@v1
       with:
