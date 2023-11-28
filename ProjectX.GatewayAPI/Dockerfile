@@ -10,6 +10,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 ARG APP_BUILD=/app/build
 WORKDIR /src
+RUN ls -al
 COPY ["ProjectX.GatewayAPI/ProjectX.GatewayAPI.csproj", "ProjectX.GatewayAPI/"]
 COPY ["ProjectX.AnalyticsLibNativeShim/ProjectX.AnalyticsLibNativeShim.csproj", "ProjectX.AnalyticsLibNativeShim/"]
 COPY ["ProjectX.AnalyticsLib.Shared/ProjectX.AnalyticsLib.Shared.csproj", "ProjectX.AnalyticsLib.Shared/"]
