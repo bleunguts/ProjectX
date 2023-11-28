@@ -21,8 +21,8 @@ jobs:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
     - name: "CMake native libs"
       run: |
-           cmake -S ./ProjectX.AnalyticsLibNative -B ./ProjectX.AnalyticsLibNative/build -D CMAKE_BUILD_TYPE=Release    
-           cmake --build ./ProjectX.AnalyticsLibNative/build
+        cmake -S ./ProjectX.AnalyticsLibNative -B ./ProjectX.AnalyticsLibNative/build -D CMAKE_BUILD_TYPE=Release
+        cmake --build ./ProjectX.AnalyticsLibNative/build
     - name: "Build sln"
       run: dotnet build ProjectX_.sln
     - name: "Run tests"
