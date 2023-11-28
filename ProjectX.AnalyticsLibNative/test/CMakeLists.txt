@@ -26,9 +26,9 @@ set(sources
 
 add_executable(${PROJECT_TEST_NAME} ${sources})
 target_link_libraries(${PROJECT_TEST_NAME} 
-	PUBLIC 
+	debug 
 	gtest_main
-	ProjectX.AnalyticsLibNative
+	ProjectX.AnalyticsLibNativeDebug
 )
 
 add_test(

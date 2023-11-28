@@ -44,13 +44,9 @@ set(Sources
 "MonteCarloHestonCppPricer2.cpp"
 )
 add_library (ProjectX.AnalyticsLibNative SHARED ${Sources} ${Headers} )
+add_library(ProjectX.AnalyticsLibNativeDebug STATIC ${Sources} ${Headers})
 
 add_custom_command(TARGET ProjectX.AnalyticsLibNative POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
         "$<TARGET_FILE:ProjectX.AnalyticsLibNative>"
         "${CMAKE_SOURCE_DIR}/../3rdParty")
-
-add_custom_command(TARGET ProjectX.AnalyticsLibNative POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy
-        "$<TARGET_FILE:ProjectX.AnalyticsLibNative>"
-        "${CMAKE_SOURCE_DIR}/tests")
