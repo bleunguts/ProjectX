@@ -19,10 +19,10 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
-    - name: "CMake native libs"
-      run: |
-        cmake -S ./ProjectX.AnalyticsLibNative -B ./ProjectX.AnalyticsLibNative/build -D CMAKE_BUILD_TYPE=Release
-        cmake --build ./ProjectX.AnalyticsLibNative/build
+    - name: "CMake native libs step 1"
+      run: cmake -S ./ProjectX.AnalyticsLibNative -B ./ProjectX.AnalyticsLibNative/build -D CMAKE_BUILD_TYPE=Release
+    - name: "CMake native libs step 2"
+      run: cmake --build ./ProjectX.AnalyticsLibNative/build
     - name: "Build sln"
       run: dotnet build ProjectX_.sln
     - name: "Run tests"
