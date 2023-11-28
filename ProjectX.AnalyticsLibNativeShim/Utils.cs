@@ -23,12 +23,12 @@ namespace ProjectX.AnalyticsLibNative.Tests
 
         public static void UnloadImportedDll(string DllPath)
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 // "We're not on windows!"
                 return;
             }
-            
+
             foreach (System.Diagnostics.ProcessModule mod in System.Diagnostics.Process.GetCurrentProcess().Modules)
             {
                 var fileInfo = new FileInfo(mod.FileName);
