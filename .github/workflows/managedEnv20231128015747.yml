@@ -40,7 +40,7 @@ jobs:
       uses: azure/container-apps-deploy-action@v1
       with:
         appSourcePath: ${{ github.workspace }}
-        dockerfilePath: ProjectX.GatewayAPI/
+        dockerfilePath: ProjectX.GatewayAPI/Dockerfile
         acrName: ${{ env.CONTAINER_REGISTRY_NAME }}
         acrUsername: ${{ secrets.registry20231128020059_USERNAME_74CC }}
         acrPassword: ${{ secrets.registry20231128020059_PASSWORD_74CC }}
