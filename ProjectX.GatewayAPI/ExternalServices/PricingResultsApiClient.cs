@@ -42,15 +42,21 @@ public class PricingResultsApiClient : IPricingResultsApiClient
         {
             Content = new StringContent(content, Encoding.UTF8, "application/json")
         };
-        var response = await _httpClient.SendAsync(request, cancellationToken);
-
-        if (!response.IsSuccessStatusCode)
+        try 
         {
-            _logger.LogWarning("Failed to send pricing result.");
+            var response = await _httpClient.SendAsync(request, cancellationToken);
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogWarning("Failed to send pricing result.");
+            }
+
+            return response;
         }
-
-        return response;
+        catch(HttpRequestException exp) 
+        {
+            _logger.LogError(exp, $"Error while posting PricingResults to endpoint {request.RequestUri}");
+            throw;
+        }                
     }
-
     
 }
