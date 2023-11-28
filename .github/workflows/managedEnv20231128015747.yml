@@ -19,14 +19,16 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
-    - name: "CMake native libs step 1"
+    - name: "CMake native libs"
       run: |
           cmake -S ./ProjectX.AnalyticsLibNative -B ./ProjectX.AnalyticsLibNative/build -D CMAKE_BUILD_TYPE=Release
           cmake --build ./ProjectX.AnalyticsLibNative/build
     - name: "Build sln"
-      run: dotnet build ProjectX_.sln
+      run: |
+           dotnet restore
+           dotnet build ProjectX_.sln -c Release
     - name: "Run tests"
-      run: dotnet test ProjectX_.sln
+      run: dotnet test ProjectX_.sln -c Release
     - name: Azure login
       uses: azure/login@v1
       with:
