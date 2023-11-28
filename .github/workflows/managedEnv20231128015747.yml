@@ -25,6 +25,8 @@ jobs:
         cmake --build ./ProjectX.AnalyticsLibNative/out
     - run: ls ./ProjectX.AnalyticsLibNative/out
     - run: ls ./ProjectX.AnalyticsLibNative/out/bin    
+    - run: cp ./ProjectX.AnalyticsLibNative/out/bin/ProjectX.AnalyticsLibNative.so ./3rdParty
+    - run: ls ./3rdParty
     - name: "Build sln"
       run: dotnet build ProjectX_.sln
     - name: "Run tests"
