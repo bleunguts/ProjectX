@@ -20,6 +20,7 @@ jobs:
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
     - run: dotnet build ProjectX_.sln
+    - run: dotnet test ProjectX_.sln
     - name: Azure login
       uses: azure/login@v1
       with:
