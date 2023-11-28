@@ -10,6 +10,7 @@ namespace ProjectX.MarketData.Tests
     public class PolygonOptionMarketSourceExternalTest
     {
         [Test]
+        [Ignore("Tool")]
         public void foo()
         {
             const string filename = "C:\\Users\\bleun\\Documents\\_\\2. [Work] Professional Profile\\Freelancing\\ProjectX\\OptionChain.json";
