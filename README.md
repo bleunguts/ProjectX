@@ -6,7 +6,7 @@ I wrote ProjectX to collate my projects that I have built in github over the yea
 We explore long-short strategy by using trend based mean reversion stock indicators; in this case the moving average stock indicator; a lagging indicator that can identify trends and reversals. 
 Finding similar well-known trading strategies from public sources is easily accessible, the key for a profitable strategy is the optimization methods that have been carried out and this app provides the toolkit to support this endeavour.
 
-The core compute engine is running on cloud-compatabile ASP.NET Core with a Desktop UI (WPF) and a Web Portal front end (React), native cross platform running .NET & native C++ pricers on Win/MacOs/Linux making it easily portable to Amazon Web Service containers to scale valuation processes.
+The core compute engine is running on cloud-native ASP.NET Core with a Desktop UI (WPF) and a Web Portal front end (React), native cross platform running .NET & native C++ pricers on Win/MacOs/Linux with native/.NET pricers running on Azure Container App.
 
 Successful trading strategy development requires backtesting on historical real price data, 
 ProjectX provides the following features to assist the optimization process:
@@ -40,7 +40,7 @@ _Desktop App FX OMS:_
 _Tech Stack:_
 * C# 11, .NET 8, WPF, Caliburn.Micro, System.ComponentModel.Composition.Hosting.CompositionContainer (IoC), ReactiveX 6, Microsft Chart Controls,
 * C++ CLI, native C++ cross platform Win32/MacOs, PInvoke marshalling, cmake, BoxMuller RNG, cdf & pdf distributions
-* ASPNET Core WebApi 6, SignalR, .NET Json Serialization, Background Services (Azure Ready), LiveCharts Skia
+* ASPNET Core WebApi 6, SignalR, .NET Json Serialization, Background Services (Azure Ready), LiveCharts Skia, Azure Container App, GitHub Actions Azure Devops
 * React 8, Bootstrap, Typescript, recharts,
 * StockIndicators Skender API,  NinjaTrader StockInidicator API, FinancialModellingPrep MarketData API, Quandl MarketData API
 * Trend indicator methods: Bollinger Bands, Moving Averages
