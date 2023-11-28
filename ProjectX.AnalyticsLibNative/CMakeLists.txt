@@ -13,5 +13,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 project ("ProjectX.AnalyticsLibNative")
 
+include(CTest)
 add_subdirectory(src)
 add_subdirectory(test)
