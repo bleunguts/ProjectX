@@ -28,7 +28,7 @@ jobs:
     - run: ls ./3rdParty
     - name: "Build sln"
       run: |
-           dotnet restore
+           dotnet restore ProjectX_.sln
            dotnet build ProjectX_.sln -c Release
     - name: "Run tests"
       run: dotnet test ProjectX_.sln -c Release
