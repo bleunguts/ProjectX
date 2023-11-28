@@ -23,6 +23,7 @@ COPY . .
 # native dependencies
 RUN apt-get update && apt-get -y install cmake
 RUN apt-get update && apt-get -y install build-essential
+RUN rm -r ./ProjectX.AnalyticsLibNative/out && rm ./ProjectX.AnalyticsLibNative/out/CMakeCache.txt
 RUN cmake -S ./ProjectX.AnalyticsLibNative -B ./ProjectX.AnalyticsLibNative/out -DCMAKE_INSTALL_PREFIX=./ProjectX.AnalyticsLibNative/out/install/linux-base
 RUn cmake --build ./ProjectX.AnalyticsLibNative/out  
 RUN ls ./ProjectX.AnalyticsLibNative/out/bin
