@@ -15,5 +15,8 @@
         "vector": "cpp",
         "string_view": "cpp",
         "initializer_list": "cpp"
-    }
+    },
+    "github-actions.workflows.pinned.workflows": [
+        ".github/workflows/managedEnv20231128015747.yml"
+    ]
 }

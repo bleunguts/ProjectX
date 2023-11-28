@@ -21,8 +21,10 @@ jobs:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
     - name: "CMake native libs step 1"
       run: |
-        cmake --debug-output -S ./ProjectX.AnalyticsLibNative -B ./ProjectX.AnalyticsLibNative/out -DCMAKE_INSTALL_PREFIX=./ProjectX.AnalyticsLibNative/out/install/linux-base
-        cmake --debug-output --build ./ProjectX.AnalyticsLibNative/out
+        cmake -S ./ProjectX.AnalyticsLibNative -B ./ProjectX.AnalyticsLibNative/out -DCMAKE_INSTALL_PREFIX=./ProjectX.AnalyticsLibNative/out/install/linux-base
+        cmake --build ./ProjectX.AnalyticsLibNative/out
+    - run: ls ./ProjectX.AnalyticsLibNative/out
+    - run: ls ./ProjectX.AnalyticsLibNative/out/bin    
     - name: "Build sln"
       run: dotnet build ProjectX_.sln
     - name: "Run tests"
