@@ -16,7 +16,7 @@ COPY ["ProjectX.AnalyticsLib.Shared/ProjectX.AnalyticsLib.Shared.csproj", "Proje
 COPY ["ProjectX.Core/ProjectX.Core.csproj", "ProjectX.Core/"]
 COPY ["ProjectX.AnalyticsLib/ProjectX.AnalyticsLib.csproj", "ProjectX.AnalyticsLib/"]
 COPY ["ProjectX.MarketData/ProjectX.MarketData.csproj", "ProjectX.MarketData/"]
-COPY ["ProjectX.AnalyticsLibNative/.", "ProjectX.AnalyticsLibNative/"]
+#COPY ["ProjectX.AnalyticsLibNative/.", "ProjectX.AnalyticsLibNative/"]
 RUN dotnet restore "./ProjectX.GatewayAPI/./ProjectX.GatewayAPI.csproj"
 COPY . .
 # native projects
