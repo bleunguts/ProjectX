@@ -4,7 +4,7 @@ on:
     - main
 env:
   DOTNET_CORE_VERSION: 7.0.x
-  CONTAINER_APP_NAME: projectx.gatewayapi-container-app
+  CONTAINER_APP_NAME: projectxgatewayapi-container-app
   CONTAINER_APP_ENVIRONMENT_NAME: managedEnv20231128015747
   RESOURCE_GROUP: managedEnv20231128015747ResourceGroup
   CONTAINER_REGISTRY_NAME: registry20231128020059
