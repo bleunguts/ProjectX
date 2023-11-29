@@ -6,7 +6,7 @@ I wrote ProjectX to collate my projects that I have built in github over the yea
 We explore long-short strategy by using trend based mean reversion stock indicators; in this case the moving average stock indicator; a lagging indicator that can identify trends and reversals. 
 Finding similar well-known trading strategies from public sources is easily accessible, the key for a profitable strategy is the optimization methods that have been carried out and this app provides the toolkit to support this endeavour.
 
-The core compute engine is running on cloud-native ASP.NET Core with a Desktop UI (WPF) and a Web Portal front end (React), native cross platform running .NET & native C++ pricers on Win/MacOs/Linux with native/.NET pricers running on Azure Container App.
+The core compute engine is running on cloud-native ASP.NET Core with a Desktop UI (WPF) and a Web Portal front end (React), native cross platform running .NET & native C++ pricers tested on Win/MacOs/Linux standalone. Engineered using github CI/CD azure deployments and tested on azure container app compute farm using HostedService enabling a grid of lightning fast native c++ linux and .net pricers. 
 
 Successful trading strategy development requires backtesting on historical real price data, 
 ProjectX provides the following features to assist the optimization process:
