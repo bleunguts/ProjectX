@@ -23,6 +23,7 @@ const mainFeaturedPost = {
         "A comprehensive tool suite that backtests trading strategies based on price trends analysis.",
   image: 'https://source.unsplash.com/random?wallpapers',
   imageText: 'main image description',  
+  linkText: '',
 };
 
 const sidebar = {
