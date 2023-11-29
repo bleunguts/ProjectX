@@ -16,6 +16,8 @@ using ProjectX.MarketData;
 using System.Runtime.CompilerServices;
 
 //https://learn.microsoft.com/en-us/aspnet/core/migration/50-to-60?view=aspnetcore-8.0&tabs=visual-studio#smhm
+Console.WriteLine($"ASPNETCORE_HTTP_PORTS={Environment.GetEnvironmentVariable("ASPNETCORE_HTTP_PORTS")}");
+Console.WriteLine($"ASPNETCORE_URLS={Environment.GetEnvironmentVariable("ASPNETCORE_URLS")}");
 
 var builder = WebApplication.CreateBuilder(args);
 
