@@ -26,6 +26,7 @@ jobs:
     # - run: ls ./ProjectX.AnalyticsLibNative/out/bin    
     # - run: cp ./ProjectX.AnalyticsLibNative/out/bin/ProjectX.AnalyticsLibNative.so ./3rdParty
     # - run: ls ./3rdParty
+    # - run: rm -rf ./ProjectX.AnalyticsLibNative/out
     # - name: "Build sln"
     #   run: |
     #        dotnet restore ProjectX_.sln
