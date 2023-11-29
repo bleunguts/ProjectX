@@ -11,7 +11,7 @@ env:
   CONTAINER_REGISTRY_LOGIN_SERVER: registry20231128020059.azurecr.io
   AZURE_WEBAPP_NAME: projectx0   # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: 'Web/'      # set this to the path to your web app project, defaults to the repository root
-  NODE_VERSION: '14.x'                # set this to the node version to use
+  NODE_VERSION: '18.x'                # set this to the node version to use
 jobs:
   BuildAndDeployContainerApp:
     runs-on: ubuntu-latest
