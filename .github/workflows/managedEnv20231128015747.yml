@@ -61,7 +61,8 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ env.NODE_VERSION }}
-        cache: 'npm'
+        cache: 'npm'        
+        cache-dependency-path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
 
     - name: npm install, build, and test
       run: |
