@@ -91,7 +91,7 @@ jobs:
       with:
         name: node-app
     - name: unzip artifact for deployment
-      run: unzip release.zip
+      run: unzip release.zip -d ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}  
     - name: Azure login
       uses: azure/login@v1
       with:
