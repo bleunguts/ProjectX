@@ -40,6 +40,17 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        // Open API support mandatory for Azure
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen();
+        services.ConfigureSwaggerGen(setup =>
+        {
+            setup.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+            {
+                Title = "GatewayAPI",
+                Version = "v1"
+            });
+        });
         // Add services to the container.
         services.AddControllers().AddJsonOptions(options =>
         {
@@ -81,9 +92,11 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
+        app.UseSwagger();
         if (env.IsDevelopment())
         {
-            app.UseDeveloperExceptionPage();            
+            app.UseDeveloperExceptionPage();
+            app.UseSwaggerUI();
         }
 
         // Configure the HTTP request pipeline.

@@ -1,0 +1,19 @@
+﻿@ProjectX.GatewayAPI_HostAddress = https://localhost:7029
+
+POST {{ProjectX.GatewayAPI_HostAddress}}/pricingtasks/bsPlot
+Content-Type: application/json
+
+{
+  //PlotOptionsPricingRequest
+}
+
+###
+
+POST {{ProjectX.GatewayAPI_HostAddress}}/pricingtasks/bsPrice
+Content-Type: application/json
+
+{
+  //OptionsPricingByMaturitiesRequest
+}
+
+###
