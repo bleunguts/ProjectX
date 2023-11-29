@@ -39,6 +39,7 @@ ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./ProjectX.GatewayAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
+ARG SERVER_PORT 8080
 ENV ASPNETCORE_HTTP_PORTS $SERVER_PORT
 ENV ASPNETCORE_URLS http://localhost:$SERVER_PORT
 WORKDIR /app
