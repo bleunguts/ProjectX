@@ -3,8 +3,8 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER app
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 7029
+EXPOSE 80
+EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
@@ -25,7 +25,7 @@ RUN apt-get update && apt-get -y install cmake
 RUN apt-get update && apt-get -y install build-essential
 RUN rm -rf ./ProjectX.AnalyticsLibNative/out && rm -f ./ProjectX.AnalyticsLibNative/out/CMakeCache.txt
 RUN cmake -S ./ProjectX.AnalyticsLibNative -B ./ProjectX.AnalyticsLibNative/out -DCMAKE_INSTALL_PREFIX=./ProjectX.AnalyticsLibNative/out/install/linux-base
-RUn cmake --build ./ProjectX.AnalyticsLibNative/out  
+RUN cmake --build ./ProjectX.AnalyticsLibNative/out  
 RUN ls ./ProjectX.AnalyticsLibNative/out/bin
 RUN mkdir -p $APP_BUILD/3rdParty
 RUN cp ./ProjectX.AnalyticsLibNative/out/bin/ProjectX.AnalyticsLibNative.so $APP_BUILD/3rdParty
