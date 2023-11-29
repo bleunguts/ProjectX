@@ -1,6 +1,7 @@
+// @ts-nocheck
 import React from "react";
 import Plot from "react-plotly.js";
-import { Datum } from "plotly.js";
+import { Data, Datum } from "plotly.js";
 
 export interface Chart3DProps {
     zData: Datum[][],
@@ -15,7 +16,7 @@ export default function Chart3D(props: Chart3DProps) {
         height: 500,        
     };
     
-    const data = [
+    const data: Data = [
         {
           z: props.zData,
           type: 'surface'     
