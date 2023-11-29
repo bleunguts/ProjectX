@@ -39,6 +39,9 @@ ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./ProjectX.GatewayAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
+ENV ASPNETCORE_HTTP_PORTS 80
+ENV ASPNETCORE_HTTPS_PORTS 443
+ENV ASPNETCORE_URLS http://localhost:80
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "ProjectX.GatewayAPI.dll"]
