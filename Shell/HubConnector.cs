@@ -30,7 +30,7 @@ namespace Shell
         [ImportingConstructor]
         public HubConnector(IOptions<GatewayApiClientOptions> options)
         {
-            _baseUriString = $"{options.Value.BaseUrl}/streamHub";
+            _baseUriString = $"{options.Value.SignalRUrl}/streamHub";
             if (!options.Value.ForceDisableSignalR)
             {
                 _connection = Connect(_baseUriString);

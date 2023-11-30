@@ -41,7 +41,13 @@ namespace Shell
             batch.AddExportedValue(container);                      
             batch.AddExportedValue<ILogger<eFXTradeExecutionService>>(new NullLogger<eFXTradeExecutionService>());
             batch.AddExportedValue<ILogger<GatewayApiClient>>(new NullLogger<GatewayApiClient>());            
-            var options = Microsoft.Extensions.Options.Options.Create(new GatewayApiClientOptions { BaseUrl = ConfigurationManager.AppSettings["BackendUrl"], ForceDisableSignalR = ShouldForceDisableSignalR(ConfigurationManager.AppSettings.Get("ForceDisableSignalR"))});
+            var options = Microsoft.Extensions.Options.Options.Create(
+                new GatewayApiClientOptions 
+                { 
+                    BaseUrl = ConfigurationManager.AppSettings["BackendUrl"], 
+                    SignalRUrl = ConfigurationManager.AppSettings["SignalRUrl"],
+                    ForceDisableSignalR = ShouldForceDisableSignalR(ConfigurationManager.AppSettings.Get("ForceDisableSignalR"))
+                });
             batch.AddExportedValue<IOptions<GatewayApiClientOptions>>(options);
             var options2 = Microsoft.Extensions.Options.Options.Create(new FileBackedStoreMarketDataSourceOptions { Filename = "cache.json"});            
             batch.AddExportedValue<IStockMarketSource>(new FileBackedStockMarketDataSource(new FMPStockMarketSource(), options2));            

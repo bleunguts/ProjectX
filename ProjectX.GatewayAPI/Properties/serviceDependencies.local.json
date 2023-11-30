@@ -7,6 +7,12 @@
       "type": "signalr.azure",
       "connectionId": "Azure:SignalR:ConnectionString",
       "dynamicId": null
+    },
+    "secrets1": {
+      "secretStore": null,
+      "resourceId": null,
+      "type": "secrets.user",
+      "connectionId": null
     }
   }
 }
