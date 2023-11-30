@@ -1,19 +1,27 @@
-﻿@ProjectX.GatewayAPI_HostAddress = https://localhost:7029
+﻿# For more info on HTTP files go to https://aka.ms/vs/httpfile
+@GatewayAPI_HostAddress = https://localhost:7029
 
-POST {{ProjectX.GatewayAPI_HostAddress}}/pricingtasks/bsPlot
-Content-Type: application/json
-
-{
-  //PlotOptionsPricingRequest
-}
+GET {{GatewayAPI_HostAddress}}/
+Accept: application/json
 
 ###
 
-POST {{ProjectX.GatewayAPI_HostAddress}}/pricingtasks/bsPrice
+GET {{GatewayAPI_HostAddress}}/PricingTasks
+Accept: application/json
+
+###
+
+POST {{GatewayAPI_HostAddress}}/PricingTasks/bsPrice
+Accept: application/json
+Content-Type: application/json
+
+{"timeSlices":10,"optionType":0,"spot":100.0,"strike":150.0,"rate":1.0,"carry":1.0,"vol":0.3,"CalculatorType":2}
+###
+
+POST {{GatewayAPI_HostAddress}}/pricingtasks/bsPrice
 Content-Type: application/json
 
 {
   //OptionsPricingByMaturitiesRequest
 }
-
 ###
