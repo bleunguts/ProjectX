@@ -90,7 +90,8 @@ public class Startup
         services.AddHostedService<PricingTasksService>();
         services.AddHostedService<FXPricingService>();
         services.AddSignalR(config => config.EnableDetailedErrors = true)
-                        .AddMessagePackProtocol();
+                        .AddMessagePackProtocol()
+                        .AddAzureSignalR();        
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -114,7 +115,12 @@ public class Startup
         {
             endpoints.Map("/", () => "Hello there.");
             endpoints.MapControllers();
-            if (!env.IsProduction()) // azure signalR not supported yet, don't run in prod
+            if (env.IsProduction()) 
+            {
+                // azure signalR not supported yet, don't run in prod
+                endpoints.MapHub<StreamHub>("/streamHub");
+            }
+            else 
             {
                 endpoints.MapHub<StreamHub>("/streamHub");
             }
