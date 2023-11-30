@@ -9,9 +9,9 @@ env:
   RESOURCE_GROUP: managedEnv20231130ResourceGroup
   CONTAINER_REGISTRY_NAME: projectx20231130
   CONTAINER_REGISTRY_LOGIN_SERVER: projectx20231130.azurecr.io
-  AZURE_WEBAPP_NAME: projectx0   # set this to your application's name
-  AZURE_WEBAPP_PACKAGE_PATH: 'Web/'      # set this to the path to your web app project, defaults to the repository root
-  NODE_VERSION: '20.x'                # set this to the node version to use
+  AZURE_WEBAPP_NAME: projectx0        # set this to your application's name.
+  AZURE_WEBAPP_PACKAGE_PATH: 'Web/'   # set this to the path to your web app project, defaults to the repository root.
+  NODE_VERSION: '20.x'                # set this to the node version to use.
 jobs:
   BuildAndDeployContainerApp:
     runs-on: ubuntu-latest
