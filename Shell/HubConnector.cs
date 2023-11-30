@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Shell
-{
+{ 
     public interface IHubConnector
     {
         Task Start();
@@ -32,6 +32,9 @@ namespace Shell
         {
             _baseUriString = $"{options.Value.BaseUrl}/streamHub";
             _connection = Connect(_baseUriString);
+            {
+                _connection = Connect(_baseUriString);
+            }           
         }
 
         public async Task Start()
@@ -56,8 +59,11 @@ namespace Shell
 
         public async Task Stop()
         {
-            // disposes each time page loads
-            await _connection.DisposeAsync();
+            if(_connection != null)
+            {
+                // disposes each time page loads
+                await _connection.DisposeAsync();
+            }            
         }
     }
 }

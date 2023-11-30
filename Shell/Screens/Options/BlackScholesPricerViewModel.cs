@@ -153,50 +153,64 @@ namespace Shell.Screens.Options
             _cts = new CancellationTokenSource();
 
             await _gatewayApiClient.StartHubAsync();
-            _gatewayApiClient.HubConnection.On("PricingResults", (Action<OptionsPricingByMaturityResults>)(pricingResult =>
+            try
             {
-                Console.WriteLine($"Received Pricing Result: {pricingResult.ResultsCount} results, requestId: {pricingResult.RequestId}, time: {pricingResult.AuditTrail.ElapsedMilliseconds} ms");
-                App.Current.Dispatcher.Invoke((System.Action)delegate
+                _gatewayApiClient.HubConnection.On("PricingResults", (Action<OptionsPricingByMaturityResults>)(pricingResult =>
                 {
-                    DataTable optionTable = GetOptionTableToModify(pricingResult.AuditTrail.CalculatorType);
-                    optionTable.Clear();
-                    foreach (var (maturity, riskResult) in pricingResult.Results)
+                    Console.WriteLine($"Received Pricing Result: {pricingResult.ResultsCount} results, requestId: {pricingResult.RequestId}, time: {pricingResult.AuditTrail.ElapsedMilliseconds} ms");
+                    App.Current.Dispatcher.Invoke((System.Action)delegate
                     {
-                        optionTable.Rows.Add(maturity, riskResult.price, riskResult.delta, riskResult.gamma, riskResult.theta, riskResult.rho, riskResult.vega);
-                    }
-                });
-            }));
-
-            _gatewayApiClient.HubConnection.On<PlotOptionsPricingResult>("PlotResults", plotPricingResult =>
+                        DataTable optionTable = GetOptionTableToModify(pricingResult.AuditTrail.CalculatorType);
+                        optionTable.Clear();
+                        foreach (var (maturity, riskResult) in pricingResult.Results)
+                        {
+                            optionTable.Rows.Add(maturity, riskResult.price, riskResult.delta, riskResult.gamma, riskResult.theta, riskResult.rho, riskResult.vega);
+                        }
+                    });
+                }));
+            }
+            catch(Exception ex) 
             {
-                var plotResult = plotPricingResult.PlotResults;
-                var zDecimalPlaces = plotPricingResult.Request.ZDecimalPlaces;
-                var zTickDecimalPlaces = plotPricingResult.Request.ZTickDecimalPlaces;
-
-                Console.WriteLine($"Received Pricing 3D Plot Result: {plotResult.PointArray.Length} coordinates, requestId: {plotPricingResult.RequestId}");
-
-                App.Current.Dispatcher.Invoke((System.Action)delegate
+                MessageBox.Show($"Disabling backend responses as we cannot stream from SignalR Hub, Reason: '{ex.Message}'", "Press ok to continue.");
+            }
+            
+            try
+            {
+                _gatewayApiClient.HubConnection.On<PlotOptionsPricingResult>("PlotResults", plotPricingResult =>
                 {
-                    DataCollection.Clear();
-                    ZLabel = zLabel;
-                    Zmin = Math.Round(plotResult.zmin, zDecimalPlaces);
-                    Zmax = Math.Round(plotResult.zmax, zDecimalPlaces);
-                    ZTick = Math.Round((plotResult.zmax - plotResult.zmin) / 5.0, zTickDecimalPlaces);            
+                    var plotResult = plotPricingResult.PlotResults;
+                    var zDecimalPlaces = plotPricingResult.Request.ZDecimalPlaces;
+                    var zTickDecimalPlaces = plotPricingResult.Request.ZTickDecimalPlaces;
 
-                    DataCollection.Add(new DataSeries3D()
+                    Console.WriteLine($"Received Pricing 3D Plot Result: {plotResult.PointArray.Length} coordinates, requestId: {plotPricingResult.RequestId}");
+
+                    App.Current.Dispatcher.Invoke((System.Action)delegate
                     {
-                        LineColor = Brushes.Black,
-                        PointArray = plotResult.PointArray.ToChartablePointArray(),
-                        XLimitMin = plotResult.XLimitMin,
-                        YLimitMin = plotResult.YLimitMin,
-                        XSpacing = plotResult.XSpacing,
-                        YSpacing = plotResult.YSpacing,
-                        XNumber = plotResult.XNumber,
-                        YNumber = plotResult.YNumber
+                        DataCollection.Clear();
+                        ZLabel = zLabel;
+                        Zmin = Math.Round(plotResult.zmin, zDecimalPlaces);
+                        Zmax = Math.Round(plotResult.zmax, zDecimalPlaces);
+                        ZTick = Math.Round((plotResult.zmax - plotResult.zmin) / 5.0, zTickDecimalPlaces);
+
+                        DataCollection.Add(new DataSeries3D()
+                        {
+                            LineColor = Brushes.Black,
+                            PointArray = plotResult.PointArray.ToChartablePointArray(),
+                            XLimitMin = plotResult.XLimitMin,
+                            YLimitMin = plotResult.YLimitMin,
+                            XSpacing = plotResult.XSpacing,
+                            YSpacing = plotResult.YSpacing,
+                            XNumber = plotResult.XNumber,
+                            YNumber = plotResult.YNumber
+                        });
                     });
                 });
-            });
-
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show($"Disabling backend responses as we cannot stream from SignalR Hub, Reason: '{ex.Message}'", "Press ok to continue.");
+            }
+            
             base.OnActivate();
             
             DataTable GetOptionTableToModify(OptionsPricingCalculatorType c)

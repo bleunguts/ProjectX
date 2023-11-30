@@ -4,6 +4,7 @@ namespace Shell
 {
     public class GatewayApiClientOptions
     {
-        public string BaseUrl { get; set; }        
+        public string BaseUrl { get; set; }   
+        public bool ForceDisableSignalR { get; set; }
     }
 }

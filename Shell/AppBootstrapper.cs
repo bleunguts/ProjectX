@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
+using System.Configuration;
 using System.Linq;
 using System.Net.Http;
 using System.Windows;
@@ -39,13 +40,19 @@ namespace Shell
             batch.AddExportedValue<IEventAggregator>(new EventAggregator());
             batch.AddExportedValue(container);                      
             batch.AddExportedValue<ILogger<eFXTradeExecutionService>>(new NullLogger<eFXTradeExecutionService>());
-            batch.AddExportedValue<ILogger<GatewayApiClient>>(new NullLogger<GatewayApiClient>());
-            var options = Microsoft.Extensions.Options.Options.Create(new GatewayApiClientOptions { BaseUrl = "https://localhost:7029" });
+            batch.AddExportedValue<ILogger<GatewayApiClient>>(new NullLogger<GatewayApiClient>());            
+            var options = Microsoft.Extensions.Options.Options.Create(new GatewayApiClientOptions { BaseUrl = ConfigurationManager.AppSettings["BackendUrl"], ForceDisableSignalR = ShouldForceDisableSignalR(ConfigurationManager.AppSettings.Get("ForceDisableSignalR"))});
             batch.AddExportedValue<IOptions<GatewayApiClientOptions>>(options);
             var options2 = Microsoft.Extensions.Options.Options.Create(new FileBackedStoreMarketDataSourceOptions { Filename = "cache.json"});            
             batch.AddExportedValue<IStockMarketSource>(new FileBackedStockMarketDataSource(new FMPStockMarketSource(), options2));            
             
             container.Compose(batch);                        
+        }
+
+        private bool ShouldForceDisableSignalR(string? config)
+        {
+            if (string.IsNullOrEmpty(config)) return false;
+            return Convert.ToBoolean(config);            
         }
 
         protected override object GetInstance(Type serviceType, string key)
