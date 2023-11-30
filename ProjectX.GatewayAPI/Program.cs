@@ -113,7 +113,7 @@ public class Startup
         {
             endpoints.Map("/", () => "Hello there.");
             endpoints.MapControllers();
-            endpoints.MapHub<StreamHub>("/streamHub");
+            //endpoints.MapHub<StreamHub>("/streamHub");
         });
 
         var appLifetime = app.ApplicationServices.GetService<IHostApplicationLifetime>();
