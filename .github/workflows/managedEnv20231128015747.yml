@@ -4,14 +4,14 @@ on:
     - main
 env:
   DOTNET_CORE_VERSION: 8.0.x
-  CONTAINER_APP_NAME: projectxgatewayapi-container-app
-  CONTAINER_APP_ENVIRONMENT_NAME: managedEnv20231128015747
-  RESOURCE_GROUP: managedEnv20231128015747ResourceGroup
-  CONTAINER_REGISTRY_NAME: registry20231128020059
-  CONTAINER_REGISTRY_LOGIN_SERVER: registry20231128020059.azurecr.io
+  CONTAINER_APP_NAME: projectxgatewayapi-app-20231130
+  CONTAINER_APP_ENVIRONMENT_NAME: managedEnv20231130
+  RESOURCE_GROUP: managedEnv20231130ResourceGroup
+  CONTAINER_REGISTRY_NAME: projectx20231130
+  CONTAINER_REGISTRY_LOGIN_SERVER: projectx20231130.azurecr.io
   AZURE_WEBAPP_NAME: projectx0   # set this to your application's name
   AZURE_WEBAPP_PACKAGE_PATH: 'Web/'      # set this to the path to your web app project, defaults to the repository root
-  NODE_VERSION: '18.x'                # set this to the node version to use
+  NODE_VERSION: '20.x'                # set this to the node version to use
 jobs:
   BuildAndDeployContainerApp:
     runs-on: ubuntu-latest
