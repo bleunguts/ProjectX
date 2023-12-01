@@ -12,8 +12,7 @@ export interface FxRateProps {
     ccyPair: CurrencyPair;    
 }
 
-export default function FxRate(props: FxRateProps) {
-    console.log(props);
+export default function FxRate(props: FxRateProps) {    
     const { ccyName, ccyPair } = props;
 
     console.log(ccyName);
