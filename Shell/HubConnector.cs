@@ -39,7 +39,7 @@ namespace Shell
 
         public async Task Start()
         {            
-            // starts connetion back up
+            // starts connection back up
             if (_connection != null && _connection.State != HubConnectionState.Connected)
             {
                 _connection = Connect(_baseUriString);
@@ -50,7 +50,7 @@ namespace Shell
 
         private HubConnection Connect(string baseUri)
         {
-            return new HubConnectionBuilder()
+            return new HubConnectionBuilder()                
                 .WithUrl(new Uri(baseUri))
                 .AddMessagePackProtocol()
                 .WithAutomaticReconnect()

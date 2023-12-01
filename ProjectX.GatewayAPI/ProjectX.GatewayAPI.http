@@ -1,5 +1,5 @@
 ﻿# For more info on HTTP files go to https://aka.ms/vs/httpfile
-@GatewayAPI_HostAddress = https://localhost:7029
+@GatewayAPI_HostAddress = https://localhost:8081
 
 GET {{GatewayAPI_HostAddress}}/
 Accept: application/json
@@ -18,10 +18,20 @@ Content-Type: application/json
 {"timeSlices":10,"optionType":0,"spot":100.0,"strike":150.0,"rate":1.0,"carry":1.0,"vol":0.3,"CalculatorType":2}
 ###
 
-POST {{GatewayAPI_HostAddress}}/pricingtasks/bsPrice
+POST {{GatewayAPI_HostAddress}}/Pricingtasks/bsPlot
 Content-Type: application/json
 
 {
-  //OptionsPricingByMaturitiesRequest
-}
+    "Id": "73ed11f2-9e2e-45ba-a479-f0a54b0a093e",
+    "GreekType": 0,
+    "OptionType": 0,
+    "Strike": 30,
+    "Rate": 0.6,
+    "Carry": 0.5,
+    "Vol": 0.3,
+    "ZLabel": "z",
+    "ZDecimalPlaces": 0,
+    "ZTickDecimalPlaces": 0,
+    "CalculatorType": 0
+ }
 ###

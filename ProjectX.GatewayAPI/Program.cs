@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json.Converters;
 using ProjectX.AnalyticsLib;
 using ProjectX.AnalyticsLib.OptionsCalculators;
 using ProjectX.AnalyticsLib.Shared;
@@ -14,6 +15,7 @@ using ProjectX.GatewayAPI.ExternalServices;
 using ProjectX.GatewayAPI.Processors;
 using ProjectX.MarketData;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 
 //https://learn.microsoft.com/en-us/aspnet/core/migration/50-to-60?view=aspnetcore-8.0&tabs=visual-studio#smhm
 Console.WriteLine($"ASPNETCORE_HTTP_PORTS={Environment.GetEnvironmentVariable("ASPNETCORE_HTTP_PORTS")}");
@@ -91,7 +93,11 @@ public class Startup
         services.AddHostedService<FXPricingService>();
         services.AddSignalR(config => config.EnableDetailedErrors = true)
                         .AddMessagePackProtocol()
-                        .AddAzureSignalR();        
+                        .AddJsonProtocol(options =>
+                        {
+                            options.PayloadSerializerOptions.Converters.Add(new Array2DConverter());
+                        })
+                        .AddAzureSignalR();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
