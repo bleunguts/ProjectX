@@ -39,7 +39,18 @@ namespace ProjectX.MarketData
         {
             //random spot price 1.6420 +- 10 pips
             // get a random midpoint - fluctuate by 10 pips
-            var rawMid = (decimal)(1.6420 + _random.NextDouble() / 100);
+            double mid = currencyPair switch {
+                "EURUSD" => 1.0510,
+                "GBPUSD" => 1.2550,
+                "USDJPY" => 149.94,
+                "USDCHF" => 0.8953,
+                "AUDUSD" => 0.6330,
+                "USDCAD" => 1.3776,
+                "NZDUSD" => 0.5821,
+                "BTCUSD" => 34223,
+                _ => 1.6420
+            }; 
+            var rawMid = (decimal)(mid + _random.NextDouble() / 100);
 
             // apply spread
             var difference = _rawSpreadInPips / 10000M / 2M;
