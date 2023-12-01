@@ -1,12 +1,8 @@
 import * as React from 'react';
 import api from './api';
-import FxRate, { CurrencyPair } from './FxRate';
+import FxRate, { CurrencyPair, CurrencyPairFormatted } from './FxRate';
 import { useState } from 'react';
 
-export interface CurrencyPairFormatted {
-    bid: string
-    ask: string
-};
 export default function FxTicker() {    
     const ccyPairs: Map<string, CurrencyPair> = new Map<string, CurrencyPair>([
         ["EURUSD", { bid: 1.0512, ask: 1.0509 }],
@@ -30,7 +26,6 @@ export default function FxTicker() {
     api.connection().on("PushFxRate", (spotPriceResult) => {
         const timestamp = spotPriceResult.timestamp;
         const spotPriceResponse = spotPriceResult["spotPriceResponse"];
-        console.log(spotPriceResponse);        
         const ccyName = spotPriceResponse.spotPrice.currencyPair
         const bidPrice = spotPriceResponse.spotPrice.bidPrice;
         const askPrice = spotPriceResponse.spotPrice.askPrice;

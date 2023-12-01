@@ -36,7 +36,7 @@ const api = {
     submitFxRateSubscribeRequest: async (ccyName: string) => {
         let requestId = uuidv1();
         let body = {
-            "currencyPair": { ccyName },
+            "currencyPair": ccyName,
             "clientName": "Web",
             "mode": 0, // subscribe
             "request": requestId,
@@ -46,7 +46,7 @@ const api = {
     submitFxRateUnsubscribeRequest: async (ccyName: string) => {
         let requestId = uuidv1();
         let body = {
-            "currencyPair": { ccyName },
+            "currencyPair": ccyName,
             "clientName": "Web",
             "mode": 1, // unsubscribe
             "request": requestId,

@@ -5,13 +5,17 @@ import * as React from 'react';
 import { SyntheticEvent } from 'react';
 import api from './api';
 
+export interface CurrencyPairFormatted {
+    bid: string
+    ask: string
+};
 export interface CurrencyPair {
     bid: number
     ask: number
 };
 export interface FxRateProps {
     ccyName: string;
-    ccyPair: CurrencyPair;    
+    ccyPair: CurrencyPairFormatted;    
 }
 
 export default function FxRate(this: any, props: FxRateProps) {    
