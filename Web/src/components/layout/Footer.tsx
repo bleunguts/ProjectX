@@ -3,9 +3,10 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import * as signalR from "@microsoft/signalr";
 import { HubConnectionState } from '@microsoft/signalr';
+import api from './api';
 
 function Copyright() {
   return (
@@ -25,53 +26,35 @@ interface FooterProps {
   title: string;
 }
 
-const backendServer = `https://projectxgatewayapi-app-20231130.yellowfield-d8e525a6.uksouth.azurecontainerapps.io`;
-const connection = new signalR.HubConnectionBuilder()
-    .withUrl(`${backendServer}/streamHub`)
-    .configureLogging(signalR.LogLevel.Information)
-    .build();
-
-async function start() {
-    if (connection.state != HubConnectionState.Disconnected) {
-        return;
-    }
-    try {
-        await connection.start();
-        console.log("SignalR Connected.");
-    } catch (err) {
-        console.log(err);
-        setTimeout(start, 5000);
-    }
-};
-
-connection.onclose(async () => {
-    await start();
-});
-
+interface CalcDetail {
+    calcType: string;
+    resultsCount: string;
+    calcTime: string;
+}
 export default function Footer(props: FooterProps) {  
+    const { description, title } = props;
+    const [backendData, setBackendData] = useState<any>("Ciao!");
+    const [lastCalcDetail, setCalcDetail] = useState<CalcDetail | null>(null);    
+
     useEffect(() => {
-        start();        
-        getData();
+        connectToSignalR();        
+        getBackendData();
     }, []);
 
-  const { description, title } = props;    
-    const [serverData, setServerData] = useState<any>([]);
-    const [lastCalcType, setLastCalcType] = useState<any>('');
-    const [lastResultsCount, setLastResultsCount] = useState<any>('');
-    const [lastCalcTime, setLastCalcTime] = useState<any>('');
+    const connectToSignalR = () => {
+        api
+            .startHub();
+    }
 
-  const getData = async () => {    
-      setServerData("Ciao!");     
-      await axios.get(backendServer).then((response: { data: any; }) => {
-      setServerData(response.data);
-    })
-    .catch((error: string) => {
-      console.log("Backend communication error: " + error);
-    });    
-    };
-
+    const getBackendData = () => {
+        api
+            .fetchData()
+            .then((res) => setBackendData((res as AxiosResponse<any, any>).data))
+            .catch((error) => console.log(`Error occured in fetching data from backend: ${error}`));
+    }; 
+   
     // suscribe to signalR events
-    connection.on("PricingResults", (pricingResults) => {
+    api.connection().on("PricingResults", (pricingResults) => {
         console.log("Client recieved a PricingResult" + JSON.stringify(pricingResults));
         let calcType = "unknown";
         switch (pricingResults["auditTrail"]["calculatorType"]) {
@@ -85,11 +68,13 @@ export default function Footer(props: FooterProps) {
                 calcType = "MonteCarlo C++ Pricer 1e^6 paths";
                 break;
         }
-        setLastCalcType(calcType);
-        setLastResultsCount(pricingResults["resultsCount"]);
-        setLastCalcTime(pricingResults["auditTrail"]["elapsedMilliseconds"])
+        setCalcDetail({
+            calcType: calcType,
+            resultsCount: pricingResults["resultsCount"],
+            calcTime: pricingResults["auditTrail"]["elapsedMilliseconds"]
+        });        
     });
-    connection.on("PlotResults", (plotResults) => {
+    api.connection().on("PlotResults", (plotResults) => {
         console.log("Client received a PlotResult" + JSON.stringify(plotResults));
     });
 
@@ -114,7 +99,7 @@ export default function Footer(props: FooterProps) {
           color="text.secondary"
           component="p"
         >
-          GatewayAPI Backend says: {JSON.stringify(serverData)}         
+          GatewayAPI Backend says: {JSON.stringify(backendData)}         
         </Typography>
         <Typography
             variant="subtitle1"
@@ -122,9 +107,8 @@ export default function Footer(props: FooterProps) {
             color="text.secondary"
             component="p"
               >
-                  GatewayAPI Last Calc Performed: {lastResultsCount} sets of valuationResults completed in {lastCalcTime} ms using the calculator {lastCalcType}
-        </Typography>
-              
+            GatewayAPI Last Calc Performed: {lastCalcDetail?.resultsCount} sets of valuationResults completed in {lastCalcDetail?.calcTime} ms using the calculator {lastCalcDetail?.calcType}
+        </Typography>              
       </Container>
     </Box>
   );
