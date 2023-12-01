@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Data;
+using System.Net.Http;
+using System.Net.Sockets;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -152,8 +154,14 @@ namespace Shell.Screens.Options
         protected override async void OnActivate()
         {
             _cts = new CancellationTokenSource();
-
-            await _gatewayApiClient.StartHubAsync();
+            try
+            {
+                await _gatewayApiClient.StartHubAsync();
+            }
+            catch(HttpRequestException socketExp)
+            {
+                MessageBox.Show("Your connection string to the backend is incorrect.  Hint: it is unset by default.", "You made it this far...");
+            }            
             try
             {
                 _gatewayApiClient.HubConnection.On("PricingResults", (Action<OptionsPricingByMaturityResults>)(pricingResult =>
