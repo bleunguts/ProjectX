@@ -105,4 +105,4 @@ jobs:
         package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}        
       #https://medium.com/@janesfrontenddiary/how-to-deploy-a-vite-react-app-to-azure-app-service-using-ci-cd-pipelines-github-actions-1cee30d49ab0
       #pm2 serve /home/site/wwwroot --no-daemon
-      #npx serve -s
+      #npx serve -s ./dist <--- it transpires and minimises the lot into one file... 

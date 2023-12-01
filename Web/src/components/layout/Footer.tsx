@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
+import axios from 'axios';
 
 function Copyright() {
   return (
@@ -30,12 +31,12 @@ export default function Footer(props: FooterProps) {
 
   const getData = async () => {    
     setServerData("Ciao!");
-    // await axios.get(`https://yesno.wtf/api`).then(response => {
-    //   setServerData(response.data);
-    // })
-    // .catch(error => {
-    //   console.log("Backend communication error: " + error);
-    // });    
+    await axios.get(`https://projectxgatewayapi-app-20231130.yellowfield-d8e525a6.uksouth.azurecontainerapps.io`).then(response => {
+      setServerData(response.data);
+    })
+    .catch(error => {
+      console.log("Backend communication error: " + error);
+    });    
   };
 
   return (
@@ -59,7 +60,7 @@ export default function Footer(props: FooterProps) {
           color="text.secondary"
           component="p"
         >
-          GatewayAPI: {JSON.stringify(serverData)}
+          GatewayAPI Backend says: {JSON.stringify(serverData)}
         </Typography>
       </Container>
     </Box>
