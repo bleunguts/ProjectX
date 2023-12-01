@@ -3,8 +3,8 @@ import { HubConnectionState } from "@microsoft/signalr";
 import axios from 'axios';
 import { v1 as uuidv1 } from 'uuid';
 
-//const backendServer = `https://projectxgatewayapi-app-20231130.yellowfield-d8e525a6.uksouth.azurecontainerapps.io`;
-const backendServer = `https://localhost:8081`;
+const backendServer = `https://projectxgatewayapi-app-20231130.yellowfield-d8e525a6.uksouth.azurecontainerapps.io`;
+//const backendServer = `https://localhost:8081`;
 const connection = new signalR.HubConnectionBuilder()
     .withUrl(`${backendServer}/streamHub`)
     .configureLogging(signalR.LogLevel.Information)
