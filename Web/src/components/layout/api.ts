@@ -26,7 +26,7 @@ connection.onclose(async () => {
 });
 
 const api = {    
-    fetchData: async () => {
+    fetchHealthCheck: async () => {
         return await axios.get(backendServer)
             .then((response) => response)
             .catch((error: string) => error);

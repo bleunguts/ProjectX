@@ -48,7 +48,7 @@ export default function Footer(props: FooterProps) {
 
     const getBackendData = () => {
         api
-            .fetchData()
+            .fetchHealthCheck()
             .then((res) => setBackendData((res as AxiosResponse<any, any>).data))
             .catch((error) => console.log(`Error occured in fetching data from backend: ${error}`));
     }; 
