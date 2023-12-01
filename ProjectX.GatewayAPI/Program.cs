@@ -119,7 +119,8 @@ public class Startup
 
         app.UseEndpoints(endpoints =>
         {
-            endpoints.Map("/", () => "Hello there.");
+            string theEnv = env.IsProduction() ? "Azure App Container" : "Dev";
+            endpoints.Map("/", () => $"Health OK. Running on {theEnv}");
             endpoints.MapControllers();
             if (env.IsProduction()) 
             {
