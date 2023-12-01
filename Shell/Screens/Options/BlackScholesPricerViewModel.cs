@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using ProjectX.Core;
 using ProjectX.Core.Requests;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Data;
 using System.Net.WebSockets;
@@ -158,6 +159,7 @@ namespace Shell.Screens.Options
                 _gatewayApiClient.HubConnection.On("PricingResults", (Action<OptionsPricingByMaturityResults>)(pricingResult =>
                 {
                     Console.WriteLine($"Received Pricing Result: {pricingResult.ResultsCount} results, requestId: {pricingResult.RequestId}, time: {pricingResult.AuditTrail.ElapsedMilliseconds} ms");
+                    UpdateStatus($"Pricing Result with {pricingResult.ResultsCount} results received. Backed completed operation in {pricingResult.AuditTrail.ElapsedMilliseconds} ms using calculator {pricingResult.AuditTrail.CalculatorType}");
                     App.Current.Dispatcher.Invoke((System.Action)delegate
                     {
                         DataTable optionTable = GetOptionTableToModify(pricingResult.AuditTrail.CalculatorType);
@@ -183,7 +185,7 @@ namespace Shell.Screens.Options
                     var zTickDecimalPlaces = plotPricingResult.Request.ZTickDecimalPlaces;
 
                     Console.WriteLine($"Received Pricing 3D Plot Result: {plotResult.PointArray.Length} coordinates, requestId: {plotPricingResult.RequestId}");
-
+                    UpdateStatus($"Pricing 3D Plot Result: {plotResult.PointArray.Length} coordinates completed. Backed completed operation in {plotPricingResult.AuditTrail.ElapsedMilliseconds} ms using calculator {plotPricingResult.AuditTrail.CalculatorType}");
                     App.Current.Dispatcher.Invoke((System.Action)delegate
                     {
                         DataCollection.Clear();
@@ -260,15 +262,15 @@ namespace Shell.Screens.Options
                 double carry = Convert.ToDouble(OptionInputTable.Rows[4]["Value"]);
                 double vol = Convert.ToDouble(OptionInputTable.Rows[5]["Value"]);
                 var request = new OptionsPricingByMaturitiesRequest(10, optionType.ToOptionType(), spot, strike, rate, carry, vol, calculatorType);
-                
+
                 await _gatewayApiClient.SubmitPricingRequest(request, _cts.Token);
+                UpdateStatus("Price submitted to backend.");
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Failed to send pricing request to backend to price\nReason:'{ex.Message}", "Calulate Price issue");
             }
         }
-
         public void PlotPrice() => Plot(OptionGreeks.Price, "Price", 1, 1);
         public void PlotDelta() => Plot(OptionGreeks.Delta, "Delta", 1, 1);
         public void PlotGamma() => Plot(OptionGreeks.Gamma, "Gamma", 2, 3);
@@ -290,6 +292,7 @@ namespace Shell.Screens.Options
                 request.ZDecimalPlaces = zDecimalPlaces;
                 request.ZTickDecimalPlaces = zTickDecimalPlaces;
                 await _gatewayApiClient.SubmitPlotRequest(request, _cts.Token);
+                UpdateStatus("Submitted Plot Price Request to backend.");
             }
             catch (Exception ex)
             {
@@ -343,6 +346,10 @@ namespace Shell.Screens.Options
                ),
                 _ => throw new NotImplementedException(),
             };
+        }
+        private void UpdateStatus(string status)
+        {
+            _events.PublishOnUIThread(new ModelEvents(new List<object>(new object[] { status })));
         }
     }
 }

@@ -98,6 +98,7 @@ namespace ProjectX.Core.Services
             MyPoint3D[,] pts = new MyPoint3D[XNumber, YNumber];
             double zmin = 10_000;
             double zmax = -10_000;
+            var timeIt = Stopwatch.StartNew();
             for (int i = 0; i < XNumber; i++)
             {
                 for (int j = 0; j < YNumber; j++)
@@ -135,7 +136,8 @@ namespace ProjectX.Core.Services
                         zmax = Math.Max(zmax, z);
                     }
                 }
-            }            
+            }
+            timeIt.Stop();
             var plotResults = new PlotResults
             {
                 PointArray = pts,
@@ -149,7 +151,7 @@ namespace ProjectX.Core.Services
                 YNumber = YNumber,
             };
 
-            return new PlotOptionsPricingResult(request, plotResults);
+            return new PlotOptionsPricingResult(request, plotResults, new AuditTrail(calculatorType, timeIt.ElapsedMilliseconds));
         }
 
     

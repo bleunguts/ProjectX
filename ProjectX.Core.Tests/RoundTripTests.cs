@@ -50,7 +50,8 @@ namespace ProjectX.Core.Tests
                     zmax = 7,
                     zmin = 8,
                     PointArray = point3Ds
-                });
+                },
+                new AuditTrail(OptionsPricingCalculatorType.OptionsPricer, 0));
            
             var serialized = System.Text.Json.JsonSerializer.Serialize<PlotOptionsPricingResult>(obj, obj.JsonOptions());
             Console.WriteLine($"Json: {serialized}");
