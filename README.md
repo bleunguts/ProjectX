@@ -29,6 +29,7 @@ ProjectX provides the following highly customizable and optimizable toolkit
 * Simple Bonds Pricer (in concept development phase, explore value add)
 * CDS Pricer (in concept development phase,  explore value add)
 * Implied Vol Pricer to help understand market sentiment (in concept development phase,  explore value add)
+* Luxious Maui mobile iOS/Android RFQ spread adjustment with real-time updates to Windows/Mac desktop Maui driven real-time instrument quotes bloter (in concept development phase)
 
 _Desktop App BS Option Pricing:_
 ![Options](Options.jpg)
@@ -38,9 +39,10 @@ _Desktop App FX OMS:_
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 _Tech Stack:_
-* C# 11, .NET 8, WPF, Caliburn.Micro, System.ComponentModel.Composition.Hosting.CompositionContainer (IoC), ReactiveX 6, Microsft Chart Controls,
+* C# 11, .NET 8, WPF, Caliburn.Micro, System.ComponentModel.Composition.Hosting.CompositionContainer (IoC), ReactiveX 6, Microsft Chart Controls
 * C++ CLI, native C++ cross platform Win32/MacOs, PInvoke marshalling, cmake, BoxMuller RNG, cdf & pdf distributions
-* ASPNET Core WebApi 6, SignalR, .NET Json Serialization, Background Services (Azure Ready), LiveCharts Skia, Azure Container App, GitHub Actions Azure Devops
+* ASPNET Core WebApi 6, SignalR, Background Services, .NET Channels, LiveCharts Skia, 
+* Azure Cloud; GitHub Actions Azure Devops CI/CD pipeline, Linux Azure Container App, Azure SignalR, Azure Web App
 * React 8, Bootstrap, Typescript, recharts,
 * StockIndicators Skender API,  NinjaTrader StockInidicator API, FinancialModellingPrep MarketData API, Quandl MarketData API
 * Trend indicator methods: Bollinger Bands, Moving Averages
