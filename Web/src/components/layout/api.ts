@@ -1,8 +1,10 @@
 import * as signalR from "@microsoft/signalr";
 import { HubConnectionState } from "@microsoft/signalr";
 import axios from 'axios';
+import { v1 as uuidv1 } from 'uuid';
 
-const backendServer = `https://projectxgatewayapi-app-20231130.yellowfield-d8e525a6.uksouth.azurecontainerapps.io`;
+//const backendServer = `https://projectxgatewayapi-app-20231130.yellowfield-d8e525a6.uksouth.azurecontainerapps.io`;
+const backendServer = `https://localhost:8081`;
 const connection = new signalR.HubConnectionBuilder()
     .withUrl(`${backendServer}/streamHub`)
     .configureLogging(signalR.LogLevel.Information)
@@ -31,6 +33,26 @@ const api = {
             .then((response) => response)
             .catch((error: string) => error);
     },
+    submitFxRateSubscribeRequest: async (ccyName: string) => {
+        let requestId = uuidv1();
+        let body = {
+            "currencyPair": { ccyName },
+            "clientName": "Web",
+            "mode": 0, // subscribe
+            "request": requestId,
+        };
+        return await axios.post(`${backendServer}/FXPricing`, body);
+    },
+    submitFxRateUnsubscribeRequest: async (ccyName: string) => {
+        let requestId = uuidv1();
+        let body = {
+            "currencyPair": { ccyName },
+            "clientName": "Web",
+            "mode": 1, // unsubscribe
+            "request": requestId,
+        };
+        return await axios.post(`${backendServer}/FXPricing`, body);
+    },
     startHub: async () => {
         startHubConnection();
     },   
@@ -39,3 +61,7 @@ const api = {
     }
 }
 export default api; 
+
+function uuidv4() {
+    throw new Error("Function not implemented.");
+}
