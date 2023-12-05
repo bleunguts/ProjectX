@@ -73,6 +73,18 @@
                 "lhs": "${hostSystemName}",
                 "rhs": "Linux"
             }
+        },
+        {
+            "name": "macos-base",
+            "displayName": "Clang 13.0.0 x86_64-apple-darwin20.6.0",
+            "description": "Using compilers: C = /usr/bin/clang, CXX = /usr/bin/clang++",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CMAKE_C_COMPILER": "/usr/bin/clang",
+                "CMAKE_CXX_COMPILER": "/usr/bin/clang++",
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
         }
     ]
 }

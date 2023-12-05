@@ -2,6 +2,8 @@
 # project specific logic here.
 #
 cmake_minimum_required (VERSION 3.8)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 # Enable Hot Reload for MSVC compilers if supported.
 if (POLICY CMP0141)
@@ -14,5 +16,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 project ("ProjectX.AnalyticsLibNative")
 
 include(CTest)
+enable_testing()
 add_subdirectory(src)
 add_subdirectory(test)
