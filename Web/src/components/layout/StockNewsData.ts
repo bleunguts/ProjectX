@@ -1,4 +1,4 @@
-export const gainers =
+const gainers =
     [
         {
             "symbol": "SPRC",
@@ -352,7 +352,7 @@ export const gainers =
         }
     ];    
 
-export const mostActive =
+const mostActive =
     [
         {
             "symbol": "CDIO",
@@ -705,3 +705,6 @@ export const mostActive =
             "changesPercentage": -2.178
         }
     ];    
+
+    export const cannedGainers = gainers.splice(0, 5);
+    export const cannedMostActive = mostActive.splice(0, 5);

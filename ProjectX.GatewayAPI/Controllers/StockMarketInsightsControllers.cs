@@ -24,7 +24,7 @@ namespace ProjectX.GatewayAPI.Controllers
             return "Hello from the StockMarket insights module";
         }
 
-        [HttpGet("highestGainerStocks/{limit:int?}")]
+        [HttpGet("HighestGainerStocks/{limit:int?}")]
         public async Task<IEnumerable<StockMarketSymbol>> HighestGainerStocks(int? limit = 50)
         {
             var stocks = await _stockMarketSource.GetHighestGainerStocks();
@@ -32,7 +32,7 @@ namespace ProjectX.GatewayAPI.Controllers
             return stocks.Take(limit.Value);
         }
 
-        [HttpGet("mostActiveStocks/{limit:int?}")]
+        [HttpGet("MostActiveStocks/{limit:int?}")]
         public async Task<IEnumerable<StockMarketSymbol>> MostActiveStocks(int? limit = 50)
         {
             var stocks = await _stockMarketSource.GetMostActiveStocks();
