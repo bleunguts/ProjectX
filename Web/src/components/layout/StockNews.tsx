@@ -1,6 +1,6 @@
 import Typography from '@mui/material/Typography';
 import * as React from 'react';
-import { gainers, mostActive } from './StockNewsData';
+import { gainers as cannedGainers, mostActive as cannedMostActive } from './StockNewsData';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import { SyntheticEvent, useState } from 'react';
@@ -9,6 +9,9 @@ import SyncIcon from '@mui/icons-material/Sync';
 
 export default function StockNews() {
     const [stockSymbol, setStockSymbol] = useState<string>("AAPL")
+    const [gainers, setGainers] = useState<any[]>(cannedGainers);
+    const [mostActive, setMostActive] = useState<any[]>(cannedMostActive);
+    
     const handleHighestGainersClick = (event: SyntheticEvent) => {
         const target = event.target;
         console.log(`Highest Gainers refresh clicked.`);       
@@ -27,7 +30,7 @@ export default function StockNews() {
     return (
         <>
             <Typography variant="h6" align="center" gutterBottom>
-                Stock Symbol Used: <b>{stockSymbol}</b>
+                Stock Symbol Applied: <b>{stockSymbol}</b>
             </Typography>
             <Typography variant="h6" align="center" gutterBottom>
             Stock Market Highest Gainers <IconButton onClick={handleHighestGainersClick}><SyncIcon></SyncIcon></IconButton>
