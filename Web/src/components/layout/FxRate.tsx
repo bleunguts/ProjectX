@@ -35,7 +35,7 @@ export default function FxRate(this: any, props: FxRateProps) {
 
     return (       
         <>              
-            <Grid container direction='row' spacing={0.5} alignItems="flex-start" alignContent='center'>
+            <Grid container direction='row' spacing={0.5} alignItems="center" alignContent='center'>
                 <Grid item xs={8}><Typography><b>{ccyName}: {ccyPair.bid}/{ccyPair.ask}</b></Typography></Grid>
                 <Grid item xs={2}><Button onClick={handleSubscribeClick}>Pull</Button></Grid>
                 <Grid item xs={2}><Button onClick={handleUnsubscribeClick}>Stop</Button></Grid>
