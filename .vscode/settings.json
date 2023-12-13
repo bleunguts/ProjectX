@@ -1,6 +1,6 @@
 {
     "dotnet.defaultSolution": "ProjectX_.sln",
-    "cmake.sourceDirectory": "/home/billy/GitHub/ProjectX/ProjectX.AnalyticsLibNative",
+    "cmake.sourceDirectory": "/Users/billyleung/Projects/GitHub/ProjectX/ProjectX.AnalyticsLibNative",
     "files.associations": {
         "*.tcc": "cpp",
         "random": "cpp",

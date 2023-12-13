@@ -20,6 +20,7 @@
     <ProjectReference Include="..\ProjectX.AnalyticsLib\ProjectX.AnalyticsLib.csproj" />
     <ProjectReference Include="..\ProjectX.Core\ProjectX.Core.csproj" />
     <ProjectReference Include="..\ProjectX.MarketData\ProjectX.MarketData.csproj" />
+    <ProjectReference Include="..\ProjectX.MarketData.Cache\ProjectX.MarketData.Cache.csproj" />
   </ItemGroup>
 
 </Project>

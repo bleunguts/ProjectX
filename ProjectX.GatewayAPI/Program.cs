@@ -14,6 +14,7 @@ using ProjectX.GatewayAPI.BackgroundServices;
 using ProjectX.GatewayAPI.ExternalServices;
 using ProjectX.GatewayAPI.Processors;
 using ProjectX.MarketData;
+using ProjectX.MarketData.Cache;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 
@@ -79,6 +80,10 @@ public class Startup
         services.AddSingleton<PricingTasksChannel>();
         services.AddSingleton<FXTasksChannel>();
         services.TryAddScoped<IPricingTasksProcessor, PricingTasksProcessor>();
+        services.AddSingleton<IStockMarketSource>(new FileBackedStockMarketDataSource(
+            new FMPStockMarketSource(), 
+            Options.Create(new FileBackedStoreMarketDataSourceOptions() { Filename = "cache.json"}))
+        );
 
         services.AddOptions();        
         services.Configure<ApiClientOptions>(options => options.BaseAddress = Configuration.GetSection("ExternalServices")["ProjectXUrl"]);
