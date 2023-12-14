@@ -16,7 +16,7 @@ export default function FxTicker() {
     ]);                
     const [eurUsd, setEurUsd] = useState<CurrencyPairFormatted>(To({ bid: 1.0512, ask: 1.0509 }, 4));
     const [gbpUsd, setGbpUsd] = useState<CurrencyPairFormatted>(To({ bid: 1.2550, ask: 1.2109 }, 4));
-    const [usdJpy, setUsdJpy] = useState<CurrencyPairFormatted>(To({ bid: 149.94, ask: 149.95 }, 4));
+    const [usdJpy, setUsdJpy] = useState<CurrencyPairFormatted>(To({ bid: 149.94, ask: 149.95 }, 2));
     const [usdChf, setUsdChf] = useState<CurrencyPairFormatted>(To({ bid: 0.8952, ask: 0.8955 }, 4));
     const [audusd, setAudUsd] = useState<CurrencyPairFormatted>(To({ bid: 0.6330, ask: 1.0509 }, 4));
     const [usdcad, setUsdCad] = useState<CurrencyPairFormatted>(To({ bid: 1.3776, ask: 1.3779 }, 4));
