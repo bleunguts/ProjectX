@@ -1,5 +1,5 @@
 {
-  "12/13/2023 12:00:00 AM": [
+  "13122023;GetMostActiveStocks": [
     {
       "companyName": "C4 Therapeutics, Inc.",
       "ticker": "CCCC",
@@ -349,6 +349,710 @@
       "price": "4.11",
       "changes": 0.67,
       "changesPercentage": "19.4767"
+    }
+  ],
+  "13122023;GetHighestGainerStocks": [
+    {
+      "companyName": "C4 Therapeutics, Inc.",
+      "ticker": "CCCC",
+      "price": "5.51",
+      "changes": 3.17,
+      "changesPercentage": "135.4701"
+    },
+    {
+      "companyName": "Shattuck Labs, Inc.",
+      "ticker": "STTK",
+      "price": "4.86",
+      "changes": 2.75,
+      "changesPercentage": "130.3318"
+    },
+    {
+      "companyName": "AB Core Plus Bond ETF",
+      "ticker": "CPLS",
+      "price": "35.22",
+      "changes": 0.0,
+      "changesPercentage": "0"
+    },
+    {
+      "companyName": "Signature Bank",
+      "ticker": "SBNY",
+      "price": "0.06",
+      "changes": 0.0295,
+      "changesPercentage": "96.7213"
+    },
+    {
+      "companyName": "F45 Training Holdings Inc.",
+      "ticker": "FXLV",
+      "price": "0.055",
+      "changes": 0.0,
+      "changesPercentage": "0"
+    },
+    {
+      "companyName": "COMSovereign Holding Corp.",
+      "ticker": "COMSP",
+      "price": "0.7701",
+      "changes": 0.3401,
+      "changesPercentage": "79.093"
+    },
+    {
+      "companyName": "Avalo Therapeutics, Inc.",
+      "ticker": "AVTX",
+      "price": "0.059",
+      "changes": 0.0243,
+      "changesPercentage": "70.0288"
+    },
+    {
+      "companyName": "NextPlay Technologies, Inc.",
+      "ticker": "NXTP",
+      "price": "1.57",
+      "changes": 0.6403,
+      "changesPercentage": "68.8717"
+    },
+    {
+      "companyName": "LQR House Inc.",
+      "ticker": "LQR",
+      "price": "2.14",
+      "changes": 0.85,
+      "changesPercentage": "65.8915"
+    },
+    {
+      "companyName": "ADC Therapeutics SA",
+      "ticker": "ADCT",
+      "price": "1.68",
+      "changes": 0.65,
+      "changesPercentage": "63.1068"
+    },
+    {
+      "companyName": "MariaDB plc",
+      "ticker": "MRDB",
+      "price": "0.43",
+      "changes": 0.15,
+      "changesPercentage": "53.5714"
+    },
+    {
+      "companyName": "ReShape Lifesciences Inc.",
+      "ticker": "RSLS",
+      "price": "0.3844",
+      "changes": 0.1334,
+      "changesPercentage": "53.1474"
+    },
+    {
+      "companyName": "SciSparc Ltd.",
+      "ticker": "SPRC",
+      "price": "6.85",
+      "changes": 1.94,
+      "changesPercentage": "39.5112"
+    },
+    {
+      "companyName": "Kiromic BioPharma, Inc.",
+      "ticker": "KRBP",
+      "price": "0.24397",
+      "changes": 0.064,
+      "changesPercentage": "35.5389"
+    },
+    {
+      "companyName": "ACADIA Pharmaceuticals Inc.",
+      "ticker": "ACAD",
+      "price": "28.47",
+      "changes": 7.3,
+      "changesPercentage": "34.4828"
+    },
+    {
+      "companyName": "Cibus, Inc.",
+      "ticker": "CBUS",
+      "price": "14",
+      "changes": 3.5,
+      "changesPercentage": "33.3333"
+    },
+    {
+      "companyName": "Innovative International Acquisition Corp.",
+      "ticker": "IOAC",
+      "price": "11.41",
+      "changes": 2.83,
+      "changesPercentage": "32.9837"
+    },
+    {
+      "companyName": "Eos Energy Enterprises, Inc.",
+      "ticker": "EOSE",
+      "price": "1.48",
+      "changes": 0.36,
+      "changesPercentage": "32.1429"
+    },
+    {
+      "companyName": "Bright Scholar Education Holdings Limited",
+      "ticker": "BEDU",
+      "price": "1.5001",
+      "changes": 0.3401,
+      "changesPercentage": "29.319"
+    },
+    {
+      "companyName": "Chanson International Holding",
+      "ticker": "CHSN",
+      "price": "14.49",
+      "changes": 3.21,
+      "changesPercentage": "28.4574"
+    },
+    {
+      "companyName": "Allied Gaming & Entertainment Inc.",
+      "ticker": "AGAE",
+      "price": "1.4",
+      "changes": 0.31,
+      "changesPercentage": "28.4404"
+    },
+    {
+      "companyName": "Safe and Green Development Corporation",
+      "ticker": "SGD",
+      "price": "1.77",
+      "changes": 0.39,
+      "changesPercentage": "28.2609"
+    },
+    {
+      "companyName": "Hanryu Holdings, Inc.",
+      "ticker": "HRYU",
+      "price": "1.09",
+      "changes": 0.2401,
+      "changesPercentage": "28.2504"
+    },
+    {
+      "companyName": "The Eastern Company",
+      "ticker": "EML",
+      "price": "26.04",
+      "changes": 5.73,
+      "changesPercentage": "28.2127"
+    },
+    {
+      "companyName": "GD Culture Group Limited",
+      "ticker": "GDC",
+      "price": "2.935",
+      "changes": 0.645,
+      "changesPercentage": "28.1659"
+    },
+    {
+      "companyName": "Alaunos Therapeutics, Inc.",
+      "ticker": "TCRT",
+      "price": "0.057",
+      "changes": 0.0123,
+      "changesPercentage": "27.5168"
+    },
+    {
+      "companyName": "Cardio Diagnostics Holdings, Inc.",
+      "ticker": "CDIO",
+      "price": "1.48",
+      "changes": 0.31,
+      "changesPercentage": "26.4957"
+    },
+    {
+      "companyName": "Applied DNA Sciences, Inc.",
+      "ticker": "APDN",
+      "price": "0.76",
+      "changes": 0.1557,
+      "changesPercentage": "25.7653"
+    },
+    {
+      "companyName": "RenovoRx, Inc.",
+      "ticker": "RNXT",
+      "price": "0.796",
+      "changes": 0.161,
+      "changesPercentage": "25.3543"
+    },
+    {
+      "companyName": "Global Blockchain Acquisition Corp.",
+      "ticker": "GBBKR",
+      "price": "0.125",
+      "changes": 0.025,
+      "changesPercentage": "25"
+    },
+    {
+      "companyName": "PaxMedica, Inc. Common Stock",
+      "ticker": "PXMD",
+      "price": "0.84",
+      "changes": 0.1679,
+      "changesPercentage": "24.9814"
+    },
+    {
+      "companyName": "Mynaric AG",
+      "ticker": "MYNA",
+      "price": "5.95",
+      "changes": 1.16,
+      "changesPercentage": "24.2171"
+    },
+    {
+      "companyName": "Nephros, Inc.",
+      "ticker": "NEPH",
+      "price": "3.18",
+      "changes": 0.61,
+      "changesPercentage": "23.7354"
+    },
+    {
+      "companyName": "Lanvin Group Holdings Limited",
+      "ticker": "LANV",
+      "price": "3.85",
+      "changes": 0.7344,
+      "changesPercentage": "23.5717"
+    },
+    {
+      "companyName": "Sphere 3D Corp.",
+      "ticker": "ANY",
+      "price": "1.42",
+      "changes": 0.27,
+      "changesPercentage": "23.4783"
+    },
+    {
+      "companyName": "BioAtla, Inc.",
+      "ticker": "BCAB",
+      "price": "2.12",
+      "changes": 0.4,
+      "changesPercentage": "23.2558"
+    },
+    {
+      "companyName": "Priority Technology Holdings, Inc.",
+      "ticker": "PRTH",
+      "price": "3.62",
+      "changes": 0.67,
+      "changesPercentage": "22.7119"
+    },
+    {
+      "companyName": "Intensity Therapeutics, Inc.",
+      "ticker": "INTS",
+      "price": "9.88",
+      "changes": 1.8,
+      "changesPercentage": "22.2772"
+    },
+    {
+      "companyName": "Aravive, Inc.",
+      "ticker": "ARAV",
+      "price": "0.1405",
+      "changes": 0.0255,
+      "changesPercentage": "22.1739"
+    },
+    {
+      "companyName": "MicroAlgo Inc.",
+      "ticker": "MLGO",
+      "price": "2.05",
+      "changes": 0.37,
+      "changesPercentage": "22.0238"
+    },
+    {
+      "companyName": "Cytosorbents Corporation",
+      "ticker": "CTSO",
+      "price": "1.75",
+      "changes": 0.31,
+      "changesPercentage": "21.5278"
+    },
+    {
+      "companyName": "Terran Orbital Corporation",
+      "ticker": "LLAP",
+      "price": "0.94",
+      "changes": 0.1659,
+      "changesPercentage": "21.4313"
+    },
+    {
+      "companyName": "Photronics, Inc.",
+      "ticker": "PLAB",
+      "price": "26.24",
+      "changes": 4.61,
+      "changesPercentage": "21.313"
+    },
+    {
+      "companyName": "BT Brands, Inc.",
+      "ticker": "BTBD",
+      "price": "1.88",
+      "changes": 0.33,
+      "changesPercentage": "21.2903"
+    },
+    {
+      "companyName": "Quetta Acquisition Corporation Right",
+      "ticker": "QETAR",
+      "price": "1.21",
+      "changes": 0.21,
+      "changesPercentage": "21"
+    },
+    {
+      "companyName": "Upstart Holdings, Inc.",
+      "ticker": "UPST",
+      "price": "42.71",
+      "changes": 7.21,
+      "changesPercentage": "20.3099"
+    },
+    {
+      "companyName": "Offerpad Solutions Inc.",
+      "ticker": "OPAD",
+      "price": "9.86",
+      "changes": 1.66,
+      "changesPercentage": "20.2439"
+    },
+    {
+      "companyName": "Gold Resource Corporation",
+      "ticker": "GORO",
+      "price": "0.3248",
+      "changes": 0.0539,
+      "changesPercentage": "19.8966"
+    },
+    {
+      "companyName": "Sunrun Inc.",
+      "ticker": "RUN",
+      "price": "14.96",
+      "changes": 2.46,
+      "changesPercentage": "19.68"
+    },
+    {
+      "companyName": "Opendoor Technologies Inc.",
+      "ticker": "OPEN",
+      "price": "4.11",
+      "changes": 0.67,
+      "changesPercentage": "19.4767"
+    }
+  ],
+  "13/12/2023 00:00:00;GetMostActiveStocks": [
+    {
+      "companyName": "Avalo Therapeutics, Inc.",
+      "ticker": "AVTX",
+      "price": "0.059",
+      "changes": 0.0243,
+      "changesPercentage": "70.0288"
+    },
+    {
+      "companyName": "C4 Therapeutics, Inc.",
+      "ticker": "CCCC",
+      "price": "5.51",
+      "changes": 3.17,
+      "changesPercentage": "135.4701"
+    },
+    {
+      "companyName": "Esports Entertainment Group, Inc.",
+      "ticker": "GMBL",
+      "price": "0.0178",
+      "changes": 0.0013,
+      "changesPercentage": "7.8788"
+    },
+    {
+      "companyName": "ReShape Lifesciences Inc.",
+      "ticker": "RSLS",
+      "price": "0.3844",
+      "changes": 0.1334,
+      "changesPercentage": "53.1474"
+    },
+    {
+      "companyName": "Nikola Corporation",
+      "ticker": "NKLA",
+      "price": "0.7996",
+      "changes": 0.0821,
+      "changesPercentage": "11.4425"
+    },
+    {
+      "companyName": "Pfizer Inc.",
+      "ticker": "PFE",
+      "price": "26.66",
+      "changes": -1.92,
+      "changesPercentage": "-6.718"
+    },
+    {
+      "companyName": "Tesla, Inc.",
+      "ticker": "TSLA",
+      "price": "239.29",
+      "changes": 2.28,
+      "changesPercentage": "0.962"
+    },
+    {
+      "companyName": "ProShares UltraPro Short QQQ",
+      "ticker": "SQQQ",
+      "price": "14.34",
+      "changes": -0.56,
+      "changesPercentage": "-3.7584"
+    },
+    {
+      "companyName": "ProShares UltraPro QQQ",
+      "ticker": "TQQQ",
+      "price": "48.74",
+      "changes": 1.66,
+      "changesPercentage": "3.5259"
+    },
+    {
+      "companyName": "Canopy Growth Corporation",
+      "ticker": "CGC",
+      "price": "0.545",
+      "changes": -0.1401,
+      "changesPercentage": "-20.4496"
+    },
+    {
+      "companyName": "Direxion Daily Semiconductor Bear 3X Shares",
+      "ticker": "SOXS",
+      "price": "6.75",
+      "changes": -0.35,
+      "changesPercentage": "-4.9296"
+    },
+    {
+      "companyName": "SPDR S&P 500 ETF Trust",
+      "ticker": "SPY",
+      "price": "470.44",
+      "changes": 6.34,
+      "changesPercentage": "1.3661"
+    },
+    {
+      "companyName": "Farfetch Limited",
+      "ticker": "FTCH",
+      "price": "0.7385",
+      "changes": 0.1121,
+      "changesPercentage": "17.8959"
+    },
+    {
+      "companyName": "Direxion Daily Semiconductor Bull 3X Shares",
+      "ticker": "SOXL",
+      "price": "27.92",
+      "changes": 1.27,
+      "changesPercentage": "4.7655"
+    },
+    {
+      "companyName": "SoFi Technologies, Inc.",
+      "ticker": "SOFI",
+      "price": "8.94",
+      "changes": 0.99,
+      "changesPercentage": "12.4528"
+    },
+    {
+      "companyName": "Advanced Micro Devices, Inc.",
+      "ticker": "AMD",
+      "price": "138.19",
+      "changes": 0.58,
+      "changesPercentage": "0.4215"
+    },
+    {
+      "companyName": "iShares 20+ Year Treasury Bond ETF",
+      "ticker": "TLT",
+      "price": "96.84",
+      "changes": 2.22,
+      "changesPercentage": "2.3462"
+    },
+    {
+      "companyName": "iShares Russell 2000 ETF",
+      "ticker": "IWM",
+      "price": "193.58",
+      "changes": 6.58,
+      "changesPercentage": "3.5187"
+    },
+    {
+      "companyName": "Apple Inc.",
+      "ticker": "AAPL",
+      "price": "197.96",
+      "changes": 3.25,
+      "changesPercentage": "1.6691"
+    },
+    {
+      "companyName": "Ford Motor Company",
+      "ticker": "F",
+      "price": "11.24",
+      "changes": 0.08,
+      "changesPercentage": "0.7168"
+    },
+    {
+      "companyName": "iShares iBoxx $ High Yield Corporate Bond ETF",
+      "ticker": "HYG",
+      "price": "77.14",
+      "changes": 1.16,
+      "changesPercentage": "1.5267"
+    },
+    {
+      "companyName": "Marathon Digital Holdings, Inc.",
+      "ticker": "MARA",
+      "price": "16.76",
+      "changes": 1.87,
+      "changesPercentage": "12.5588"
+    },
+    {
+      "companyName": "Shattuck Labs, Inc.",
+      "ticker": "STTK",
+      "price": "4.86",
+      "changes": 2.75,
+      "changesPercentage": "130.3318"
+    },
+    {
+      "companyName": "NIO Inc.",
+      "ticker": "NIO",
+      "price": "7.43",
+      "changes": 0.16,
+      "changesPercentage": "2.2008"
+    },
+    {
+      "companyName": "Financial Select Sector SPDR Fund",
+      "ticker": "XLF",
+      "price": "37.2",
+      "changes": 0.59,
+      "changesPercentage": "1.6116"
+    },
+    {
+      "companyName": "Bitfarms Ltd.",
+      "ticker": "BITF",
+      "price": "2.95",
+      "changes": 0.46,
+      "changesPercentage": "18.4739"
+    },
+    {
+      "companyName": "AT&T Inc.",
+      "ticker": "T",
+      "price": "16.45",
+      "changes": 0.04,
+      "changesPercentage": "0.2438"
+    },
+    {
+      "companyName": "Invesco QQQ Trust",
+      "ticker": "QQQ",
+      "price": "403.74",
+      "changes": 5.07,
+      "changesPercentage": "1.2717"
+    },
+    {
+      "companyName": "Mullen Automotive, Inc.",
+      "ticker": "MULN",
+      "price": "0.1262",
+      "changes": 0.0005,
+      "changesPercentage": "0.3978"
+    },
+    {
+      "companyName": "Palantir Technologies Inc.",
+      "ticker": "PLTR",
+      "price": "17.87",
+      "changes": 0.37,
+      "changesPercentage": "2.1143"
+    },
+    {
+      "companyName": "Bank of America Corporation",
+      "ticker": "BAC",
+      "price": "32.04",
+      "changes": 1.3,
+      "changesPercentage": "4.229"
+    },
+    {
+      "companyName": "Amazon.com, Inc.",
+      "ticker": "AMZN",
+      "price": "148.84",
+      "changes": 1.36,
+      "changesPercentage": "0.9222"
+    },
+    {
+      "companyName": "Tellurian Inc.",
+      "ticker": "TELL",
+      "price": "0.649",
+      "changes": 0.0473,
+      "changesPercentage": "7.8611"
+    },
+    {
+      "companyName": "NVIDIA Corporation",
+      "ticker": "NVDA",
+      "price": "480.88",
+      "changes": 4.31,
+      "changesPercentage": "0.9044"
+    },
+    {
+      "companyName": "VanEck Gold Miners ETF",
+      "ticker": "GDX",
+      "price": "30.7",
+      "changes": 1.84,
+      "changesPercentage": "6.3756"
+    },
+    {
+      "companyName": "Lufax Holding Ltd",
+      "ticker": "LU",
+      "price": "0.9333",
+      "changes": 0.073,
+      "changesPercentage": "8.4854"
+    },
+    {
+      "companyName": "Uber Technologies, Inc.",
+      "ticker": "UBER",
+      "price": "61.97",
+      "changes": -0.75,
+      "changesPercentage": "-1.1958"
+    },
+    {
+      "companyName": "Opendoor Technologies Inc.",
+      "ticker": "OPEN",
+      "price": "4.11",
+      "changes": 0.67,
+      "changesPercentage": "19.4767"
+    },
+    {
+      "companyName": "iShares MSCI Brazil ETF",
+      "ticker": "EWZ",
+      "price": "34.63",
+      "changes": 1.21,
+      "changesPercentage": "3.6206"
+    },
+    {
+      "companyName": "Rivian Automotive, Inc.",
+      "ticker": "RIVN",
+      "price": "19.68",
+      "changes": 1.47,
+      "changesPercentage": "8.0725"
+    },
+    {
+      "companyName": "American Airlines Group Inc.",
+      "ticker": "AAL",
+      "price": "14.09",
+      "changes": 0.05,
+      "changesPercentage": "0.3561"
+    },
+    {
+      "companyName": "Lucid Group, Inc.",
+      "ticker": "LCID",
+      "price": "4.49",
+      "changes": 0.27,
+      "changesPercentage": "6.3981"
+    },
+    {
+      "companyName": "iShares China Large-Cap ETF",
+      "ticker": "FXI",
+      "price": "23.87",
+      "changes": -0.08,
+      "changesPercentage": "-0.334"
+    },
+    {
+      "companyName": "ProShares UltraPro Short S&P500",
+      "ticker": "SPXU",
+      "price": "9.1",
+      "changes": -0.4,
+      "changesPercentage": "-4.2105"
+    },
+    {
+      "companyName": "Direxion Daily Small Cap Bull 3X Shares",
+      "ticker": "TNA",
+      "price": "35.67",
+      "changes": 3.43,
+      "changesPercentage": "10.6389"
+    },
+    {
+      "companyName": "iShares MSCI Emerging Markets ETF",
+      "ticker": "EEM",
+      "price": "39.64",
+      "changes": 0.39,
+      "changesPercentage": "0.9936"
+    },
+    {
+      "companyName": "Intel Corporation",
+      "ticker": "INTC",
+      "price": "44.57",
+      "changes": 0.53,
+      "changesPercentage": "1.2034"
+    },
+    {
+      "companyName": "Carnival Corporation & plc",
+      "ticker": "CCL",
+      "price": "18.27",
+      "changes": 0.45,
+      "changesPercentage": "2.5253"
+    },
+    {
+      "companyName": "iShares Silver Trust",
+      "ticker": "SLV",
+      "price": "21.77",
+      "changes": 0.93,
+      "changesPercentage": "4.4626"
+    },
+    {
+      "companyName": "Plug Power Inc.",
+      "ticker": "PLUG",
+      "price": "4.31",
+      "changes": 0.38,
+      "changesPercentage": "9.6692"
     }
   ]
 }

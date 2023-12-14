@@ -1,4 +1,5 @@
 ﻿using JsonFlatFileDataStore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ProjectX.Core;
 using Skender.Stock.Indicators;
@@ -79,7 +80,7 @@ namespace ProjectX.MarketData.Cache
         }
 
         static string Key(Category category, string ticker, DateTime from, DateTime to) => $"{category.ToString().ToLower()};{ticker};{from.ToString("yyyy-MM-dd")};{to.ToString("yyyy-MM-dd")}";
-        static string Key(DateTime dateTime, Operation operation) => $"{dateTime};{operation}";
+        static string Key(DateTime dateTime, Operation operation) => $"{dateTime.ToString("dMMyyyy")};{operation}";
         public void CleanFile()
         {
             try
