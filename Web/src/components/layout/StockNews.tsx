@@ -47,7 +47,7 @@ export default function StockNews() {
             });
     };
 
-    const handleStockSymbolChange = (event) => {
+    const handleStockSymbolChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setStockSymbol(event.target.value);
     };
  
