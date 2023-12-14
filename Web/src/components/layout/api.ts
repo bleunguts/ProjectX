@@ -35,10 +35,14 @@ const api = {
             .catch((error: string) => error);
     },
     fetchHighestGainerStocks: async (limitRows: number) => {
-        return await axios.get(`${backendServer}/StockMarketInsights/HighestGainerStocks?limit=${limitRows}`);
+        const endpoint =`${backendServer}/StockMarketInsights/HighestGainerStocks/${limitRows}`;
+        console.log(`Fetching from ${endpoint}`);
+        return await axios.get(endpoint);
     },
     fetchMostActiveStocks: async (limitRows: number) => {
-        return await axios.get(`${backendServer}/StockMarketInsights/MostActiveStocks?limit=${limitRows}`);
+        const endpoint = `${backendServer}/StockMarketInsights/MostActiveStocks/${limitRows}`;
+        console.log(`Fetching from ${endpoint}`);
+        return await axios.get(endpoint);
     },
     submitFxRateSubscribeRequest: async (ccyName: string) => {
         let requestId = uuidv1();

@@ -9,10 +9,18 @@ import SyncIcon from '@mui/icons-material/Sync';
 import { AxiosResponse } from 'axios';
 import api from './api';
 
+export interface StockMarketSymbol {
+    ticker: string,
+    changes: number,
+    price: string,
+    changesPercentage: string,
+    companyName: string
+};
+
 export default function StockNews() {
     const [stockSymbol, setStockSymbol] = useState<string>("AAPL")
-    const [highestGainerStocks, setHighestGainerStocks] = useState<any[]>(cannedGainers);
-    const [mostActiveStocks, setMostActiveStocks] = useState<any[]>(cannedMostActive);
+    const [highestGainerStocks, setHighestGainerStocks] = useState<StockMarketSymbol[]>(cannedGainers);
+    const [mostActiveStocks, setMostActiveStocks] = useState<StockMarketSymbol[]>(cannedMostActive);
     
     useEffect(() => {
         getHighestGainerStocks(cannedGainers);
@@ -44,7 +52,6 @@ export default function StockNews() {
         getHighestGainerStocks([]);
     };
     const handleMostActiveClick = (event: SyntheticEvent) => {
-        const target = event.target;
         console.log(`Most Active refresh clicked.`);       
         getMostActiveStocks([]);
     };
@@ -53,6 +60,14 @@ export default function StockNews() {
         // do something
         
     };
+
+    function prettify(changesPercentage: string): string {
+        return changesPercentage.includes('.') ?
+                changesPercentage.substring(0, changesPercentage.indexOf('.') + 2)
+                :
+                changesPercentage;
+    }
+
     return (
         <>
             <Typography variant="h6" align="center" gutterBottom>
@@ -63,11 +78,11 @@ export default function StockNews() {
             </Typography>
             {highestGainerStocks.map((gainer) =>
             (
-                <Grid container direction='row' spacing={0.5} alignItems="center" justifyContent="center" alignContent='center'>
-                    <Grid item xs={2}><Typography><b>{gainer.symbol}</b></Typography></Grid>
-                    <Grid item xs={2}><Typography>${gainer.price.toFixed(1)}</Typography></Grid>
-                    <Grid item xs={2}><Typography>{gainer.changesPercentage.toFixed(1)}%</Typography></Grid> 
-                    <Grid item xs={1}><Button disabled={true} onClick={() => handleApplyClick(gainer.symbol)}>APPLY STRATEGY</Button></Grid>                                       
+                <Grid key={JSON.stringify(gainer)} container direction='row' spacing={0.5} alignItems="center" justifyContent="center" alignContent='center'>
+                    <Grid item xs={2}><Typography><b>{gainer.ticker}</b></Typography></Grid>
+                    <Grid item xs={2}><Typography>${gainer.price}</Typography></Grid>
+                    <Grid item xs={2}><Typography>{prettify(gainer.changesPercentage)}%</Typography></Grid> 
+                    <Grid item xs={1}><Button disabled={true} onClick={() => handleApplyClick(gainer.ticker)}>APPLY STRATEGY</Button></Grid>                                       
                 </Grid>
             ))}
             <Typography variant="h6" align="center" gutterBottom>
@@ -75,11 +90,11 @@ export default function StockNews() {
             </Typography>
             {mostActiveStocks.map((stock) =>
             (
-                <Grid container direction='row' spacing={0.5} alignItems="center" justifyContent="center" alignContent='center'>
-                    <Grid item xs={2}><Typography><b>{stock.symbol}</b></Typography></Grid>
-                    <Grid item xs={2}><Typography>${stock.price.toFixed(1)}</Typography></Grid>
-                    <Grid item xs={2}><Typography>{stock.changesPercentage.toFixed(1)}%</Typography></Grid>
-                    <Grid item xs={1}><Button disabled={true} onClick={() => handleApplyClick(stock.symbol)}>APPLY STRATEGY</Button></Grid>   
+                <Grid key={JSON.stringify(stock)} container direction='row' spacing={0.5} alignItems="center" justifyContent="center" alignContent='center'>
+                    <Grid item xs={2}><Typography><b>{stock.ticker}</b></Typography></Grid>
+                    <Grid item xs={2}><Typography>${stock.price}</Typography></Grid>
+                    <Grid item xs={2}><Typography>{prettify(stock.changesPercentage)}%</Typography></Grid>
+                    <Grid item xs={1}><Button disabled={true} onClick={() => handleApplyClick(stock.ticker)}>APPLY STRATEGY</Button></Grid>   
                 </Grid>
             ))}
         </>

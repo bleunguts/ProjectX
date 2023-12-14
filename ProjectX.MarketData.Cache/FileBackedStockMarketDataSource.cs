@@ -6,6 +6,7 @@ using Skender.Stock.Indicators;
 namespace ProjectX.MarketData.Cache
 {
     public enum Category { Hurst, Prices, Quotes };
+    public enum Operation { GetHighestGainerStocks, GetMostActiveStocks}
 
     public class FileBackedStockMarketDataSource : IStockMarketSource
     {        
@@ -50,7 +51,7 @@ namespace ProjectX.MarketData.Cache
 
         public async Task<IEnumerable<StockMarketSymbol>> GetHighestGainerStocks()
         {
-            var key = Key(DateTime.Today.Date);
+            var key = Key(DateTime.Today.Date, Operation.GetHighestGainerStocks);
             return await GetFromCacheIfExistsElseFetch<IEnumerable<StockMarketSymbol>>(key, async() => 
             {
                 return await _marketDataSource.GetHighestGainerStocks();
@@ -59,7 +60,7 @@ namespace ProjectX.MarketData.Cache
 
         public async Task<IEnumerable<StockMarketSymbol>> GetMostActiveStocks()
         {
-            var key = Key(DateTime.Today.Date);
+            var key = Key(DateTime.Today.Date, Operation.GetMostActiveStocks);
             return await GetFromCacheIfExistsElseFetch<IEnumerable<StockMarketSymbol>>(key, async() => 
             {
                 return await _marketDataSource.GetMostActiveStocks();
@@ -78,7 +79,7 @@ namespace ProjectX.MarketData.Cache
         }
 
         static string Key(Category category, string ticker, DateTime from, DateTime to) => $"{category.ToString().ToLower()};{ticker};{from.ToString("yyyy-MM-dd")};{to.ToString("yyyy-MM-dd")}";
-        static string Key(DateTime dateTime) => dateTime.ToString();
+        static string Key(DateTime dateTime, Operation operation) => $"{dateTime};{operation}";
         public void CleanFile()
         {
             try
