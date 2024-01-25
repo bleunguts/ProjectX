@@ -3,6 +3,7 @@ using MatthiWare.FinancialModelingPrep;
 using ProjectX.Core;
 using Skender.Stock.Indicators;
 using MatthiWare.FinancialModelingPrep.Model;
+using MatthiWare.FinancialModelingPrep.Model.StockMarket;
 
 namespace ProjectX.MarketData;
 
@@ -39,12 +40,36 @@ public class FMPStockMarketSource : IStockMarketSource, IRealStockMarketSource
         return response.Historical.Select(h => h.ToQuote());
     }
 
+    public async Task<IEnumerable<StockMarketSymbol>> GetHighestGainerStocks()
+    {
+        var result = await _api.StockMarket.GetBiggestGainerStocksAsync();
+        var response = result.Data;
+        ThrowIfBadResponse(result);
+        return response.Select(r => r.ToStockMarketSymbol());
+    }
+
+    public async Task<IEnumerable<StockMarketSymbol>> GetMostActiveStocks()
+    {
+        var result = await _api.StockMarket.GetMostActiveStocksAsync();
+        var response = result.Data;
+        ThrowIfBadResponse(result);
+        return response.Select(r => r.ToStockMarketSymbol());
+    }
+
+    private void ThrowIfBadResponse(ApiResponse<List<StockMarketSymbolResponse>> result)
+    {
+        ThrowIfError(result);
+
+        var response = result.Data;
+        if (response == null)
+        {
+            throw new Exception($"Cannot fetch any data for GetBiggestGainerStocksAsync api call sourceProvider: {this}");
+        }
+    }
+
     private void ThrowIfBadResponse(string ticker, DateTime from, DateTime to, ApiResponse<HistoricalPriceResponse> result)
     {
-        if (result.HasError)
-        {
-            throw new Exception($"Error occured: {result.Error}");
-        }
+        ThrowIfError(result);
 
         var response = result.Data;
         if (response.Historical == null)
@@ -53,6 +78,13 @@ public class FMPStockMarketSource : IStockMarketSource, IRealStockMarketSource
         }
     }
 
+    private static void ThrowIfError<T>(ApiResponse<T> result) where T: class
+    {
+        if (result.HasError)
+        {
+            throw new Exception($"Error occured: {result.Error}");
+        }
+    }
 
     public override string ToString() => $"FinancialModelingPrep market source {_api.ToString()}";
 }

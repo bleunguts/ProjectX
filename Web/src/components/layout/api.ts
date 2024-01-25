@@ -5,6 +5,7 @@ import { v1 as uuidv1 } from 'uuid';
 
 const backendServer = `https://projectxgatewayapi-app-20231130.yellowfield-d8e525a6.uksouth.azurecontainerapps.io`;
 //const backendServer = `https://localhost:8081`;
+
 const connection = new signalR.HubConnectionBuilder()
     .withUrl(`${backendServer}/streamHub`)
     .configureLogging(signalR.LogLevel.Information)
@@ -32,6 +33,16 @@ const api = {
         return await axios.get(backendServer)
             .then((response) => response)
             .catch((error: string) => error);
+    },
+    fetchHighestGainerStocks: async (limitRows: number) => {
+        const endpoint =`${backendServer}/StockMarketInsights/HighestGainerStocks/${limitRows}`;
+        console.log(`Fetching from ${endpoint}`);
+        return await axios.get(endpoint);
+    },
+    fetchMostActiveStocks: async (limitRows: number) => {
+        const endpoint = `${backendServer}/StockMarketInsights/MostActiveStocks/${limitRows}`;
+        console.log(`Fetching from ${endpoint}`);
+        return await axios.get(endpoint);
     },
     submitFxRateSubscribeRequest: async (ccyName: string) => {
         let requestId = uuidv1();

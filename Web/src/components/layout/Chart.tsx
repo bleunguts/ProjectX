@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid, Legend } from 'recharts';
 import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
 
 // create data for chart
 export interface ChartProps {
@@ -14,6 +15,16 @@ export default function Chart(props: ChartProps) {
   
   return (
     <React.Fragment>
+      <Grid container direction="row" spacing={1.5} alignItems="right" justifyContent="flex-end" alignContent='center'>
+        <Grid item> 
+        <select>
+          <option value="LongShortMean">Long-Short (Bollinger)</option>
+          <option value="LongShortMomentum" disabled={true}>Long-Short (RSI)</option>
+          <option value="PairsMean" disabled={true}>Correlated Pairs (Bollinger)</option>
+          <option value="PairsMomentum" disabled={true}>Correlated Pairs (WilliamsR)</option>
+        </select>
+        </Grid>
+      </Grid>
       <Typography component="h6" variant="body1" color="primary" gutterBottom>
       {label}
       </Typography>

@@ -11,6 +11,8 @@ namespace ProjectX.Core
         Task<IEnumerable<MarketPrice>> GetPrices(string ticker, DateTime from, DateTime to);
         Task<IEnumerable<double?>> GetHurst(string ticker, DateTime from, DateTime to);
         Task<IEnumerable<Quote>> GetQuote(string ticker, DateTime from, DateTime to);
+        Task<IEnumerable<StockMarketSymbol>> GetHighestGainerStocks();
+        Task<IEnumerable<StockMarketSymbol>> GetMostActiveStocks();
     }
 
     public class MarketPrice : IQuote
@@ -27,5 +29,14 @@ namespace ProjectX.Core
 
         public decimal Close { get; set; }
         public string Ticker { get; set; }
+    }
+
+     public class StockMarketSymbol
+    {
+        public string CompanyName { get; set; }
+        public string Ticker { get; set; }
+        public string Price { get; set; }
+        public double Changes { get; set; }
+        public string ChangesPercentage { get; set; }
     }
 }

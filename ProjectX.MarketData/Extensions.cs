@@ -1,4 +1,5 @@
-﻿using MatthiWare.FinancialModelingPrep.Model.StockTimeSeries;
+﻿using MatthiWare.FinancialModelingPrep.Model.StockMarket;
+using MatthiWare.FinancialModelingPrep.Model.StockTimeSeries;
 using ProjectX.Core;
 using Skender.Stock.Indicators;
 
@@ -25,5 +26,15 @@ public static class Extensions
         Low = Convert.ToDecimal(p.Low),
         Volume = Convert.ToDecimal(p.Volume),
         Date = DateTime.Parse(p.Date)
+    };
+
+
+    public static StockMarketSymbol ToStockMarketSymbol(this StockMarketSymbolResponse s) => new() 
+    {
+        CompanyName = s.CompanyName,
+        Ticker = s.Ticker,
+        Price = s.Price,
+        Changes = s.Changes,
+        ChangesPercentage = s.ChangesPercentage,
     };
 }

@@ -5,7 +5,7 @@
             "name": "C#: ProjectX.GatewayAPI Debug",
             "type": "dotnet",
             "request": "launch",
-            "projectPath": "${workspaceFolder}/ProjectX.GatewayAPI.csproj"
+            "projectPath": "${workspaceFolder}/ProjectX.GatewayAPI/ProjectX.GatewayAPI.csproj",
         }
     ]
 }

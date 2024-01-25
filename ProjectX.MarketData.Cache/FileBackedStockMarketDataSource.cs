@@ -1,4 +1,5 @@
 ﻿using JsonFlatFileDataStore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ProjectX.Core;
 using Skender.Stock.Indicators;
@@ -6,6 +7,7 @@ using Skender.Stock.Indicators;
 namespace ProjectX.MarketData.Cache
 {
     public enum Category { Hurst, Prices, Quotes };
+    public enum Operation { GetHighestGainerStocks, GetMostActiveStocks}
 
     public class FileBackedStockMarketDataSource : IStockMarketSource
     {        
@@ -24,7 +26,7 @@ namespace ProjectX.MarketData.Cache
         public async Task<IEnumerable<double?>> GetHurst(string ticker, DateTime from, DateTime to)
         {
             var key = Key(Category.Hurst, ticker, from, to);
-            return await GetFromCacheIfExistsElseFetch<IEnumerable<double?>>(ticker, from, to, key, async () =>
+            return await GetFromCacheIfExistsElseFetch<IEnumerable<double?>>(key, async () =>
             {
                 return await _marketDataSource.GetHurst(ticker, from, to);
             });
@@ -33,7 +35,7 @@ namespace ProjectX.MarketData.Cache
         public async Task<IEnumerable<MarketPrice>> GetPrices(string ticker, DateTime from, DateTime to)
         {
             var key = Key(Category.Prices, ticker, from, to);
-            return await GetFromCacheIfExistsElseFetch<IEnumerable<MarketPrice>>(ticker, from, to, key, async () =>
+            return await GetFromCacheIfExistsElseFetch<IEnumerable<MarketPrice>>(key, async () =>
             {
                 return await _marketDataSource.GetPrices(ticker, from, to);
             });
@@ -42,13 +44,31 @@ namespace ProjectX.MarketData.Cache
         public async Task<IEnumerable<Quote>> GetQuote(string ticker, DateTime from, DateTime to)
         {
             var key = Key(Category.Quotes, ticker, from, to);
-            return await GetFromCacheIfExistsElseFetch<IEnumerable<Quote>>(ticker, from, to, key, async () =>
+            return await GetFromCacheIfExistsElseFetch<IEnumerable<Quote>>(key, async () =>
             {
                 return await _marketDataSource.GetQuote(ticker, from, to);
             });
         }
 
-        private async Task<T> GetFromCacheIfExistsElseFetch<T>(string ticker, DateTime from, DateTime to, string key, Func<Task<T>> fetchFromSource)
+        public async Task<IEnumerable<StockMarketSymbol>> GetHighestGainerStocks()
+        {
+            var key = Key(DateTime.Today.Date, Operation.GetHighestGainerStocks);
+            return await GetFromCacheIfExistsElseFetch<IEnumerable<StockMarketSymbol>>(key, async() => 
+            {
+                return await _marketDataSource.GetHighestGainerStocks();
+            });
+        }
+
+        public async Task<IEnumerable<StockMarketSymbol>> GetMostActiveStocks()
+        {
+            var key = Key(DateTime.Today.Date, Operation.GetMostActiveStocks);
+            return await GetFromCacheIfExistsElseFetch<IEnumerable<StockMarketSymbol>>(key, async() => 
+            {
+                return await _marketDataSource.GetMostActiveStocks();
+            });
+        }
+
+        private async Task<T> GetFromCacheIfExistsElseFetch<T>(string key, Func<Task<T>> fetchFromSource)
         {
             if (!_store.GetKeys().TryGetValue(key, out _))
             {                
@@ -60,7 +80,7 @@ namespace ProjectX.MarketData.Cache
         }
 
         static string Key(Category category, string ticker, DateTime from, DateTime to) => $"{category.ToString().ToLower()};{ticker};{from.ToString("yyyy-MM-dd")};{to.ToString("yyyy-MM-dd")}";
-
+        static string Key(DateTime dateTime, Operation operation) => $"{dateTime.ToString("dMMyyyy")};{operation}";
         public void CleanFile()
         {
             try

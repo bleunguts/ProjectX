@@ -49,6 +49,19 @@ namespace ProjectX.MarketData.Tests
         }
 
         [Test]
+        [Ignore("External Tool for testing only")]
+        public async Task WhenGettingStockMarketMostActiveFromFMP() 
+        {
+            var marketDataService = new FMPStockMarketSource();
+            var mostActiveStocks = await marketDataService.GetMostActiveStocks();
+            Assert.That(mostActiveStocks.Count(), Is.GreaterThan(0));
+            foreach(var data in mostActiveStocks) 
+            {
+                Console.WriteLine($"{data.CompanyName} {data.Ticker} {data.Price} {data.Changes} {data.ChangesPercentage}");
+            }
+        }
+
+        [Test]
         [Ignore("Use to try out StockIndicator Api features")]
         public async Task WhenGettingBollingerBandsFromFMQ()
         {

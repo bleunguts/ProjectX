@@ -27,8 +27,15 @@ namespace ProjectX.MarketData.Cache.Tests
             new Quote{ Close = 2.0M },
             new Quote{ Close = 3.0M },
         };
+        IEnumerable<StockMarketSymbol> highestGainers = new StockMarketSymbol[] 
+        {
+            new StockMarketSymbol{ Ticker="aTicker", CompanyName="aCompanyName", Changes = 1.2, ChangesPercentage = "10.4", Price = "20.0"},
+            new StockMarketSymbol{ Ticker="aTicker2", CompanyName="aCompanyName2", Changes = -1.2, ChangesPercentage = "-5.4", Price = "100.0"},
+            new StockMarketSymbol{ Ticker="aTicker3", CompanyName="aCompanyName3", Changes = 5, ChangesPercentage = "3.5", Price = "150.0"},
+        };
         Comparer<MarketPrice> marketPriceComparer = Comparer<MarketPrice>.Create(new Comparison<MarketPrice>(compareMarketPrice));
-        Comparer<Quote> quoteComparer = Comparer<Quote>.Create(new Comparison<Quote>(compareQuote));       
+        Comparer<Quote> quoteComparer = Comparer<Quote>.Create(new Comparison<Quote>(compareQuote));    
+        Comparer<StockMarketSymbol> stockMarketSymbolComparer = Comparer<StockMarketSymbol>.Create(new Comparison<StockMarketSymbol>(compareStockMarketSymbols));   
 
         [SetUp]
         public void Setup()
@@ -36,6 +43,7 @@ namespace ProjectX.MarketData.Cache.Tests
             _marketData.Setup(x => x.GetHurst(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(Task.FromResult(hurst));
             _marketData.Setup(x => x.GetPrices(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(Task.FromResult(prices));
             _marketData.Setup(x => x.GetQuote(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>())).Returns(Task.FromResult(quotes));
+            _marketData.Setup(x => x.GetHighestGainerStocks()).Returns(Task.FromResult(highestGainers));
             var options = Options.Create<FileBackedStoreMarketDataSourceOptions>(new FileBackedStoreMarketDataSourceOptions { Filename = "tests.json" });
             _dataSource = new FileBackedStockMarketDataSource(_marketData.Object, options);
             _dataSource.CleanFile();
@@ -139,5 +147,36 @@ namespace ProjectX.MarketData.Cache.Tests
             return -1;
         }
 
+        [Test]
+        public async Task GetHighestGainsStockUsesCache()
+        {
+            var initialResults = await _dataSource.GetHighestGainerStocks();
+            CollectionAssert.AreEqual(highestGainers, initialResults, stockMarketSymbolComparer);
+            var cachedResults = await _dataSource.GetHighestGainerStocks();
+            CollectionAssert.AreEqual(highestGainers, cachedResults, stockMarketSymbolComparer);
+
+            _marketData.Verify(x => x.GetHighestGainerStocks(), Times.Once);
+        }
+
+        private static int compareStockMarketSymbols(StockMarketSymbol x, StockMarketSymbol y)
+        {
+             if (x.Ticker == y.Ticker &&
+                x.CompanyName == y.CompanyName &&
+                x.Changes == y.Changes &&
+                x.ChangesPercentage == y.ChangesPercentage &&
+                x.Price == y.Price
+            )
+                return 0;
+
+            if (x.Ticker.CompareTo(y.Ticker) == 1 ||
+               x.CompanyName.CompareTo(y.CompanyName) == 1 ||
+               x.Changes.CompareTo(y.Changes) == 1 ||
+               x.ChangesPercentage.CompareTo(y.ChangesPercentage) == 1 ||
+               x.Price.CompareTo(y.Price) == 1 
+           )
+                return 1;
+
+            return -1;
+        }
     }
 }
