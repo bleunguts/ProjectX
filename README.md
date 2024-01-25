@@ -47,3 +47,4 @@ _Tech Stack:_
 * StockIndicators Skender API,  NinjaTrader StockInidicator API, FinancialModellingPrep MarketData API, Quandl MarketData API
 * Trend indicator methods: Bollinger Bands, Moving Averages
  
+.
