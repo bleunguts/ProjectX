@@ -58,6 +58,7 @@ export const Main = observer(function Main(props: MainProps) {
                             height: 200,
                         }}
                     >              
+                    <Typography>{tradingStrategyStore.symbol}</Typography>
                     <Chart label='Long & Short Strategy Pnl' data={tradingStrategyStore.data}/>                                   
                     </Paper>
                 </CardContent>

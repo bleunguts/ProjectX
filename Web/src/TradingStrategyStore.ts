@@ -1,6 +1,6 @@
 import { RootStore } from "./RootStore";
 import { BackenedApi } from "./api";
-import { makeAutoObservable, runInAction} from "mobx"
+import { reaction, runInAction, makeAutoObservable, observable } from 'mobx';
 import { FakeStrategyChartData } from "./components/layout/DummyData";
 
 export interface ChartData {
@@ -16,25 +16,28 @@ export class TradingStrategyStore
 
     isLoading: boolean = false;
     data: ChartData[] = [];
+    symbol : string;
 
     constructor(root: RootStore, transport: BackenedApi) {
-      makeAutoObservable(this);
-
       this.root = root
       this.transport = transport;
+      makeAutoObservable(this);
 
-      this.loadChartData();
+      this.symbol = 'AAPL';
+      this.loadChartData(this.symbol);
+
+      reaction(
+            () => this.symbol, 
+            newSymbol => { this.loadChartData(newSymbol)}
+      );
     }
 
-    loadChartData() {
+    loadChartData(symbol: string) {
         this.isLoading = true;
         runInAction(() => {
-            console.log(`Data length: ${FakeStrategyChartData.length}`);
+            console.log(`Symbol: ${symbol} loaded, Data length: ${FakeStrategyChartData.length}`);
             this.data = FakeStrategyChartData;
             this.isLoading = false;
         })
     }
 }
-
-
-  

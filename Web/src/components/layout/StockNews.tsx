@@ -8,6 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import SyncIcon from '@mui/icons-material/Sync';
 import { AxiosResponse } from 'axios';
 import api from '../../api';
+import { useRootStore } from '../../RootStoreProvider';
 
 export interface StockMarketSymbol {
     ticker: string,
@@ -18,7 +19,8 @@ export interface StockMarketSymbol {
 };
 
 export default function StockNews() {
-    const [stockSymbol, setStockSymbol] = useState<string>("AAPL")
+    const { tradingStrategyStore } = useRootStore();
+    const [stockSymbol, setStockSymbol] = useState<string>(tradingStrategyStore.symbol);
     const [highestGainerStocks, setHighestGainerStocks] = useState<StockMarketSymbol[]>(cannedGainers);
     const [mostActiveStocks, setMostActiveStocks] = useState<StockMarketSymbol[]>(cannedMostActive);
     
@@ -27,7 +29,7 @@ export default function StockNews() {
         getMostActiveStocks(cannedMostActive);
     }, []);
 
-    const getHighestGainerStocks = (defaultsOnFail : any[]) => {
+    const getHighestGainerStocks = (defaultsOnFail : unknown[]) => {
         api        
             .fetchHighestGainerStocks(6)
             .then((res) => setHighestGainerStocks((res as AxiosResponse<any, any>).data))
@@ -64,8 +66,8 @@ export default function StockNews() {
         handleStrategize();
     };
     const handleStrategize = () => {
-        console.log(`Strategizing target: ${stockSymbol} ...`);    
-        // TODO: invoke strategize     
+        console.log(`Strategizing target: ${stockSymbol} ...`);     
+        tradingStrategyStore.symbol = stockSymbol;
     };
 
     function prettify(changesPercentage: string): string {
@@ -79,8 +81,8 @@ export default function StockNews() {
         <>
             <Grid container direction="row" spacing={1.5} alignItems="right" justifyContent="flex-end" alignContent='center'>
                 <Grid item><Typography variant="h6" align="center" gutterBottom>Stock Symbol:</Typography></Grid>
-                <Grid item><input id="stockSymbol" type="text" size={5} disabled={true} value={stockSymbol} onChange={handleStockSymbolChange}/></Grid>
-                <Grid item><Button disabled={true} onClick={handleStrategize}>STRATEGIZE</Button></Grid>
+                <Grid item><input id="stockSymbol" type="text" size={5} disabled={false} value={stockSymbol} onChange={handleStockSymbolChange}/></Grid>
+                <Grid item><Button disabled={false} onClick={handleStrategize}>STRATEGIZE</Button></Grid>
             </Grid>
             <Typography variant="h6" align="center" gutterBottom>
             Stock Market Highest Gainers <IconButton onClick={handleHighestGainersClick}><SyncIcon></SyncIcon></IconButton>
