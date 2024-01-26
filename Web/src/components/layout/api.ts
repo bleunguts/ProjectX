@@ -3,7 +3,7 @@ import { HubConnectionState } from "@microsoft/signalr";
 import axios from 'axios';
 import { v1 as uuidv1 } from 'uuid';
 
-const backendServer =  `https://projectxgatewayapi-app-20231130--go6s9zx.icybay-6c4fad7d.westus2.azurecontainerapps.io/`;
+const backendServer =  `https://projectxgatewayapi-app-20231130.icybay-6c4fad7d.westus2.azurecontainerapps.io`;
 //const backendServer = `https://localhost:8081`;
 
 const connection = new signalR.HubConnectionBuilder()
@@ -45,8 +45,8 @@ const api = {
         return await axios.get(endpoint);
     },
     submitFxRateSubscribeRequest: async (ccyName: string) => {
-        let requestId = uuidv1();
-        let body = {
+        const requestId = uuidv1();
+        const body = {
             "currencyPair": ccyName,
             "clientName": "Web",
             "mode": 0, // subscribe
@@ -55,8 +55,8 @@ const api = {
         return await axios.post(`${backendServer}/FXPricing`, body);
     },
     submitFxRateUnsubscribeRequest: async (ccyName: string) => {
-        let requestId = uuidv1();
-        let body = {
+        const requestId = uuidv1();
+        const body = {
             "currencyPair": ccyName,
             "clientName": "Web",
             "mode": 1, // unsubscribe
@@ -72,7 +72,3 @@ const api = {
     }
 }
 export default api; 
-
-function uuidv4() {
-    throw new Error("Function not implemented.");
-}
