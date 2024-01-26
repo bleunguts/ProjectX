@@ -77,7 +77,7 @@ jobs:
       working-directory: Web/
       run: zip release.zip ./* -r
     - name: Upload artifact for deployment job      
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: node-app
         path: Web/release.zip  
@@ -87,7 +87,7 @@ jobs:
     needs: buildWeb   
     steps:
     - name: Download artifact from build job
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: node-app
     - name: unzip artifact for deployment
