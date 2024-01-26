@@ -1,6 +1,6 @@
 import { RootStore } from "./RootStore";
 import { BackenedApi } from "./api";
-import { reaction, runInAction, makeAutoObservable, observable } from 'mobx';
+import { reaction, runInAction, makeAutoObservable } from 'mobx';
 import { FakeStrategyChartData } from "./components/layout/DummyData";
 
 export interface ChartData {

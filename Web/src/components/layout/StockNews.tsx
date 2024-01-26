@@ -16,7 +16,7 @@ export interface StockMarketSymbol {
     price: string,
     changesPercentage: string,
     companyName: string
-};
+}
 
 export default function StockNews() {
     const { tradingStrategyStore } = useRootStore();
@@ -29,20 +29,20 @@ export default function StockNews() {
         getMostActiveStocks(cannedMostActive);
     }, []);
 
-    const getHighestGainerStocks = (defaultsOnFail : unknown[]) => {
+    const getHighestGainerStocks = (defaultsOnFail : StockMarketSymbol[]) => {
         api        
             .fetchHighestGainerStocks(6)
-            .then((res) => setHighestGainerStocks((res as AxiosResponse<any, any>).data))
+            .then((res) => setHighestGainerStocks((res as AxiosResponse<never, never>).data as StockMarketSymbol[]))
             .catch((error) => {    
                 console.log(`Error occured in fetching data from backend: ${error}`);
                 setHighestGainerStocks(defaultsOnFail);
             });
     };
 
-    const getMostActiveStocks = (defaultsOnFail : any[]) => {
+    const getMostActiveStocks = (defaultsOnFail : StockMarketSymbol[]) => {
         api        
             .fetchMostActiveStocks(6)
-            .then((res) => setMostActiveStocks((res as AxiosResponse<any, any>).data))
+            .then((res) => setMostActiveStocks((res as AxiosResponse<never, never>).data as StockMarketSymbol[]))
             .catch((error) => {   
                 console.log(`Error occured in fetching data from backend: ${error}`);
                 setMostActiveStocks(defaultsOnFail);
@@ -53,12 +53,12 @@ export default function StockNews() {
         setStockSymbol(event.target.value);
     };
  
-    const handleHighestGainersClick = (event: SyntheticEvent) => {
-        console.log(`Highest Gainers refresh clicked.`);       
+    const handleHighestGainersClick = (event : SyntheticEvent) => {
+        console.log(`Highest Gainers refresh clicked ${event.target}`);       
         getHighestGainerStocks([]);
     };
     const handleMostActiveClick = (event: SyntheticEvent) => {
-        console.log(`Most Active refresh clicked.`);       
+        console.log(`Most Active refresh clicked ${event.target}.`);       
         getMostActiveStocks([]);
     };
     const handleStrategizeFrom = (symbol: string) => {
