@@ -1,7 +1,7 @@
 import { RootStore } from "./RootStore";
 import { BackenedApi } from "./api";
 import { reaction, runInAction, makeAutoObservable } from 'mobx';
-import { FakeStrategyChartData } from "./components/layout/DummyData";
+import { FakeStrategyBTCUSD as FakeStrategyBTCUSDData, FakeStrategyChartData, FakeStrategyIBMData } from "./components/layout/DummyData";
 
 export interface ChartData {
     time: string,
@@ -33,11 +33,31 @@ export class TradingStrategyStore
     }
 
     loadChartData(symbol: string) {
-        this.isLoading = true;
-        runInAction(() => {
-            console.log(`Symbol: ${symbol} loaded, Data length: ${FakeStrategyChartData.length}`);
-            this.data = FakeStrategyChartData;
+        try {
+            this.isLoading = true;
+            const data = fetchData(symbol);
+            runInAction(() => {
+                console.log(`Symbol: ${symbol} loaded, data length: ${data.length}`);
+                this.data = data;
+            })
+         }
+         catch(e) {
+            console.log(`Error occurred whilst loading new symbol... ${e}`);
+            this.symbol = 'ERROR LOADING SYMBOL..';
+         }
+         finally {
             this.isLoading = false;
-        })
+         }
     }
 }
+
+function fetchData(symbol: string): ChartData[] {
+    switch(symbol)
+    {
+        case 'AAPL': return FakeStrategyChartData;
+        case 'IBM' : return FakeStrategyIBMData;
+        case 'BTCUSD' : return FakeStrategyBTCUSDData;
+        default: throw new Error(`Cannot load data for symbol ${symbol}`);
+    }
+}
+

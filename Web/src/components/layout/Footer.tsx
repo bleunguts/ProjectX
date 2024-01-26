@@ -3,9 +3,7 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
-import axios, { AxiosResponse } from 'axios';
-import * as signalR from "@microsoft/signalr";
-import { HubConnectionState } from '@microsoft/signalr';
+import { AxiosResponse } from 'axios';
 import api from '../../api';
 
 function Copyright() {

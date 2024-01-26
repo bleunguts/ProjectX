@@ -81,7 +81,16 @@ export default function StockNews() {
         <>
             <Grid container direction="row" spacing={1.5} alignItems="right" justifyContent="flex-end" alignContent='center'>
                 <Grid item><Typography variant="h6" align="center" gutterBottom>Stock Symbol:</Typography></Grid>
-                <Grid item><input id="stockSymbol" type="text" size={5} disabled={false} value={stockSymbol} onChange={handleStockSymbolChange}/></Grid>
+                <Grid item>
+                <select value={stockSymbol} onChange={handleStockSymbolChange}>
+                    <option value="AAPL">AAPL</option>
+                    <option value="IBM">IBM</option>
+                    <option value="BTCUSD">BTCUSD</option>
+                </select>
+                </Grid>
+                <Grid item><input id="stockSymbol" type="text" size={10} disabled={false} value={stockSymbol} onChange={handleStockSymbolChange}/></Grid>
+            </Grid>
+            <Grid container direction="row" spacing={1.5} alignItems="center" justifyContent="flex-end" alignContent='center'>
                 <Grid item><Button disabled={false} onClick={handleStrategize}>STRATEGIZE</Button></Grid>
             </Grid>
             <Typography variant="h6" align="center" gutterBottom>
