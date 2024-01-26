@@ -25,6 +25,7 @@
     "uuidv4": "^6.2.13"
   },
   "devDependencies": {
+    "@types/node": "^20.11.6",
     "@types/plotly.js": "^2.12.29",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
