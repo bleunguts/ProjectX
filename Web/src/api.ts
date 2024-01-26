@@ -1,6 +1,6 @@
 import * as signalR from "@microsoft/signalr";
 import { HubConnectionState } from "@microsoft/signalr";
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { v1 as uuidv1 } from 'uuid';
 
 const backendServer =  `https://projectxgatewayapi-app-20231130.icybay-6c4fad7d.westus2.azurecontainerapps.io`;
@@ -32,7 +32,17 @@ connection.onclose(async () => {
     await startHubConnection();
 });
 
-const api = {    
+export interface BackenedApi {
+    fetchHealthCheck(): Promise<string | AxiosResponse<unknown,unknown>>,
+    fetchHighestGainerStocks(limitRows: number): Promise<AxiosResponse<unknown,unknown>>,
+    fetchMostActiveStocks(limitRows: number): Promise<AxiosResponse<unknown,unknown>>,
+    submitFxRateSubscribeRequest(ccyName: string): Promise<AxiosResponse<unknown,unknown>>,
+    submitFxRateUnsubscribeRequest(ccyName: string): Promise<AxiosResponse<unknown,unknown>>,
+    startHub(): void,
+    connection(): signalR.HubConnection
+}
+
+const api: BackenedApi = {    
     fetchHealthCheck: async () => {
         return await axios.get(backendServer)
             .then((response) => response)

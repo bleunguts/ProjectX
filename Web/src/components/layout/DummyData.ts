@@ -1,15 +1,7 @@
 import { Datum } from "plotly.js";
+import { ChartData } from "../../TradingStrategyStore";
 
-export interface ChartData {
-  time: string,
-  amount: number
-}
-
-export function createData(time: string, amount: number) : ChartData {
-  return { time, amount };
-}
-
-export const FakeStrategyChartData = [
+export const FakeStrategyChartData: ChartData[] = [
     {
       "time": "230921",
       "amount": 0.0,

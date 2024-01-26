@@ -6,10 +6,10 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Header from './Header';
 import MainFeaturedPost from './MainFeaturedPost';
 import FeaturedPost from './FeaturedPost';
-import Main from './Main';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
 import { featuredPosts }  from './Posts'
+import { Main } from './Main';
 
 const sections = [
   { title: 'Home', url: '#' },

@@ -7,7 +7,7 @@ import { SyntheticEvent, useEffect, useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import SyncIcon from '@mui/icons-material/Sync';
 import { AxiosResponse } from 'axios';
-import api from './api';
+import api from '../../api';
 
 export interface StockMarketSymbol {
     ticker: string,

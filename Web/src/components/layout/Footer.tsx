@@ -6,7 +6,7 @@ import Link from '@mui/material/Link';
 import axios, { AxiosResponse } from 'axios';
 import * as signalR from "@microsoft/signalr";
 import { HubConnectionState } from '@microsoft/signalr';
-import api from './api';
+import api from '../../api';
 
 function Copyright() {
   return (

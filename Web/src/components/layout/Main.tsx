@@ -6,16 +6,19 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Paper from '@mui/material/Paper';
 import Chart from './Chart';
-import { FakeStrategyChartData, FakeVolatilityData } from './DummyData';
+import { FakeVolatilityData } from './DummyData';
 import Chart3D from './Chart3D';
+import { observer } from 'mobx-react-lite';
+import { useRootStore } from '../../RootStoreProvider';
 
 interface MainProps {
     posts: ReadonlyArray<string>;
     title: string;
 }
 
-export default function Main(props: MainProps) {
+export const Main = observer(function Main(props: MainProps) {
     const { posts, title } = props;
+    const { tradingStrategyStore } = useRootStore();
 
     return (
         <Grid
@@ -55,7 +58,7 @@ export default function Main(props: MainProps) {
                             height: 200,
                         }}
                     >              
-                    <Chart label='Long & Short Strategy Pnl' data={FakeStrategyChartData}/>                                   
+                    <Chart label='Long & Short Strategy Pnl' data={tradingStrategyStore.data}/>                                   
                     </Paper>
                 </CardContent>
             </Card>
@@ -82,4 +85,4 @@ export default function Main(props: MainProps) {
             </Card>          
         </Grid>
     );
-}
+});

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import api from './api';
+import api from '../../api';
 import FxRate, { CurrencyPair, CurrencyPairFormatted } from './FxRate';
 import { useState } from 'react';
 
