@@ -7,7 +7,11 @@ const backendServer =  `https://projectxgatewayapi-app-20231130.icybay-6c4fad7d.
 //const backendServer = `https://localhost:8081`;
 
 const connection = new signalR.HubConnectionBuilder()
-    .withUrl(`${backendServer}/streamHub`)
+    .withUrl(`${backendServer}/streamHub`,
+    {
+        accessTokenFactory: () => 'zpq+oW5R6HtWi0Or1XAI0BJcLHTaXOlQHLhRHo7A8IQ=',
+        withCredentials: false
+    })
     .configureLogging(signalR.LogLevel.Information)
     .build();
 
@@ -19,10 +23,10 @@ async function startHubConnection() {
         await connection.start();
         console.log("SignalR Connected.");
     } catch (err) {
-        console.log(err);
+        console.log(`SignalR Connection error: {err}`);
         setTimeout(startHubConnection, 5000);
     }
-};
+}
 
 connection.onclose(async () => {
     await startHubConnection();

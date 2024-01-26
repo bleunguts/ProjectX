@@ -129,7 +129,6 @@ public class Startup
             endpoints.MapControllers();
             if (env.IsProduction()) 
             {
-                // azure signalR not supported yet, don't run in prod
                 endpoints.MapHub<StreamHub>("/streamHub");
             }
             else 
