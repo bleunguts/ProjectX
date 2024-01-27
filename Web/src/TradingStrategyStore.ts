@@ -33,24 +33,43 @@ export class TradingStrategyStore
       );
     }
 
+    error = () => {
+        this.symbol = `ERROR LOADING SYMBOL..`;
+        this.data = FakeStrategyPlaceholder;
+    };
+
     loadChartData(symbol: string) {
         try {
             this.isLoading = true;
             runInAction(() => {
                 this.transport        
                     .fetchLongShortStrategy(symbol)
-                    .then((res) => this.data = ((res as AxiosResponse<never, never>).data as ChartData[]))
+                    .then((res) => {
+                        const resp = (res as AxiosResponse<never, never>);
+                        switch(resp.status) {
+                            case 204: {
+                                const cache = cachedData(symbol);
+                                if(cache != undefined){
+                                    this.data = cache as ChartData[];
+                                } else {
+                                    this.error();
+                                }
+                                break;
+                            }
+                            case 500: {
+                                this.error();
+                                break;
+                            }
+                            default:  {
+                                this.data = (resp.data as ChartData[]);
+                                break;
+                            }
+                        }
+                    })
                     .catch((e) => {
                         console.log(`Error occurred whilst loading new symbol... ${e}`);
                         console.log(e);
-                        const cache = cachedData(symbol);
-                        if (cache != undefined){
-                            this.data = cache as ChartData[];
-
-                        } else {
-                            this.symbol = `ERROR LOADING SYMBOL..`;
-                            this.data = FakeStrategyPlaceholder;
-                        }
+                        this.error();
                     });
                 
                 console.log(`Symbol: ${symbol} loaded, data length: ${this.data.length}`);
