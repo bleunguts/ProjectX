@@ -39,7 +39,12 @@ export class TradingStrategyStore
             runInAction(() => {
                 this.transport        
                     .fetchLongShortStrategy(symbol)
-                    .then((res) => this.data = ((res as AxiosResponse<never, never>).data as ChartData[]));
+                    .then((res) => this.data = ((res as AxiosResponse<never, never>).data as ChartData[]))
+                    .catch((e) => {
+                        console.log(`Error occurred whilst loading new symbol... ${e}`);
+                        this.symbol = `ERROR LOADING SYMBOL..`;
+                        this.data = FakeStrategyPlaceholder;
+                    });
                 
                 console.log(`Symbol: ${symbol} loaded, data length: ${this.data.length}`);
             })

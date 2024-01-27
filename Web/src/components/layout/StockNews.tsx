@@ -74,12 +74,19 @@ export default function StockNews() {
     const handleDoubleClick = () => {
         setStockSymbol("");
     }
+
     function prettify(changesPercentage: string): string {
         return changesPercentage.includes('.') ?
                 changesPercentage.substring(0, changesPercentage.indexOf('.') + 2)
                 :
                 changesPercentage;
     }
+
+    const stockSymbols: Array<string> = [
+        'AAPL',
+        'IBM',
+        'BTCUSD'
+    ];
 
     return (
         <>
@@ -88,9 +95,13 @@ export default function StockNews() {
                 <Grid item>
                     <input id="stockSymbol" type="text" size={6} disabled={false} value={stockSymbol} onChange={handleStockSymbolChange} list="datalist" onDoubleClick={handleDoubleClick}/>
                     <datalist id="datalist">
-                        <option value="AAPL">AAPL</option>
-                        <option value="IBM">IBM</option>
-                        <option value="BTCUSD">BTCUSD</option>
+                        { 
+                            stockSymbols.map(function(s) {
+                                return (
+                                    <option value={s}>{s}</option>
+                                )
+                            })
+                        }
                     </datalist>
                 </Grid>
                 <Grid item><Button disabled={false} onClick={handleStrategize}>STRATEGIZE</Button></Grid>

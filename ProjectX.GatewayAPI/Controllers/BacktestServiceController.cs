@@ -37,17 +37,25 @@ public class BacktestServiceController
         bool isReinvest = false;
         MovingAverageImpl movingAverageImpl = MovingAverageImpl.BollingerBandsImpl;
 
-        var marketPrices = await _stockMarketSource.GetPrices(ticker, fromDate, toDate);
-        var pnlRanking = _backtestService.ComputeLongShortPnlFull(marketPrices, notional, new TradingStrategy(TradingStrategyType.MeanReversion, isReinvest));
-        var maximumProfitStrategy = pnlRanking.OrderByDescending(p => p.pnlCum).First();
+        try
+        {
+            var marketPrices = await _stockMarketSource.GetPrices(ticker, fromDate, toDate);
+            var pnlRanking = _backtestService.ComputeLongShortPnlFull(marketPrices, notional, new TradingStrategy(TradingStrategyType.MeanReversion, isReinvest));
+            var maximumProfitStrategy = pnlRanking.OrderByDescending(p => p.pnlCum).First();
 
-        int movingWindow = maximumProfitStrategy.movingWindow;
-        double signalIn = maximumProfitStrategy.zin;
-        double signalOut = maximumProfitStrategy.zout;
+            int movingWindow = maximumProfitStrategy.movingWindow;
+            double signalIn = maximumProfitStrategy.zin;
+            double signalOut = maximumProfitStrategy.zout;
 
-        var smoothenedSignals = await _stockSignalService.GetSignalUsingMovingAverageByDefault(ticker, fromDate, toDate, movingWindow, movingAverageImpl);
-        List<StrategyPnl> pnlForMaximumProfit = _backtestService.ComputeLongShortPnl(smoothenedSignals, notional, signalIn, signalOut, new TradingStrategy(TradingStrategyType.MeanReversion, isReinvest)).ToList();
-        var data = pnlForMaximumProfit.Select(p => new StrategyChartData(p.Date.ToString("ddMMyy"), p.PnLCum, p.PnLCumHold));
-        return data;
+            var smoothenedSignals = await _stockSignalService.GetSignalUsingMovingAverageByDefault(ticker, fromDate, toDate, movingWindow, movingAverageImpl);
+            List<StrategyPnl> pnlForMaximumProfit = _backtestService.ComputeLongShortPnl(smoothenedSignals, notional, signalIn, signalOut, new TradingStrategy(TradingStrategyType.MeanReversion, isReinvest)).ToList();
+            var data = pnlForMaximumProfit.Select(p => new StrategyChartData(p.Date.ToString("ddMMyy"), p.PnLCum, p.PnLCumHold));
+            return data;
+        }
+        catch(Exception exp)
+        {
+            _logger.LogError($"Cannot GetLongShort Strategy for {ticker}, {fromDate} {toDate} {notional}, Reason: {exp.Message}");
+            throw;
+        }
     }
 }
