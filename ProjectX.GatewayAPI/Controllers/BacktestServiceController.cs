@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Any;
 using Newtonsoft.Json;
 using ProjectX.Core;
@@ -32,7 +33,7 @@ public class BacktestServiceController
     }
 
     [HttpGet("LongShortStrategy")]
-    public async Task<IEnumerable<StrategyChartData>> Get(string ticker, DateTime fromDate, DateTime toDate, double notional)
+    public async Task<Results<NoContent, NotFound, Ok<IEnumerable<StrategyChartData>>>> GetAsync(string ticker, DateTime fromDate, DateTime toDate, double notional)
     { 
         bool isReinvest = false;
         MovingAverageImpl movingAverageImpl = MovingAverageImpl.BollingerBandsImpl;
@@ -50,12 +51,17 @@ public class BacktestServiceController
             var smoothenedSignals = await _stockSignalService.GetSignalUsingMovingAverageByDefault(ticker, fromDate, toDate, movingWindow, movingAverageImpl);
             List<StrategyPnl> pnlForMaximumProfit = _backtestService.ComputeLongShortPnl(smoothenedSignals, notional, signalIn, signalOut, new TradingStrategy(TradingStrategyType.MeanReversion, isReinvest)).ToList();
             var data = pnlForMaximumProfit.Select(p => new StrategyChartData(p.Date.ToString("ddMMyy"), p.PnLCum, p.PnLCumHold));
-            return data;
+            return TypedResults.Ok(data);
         }
-        catch(Exception exp)
+        catch(Exception e) when (e.Message.Contains("TooManyRequests"))
         {
-            _logger.LogError($"Cannot GetLongShort Strategy for {ticker}, {fromDate} {toDate} {notional}, Reason: {exp.Message}");
-            throw;
+            _logger.LogError($"Cannot GetLongShort Strategy for {ticker}, {fromDate} {toDate} {notional}, Reason: {e.Message}");
+            return TypedResults.NoContent();
+        }
+        catch (Exception e)
+        {
+            _logger.LogError($"Cannot GetLongShort Strategy for {ticker}, {fromDate} {toDate} {notional}, Reason: {e.Message}");
+            return TypedResults.NotFound();
         }
     }
 }
