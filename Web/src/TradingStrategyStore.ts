@@ -33,7 +33,7 @@ export class TradingStrategyStore
       );
     }
 
-    error = () => {
+    loadErrorPlaceholder = () => {
         this.symbol = `ERROR LOADING SYMBOL..`;
         this.data = FakeStrategyPlaceholder;
     };
@@ -52,12 +52,12 @@ export class TradingStrategyStore
                                 if(cache != undefined){
                                     this.data = cache as ChartData[];
                                 } else {
-                                    this.error();
+                                    this.loadErrorPlaceholder();
                                 }
                                 break;
                             }
                             case 500: {
-                                this.error();
+                                this.loadErrorPlaceholder();
                                 break;
                             }
                             default:  {
@@ -69,7 +69,7 @@ export class TradingStrategyStore
                     .catch((e) => {
                         console.log(`Error occurred whilst loading new symbol... ${e}`);
                         console.log(e);
-                        this.error();
+                        this.loadErrorPlaceholder();
                     });
                 
                 console.log(`Symbol: ${symbol} loaded, data length: ${this.data.length}`);
@@ -77,8 +77,7 @@ export class TradingStrategyStore
          }
          catch(e) {
             console.log(`Error occurred whilst loading new symbol... ${e}`);
-            this.symbol = 'ERROR LOADING SYMBOL..';
-            this.data = FakeStrategyPlaceholder;
+            this.loadErrorPlaceholder();
          }
          finally {
             this.isLoading = false;
