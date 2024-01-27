@@ -36,6 +36,7 @@ export interface BackenedApi {
     fetchHealthCheck(): Promise<string | AxiosResponse<unknown,unknown>>,
     fetchHighestGainerStocks(limitRows: number): Promise<AxiosResponse<unknown,unknown>>,
     fetchMostActiveStocks(limitRows: number): Promise<AxiosResponse<unknown,unknown>>,
+    fetchLongShortStrategy(ticker: string): Promise<AxiosResponse<unknown,unknown>>,
     submitFxRateSubscribeRequest(ccyName: string): Promise<AxiosResponse<unknown,unknown>>,
     submitFxRateUnsubscribeRequest(ccyName: string): Promise<AxiosResponse<unknown,unknown>>,
     startHub(): void,
@@ -55,6 +56,11 @@ const api: BackenedApi = {
     },
     fetchMostActiveStocks: async (limitRows: number) => {
         const endpoint = `${backendServer}/StockMarketInsights/MostActiveStocks/${limitRows}`;
+        console.log(`Fetching from ${endpoint}`);
+        return await axios.get(endpoint);
+    },
+    fetchLongShortStrategy: async (ticker: string) => {
+        const endpoint = `${backendServer}/BacktestService/LongShortStrategy?ticker=${ticker}&fromDate=2023-05-01&toDate=2023-09-25&notional=10000`;
         console.log(`Fetching from ${endpoint}`);
         return await axios.get(endpoint);
     },

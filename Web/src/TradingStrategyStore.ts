@@ -1,7 +1,8 @@
 import { RootStore } from "./RootStore";
 import { BackenedApi } from "./api";
 import { reaction, runInAction, makeAutoObservable } from 'mobx';
-import { FakeStrategyBTCUSD as FakeStrategyBTCUSDData, FakeStrategyChartData, FakeStrategyIBMData, FakeStrategyPlaceholder } from "./components/layout/DummyData";
+import { FakeStrategyPlaceholder } from "./components/layout/DummyData";
+import { AxiosResponse } from "axios";
 
 export interface ChartData {
     time: string,
@@ -35,10 +36,12 @@ export class TradingStrategyStore
     loadChartData(symbol: string) {
         try {
             this.isLoading = true;
-            const data = fetchData(symbol);
             runInAction(() => {
-                console.log(`Symbol: ${symbol} loaded, data length: ${data.length}`);
-                this.data = data;
+                this.transport        
+                    .fetchLongShortStrategy(symbol)
+                    .then((res) => this.data = ((res as AxiosResponse<never, never>).data as ChartData[]));
+                
+                console.log(`Symbol: ${symbol} loaded, data length: ${this.data.length}`);
             })
          }
          catch(e) {
@@ -52,13 +55,13 @@ export class TradingStrategyStore
     }
 }
 
-function fetchData(symbol: string): ChartData[] {
-    switch(symbol)
-    {
-        case 'AAPL': return FakeStrategyChartData;
-        case 'IBM' : return FakeStrategyIBMData;
-        case 'BTCUSD' : return FakeStrategyBTCUSDData;
-        default: throw new Error(`Cannot load data for symbol ${symbol}`);
-    }
-}
+// function fetchData(symbol: string): ChartData[] {
+//     switch(symbol)
+//     {
+//         case 'AAPL': return FakeStrategyChartData;
+//         case 'IBM' : return FakeStrategyIBMData;
+//         case 'BTCUSD' : return FakeStrategyBTCUSDData;
+//         default: throw new Error(`Cannot load data for symbol ${symbol}`);
+//     }
+// }
 

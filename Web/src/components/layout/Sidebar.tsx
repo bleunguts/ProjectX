@@ -1,9 +1,7 @@
 import * as React from 'react';
 import Grid from '@mui/material/Grid';
-import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
 import FxTicker from './FxTicker';
 import StockNews from './StockNews';
 

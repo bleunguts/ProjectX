@@ -62,8 +62,9 @@ export default function StockNews() {
         getMostActiveStocks([]);
     };
     const handleStrategizeFrom = (symbol: string) => {
+        console.log(`Button clicked for ${symbol}.`);
         setStockSymbol(symbol);   
-        handleStrategize();
+        tradingStrategyStore.symbol = symbol;
     };
     const handleStrategize = () => {
         console.log(`Strategizing target: ${stockSymbol} ...`);     
