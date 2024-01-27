@@ -84,6 +84,8 @@ public class Startup
             new FMPStockMarketSource(), 
             Options.Create(new FileBackedStoreMarketDataSourceOptions() { Filename = "cache.json"}))
         );
+        services.AddSingleton<IStockSignalService, StockSignalService>();
+        services.AddSingleton<IBacktestService, BacktestService>();
 
         services.AddOptions();        
         services.Configure<ApiClientOptions>(options => options.BaseAddress = Configuration.GetSection("ExternalServices")["ProjectXUrl"]);

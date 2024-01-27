@@ -18,7 +18,7 @@ Content-Type: application/json
 {"timeSlices":10,"optionType":0,"spot":100.0,"strike":150.0,"rate":1.0,"carry":1.0,"vol":0.3,"CalculatorType":2}
 ###
 
-POST {{GatewayAPI_HostAddress}}/Pricingtasks/bsPlot
+POST {{GatewayAPI_HostAddress}}/PricingTasks/bsPlot
 Content-Type: application/json
 
 {
@@ -34,4 +34,13 @@ Content-Type: application/json
     "ZTickDecimalPlaces": 0,
     "CalculatorType": 0
  }
+###
+GET {{GatewayAPI_HostAddress}}/BacktestService
+Accept: application/json
+
+###
+
+GET {{GatewayAPI_HostAddress}}/BacktestService/LongShortStrategy?ticker=AAPL&fromDate=2023-05-01&toDate=2023-09-25&notional=10000
+Accept: application/json
+
 ###
