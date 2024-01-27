@@ -1,7 +1,7 @@
 import { RootStore } from "./RootStore";
 import { BackenedApi } from "./api";
 import { reaction, runInAction, makeAutoObservable } from 'mobx';
-import { FakeStrategyBTCUSD as FakeStrategyBTCUSDData, FakeStrategyChartData, FakeStrategyIBMData } from "./components/layout/DummyData";
+import { FakeStrategyBTCUSD as FakeStrategyBTCUSDData, FakeStrategyChartData, FakeStrategyIBMData, FakeStrategyPlaceholder } from "./components/layout/DummyData";
 
 export interface ChartData {
     time: string,
@@ -44,7 +44,7 @@ export class TradingStrategyStore
          catch(e) {
             console.log(`Error occurred whilst loading new symbol... ${e}`);
             this.symbol = 'ERROR LOADING SYMBOL..';
-            this.data = FakeStrategyChartData;
+            this.data = FakeStrategyPlaceholder;
          }
          finally {
             this.isLoading = false;

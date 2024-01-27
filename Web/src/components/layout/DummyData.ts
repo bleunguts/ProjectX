@@ -1,6 +1,750 @@
 import { Datum } from "plotly.js";
 import { ChartData } from "../../TradingStrategyStore";
 
+export const FakeStrategyPlaceholder: ChartData[] =
+[
+  {
+    "time": "010523",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "020523",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "030523",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "040523",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "050523",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "060523",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "070523",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "080523",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "090523",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "100523",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "110523",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "120523",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "130523",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "140523",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "150523",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "160523",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "170523",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "180523",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "190523",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "200523",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "210523",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "220523",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "230523",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "240523",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "250523",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "260523",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "270523",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "280523",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "290523",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "300523",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "310523",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "010623",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "020623",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "030623",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "040623",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "050623",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "060623",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "070623",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "080623",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "090623",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "100623",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "110623",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "120623",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "130623",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "140623",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "150623",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "160623",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "170623",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "180623",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "190623",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "200623",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "210623",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "220623",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "230623",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "240623",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "250623",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "260623",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "270623",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "280623",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "290623",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "300623",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "010723",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "020723",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "030723",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "040723",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "050723",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "060723",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "070723",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "080723",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "090723",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "100723",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "110723",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "120723",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "130723",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "140723",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "150723",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "160723",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "170723",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "180723",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "190723",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "200723",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "210723",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "220723",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "230723",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "240723",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "250723",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "260723",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "270723",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "280723",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "290723",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "300723",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "310723",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "010823",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "020823",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "030823",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "040823",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "050823",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "060823",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "070823",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "080823",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "090823",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "100823",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "110823",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "120823",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "130823",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "140823",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "150823",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "160823",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "170823",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "180823",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "190823",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "200823",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "210823",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "220823",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "230823",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "240823",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "250823",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "260823",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "270823",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "280823",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "290823",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "300823",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "310823",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "010923",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "020923",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "030923",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "040923",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "050923",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "060923",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "070923",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "080923",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "090923",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "100923",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "110923",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "120923",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "130923",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "140923",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "150923",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "160923",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "170923",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "180923",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "190923",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "200923",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "210923",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "220923",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "230923",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  },
+  {
+    "time": "240923",
+    "amount": 0.0,
+    "amountHold": -2000.0
+  },
+  {
+    "time": "250923",
+    "amount": 1000.0,
+    "amountHold": 0.0
+  }
+];
+
 export const FakeStrategyBTCUSD: ChartData[] = [
   {
     "time": "010523",

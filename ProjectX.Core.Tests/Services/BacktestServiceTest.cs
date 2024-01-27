@@ -229,6 +229,30 @@ public class BacktestServiceTest
         Assert.That(drawdownResult, Is.Not.Null);
     }
 
+    [Test]
+    [Ignore("Generate dummy data for ui")]
+    public void foo()
+    {
+        List<StrategyChartData> result = new();
+        DateTime from = new DateTime(2023, 5, 1);
+        DateTime to = new DateTime(2023, 9, 25);
+        //fromDate=2023-05-01&toDate=2023-09-25
+        var current = from;
+        var counter = 0;
+        while (current <= to)
+        {
+            var pnlCum = counter % 2 == 0 ? 0.0 : 1000.0;
+            var pnlCumHold = counter % 2 == 0 ? -2000.0 : 0.0;
+            var data = new StrategyChartData(current.Date.ToString("ddMMyy"), pnlCum, pnlCumHold);
+            result.Add(data);
+
+            current = current.AddDays(1);
+            counter++;
+        }
+        var json = JsonConvert.SerializeObject(result, Newtonsoft.Json.Formatting.Indented);
+        Console.WriteLine(json);
+    }
+
     static MarketPrice[] GetRandomPrices(int howmany = 100)
     {
         var current = DateTime.Now.AddDays(-howmany * 2);
