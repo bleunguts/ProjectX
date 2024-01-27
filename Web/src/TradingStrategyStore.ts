@@ -44,6 +44,7 @@ export class TradingStrategyStore
          catch(e) {
             console.log(`Error occurred whilst loading new symbol... ${e}`);
             this.symbol = 'ERROR LOADING SYMBOL..';
+            this.data = FakeStrategyChartData;
          }
          finally {
             this.isLoading = false;

@@ -70,6 +70,9 @@ export default function StockNews() {
         tradingStrategyStore.symbol = stockSymbol;
     };
 
+    const handleDoubleClick = () => {
+        setStockSymbol("");
+    }
     function prettify(changesPercentage: string): string {
         return changesPercentage.includes('.') ?
                 changesPercentage.substring(0, changesPercentage.indexOf('.') + 2)
@@ -79,18 +82,16 @@ export default function StockNews() {
 
     return (
         <>
-            <Grid container direction="row" spacing={1.5} alignItems="right" justifyContent="flex-end" alignContent='center'>
+            <Grid container direction="row" spacing={1.5} alignItems="center" justifyContent="flex-end" alignContent='center'>
                 <Grid item><Typography variant="h6" align="center" gutterBottom>Stock Symbol:</Typography></Grid>
                 <Grid item>
-                <select value={stockSymbol} onChange={handleStockSymbolChange}>
-                    <option value="AAPL">AAPL</option>
-                    <option value="IBM">IBM</option>
-                    <option value="BTCUSD">BTCUSD</option>
-                </select>
+                    <input id="stockSymbol" type="text" size={6} disabled={false} value={stockSymbol} onChange={handleStockSymbolChange} list="datalist" onDoubleClick={handleDoubleClick}/>
+                    <datalist id="datalist">
+                        <option value="AAPL">AAPL</option>
+                        <option value="IBM">IBM</option>
+                        <option value="BTCUSD">BTCUSD</option>
+                    </datalist>
                 </Grid>
-                <Grid item><input id="stockSymbol" type="text" size={10} disabled={false} value={stockSymbol} onChange={handleStockSymbolChange}/></Grid>
-            </Grid>
-            <Grid container direction="row" spacing={1.5} alignItems="center" justifyContent="flex-end" alignContent='center'>
                 <Grid item><Button disabled={false} onClick={handleStrategize}>STRATEGIZE</Button></Grid>
             </Grid>
             <Typography variant="h6" align="center" gutterBottom>
@@ -102,7 +103,7 @@ export default function StockNews() {
                     <Grid item xs={2}><Typography><b>{gainer.ticker}</b></Typography></Grid>
                     <Grid item xs={2}><Typography>${gainer.price}</Typography></Grid>
                     <Grid item xs={2}><Typography>{prettify(gainer.changesPercentage)}%</Typography></Grid> 
-                    <Grid item xs={1}><Button disabled={true} onClick={() => handleStrategizeFrom(gainer.ticker)}>STRATEGIZE</Button></Grid>                                       
+                    <Grid item xs={1}><Button disabled={false} onClick={() => handleStrategizeFrom(gainer.ticker)}>STRATEGIZE</Button></Grid>                                       
                 </Grid>
             ))}
             <Typography variant="h6" align="center" gutterBottom>
@@ -114,7 +115,7 @@ export default function StockNews() {
                     <Grid item xs={2}><Typography><b>{stock.ticker}</b></Typography></Grid>
                     <Grid item xs={2}><Typography>${stock.price}</Typography></Grid>
                     <Grid item xs={2}><Typography>{prettify(stock.changesPercentage)}%</Typography></Grid>
-                    <Grid item xs={1}><Button disabled={true} onClick={() => handleStrategizeFrom(stock.ticker)}>STRATEGIZE</Button></Grid>   
+                    <Grid item xs={1}><Button disabled={false} onClick={() => handleStrategizeFrom(stock.ticker)}>STRATEGIZE</Button></Grid>   
                 </Grid>
             ))}
         </>
