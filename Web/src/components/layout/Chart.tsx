@@ -29,7 +29,7 @@ export default function Chart(props: ChartProps) {
       {label}
       </Typography>
       <ResponsiveContainer>
-      <LineChart width={400} height={200} data={data}>
+      <LineChart  data={data}>
         <YAxis yAxisId={0} orientation='left'/>
         <YAxis yAxisId={1} orientation='right'/>
         <XAxis dataKey="time" />

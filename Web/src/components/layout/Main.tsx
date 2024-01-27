@@ -52,10 +52,9 @@ export const Main = observer(function Main(props: MainProps) {
                 <CardContent>
                     <Paper
                         sx={{
-                            p: 2,
                             display: 'flex',
                             flexDirection: 'column',
-                            height: 200,
+                            height: 500,
                         }}
                     >              
                     <Typography>{tradingStrategyStore.symbol}</Typography>
@@ -70,9 +69,9 @@ export const Main = observer(function Main(props: MainProps) {
                 }}>
                 <CardContent>
                     <Paper sx={{
-                            p: 2,
                             display: 'flex',
-                            flexDirection: 'column',                            
+                            flexDirection: 'column',
+                            height: 400,        
                         }}
                     >   
                     <Typography style={{                                       
