@@ -32,8 +32,8 @@ public class BacktestServiceController : ControllerBase
         return "Hello from BacktestServiceController";
     }
 
-    [HttpGet("LongShortStrategyChartData")]
-    public async Task<ActionResult<IEnumerable<StrategyChartData>>> ComputeLongShortPnlStrategy(string ticker, DateTime fromDate, DateTime toDate, double notional, MovingAverageImpl movingAverageImpl = MovingAverageImpl.BollingerBandsImpl)
+    [HttpGet("LongShortPnlStrategyChartData")]
+    public async Task<ActionResult<IEnumerable<StrategyChartData>>> ComputeLongShortPnlStrategyChartData(string ticker, DateTime fromDate, DateTime toDate, double notional, MovingAverageImpl movingAverageImpl = MovingAverageImpl.BollingerBandsImpl)
     {
         bool isReinvest = false;
 
