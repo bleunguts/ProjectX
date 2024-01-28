@@ -37,10 +37,47 @@ Content-Type: application/json
 ###
 GET {{GatewayAPI_HostAddress}}/BacktestService
 Accept: application/json
-
 ###
 
 GET {{GatewayAPI_HostAddress}}/BacktestService/LongShortStrategy?ticker=AAPL&fromDate=2023-05-01&toDate=2023-09-25&notional=10000
 Accept: application/json
+###
 
+GET {{GatewayAPI_HostAddress}}/BacktestService/LongShortStrategy?ticker=IBM&fromDate=2023-05-01&toDate=2023-09-25&notional=10000
+Accept: application/json
+###
+
+GET {{GatewayAPI_HostAddress}}/BacktestService/LongShortStrategy?ticker=BTCUSD&fromDate=2023-05-01&toDate=2023-09-25&notional=10000
+Accept: application/json
+###
+GET {{GatewayAPI_HostAddress}}/BacktestService/LongShortStrategy?ticker=CCCC&fromDate=2023-05-01&toDate=2023-09-25&notional=10000
+Accept: application/json
+###
+
+GET {{GatewayAPI_HostAddress}}/BacktestService/LongShortStrategy?ticker=STTK&fromDate=2023-05-01&toDate=2023-09-25&notional=10000
+Accept: application/json
+###
+
+GET {{GatewayAPI_HostAddress}}/BacktestService/LongShortStrategy?ticker=CPLS&fromDate=2023-05-01&toDate=2023-09-25&notional=10000
+Accept: application/json
+###
+
+GET {{GatewayAPI_HostAddress}}/BacktestService/LongShortStrategy?ticker=SBNY&fromDate=2023-05-01&toDate=2023-09-25&notional=10000
+Accept: application/json
+###
+
+GET {{GatewayAPI_HostAddress}}/BacktestService/LongShortStrategy?ticker=PHUN&fromDate=2023-05-01&toDate=2023-09-25&notional=10000
+Accept: application/json
+###
+
+GET {{GatewayAPI_HostAddress}}/BacktestService/LongShortStrategy?ticker=SOXS&fromDate=2023-05-01&toDate=2023-09-25&notional=10000
+Accept: application/json
+###
+
+GET {{GatewayAPI_HostAddress}}/BacktestService/LongShortStrategy?ticker=INTC&fromDate=2023-05-01&toDate=2023-09-25&notional=10000
+Accept: application/json
+###
+
+GET {{GatewayAPI_HostAddress}}/BacktestService/LongShortStrategy?ticker=IVP&fromDate=2023-05-01&toDate=2023-09-25&notional=10000
+Accept: application/json
 ###
