@@ -11,7 +11,7 @@ namespace ProjectX.GatewayAPI.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class BacktestServiceController
+public class BacktestServiceController : ControllerBase
 {
     private readonly ILogger<BacktestServiceController> _logger;
     private readonly IStockSignalService _stockSignalService;
@@ -32,18 +32,17 @@ public class BacktestServiceController
         return "Hello from BacktestServiceController";
     }
 
-    [HttpGet("LongShortStrategy")]
-    public async Task<Results<NoContent, NotFound, Ok<IEnumerable<StrategyChartData>>>> GetAsync(string ticker, DateTime fromDate, DateTime toDate, double notional)
-    { 
+    [HttpGet("LongShortStrategyChartData")]
+    public async Task<ActionResult<IEnumerable<StrategyChartData>>> ComputeLongShortPnlStrategy(string ticker, DateTime fromDate, DateTime toDate, double notional, MovingAverageImpl movingAverageImpl = MovingAverageImpl.BollingerBandsImpl)
+    {
         bool isReinvest = false;
-        MovingAverageImpl movingAverageImpl = MovingAverageImpl.BollingerBandsImpl;
 
         try
         {
             var marketPrices = await _stockMarketSource.GetPrices(ticker, fromDate, toDate);
             var pnlRanking = _backtestService.ComputeLongShortPnlFull(marketPrices, notional, new TradingStrategy(TradingStrategyType.MeanReversion, isReinvest));
+            
             var maximumProfitStrategy = pnlRanking.OrderByDescending(p => p.pnlCum).First();
-
             int movingWindow = maximumProfitStrategy.movingWindow;
             double signalIn = maximumProfitStrategy.zin;
             double signalOut = maximumProfitStrategy.zout;
@@ -51,17 +50,17 @@ public class BacktestServiceController
             var smoothenedSignals = await _stockSignalService.GetSignalUsingMovingAverageByDefault(ticker, fromDate, toDate, movingWindow, movingAverageImpl);
             List<StrategyPnl> pnlForMaximumProfit = _backtestService.ComputeLongShortPnl(smoothenedSignals, notional, signalIn, signalOut, new TradingStrategy(TradingStrategyType.MeanReversion, isReinvest)).ToList();
             var data = pnlForMaximumProfit.Select(p => new StrategyChartData(p.Date.ToString("ddMMyy"), p.PnLCum, p.PnLCumHold));
-            return TypedResults.Ok(data);
+            return Ok(data);
         }
         catch(Exception e) when (e.Message.Contains("TooManyRequests"))
         {
-            _logger.LogError($"Cannot GetLongShort Strategy for {ticker}, {fromDate} {toDate} {notional}, Reason: {e.Message}");
-            return TypedResults.NoContent();
+            _logger.LogError($"Error executing LongShortStrategy for {ticker}, {fromDate} {toDate} {notional}, Reason: {e.Message}");
+            return NoContent();
         }
         catch (Exception e)
         {
-            _logger.LogError($"Cannot GetLongShort Strategy for {ticker}, {fromDate} {toDate} {notional}, Reason: {e.Message}");
-            return TypedResults.NotFound();
+            _logger.LogError($"CannotError executing LongShortStrategy for {ticker}, {fromDate} {toDate} {notional}, Reason: {e.Message}");
+            return NotFound();
         }
     }
 }

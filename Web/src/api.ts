@@ -60,7 +60,7 @@ const api: BackenedApi = {
         return await axios.get(endpoint);
     },
     fetchLongShortStrategy: async (ticker: string) => {
-        const endpoint = `${backendServer}/BacktestService/LongShortStrategy?ticker=${ticker}&fromDate=2023-05-01&toDate=2023-09-25&notional=10000`;
+        const endpoint = `${backendServer}/BacktestService/LongShortStrategyChartData?ticker=${ticker}&fromDate=2023-05-01&toDate=2023-09-25&notional=10000`;
         console.log(`Fetching from ${endpoint}`);
         return await axios.get(endpoint);
     },
