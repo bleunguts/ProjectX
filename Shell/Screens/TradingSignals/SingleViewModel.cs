@@ -36,7 +36,7 @@ namespace Shell.Screens.TradingSignals;
 [Export(typeof(IScreen)), PartCreationPolicy(CreationPolicy.NonShared)]
 public partial class SingleViewModel : Screen
 {
-    private readonly IEventAggregator _eventAggregator;
+    private readonly IEventAggregator _events;
     private readonly IGatewayApiClient _gatewayApiClient;
 
     [ImportingConstructor]
@@ -44,7 +44,7 @@ public partial class SingleViewModel : Screen
         IEventAggregator eventAggregator, 
         IGatewayApiClient gatewayApiClient)
     {
-        _eventAggregator = eventAggregator;
+        _events = eventAggregator;
         _gatewayApiClient = gatewayApiClient;
 
         DisplayName = "Mean Reversion strategy (Backtesting)";
@@ -209,6 +209,8 @@ public partial class SingleViewModel : Screen
             YearlyPnLTable = new DataTable();
 
             var pnls = await _gatewayApiClient.ComputeLongShortPnlMatrix(Ticker, FromDate, ToDate, Notional);
+            UpdateStatus($"ComputeLongShortPnlMatrix with {pnls.Count()} results received.");
+
             var builder = new PnlRankingTableBuilder();
             builder.SetRows(pnls);
             PnLRankingTable = builder.Build();
@@ -238,7 +240,8 @@ public partial class SingleViewModel : Screen
     public async void HurstCalc()
     {
         var input = await _gatewayApiClient.GetHurst(Ticker, FromDate, ToDate);
-        
+        UpdateStatus($"Fetched Hurst value from Backend for ticker={Ticker} from {FromDate} to {ToDate}");
+
         var l = input.Where(x => x.HasValue).Select(x => x.Value).ToList();
         if(l.Count == 0)
         {
@@ -295,6 +298,8 @@ public partial class SingleViewModel : Screen
     private async Task DisplayPnl(int movingWindow, double signalIn, double signalOut, bool IsReinvest, double pnl, double sharpe, int numTrades)
     { 
         var strategyResults = await _gatewayApiClient.ComputeLongShortPnl(Ticker, FromDate, ToDate, movingWindow, Notional, signalIn, signalOut, _movingAverageImpl);
+        UpdateStatus($"ComputeLongShortPnl results received from Backend, {strategyResults.StrategyPnls.Count()} strategies received, {strategyResults.YearlyStrategyPnls.Count()} yearly pnl results received, {strategyResults.StrategyDrawdowns.Count()} drawdowns received.");
+
         // main table populated
         var builder2 = new PnLTableBuilder();
         builder2.SetRows(strategyResults.StrategyPnls);
@@ -316,6 +321,8 @@ public partial class SingleViewModel : Screen
         try
         {
             var smoothenedSignals = await _gatewayApiClient.GetMovingAverageSignals(Ticker, FromDate, ToDate, movingWindow, _movingAverageImpl);
+            UpdateStatus($"Fetched MovingAverageSignals from Backend, {smoothenedSignals.Count()} smoothened signals received, movingWindow={movingWindow}, movingAverageTyp={_movingAverageImpl}");
+
             _signals = new BindableCollection<PriceSignal>(smoothenedSignals);
 
             var priceChart = PlotPriceChart(_signals);
@@ -502,7 +509,10 @@ public partial class SingleViewModel : Screen
 
         return (series, title, yAxes);
     }
-
+    private void UpdateStatus(string status)
+    {
+        _events.PublishOnUIThread(new ModelEvents(new List<object>(new object[] { status })));
+    }
     static class DummyData
     {
         public static IEnumerable<MatrixStrategyPnl> DummyPnLRankingTable => new List<MatrixStrategyPnl>()
