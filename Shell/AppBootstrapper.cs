@@ -48,10 +48,7 @@ namespace Shell
                     SignalRUrl = ConfigurationManager.AppSettings["SignalRUrl"],
                     ForceDisableSignalR = ShouldForceDisableSignalR(ConfigurationManager.AppSettings.Get("ForceDisableSignalR"))
                 });
-            batch.AddExportedValue<IOptions<GatewayApiClientOptions>>(options);
-            var options2 = Microsoft.Extensions.Options.Options.Create(new FileBackedStoreMarketDataSourceOptions { Filename = "cache.json"});            
-            batch.AddExportedValue<IStockMarketSource>(new FileBackedStockMarketDataSource(new FMPStockMarketSource(), options2));            
-            
+            batch.AddExportedValue<IOptions<GatewayApiClientOptions>>(options);    
             container.Compose(batch);                        
         }
 
