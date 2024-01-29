@@ -1,11 +1,9 @@
 ﻿using Caliburn.Micro;
-using MatthiWare.FinancialModelingPrep.Core.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using ProjectX.Core;
 using ProjectX.Core.Requests;
 using ProjectX.Core.Services;

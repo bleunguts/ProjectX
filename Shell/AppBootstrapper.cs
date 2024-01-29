@@ -4,8 +4,6 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using ProjectX.Core;
 using ProjectX.Core.Services;
-using ProjectX.MarketData;
-using ProjectX.MarketData.Cache;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;

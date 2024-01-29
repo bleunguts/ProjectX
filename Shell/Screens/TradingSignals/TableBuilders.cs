@@ -1,5 +1,4 @@
-﻿using MatthiWare.FinancialModelingPrep.Model;
-using ProjectX.Core.Strategy;
+﻿using ProjectX.Core.Strategy;
 using System;
 using System.Collections.Generic;
 using System.Data;
