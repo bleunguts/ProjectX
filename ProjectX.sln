@@ -46,6 +46,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{406DF674-C57
 		ProjectX.AnalyticsLibNative\src\CMakeLists.txt = ProjectX.AnalyticsLibNative\src\CMakeLists.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.MarketData.NinjaTrader.Tests", "ProjectX.MarketData.NinjaTrader.Tests\ProjectX.MarketData.NinjaTrader.Tests.csproj", "{31FE4683-7334-48FC-9642-628F4FA7F821}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.MarketData.NinjaTraderApi.Tests", "ProjectX.MarketData.NinjaTraderApi.Tests\ProjectX.MarketData.NinjaTraderApi.Tests.csproj", "{31A7F96A-31E5-4B88-80E5-DC04329B880F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -242,6 +246,30 @@ Global
 		{976A2B6C-D76E-46E9-BD5D-C5FAC69B8509}.Release|x64.Build.0 = Release|Any CPU
 		{976A2B6C-D76E-46E9-BD5D-C5FAC69B8509}.Release|x86.ActiveCfg = Release|Any CPU
 		{976A2B6C-D76E-46E9-BD5D-C5FAC69B8509}.Release|x86.Build.0 = Release|Any CPU
+		{31FE4683-7334-48FC-9642-628F4FA7F821}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31FE4683-7334-48FC-9642-628F4FA7F821}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31FE4683-7334-48FC-9642-628F4FA7F821}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{31FE4683-7334-48FC-9642-628F4FA7F821}.Debug|x64.Build.0 = Debug|Any CPU
+		{31FE4683-7334-48FC-9642-628F4FA7F821}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{31FE4683-7334-48FC-9642-628F4FA7F821}.Debug|x86.Build.0 = Debug|Any CPU
+		{31FE4683-7334-48FC-9642-628F4FA7F821}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31FE4683-7334-48FC-9642-628F4FA7F821}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31FE4683-7334-48FC-9642-628F4FA7F821}.Release|x64.ActiveCfg = Release|Any CPU
+		{31FE4683-7334-48FC-9642-628F4FA7F821}.Release|x64.Build.0 = Release|Any CPU
+		{31FE4683-7334-48FC-9642-628F4FA7F821}.Release|x86.ActiveCfg = Release|Any CPU
+		{31FE4683-7334-48FC-9642-628F4FA7F821}.Release|x86.Build.0 = Release|Any CPU
+		{31A7F96A-31E5-4B88-80E5-DC04329B880F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31A7F96A-31E5-4B88-80E5-DC04329B880F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31A7F96A-31E5-4B88-80E5-DC04329B880F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{31A7F96A-31E5-4B88-80E5-DC04329B880F}.Debug|x64.Build.0 = Debug|Any CPU
+		{31A7F96A-31E5-4B88-80E5-DC04329B880F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{31A7F96A-31E5-4B88-80E5-DC04329B880F}.Debug|x86.Build.0 = Debug|Any CPU
+		{31A7F96A-31E5-4B88-80E5-DC04329B880F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31A7F96A-31E5-4B88-80E5-DC04329B880F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31A7F96A-31E5-4B88-80E5-DC04329B880F}.Release|x64.ActiveCfg = Release|Any CPU
+		{31A7F96A-31E5-4B88-80E5-DC04329B880F}.Release|x64.Build.0 = Release|Any CPU
+		{31A7F96A-31E5-4B88-80E5-DC04329B880F}.Release|x86.ActiveCfg = Release|Any CPU
+		{31A7F96A-31E5-4B88-80E5-DC04329B880F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -254,6 +282,8 @@ Global
 		{A91A79D7-55B1-4D85-B500-6B53D0C42886} = {291F2E1A-D783-4A45-955B-6C39A801C658}
 		{66D0F4A6-3505-4275-90AA-8B95E76EFB41} = {291F2E1A-D783-4A45-955B-6C39A801C658}
 		{406DF674-C576-4678-9B50-630275B73318} = {CB887621-9DE5-49ED-BE4C-7B170A43F062}
+		{31FE4683-7334-48FC-9642-628F4FA7F821} = {291F2E1A-D783-4A45-955B-6C39A801C658}
+		{31A7F96A-31E5-4B88-80E5-DC04329B880F} = {291F2E1A-D783-4A45-955B-6C39A801C658}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8123A31C-36EE-481E-9ED7-0EB9D36F17CD}
