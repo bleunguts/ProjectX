@@ -37,17 +37,16 @@ namespace Shell.Screens.TradingSignals;
 public partial class SingleViewModel : Screen
 {
     private readonly IEventAggregator _eventAggregator;
-    private readonly IStockSignalService _stockSignalService;
-    private readonly IBacktestService _backtestService;
-    private readonly IStockMarketSource _marketSource;
+    private readonly IGatewayApiClient _gatewayApiClient;
 
     [ImportingConstructor]
-    public SingleViewModel(IEventAggregator eventAggregator, IStockSignalService stockSignalService, IBacktestService backtestService, IStockMarketSource marketSource)
+    public SingleViewModel(
+        IEventAggregator eventAggregator, 
+        IGatewayApiClient gatewayApiClient)
     {
         _eventAggregator = eventAggregator;
-        _stockSignalService = stockSignalService;
-        _backtestService = backtestService;
-        _marketSource = marketSource;
+        _gatewayApiClient = gatewayApiClient;
+
         DisplayName = "Mean Reversion strategy (Backtesting)";
     }
 
@@ -209,8 +208,7 @@ public partial class SingleViewModel : Screen
             PnLTable.Clear();
             YearlyPnLTable = new DataTable();
 
-            var inputs = await _marketSource.GetPrices(Ticker, FromDate, ToDate);
-            var pnls = _backtestService.ComputeLongShortPnlFull(inputs, Notional, new TradingStrategy(TradingStrategyType.MeanReversion, false));
+            var pnls = await _gatewayApiClient.ComputeLongShortPnlMatrix(Ticker, FromDate, ToDate, Notional);
             var builder = new PnlRankingTableBuilder();
             builder.SetRows(pnls);
             PnLRankingTable = builder.Build();
@@ -239,7 +237,7 @@ public partial class SingleViewModel : Screen
 
     public async void HurstCalc()
     {
-        var input = await _marketSource.GetHurst(Ticker, FromDate, ToDate);
+        var input = await _gatewayApiClient.GetHurst(Ticker, FromDate, ToDate);
         
         var l = input.Where(x => x.HasValue).Select(x => x.Value).ToList();
         if(l.Count == 0)
@@ -295,22 +293,19 @@ public partial class SingleViewModel : Screen
     }
 
     private async Task DisplayPnl(int movingWindow, double signalIn, double signalOut, bool IsReinvest, double pnl, double sharpe, int numTrades)
-    {
-        var smoothenedSignals = await _stockSignalService.GetSignalUsingMovingAverageByDefault(Ticker, FromDate, ToDate, movingWindow, _movingAverageImpl);
-        List<StrategyPnl> pnls = _backtestService.ComputeLongShortPnl(smoothenedSignals, Notional, signalIn, signalOut, new TradingStrategy(TradingStrategyType.MeanReversion, IsReinvest)).ToList();
+    { 
+        var strategyResults = await _gatewayApiClient.ComputeLongShortPnl(Ticker, FromDate, ToDate, movingWindow, Notional, signalIn, signalOut, _movingAverageImpl);
         // main table populated
         var builder2 = new PnLTableBuilder();
-        builder2.SetRows(pnls);
+        builder2.SetRows(strategyResults.StrategyPnls);
         PnLTable = builder2.Build();
 
         // aggregate yearly stats populated 
-        var yearlyPnls = _backtestService.GetYearlyPnl(pnls);
         var builder = new YearlyPnLTableBuilder();
-        builder.SetRows(yearlyPnls);
+        builder.SetRows(strategyResults.YearlyStrategyPnls);
         YearlyPnLTable = builder.Build();       
 
-        IEnumerable<StrategyDrawdown> drawdownResults = _backtestService.CalculateDrawdown(pnls, Notional);
-        DisplayAccumulatedPnlAndDrawdownForStrategyView(pnls, drawdownResults, pnl, sharpe, numTrades);
+        DisplayAccumulatedPnlAndDrawdownForStrategyView(strategyResults.StrategyPnls, strategyResults.StrategyDrawdowns, pnl, sharpe, numTrades);
     }
 
     /// <summary>
@@ -320,7 +315,7 @@ public partial class SingleViewModel : Screen
     {
         try
         {
-            var smoothenedSignals = await _stockSignalService.GetSignalUsingMovingAverageByDefault(Ticker, FromDate, ToDate, movingWindow, _movingAverageImpl);
+            var smoothenedSignals = await _gatewayApiClient.GetMovingAverageSignals(Ticker, FromDate, ToDate, movingWindow, _movingAverageImpl);
             _signals = new BindableCollection<PriceSignal>(smoothenedSignals);
 
             var priceChart = PlotPriceChart(_signals);
@@ -339,7 +334,7 @@ public partial class SingleViewModel : Screen
         }
     }
 
-    private void DisplayAccumulatedPnlAndDrawdownForStrategyView(List<StrategyPnl> pnls, IEnumerable<StrategyDrawdown> drawdownResults, double pnl, double sharpe, int numTrades)
+    private void DisplayAccumulatedPnlAndDrawdownForStrategyView(IEnumerable<StrategyPnl> pnls, IEnumerable<StrategyDrawdown> drawdownResults, double pnl, double sharpe, int numTrades)
     {
         // Plot Accumulated PnL chart (1) accompanied by the Drawdown Chart (2)
         var accumulatedPnlChart = PlotAccumulatedPnlChart(pnls, pnl, sharpe, numTrades);
@@ -391,7 +386,7 @@ public partial class SingleViewModel : Screen
         return (series, title, yAxes);
     }
 
-    private (ISeries[] series, string title, Axis[] yAxis) PlotAccumulatedPnlChart(List<StrategyPnl> pnls, double pnl, double sharpe, int numTrades)
+    private (ISeries[] series, string title, Axis[] yAxis) PlotAccumulatedPnlChart(IEnumerable<StrategyPnl> pnls, double pnl, double sharpe, int numTrades)
     {
         var series = new ISeries[]
         {

@@ -7,9 +7,9 @@ namespace ProjectX.Core.Services
     public interface IBacktestService
     {
         IEnumerable<StrategyPnl> ComputeLongShortPnl(IEnumerable<PriceSignal> inputSignals, double notional, double signalIn, double signalOut, TradingStrategy strategy);
-        IEnumerable<YearlyStrategyPnl> GetYearlyPnl(List<StrategyPnl> pnls);
+        IEnumerable<YearlyStrategyPnl> GetYearlyPnl(IEnumerable<StrategyPnl> pnls);
         IEnumerable<MatrixStrategyPnl> ComputeLongShortPnlFull(IEnumerable<MarketPrice> inputSignals, double notional, TradingStrategy strategy);
-        IEnumerable<StrategyDrawdown> CalculateDrawdown(List<StrategyPnl> pnls, double notional);
+        IEnumerable<StrategyDrawdown> CalculateDrawdown(IEnumerable<StrategyPnl> pnls, double notional);
     }
 
     [Export(typeof(IBacktestService)), PartCreationPolicy(CreationPolicy.Shared)]
@@ -146,7 +146,7 @@ namespace ProjectX.Core.Services
             return (sp, spHolding);
         }
 
-        public IEnumerable<YearlyStrategyPnl> GetYearlyPnl(List<StrategyPnl> pnls)
+        public IEnumerable<YearlyStrategyPnl> GetYearlyPnl(IEnumerable<StrategyPnl> pnls)
         {
             DateTime firstDate = pnls.First().Date;
             DateTime lastDate = pnls.Last().Date;
@@ -218,16 +218,15 @@ namespace ProjectX.Core.Services
             return results;
         }
 
-        public IEnumerable<StrategyDrawdown> CalculateDrawdown(List<StrategyPnl> pnls, double notional)
+        public IEnumerable<StrategyDrawdown> CalculateDrawdown(IEnumerable<StrategyPnl> pnls, double notional)
         {
             var results = new List<StrategyDrawdown>();
 
             double max = 0; double maxHold = 0;
             double min = 2.0 * notional; double minHold = 2.0 * notional;
 
-            for (int i = 0; i < pnls.Count; i++)
+            foreach (var current in pnls)
             {
-                var current = pnls[i];
                 double pnl = current.PnLCum + notional;
                 double pnlHold = current.PnLCumHold + notional;
                 max = Math.Max(max, pnl);

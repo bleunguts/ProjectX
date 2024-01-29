@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using ProjectX.Core;
 using ProjectX.Core.Services;
 using ProjectX.Core.Strategy;
+using System.Reflection.Metadata.Ecma335;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ProjectX.GatewayAPI.Controllers;
@@ -32,15 +33,37 @@ public class BacktestServiceController : ControllerBase
         return "Hello from BacktestServiceController";
     }
 
-    [HttpGet("LongShortPnlStrategyChartData")]
+    [HttpGet("ComputeLongShortPnl")]
+    public async Task<ActionResult<StrategyResults>> ComputeLongShortPnl(string ticker, DateTime fromDate, DateTime toDate, double notional, int movingWindow, double signalIn, double signalOut, MovingAverageImpl movingAverageImpl)
+    {
+        var strategy = new TradingStrategy(TradingStrategyType.MeanReversion, shouldReinvest: false);
+
+        var smoothenedSignals = await _stockSignalService.GetSignalUsingMovingAverageByDefault(ticker, fromDate, toDate, movingWindow, movingAverageImpl);
+        var strategyPnls = _backtestService.ComputeLongShortPnl(smoothenedSignals, notional, signalIn, signalOut, strategy);
+        var yearlyPnls = _backtestService.GetYearlyPnl(strategyPnls);
+        var drawdownPnls = _backtestService.CalculateDrawdown(strategyPnls, notional);
+        return Ok(new StrategyResults(strategyPnls, yearlyPnls, drawdownPnls));
+    }
+
+    [HttpGet("ComputeLongShortPnlMatrix")]
+    public async Task<ActionResult<IEnumerable<MatrixStrategyPnl>>> ComputeLongShortPnlMatrix(string ticker, DateTime fromDate, DateTime toDate, double notional)
+    {
+        var strategy = new TradingStrategy(TradingStrategyType.MeanReversion, shouldReinvest: false);
+
+        var marketPrices = await _stockMarketSource.GetPrices(ticker, fromDate, toDate);
+        var pnls = _backtestService.ComputeLongShortPnlFull(marketPrices, notional, strategy);
+        return Ok(pnls);
+    }
+
+    [HttpGet("ComputeLongShortPnlStrategyChartData")]
     public async Task<ActionResult<IEnumerable<StrategyChartData>>> ComputeLongShortPnlStrategyChartData(string ticker, DateTime fromDate, DateTime toDate, double notional, MovingAverageImpl movingAverageImpl = MovingAverageImpl.BollingerBandsImpl)
     {
-        bool isReinvest = false;
+        var strategy = new TradingStrategy(TradingStrategyType.MeanReversion, shouldReinvest: false);
 
         try
         {
             var marketPrices = await _stockMarketSource.GetPrices(ticker, fromDate, toDate);
-            var pnlRanking = _backtestService.ComputeLongShortPnlFull(marketPrices, notional, new TradingStrategy(TradingStrategyType.MeanReversion, isReinvest));
+            var pnlRanking = _backtestService.ComputeLongShortPnlFull(marketPrices, notional, strategy);
             
             var maximumProfitStrategy = pnlRanking.OrderByDescending(p => p.pnlCum).First();
             int movingWindow = maximumProfitStrategy.movingWindow;
@@ -48,7 +71,7 @@ public class BacktestServiceController : ControllerBase
             double signalOut = maximumProfitStrategy.zout;
 
             var smoothenedSignals = await _stockSignalService.GetSignalUsingMovingAverageByDefault(ticker, fromDate, toDate, movingWindow, movingAverageImpl);
-            List<StrategyPnl> pnlForMaximumProfit = _backtestService.ComputeLongShortPnl(smoothenedSignals, notional, signalIn, signalOut, new TradingStrategy(TradingStrategyType.MeanReversion, isReinvest)).ToList();
+            List<StrategyPnl> pnlForMaximumProfit = _backtestService.ComputeLongShortPnl(smoothenedSignals, notional, signalIn, signalOut, strategy).ToList();
             var data = pnlForMaximumProfit.Select(p => new StrategyChartData(p.Date.ToString("ddMMyy"), p.PnLCum, p.PnLCumHold));
             return Ok(data);
         }

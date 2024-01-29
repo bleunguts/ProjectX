@@ -14,5 +14,9 @@ namespace ProjectX.Core
         public const string ResultsPlotOptionBS = "PricingResults/bsPlot";
         public const string FXSpotPriceStart = "FXPricing";
         public const string FXSpotPriceEnd = "FXPricing";
+        public const string BacktestLongShortPnlMatrix = "BacktestService/ComputeLongShortPnlMatrix";
+        public const string BacktestLongShortPnl = "BacktestService/ComputeLongShortPnl";
+        public const string StockSignalMovingAverage = "StockSignal/MovingAverageSignals";
+        public const string StockSignalHursts = "StockSignal/Hursts";
     }
 }

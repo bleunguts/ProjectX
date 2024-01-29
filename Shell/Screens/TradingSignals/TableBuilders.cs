@@ -79,7 +79,7 @@ public partial class SingleViewModel
             return _dt.DefaultView.ToTable();            
         }
 
-        public void SetRows(List<StrategyPnl> pnls)
+        public void SetRows(IEnumerable<StrategyPnl> pnls)
         {
             FillRows(_dt, pnls);
         }
