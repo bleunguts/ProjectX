@@ -33,7 +33,6 @@ public class BacktestServiceTest
     //  -2 < -0.1 almost profitable
     // -2 < 0 signalOut barrier breached exit position
     [Test]
-    [Ignore("TODO: Flaky test for unknown reasons")]
     public void WhenSignalIsLessThanNegSignalItShouldEnterAndExitLongTrade()
     {
         var builder = new SignalBuilder(ticker);
@@ -193,7 +192,6 @@ public class BacktestServiceTest
     }
 
     [Test]
-    [Ignore("TODO: Flaky test for unknown reasons")]
     public void WhenGettingMatrixStrategyPnl()
     {
         var builder = new SignalBuilder(ticker);

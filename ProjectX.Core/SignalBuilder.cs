@@ -28,7 +28,7 @@ public class SignalBuilder
 
     public PriceSignal NewSignal(decimal signal, int low = 10, int high = 20)
     {
-        var price = _random.Next(low, high);
+        var price = _random.Next(low, high) + (decimal)_random.NextDouble();
         var pricePredicted = price + (decimal)_random.NextDouble();        
         var lowerBand = low - (decimal)_random.NextDouble();
         var upperBand = high + (decimal)_random.NextDouble();

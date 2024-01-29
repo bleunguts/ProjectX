@@ -139,8 +139,8 @@ namespace ProjectX.Core.Services
             double avgHolding = pnl.Average(x => x.PnLDailyHold);
             double stdHolding = (double)pnl.StdDev(x => (decimal)x.PnLDailyHold);
 
-            double sp = Math.Round(Math.Sqrt(252.0) * avg / std, 4);
-            double spHolding = Math.Round(Math.Sqrt(252.0) * avgHolding / stdHolding, 4);
+            double sp = std == 0 ? 0.0 : Math.Round(Math.Sqrt(252.0) * avg / std, 4);
+            double spHolding = stdHolding == 0 ? 0.0 : Math.Round(Math.Sqrt(252.0) * avgHolding / stdHolding, 4);
 
             // shows how your strategy performs each year 
             return (sp, spHolding);
