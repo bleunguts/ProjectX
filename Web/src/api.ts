@@ -3,7 +3,16 @@ import { HubConnectionState } from "@microsoft/signalr";
 import axios, { AxiosResponse } from 'axios';
 import { v1 as uuidv1 } from 'uuid';
 
-const backendServer =  `https://projectxgatewayapi-app-20231130.icybay-6c4fad7d.westus2.azurecontainerapps.io`;
+const config = () => {
+    console.log(process.env);
+    return {
+        BackendServer : process.env.BACKEND_SERVER
+    }
+}
+
+const backendServer = config().BackendServer ??  `https://projectxgatewayapi-app-20231130.icybay-6c4fad7d.westus2.azurecontainerapps.io`;
+
+//const backendServer =  `https://projectxgatewayapi-app-20231130.icybay-6c4fad7d.westus2.azurecontainerapps.io`;
 //const backendServer = `https://localhost:8081`;
 
 const connection = new signalR.HubConnectionBuilder()
