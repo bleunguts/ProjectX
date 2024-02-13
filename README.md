@@ -42,7 +42,7 @@ _Tech Stack:_
 * C# 11, .NET 8, WPF, Caliburn.Micro, System.ComponentModel.Composition.Hosting.CompositionContainer (IoC), ReactiveX 6, Microsft Chart Controls
 * C++ CLI, native C++ cross platform Win32/MacOs, PInvoke marshalling, cmake, BoxMuller RNG, cdf & pdf distributions
 * ASPNET Core WebApi 6, SignalR, Background Services, .NET Channels, LiveCharts Skia, 
-* Azure Cloud; GitHub Actions Azure Devops CI/CD pipeline, Linux Azure Container App, Azure SignalR, Azure Web App
+* Azure Cloud; GitHub Actions Azure Devops CI/CD pipeline, Azure Container App, Azure SignalR, Azure Web App, Azure Files Samba share, Azure Secrets
 * React 8, Bootstrap, Typescript, recharts,
 * StockIndicators Skender API,  NinjaTrader StockInidicator API, FinancialModellingPrep MarketData API, Quandl MarketData API
 * Trend indicator methods: Bollinger Bands, Moving Averages
