@@ -10,10 +10,7 @@ const config = () => {
     }
 }
 
-const backendServer = config().BackendServer ??  `https://projectxgatewayapi-app-20231130.icybay-6c4fad7d.westus2.azurecontainerapps.io`;
-
-//const backendServer =  `https://projectxgatewayapi-app-20231130.icybay-6c4fad7d.westus2.azurecontainerapps.io`;
-//const backendServer = `https://localhost:8081`;
+const backendServer = config().BackendServer ??  `https://projectxgatewayapi-app-20231130.mangorock-d77aee79.uksouth.azurecontainerapps.io`;
 
 const connection = new signalR.HubConnectionBuilder()
     .withUrl(`${backendServer}/streamHub`,
