@@ -54,7 +54,7 @@ jobs:
         resourceGroup: ${{ env.RESOURCE_GROUP }}
         ingress: external
         targetPort: 8080
-        location: "UK South"
+        location: uksouth
   buildWeb:
     runs-on: ubuntu-latest    
     steps:
