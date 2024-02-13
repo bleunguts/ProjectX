@@ -81,9 +81,12 @@ public class Startup
         services.AddSingleton<PricingTasksChannel>();
         services.AddSingleton<FXTasksChannel>();
         services.TryAddScoped<IPricingTasksProcessor, PricingTasksProcessor>();
-        services.AddSingleton<IStockMarketSource>(new FileBackedStockMarketDataSource(
-            new FMPStockMarketSource(Options.Create(new FMPStockMarketSourceOptions() { ApiKey = FMPStockMarketSourceOptions.GetFromEnvironment() })), 
-            Options.Create(new FileBackedStoreMarketDataSourceOptions() { Filename = Configuration.GetSection("MarketData")["CacheFilename"] }))
+        var environmentVariablesLoader = new EnvironmentVariableLoader();
+        services.AddSingleton<IStockMarketSource>(
+            new FileBackedStockMarketDataSource(
+                new FMPStockMarketSource(Options.Create(new FMPStockMarketSourceOptions { ApiKey = environmentVariablesLoader.FromEnvironmentVariable("fmpapikey") })), 
+                Options.Create(new FileBackedStoreMarketDataSourceOptions() { Filename = Configuration.GetSection("MarketData")["CacheFilename"] })
+            )
         );
         services.AddSingleton<IStockSignalService, StockSignalService>();
         services.AddSingleton<IBacktestService, BacktestService>();

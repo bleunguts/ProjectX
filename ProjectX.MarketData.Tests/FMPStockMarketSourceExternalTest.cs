@@ -12,14 +12,17 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace ProjectX.MarketData.Tests
 {
     public class FMPStockMarketSourceExternalTest
-    {      
+    {
+        private static readonly EnvironmentVariableLoader _environmentVariableLoader = new();
+        private static readonly string _apiKey = _environmentVariableLoader.FromEnvironmentVariable("fmpapikey");
+
         [Test]
         [Ignore("Tool")]
         public async Task ExternalFoo()
         {
             var api = FinancialModelingPrepApiClientFactory.CreateClient(new FinancialModelingPrepOptions()
             {
-                ApiKey = "35fdfe7c1a0d49e6ca2283bb073fea3a"
+                ApiKey = _apiKey
             });            
 
             var result = await api.StockTimeSeries.GetHistoricalDailyPricesAsync("GOOGL", "2020-01-01", "2020-02-01");
@@ -38,7 +41,7 @@ namespace ProjectX.MarketData.Tests
         [Ignore("Tool")]
         public async Task WhenGettingHistoricalPricesFromFMP()
         {
-            var marketDataService = new FMPStockMarketSource(Options.Create<FMPStockMarketSourceOptions>(new FMPStockMarketSourceOptions() { ApiKey = FMPStockMarketSourceOptions.GetFromEnvironment() }));
+            var marketDataService = new FMPStockMarketSource(Options.Create<FMPStockMarketSourceOptions>(new FMPStockMarketSourceOptions { ApiKey = _apiKey }));
             var marketPrices = await marketDataService.GetPrices("ACAQ", new DateTime(2023, 1, 1), new DateTime(2023, 10, 1));
             Assert.That(marketPrices.Count(), Is.GreaterThan(0));
             foreach (var data in marketPrices)
@@ -53,7 +56,7 @@ namespace ProjectX.MarketData.Tests
         [Ignore("External Tool for testing only")]
         public async Task WhenGettingStockMarketMostActiveFromFMP() 
         {
-            var marketDataService = new FMPStockMarketSource(Options.Create<FMPStockMarketSourceOptions>(new FMPStockMarketSourceOptions() { ApiKey = FMPStockMarketSourceOptions.GetFromEnvironment() }));
+            var marketDataService = new FMPStockMarketSource(Options.Create<FMPStockMarketSourceOptions>(new FMPStockMarketSourceOptions { ApiKey = _apiKey }));
             var mostActiveStocks = await marketDataService.GetMostActiveStocks();
             Assert.That(mostActiveStocks.Count(), Is.GreaterThan(0));
             foreach(var data in mostActiveStocks) 
@@ -66,7 +69,8 @@ namespace ProjectX.MarketData.Tests
         [Ignore("Use to try out StockIndicator Api features")]
         public async Task WhenGettingBollingerBandsFromFMQ()
         {
-            var marketDataService = new FMPStockMarketSource(Options.Create<FMPStockMarketSourceOptions>(new FMPStockMarketSourceOptions() { ApiKey = FMPStockMarketSourceOptions.GetFromEnvironment() }));
+            var config = Options.Create<FMPStockMarketSourceOptions>(new FMPStockMarketSourceOptions { ApiKey = _apiKey });
+            var marketDataService = new FMPStockMarketSource(config);
             var quotes = await marketDataService.GetQuote("ACAQ", new DateTime(2023, 1, 1), new DateTime(2023, 10, 1));
             Assert.That(quotes.Count(), Is.GreaterThan(0));
 

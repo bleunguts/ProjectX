@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using ProjectX.Core;
 using ProjectX.Core.Services;
 using ProjectX.Core.Strategy;
 using System;
@@ -14,9 +15,11 @@ namespace ProjectX.MarketData.Cache.Tests
     {
         const string ticker = "IBM";
 
+        private static readonly EnvironmentVariableLoader _environmentVariableLoader = new();
+        private static readonly string _apiKey = _environmentVariableLoader.FromEnvironmentVariable("fmpapikey");
         private readonly BacktestService _backtestService = new();
         private readonly FileBackedStockMarketDataSource _marketSource = new FileBackedStockMarketDataSource(
-            new FMPStockMarketSource(Options.Create<FMPStockMarketSourceOptions>(new FMPStockMarketSourceOptions() { ApiKey = FMPStockMarketSourceOptions.GetFromEnvironment()})), 
+            new FMPStockMarketSource(Options.Create<FMPStockMarketSourceOptions>(new FMPStockMarketSourceOptions { ApiKey = _apiKey })), 
             Options.Create<FileBackedStoreMarketDataSourceOptions>(new FileBackedStoreMarketDataSourceOptions { Filename = "externalTests.json" }));
         public record ChartData(string time, double amount, double amountHold);
 
