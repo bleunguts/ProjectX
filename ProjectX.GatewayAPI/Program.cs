@@ -82,7 +82,7 @@ public class Startup
         services.TryAddScoped<IPricingTasksProcessor, PricingTasksProcessor>();
         services.AddSingleton<IStockMarketSource>(new FileBackedStockMarketDataSource(
             new FMPStockMarketSource(), 
-            Options.Create(new FileBackedStoreMarketDataSourceOptions() { Filename = "cache.json"}))
+            Options.Create(new FileBackedStoreMarketDataSourceOptions() { Filename = Configuration.GetSection("MarketData")["CacheFilename"] }))
         );
         services.AddSingleton<IStockSignalService, StockSignalService>();
         services.AddSingleton<IBacktestService, BacktestService>();
