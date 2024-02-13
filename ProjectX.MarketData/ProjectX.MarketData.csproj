@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="MatthiWare.FinancialModelingPrep" Version="0.2.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0" />
     <PackageReference Include="System.Reactive" Version="6.0.0" />
   </ItemGroup>
 

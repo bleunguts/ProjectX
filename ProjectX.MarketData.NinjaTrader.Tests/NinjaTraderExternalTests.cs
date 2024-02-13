@@ -16,6 +16,7 @@ namespace ProjectX.MarketData.NinjaTrader.Tests
         private Client _client = new Client();
 
         [Test]
+        [Ignore("Requires Ninja Trader GUI to be running")]
         public async Task SubscribeTo()
         {
             const string instrumentReceive = "BTCUSD";

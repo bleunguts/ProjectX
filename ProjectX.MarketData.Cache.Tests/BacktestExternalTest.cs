@@ -15,7 +15,9 @@ namespace ProjectX.MarketData.Cache.Tests
         const string ticker = "IBM";
 
         private readonly BacktestService _backtestService = new();
-        private readonly FileBackedStockMarketDataSource _marketSource = new FileBackedStockMarketDataSource(new FMPStockMarketSource(), Options.Create<FileBackedStoreMarketDataSourceOptions>(new FileBackedStoreMarketDataSourceOptions { Filename = "externalTests.json" }));
+        private readonly FileBackedStockMarketDataSource _marketSource = new FileBackedStockMarketDataSource(
+            new FMPStockMarketSource(Options.Create<FMPStockMarketSourceOptions>(new FMPStockMarketSourceOptions() { ApiKey = FMPStockMarketSourceOptions.GetFromEnvironment()})), 
+            Options.Create<FileBackedStoreMarketDataSourceOptions>(new FileBackedStoreMarketDataSourceOptions { Filename = "externalTests.json" }));
         public record ChartData(string time, double amount, double amountHold);
 
         [Test]

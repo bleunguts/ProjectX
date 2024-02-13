@@ -4,18 +4,18 @@ using ProjectX.Core;
 using Skender.Stock.Indicators;
 using MatthiWare.FinancialModelingPrep.Model;
 using MatthiWare.FinancialModelingPrep.Model.StockMarket;
+using Microsoft.Extensions.Options;
 
 namespace ProjectX.MarketData;
-
 public class FMPStockMarketSource : IStockMarketSource, IRealStockMarketSource
 {
     private readonly IFinancialModelingPrepApiClient _api;
 
-    public FMPStockMarketSource()
+    public FMPStockMarketSource(IOptions<FMPStockMarketSourceOptions> options)
     {
         _api = FinancialModelingPrepApiClientFactory.CreateClient(new FinancialModelingPrepOptions()
         {
-            ApiKey = "35fdfe7c1a0d49e6ca2283bb073fea3a"
+            ApiKey = options.Value.ApiKey
         });
     }
    

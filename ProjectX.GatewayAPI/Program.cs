@@ -22,6 +22,7 @@ using System.Text.Json;
 Console.WriteLine($"ASPNETCORE_HTTP_PORTS={Environment.GetEnvironmentVariable("ASPNETCORE_HTTP_PORTS")}");
 Console.WriteLine($"ASPNETCORE_URLS={Environment.GetEnvironmentVariable("ASPNETCORE_URLS")}");
 Console.WriteLine($"ASPNETCORE_ENVIRONMENT ={Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}");
+Console.WriteLine($"fmpapikey ={Environment.GetEnvironmentVariable("fmpapikey")}");
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -81,7 +82,7 @@ public class Startup
         services.AddSingleton<FXTasksChannel>();
         services.TryAddScoped<IPricingTasksProcessor, PricingTasksProcessor>();
         services.AddSingleton<IStockMarketSource>(new FileBackedStockMarketDataSource(
-            new FMPStockMarketSource(), 
+            new FMPStockMarketSource(Options.Create(new FMPStockMarketSourceOptions() { ApiKey = FMPStockMarketSourceOptions.GetFromEnvironment()})), 
             Options.Create(new FileBackedStoreMarketDataSourceOptions() { Filename = Configuration.GetSection("MarketData")["CacheFilename"] }))
         );
         services.AddSingleton<IStockSignalService, StockSignalService>();

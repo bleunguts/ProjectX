@@ -14,7 +14,7 @@ namespace ProjectX.MarketData.Tests
 {
     public  class StockSignalServiceExternalTest
     {
-        private static readonly FileBackedStockMarketDataSource _marketSource = new FileBackedStockMarketDataSource(new FMPStockMarketSource(), Options.Create<FileBackedStoreMarketDataSourceOptions>(new FileBackedStoreMarketDataSourceOptions { Filename = "externalTests.json" }));
+        private static readonly FileBackedStockMarketDataSource _marketSource = new FileBackedStockMarketDataSource(new FMPStockMarketSource(Options.Create<FMPStockMarketSourceOptions>(new FMPStockMarketSourceOptions() { ApiKey = FMPStockMarketSourceOptions.GetFromEnvironment() })), Options.Create<FileBackedStoreMarketDataSourceOptions>(new FileBackedStoreMarketDataSourceOptions { Filename = "externalTests.json" }));
         private readonly StockSignalService _signalService = new StockSignalService(_marketSource);        
 
         [Test]
