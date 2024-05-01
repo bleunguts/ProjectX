@@ -9,11 +9,14 @@ namespace ProjectX.AnalyticsLib;
 
 public class CreditDefaultSwapFunctions
 {
+    /// <summary>
+    /// Uses Flat Interest Rate Curve - instead of PiecewiseLogCubic ISDA rate curves
+    /// </summary>    
     public static CreditDefaultSwapPVResult PV(
         DateTime evaluationDate, 
         DateTime effectiveDate, 
         DateTime maturityDate, 
-        int[] spreadsInBps, 
+        double[] spreadsInBps, 
         string[] tenors, 
         double recoveryRate, 
         int couponInBps, 
