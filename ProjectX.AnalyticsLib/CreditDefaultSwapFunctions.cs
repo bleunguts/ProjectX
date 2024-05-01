@@ -33,6 +33,8 @@ public class CreditDefaultSwapFunctions
             Protection.Side.Seller => 100 + upfront,
             _ => throw new NotImplementedException(),
         };           
+
+        // we calculate accrual using T + 1 rule
         int numDays = effectiveDate.Subtract(evalDate).Days + 1;
         double accrual = couponInBps * numDays / 360.0 / 100.0;
         double cleanPrice = protectionSide switch
@@ -41,11 +43,13 @@ public class CreditDefaultSwapFunctions
             Protection.Side.Seller => dirtyPrice - accrual,
             _ => throw new NotImplementedException(),
         };
+        // the dirty price with a notional of $100 should be 100 - upfront
+        // the clean price should be dirty price with the accrual removal
 
         // compute risky annuity (dv01)
-        // the risky duration (dv01) relates to a trade and is the change in mark-to-market of a CDS trade for a 1 basis point parallel shift in spreads.        
-    
-        // for a par trade Sinitial = SCurrent risky duration is equal to the risky annuity.  
+        // the risky duration (dv01) relates to a trade and is the change in mark-to-market of a CDS trade for a 1 basis point parallel shift in spreads.            
+        // for a par trade Sinitial = SCurrent risky duration is equal to the risky annuity.
+        // we calculate by setting the coupon to parSpread + 1 bps
         double cds2coupon = cds.FairSpread + 1;
         var cds2 = PV(evalDate, effectiveDate, maturityDate, spreadsInBps, tenors, recoveryRate, cds2coupon, 100, protectionSide, flatInterestRate);
         double riskyAnnuity = cds2.PV;
@@ -113,8 +117,7 @@ public class CreditDefaultSwapFunctions
         // build instrument
         var schedule = new Schedule(effectiveDate.ToQuantLibDate(), maturity, new Period(Frequency.Annual), calendar, BusinessDayConvention.Following, BusinessDayConvention.Following, DateGeneration.Rule.Twentieth, false);
         CreditDefaultSwap cds = new CreditDefaultSwap(protectionSide, notional, couponInBps / 10_000.0, schedule, BusinessDayConvention.ModifiedFollowing, new Actual365Fixed());
-        cds.setPricingEngine(new MidPointCdsEngine(piecewiseFlatHazardRate, recoveryRate, curve));
-        cds.recalculate();
+        cds.setPricingEngine(new MidPointCdsEngine(piecewiseFlatHazardRate, recoveryRate, curve));        
 
         // results
         var pv = cds.NPV();        
