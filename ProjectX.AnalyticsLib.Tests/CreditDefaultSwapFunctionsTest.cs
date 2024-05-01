@@ -21,7 +21,7 @@ public class CreditDefaultSwapFunctionsTest
         var couponInBps = 100;
         var notional = 10_000;
         Protection.Side protectionSide = Protection.Side.Buyer;
-        var interestRate = 0.15;
+        var interestRate = 0.07;
         var actual = CreditDefaultSwapFunctions.PV(
             evalDate, 
             effectiveDate,
@@ -36,7 +36,7 @@ public class CreditDefaultSwapFunctionsTest
         Assert.That(actual.SurvivalProbabilityPercentage, Is.EqualTo(82).Within(1));
         Assert.That(actual.DefaultProbabilityPercentage, Is.EqualTo(17).Within(1));
         Assert.That(actual.HazardRatePercentage, Is.EqualTo(3).Within(1));
-        Assert.That(actual.PV, Is.EqualTo(405).Within(1), "PV must be equal to expected value within tolerance"); 
-        Assert.That(actual.FairSpread, Is.EqualTo(224).Within(1), "Fair spread must be equal to expected value within tolerance"); 
+        Assert.That(actual.PV, Is.EqualTo(471).Within(1), "PV must be equal to expected value within tolerance"); 
+        Assert.That(actual.FairSpread, Is.EqualTo(218).Within(1), "Fair spread must be equal to expected value within tolerance"); 
     }
 }
