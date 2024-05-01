@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="QLNet" Version="1.13.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ProjectX.AnalyticsLib.Shared\ProjectX.AnalyticsLib.Shared.csproj" />
     <ProjectReference Include="..\ProjectX.Core\ProjectX.Core.csproj" />
   </ItemGroup>
