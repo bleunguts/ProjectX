@@ -51,8 +51,7 @@ public class CreditDefaultSwapFunctionsTest
         var recoveryRate = 0.4;
         var couponInBps = 100;
         var notional = 10_000;
-        Protection.Side protectionSide = Protection.Side.Buyer;
-        var interestRate = 0.07;
+        Protection.Side protectionSide = Protection.Side.Buyer;        
         var actual = CreditDefaultSwapFunctions.PV(
             evalDate,
             effectiveDate,
@@ -63,11 +62,42 @@ public class CreditDefaultSwapFunctionsTest
             couponInBps,
             notional,
             protectionSide,
-            interestRate);
+            0.07);
         Assert.That(actual.SurvivalProbabilityPercentage, Is.EqualTo(96.3).Within(1));
         Assert.That(actual.DefaultProbabilityPercentage, Is.EqualTo(3.6).Within(1));
         Assert.That(actual.HazardRatePercentage, Is.EqualTo(1.8).Within(1));
         Assert.That(actual.PV, Is.EqualTo(-137).Within(1), "PV must be equal to expected value within tolerance");
         Assert.That(actual.FairSpread, Is.EqualTo(51.3).Within(1), "Fair spread must be equal to expected value within tolerance");
+    }
+
+    [Test]
+    public void WhenCdsPriceShouldReturnCleanAndDirtyPrice()
+    {
+        var evalDate = new DateTime(2015, 5, 15);
+        var effectiveDate = new DateTime(2015, 3, 20);
+        var maturityDate = new DateTime(2018, 6, 20);
+        var spreadsInBps = new double[] { 34.93, 53.6, 72.02, 106.39, 129.39, 139.46 };
+        var tenors = new string[] { "1Y", "2Y", "3Y", "5Y", "7Y", "10Y" };
+        var recoveryRate = 0.4;
+        var couponInBps = 100;
+        var couponFrequency = Frequency.Annual;
+        Protection.Side protectionSide = Protection.Side.Buyer;        
+
+        var actual = CreditDefaultSwapFunctions.Price(
+           evalDate,
+           effectiveDate,
+           maturityDate,
+           spreadsInBps,
+           tenors,
+           recoveryRate,
+           couponInBps,
+           couponFrequency,
+           protectionSide, 
+           0.07);
+
+        Assert.That(actual.cleanPrice, Is.EqualTo(100.43).Within(1));
+        Assert.That(actual.dirtyPrice, Is.EqualTo(100.67).Within(1));
+        Assert.That(actual.dirtyPrice, Is.GreaterThan(actual.cleanPrice));
+        Assert.That(actual.riskyAnnuity, Is.EqualTo(-0.04).Within(1));
     }
 }

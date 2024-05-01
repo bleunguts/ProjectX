@@ -6,11 +6,54 @@ using System.Text;
 using QLNet;
 
 namespace ProjectX.AnalyticsLib;
-
+/// <summary>
+/// For CDS buyers or sellers the present value of a CDS contract is all what they care about.
+/// For quants, we want to calculate accrual amount, risk annuity (DV01), dirty price, clean price @ $100
+/// </summary>
 public class CreditDefaultSwapFunctions
 {
+    public static CreditDefaultSwapPriceResult Price(
+        DateTime evalDate,
+        DateTime effectiveDate,
+        DateTime maturityDate,
+        double[] spreadsInBps,
+        string[] tenors,
+        double recoveryRate,
+        double couponInBps,
+        Frequency couponFrequency,
+        Protection.Side protectionSide, 
+        double flatInterestRate)
+    {
+        // we want to know the dirty price and clean price for a notional of $100, just like a bond with a face value of $100
+        var cds = PV(evalDate, effectiveDate, maturityDate, spreadsInBps, tenors, recoveryRate, couponInBps, 100, protectionSide, flatInterestRate);
+        double upfront = cds.PV;
+        double dirtyPrice = protectionSide switch
+        {
+            Protection.Side.Buyer => 100 - upfront,
+            Protection.Side.Seller => 100 + upfront,
+            _ => throw new NotImplementedException(),
+        };           
+        int numDays = effectiveDate.Subtract(evalDate).Days + 1;
+        double accrual = couponInBps * numDays / 360.0 / 100.0;
+        double cleanPrice = protectionSide switch
+        {
+            Protection.Side.Buyer => dirtyPrice + accrual,
+            Protection.Side.Seller => dirtyPrice - accrual,
+            _ => throw new NotImplementedException(),
+        };
+
+        // compute risky annuity (dv01)
+        // the risky duration (dv01) relates to a trade and is the change in mark-to-market of a CDS trade for a 1 basis point parallel shift in spreads.        
+    
+        // for a par trade Sinitial = SCurrent risky duration is equal to the risky annuity.  
+        double cds2coupon = cds.FairSpread + 1;
+        var cds2 = PV(evalDate, effectiveDate, maturityDate, spreadsInBps, tenors, recoveryRate, cds2coupon, 100, protectionSide, flatInterestRate);
+        double riskyAnnuity = cds2.PV;
+        return (cleanPrice, dirtyPrice, riskyAnnuity);
+    }
+
     /// <summary>
-    /// Uses Flat Interest Rate Curve - instead of PiecewiseLogCubic ISDA rate curves
+    /// Uses Flat Interest Rate Curve. Other possible implementations include market ISDA rate curve (PiecewiseLogCubic)
     /// </summary>    
     public static CreditDefaultSwapPVResult PV(
         DateTime evaluationDate, 
@@ -19,7 +62,7 @@ public class CreditDefaultSwapFunctions
         double[] spreadsInBps, 
         string[] tenors, 
         double recoveryRate, 
-        int couponInBps, 
+        double couponInBps, 
         int notional, 
         Protection.Side protectionSide, 
         double flatInterestRate)
@@ -94,5 +137,18 @@ public record struct CreditDefaultSwapPVResult(double PV, double FairSpread, dou
     public static implicit operator CreditDefaultSwapPVResult((double pv, double fairSpread, double survivalProbabilityPercentage, double hazardRatePercenatge, double defaultProbabilityPercentage) value)
     {
         return new CreditDefaultSwapPVResult(value.pv, value.fairSpread, value.survivalProbabilityPercentage, value.hazardRatePercenatge, value.defaultProbabilityPercentage);
+    }
+}
+
+public record struct CreditDefaultSwapPriceResult(double cleanPrice, double dirtyPrice, double riskyAnnuity)
+{
+    public static implicit operator (double cleanPrice, double dirtyPrice, double riskyAnnuity)(CreditDefaultSwapPriceResult value)
+    {
+        return (value.cleanPrice, value.dirtyPrice, value.riskyAnnuity);
+    }
+
+    public static implicit operator CreditDefaultSwapPriceResult((double cleanPrice, double dirtyPrice, double riskyAnnuity) value)
+    {
+        return new CreditDefaultSwapPriceResult(value.cleanPrice, value.dirtyPrice, value.riskyAnnuity);
     }
 }
