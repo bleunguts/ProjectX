@@ -169,5 +169,10 @@ namespace Shell
 
             return response;
         }
+
+        public override string ToString()
+        {            
+            return $"BackendAddress={_httpClient.BaseAddress}";
+        }
     }
 }

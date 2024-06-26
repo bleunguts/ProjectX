@@ -1,4 +1,7 @@
 ﻿using Caliburn.Micro;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
@@ -10,12 +13,13 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Windows;
 
 namespace Shell
-{
+{   
     public class AppBootstrapper : BootstrapperBase
     {
         private CompositionContainer container;
@@ -38,22 +42,13 @@ namespace Shell
             batch.AddExportedValue<IEventAggregator>(new EventAggregator());
             batch.AddExportedValue(container);                      
             batch.AddExportedValue<ILogger<eFXTradeExecutionService>>(new NullLogger<eFXTradeExecutionService>());
-            batch.AddExportedValue<ILogger<GatewayApiClient>>(new NullLogger<GatewayApiClient>());            
-            var options = Microsoft.Extensions.Options.Options.Create(
-                new GatewayApiClientOptions 
-                { 
-                    BaseUrl = ConfigurationManager.AppSettings["BackendUrl"], 
-                    SignalRUrl = ConfigurationManager.AppSettings["SignalRUrl"],
-                    ForceDisableSignalR = ShouldForceDisableSignalR(ConfigurationManager.AppSettings.Get("ForceDisableSignalR"))
-                });
-            batch.AddExportedValue<IOptions<GatewayApiClientOptions>>(options);    
+            batch.AddExportedValue<ILogger<GatewayApiClient>>(new NullLogger<GatewayApiClient>());
+            
+            HostApplicationBuilder builder = Host.CreateApplicationBuilder();                                    
+            GatewayApiClientOptions options = new();
+            builder.Configuration.GetSection(nameof(GatewayApiClientOptions)).Bind(options);
+            batch.AddExportedValue<IOptions<GatewayApiClientOptions>>(Options.Create(options));    
             container.Compose(batch);                        
-        }
-
-        private bool ShouldForceDisableSignalR(string? config)
-        {
-            if (string.IsNullOrEmpty(config)) return false;
-            return Convert.ToBoolean(config);            
         }
 
         protected override object GetInstance(Type serviceType, string key)

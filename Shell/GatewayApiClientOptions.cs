@@ -6,6 +6,6 @@ namespace Shell
     {
         public string BaseUrl { get; set; }   
         public string SignalRUrl { get; set; }
-        public bool ForceDisableSignalR { get; set; }
+        public bool? ForceDisableSignalR { get; set; }
     }
 }

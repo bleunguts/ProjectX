@@ -156,6 +156,7 @@ namespace Shell.Screens.Options
             _cts = new CancellationTokenSource();
             try
             {
+                UpdateStatus($"Connecting to backend... {_gatewayApiClient.ToString()}");
                 await _gatewayApiClient.StartHubAsync();
             }
             catch(HttpRequestException socketExp)

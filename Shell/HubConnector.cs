@@ -31,7 +31,7 @@ namespace Shell
         public HubConnector(IOptions<GatewayApiClientOptions> options)
         {
             _baseUriString = $"{options.Value.SignalRUrl}";
-            if (!options.Value.ForceDisableSignalR)
+            if (options.Value.ForceDisableSignalR.HasValue)
             {
                 _connection = Connect(_baseUriString);
             }           
