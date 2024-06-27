@@ -12,11 +12,13 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
+using System.ComponentModel.DataAnnotations;
 using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Windows;
+using static SkiaSharp.HarfBuzz.SKShaper;
 
 namespace Shell
 {   
@@ -47,6 +49,10 @@ namespace Shell
             HostApplicationBuilder builder = Host.CreateApplicationBuilder();                                    
             GatewayApiClientOptions options = new();
             builder.Configuration.GetSection(nameof(GatewayApiClientOptions)).Bind(options);
+            var results = new List<ValidationResult>();
+            if (!Validator.TryValidateObject(options, new ValidationContext(options), results))
+                throw new Exception($"GatewayApiClientOptions config is invalid! {string.Join(", ", results)}");
+
             batch.AddExportedValue<IOptions<GatewayApiClientOptions>>(Options.Create(options));    
             container.Compose(batch);                        
         }
