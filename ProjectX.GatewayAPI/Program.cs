@@ -23,6 +23,7 @@ Console.WriteLine($"ASPNETCORE_HTTP_PORTS={Environment.GetEnvironmentVariable("A
 Console.WriteLine($"ASPNETCORE_URLS={Environment.GetEnvironmentVariable("ASPNETCORE_URLS")}");
 Console.WriteLine($"ASPNETCORE_ENVIRONMENT ={Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}");
 Console.WriteLine($"fmpapikey ={Environment.GetEnvironmentVariable("fmpapikey")}");
+Console.WriteLine($"AZURE_SIGNALR_ConnectionString ={Environment.GetEnvironmentVariable("AZURE__SIGNALR__ConnectionString")}");
 
 var builder = WebApplication.CreateBuilder(args);
 
