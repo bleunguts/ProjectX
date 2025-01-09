@@ -16,94 +16,76 @@ jobs:
   BuildAndDeployContainerApp:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout source code
-      uses: actions/checkout@v4
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
-    # - name: "CMake native libs"
-    #   run: |
-    #        cmake -S ./ProjectX.AnalyticsLibNative -B ./ProjectX.AnalyticsLibNative/out -DCMAKE_INSTALL_PREFIX=./ProjectX.AnalyticsLibNative/out/install/linux-base
-    #        cmake --build ./ProjectX.AnalyticsLibNative/out  
-    # - run: ls ./ProjectX.AnalyticsLibNative/out/bin    
-    # - run: cp ./ProjectX.AnalyticsLibNative/out/bin/ProjectX.AnalyticsLibNative.so ./3rdParty
-    # - run: ls ./3rdParty
-    # - run: rm -rf ./ProjectX.AnalyticsLibNative/out
-    # - name: "Build sln"
-    #   run: |
-    #        dotnet restore ProjectX_.sln
-    #        dotnet build ProjectX_.sln -c Release
-    # - name: "Run tests"
-    #   run: dotnet test ProjectX_.sln -c Release
+    # - name: Checkout source code
+    #   uses: actions/checkout@v4
+    # - name: Setup .NET SDK
+    #   uses: actions/setup-dotnet@v3
+    #   with:
+    #     dotnet-version: ${{ env.DOTNET_CORE_VERSION }}    
     - name: Azure login
-      uses: azure/login@v1
+      uses: azure/login@v2
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-    - name: Container App deploy
-      uses: azure/container-apps-deploy-action@v1
-      with:
-        appSourcePath: ${{ github.workspace }}
-        dockerfilePath: ProjectX.GatewayAPI/Dockerfile
-        acrName: ${{ env.CONTAINER_REGISTRY_NAME }}
-        acrUsername: ${{ secrets.registry20231128020059_USERNAME_74CC }}
-        acrPassword: ${{ secrets.registry20231128020059_PASSWORD_74CC }}
-        imageToBuild: ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.CONTAINER_APP_NAME }}:${{ github.sha }}
-        containerAppName: ${{ env.CONTAINER_APP_NAME }}
-        containerAppEnvironment: ${{ env.CONTAINER_APP_ENVIRONMENT_NAME }}
-        resourceGroup: ${{ env.RESOURCE_GROUP }}
-        ingress: external
-        targetPort: 8080
-        location: uksouth
-  buildWeb:
-    runs-on: ubuntu-latest    
-    steps:
-    - name: Checkout source code
-      uses: actions/checkout@v4
+    # - name: Container App deploy
+    #   uses: azure/container-apps-deploy-action@v1
+    #   with:
+    #     appSourcePath: ${{ github.workspace }}
+    #     dockerfilePath: ProjectX.GatewayAPI/Dockerfile
+    #     acrName: ${{ env.CONTAINER_REGISTRY_NAME }}
+    #     acrUsername: ${{ secrets.registry20231128020059_USERNAME_74CC }}
+    #     acrPassword: ${{ secrets.registry20231128020059_PASSWORD_74CC }}
+    #     imageToBuild: ${{ env.CONTAINER_REGISTRY_LOGIN_SERVER }}/${{ env.CONTAINER_APP_NAME }}:${{ github.sha }}
+    #     containerAppName: ${{ env.CONTAINER_APP_NAME }}
+    #     containerAppEnvironment: ${{ env.CONTAINER_APP_ENVIRONMENT_NAME }}
+    #     resourceGroup: ${{ env.RESOURCE_GROUP }}
+    #     ingress: external
+    #     targetPort: 8080
+    #     location: uksouth
+  # buildWeb:
+  #   runs-on: ubuntu-latest    
+  #   steps:
+  #   - name: Checkout source code
+  #     uses: actions/checkout@v4
 
-    - name: Set up Node.js      
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ env.NODE_VERSION }}
-        # cache: 'npm'        
-        # cache-dependency-path: package-lock.json
-
-    - name: npm install, build, and test
-      working-directory: Web/
-      run: | 
-        npm install
-        npm run build --if-present
-        npm run test --if-present
-    - name: Zip artifact for deployment
-      working-directory: Web/
-      run: zip release.zip ./* -r
-    - name: Upload artifact for deployment job      
-      uses: actions/upload-artifact@v4
-      with:
-        name: node-app
-        path: Web/release.zip  
-        
-  deployWeb:
-    runs-on: ubuntu-latest
-    needs: buildWeb   
-    steps:
-    - name: Download artifact from build job
-      uses: actions/download-artifact@v4
-      with:
-        name: node-app
-    - name: unzip artifact for deployment
-      run: unzip release.zip -d ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}  
-    - name: Azure login
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-    - name: 'Deploy to Azure WebApp'
-      id: deploy-to-webapp 
-      uses: azure/webapps-deploy@85270a1854658d167ab239bce43949edb336fa7c
-      with:
-        app-name: ${{ env.AZURE_WEBAPP_NAME }}
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}        
+  #   - name: Set up Node.js      
+  #     uses: actions/setup-node@v4
+  #     with:
+  #       node-version: ${{ env.NODE_VERSION }}        
+  #   - name: npm install, build, and test
+  #     working-directory: Web/
+  #     run: | 
+  #       npm install
+  #       npm run build --if-present
+  #       npm run test --if-present
+  #   - name: Zip artifact for deployment
+  #     working-directory: Web/
+  #     run: zip release.zip ./* -r
+  #   - name: Upload artifact for deployment job      
+  #     uses: actions/upload-artifact@v4
+  #     with:
+  #       name: node-app
+  #       path: Web/release.zip         
+  # deployWeb:
+  #   runs-on: ubuntu-latest
+  #   needs: buildWeb   
+  #   steps:
+  #   - name: Download artifact from build job
+  #     uses: actions/download-artifact@v4
+  #     with:
+  #       name: node-app
+  #   - name: unzip artifact for deployment
+  #     run: unzip release.zip -d ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}  
+  #   - name: Azure login
+  #     uses: azure/login@v2
+  #     with:
+  #       creds: ${{ secrets.AZURE_CREDENTIALS }}
+  #   - name: 'Deploy to Azure WebApp'
+  #     id: deploy-to-webapp 
+  #     uses: azure/webapps-deploy@85270a1854658d167ab239bce43949edb336fa7c
+  #     with:
+  #       app-name: ${{ env.AZURE_WEBAPP_NAME }}
+  #       publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+  #       package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}        
       #https://medium.com/@janesfrontenddiary/how-to-deploy-a-vite-react-app-to-azure-app-service-using-ci-cd-pipelines-github-actions-1cee30d49ab0
       #pm2 serve /home/site/wwwroot --no-daemon
       #npx serve -s ./dist <--- it transpires and minimises the lot into one file... 
