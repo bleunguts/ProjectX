@@ -1,12 +1,27 @@
 ﻿using MatthiWare.FinancialModelingPrep.Model.StockMarket;
 using MatthiWare.FinancialModelingPrep.Model.StockTimeSeries;
 using ProjectX.Core;
+using ProjectX.MachineLearning;
 using Skender.Stock.Indicators;
 
 namespace ProjectX.MarketData;
 
-public static class Extensions
+public static class MarketDataExtensions
 {
+    public static MarketPrice ToMarketPrice(this KaggleStockData stockData)
+    {
+        return new MarketPrice
+        {
+            Ticker = stockData.Symbol,
+            High = stockData.AdjHigh,
+            Low = stockData.AdjLow,
+            Open = stockData.Open,
+            Close = stockData.Close,
+            Date = DateTimeOffset.Parse(stockData.Date).Date,
+            Volume = stockData.Volume
+        };
+    }
+
     public static MarketPrice ToMarketPrice(this HistoricalPriceItem p, string ticker) => new()
     {
         Open = Convert.ToDecimal(p.Open),
@@ -27,7 +42,6 @@ public static class Extensions
         Volume = Convert.ToDecimal(p.Volume),
         Date = DateTime.Parse(p.Date)
     };
-
 
     public static StockMarketSymbol ToStockMarketSymbol(this StockMarketSymbolResponse s) => new() 
     {
