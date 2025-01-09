@@ -20,7 +20,7 @@ const sections = [
 const mainFeaturedPost = {
   title: 'Innovative trading signals platform',
   description:
-        "A comprehensive backtest platform for algorithmic trading strategies based on price trends signals and price predictions using AI.",
+        "A backtest platform for algo trading strategies based on price trends signals and price predictions using AI.",
   image: 'https://source.unsplash.com/random?wallpapers',
   imageText: 'main image description',  
   linkText: '',
@@ -33,7 +33,7 @@ const sidebar = {
 
 const defaultTheme = createTheme();
 const bodyComponents = [
-    'The key to a profitable trading strategy lies in the optimization methods applied, and this app provides the tools to visualize the outcomes effectively. Backtesting enables a comprehensive understanding of the strategy and demonstrates its reproducibility by showing how it would have performed in the past. Using the long-short method, the app computes PnL based on Moving Averages within a specified Moving Window (i.e. the number of prices/days). Trades are initiated only after exiting the current position, ensuring that no more than one trade is executed per trading day.',
+    'Backtesting enables a comprehensive understanding of a strategy by demonstrating its reproducibility by running it against past live data. Using the long-short method, the app computes PnL based on Moving Averages within a specified Moving Window (i.e. the number of prices/days). Trades are initiated only after exiting the current position, ensuring that no more than one trade is executed per trading day.',
 ];
 export default function Blog() {
   return (
