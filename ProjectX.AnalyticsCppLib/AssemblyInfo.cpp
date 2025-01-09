@@ -11,7 +11,7 @@ using namespace System::Security::Permissions;
 [assembly:AssemblyConfigurationAttribute(L"")];
 [assembly:AssemblyCompanyAttribute(L"")];
 [assembly:AssemblyProductAttribute(L"ProjectXAnalyticsCppLib")];
-[assembly:AssemblyCopyrightAttribute(L"Copyright (c)  2023")];
+[assembly:AssemblyCopyrightAttribute(L"Copyright (c)  2025")];
 [assembly:AssemblyTrademarkAttribute(L"")];
 [assembly:AssemblyCultureAttribute(L"")];
 
