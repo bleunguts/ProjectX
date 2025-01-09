@@ -90,46 +90,63 @@ export default function StockNews() {
 
     return (
         <>
-            <Grid container direction="row" spacing={1.5} alignItems="center" justifyContent="flex-end" alignContent='center'>
-                <Grid item><Typography variant="h6" align="center" gutterBottom>Stock Symbol:</Typography></Grid>
+            <Typography variant="h6" align="center" gutterBottom>
+            Stocks
+            </Typography>
+            <Typography variant="caption" align="center" gutterBottom>
+            Run trading algorithms & predict prices using AI against market stock prices 
+            </Typography>
+            <Grid container direction="row">
                 <Grid item>
-                    <input id="stockSymbol" type="text" size={6} disabled={false} value={stockSymbol} onChange={handleStockSymbolChange} list="datalist" onDoubleClick={handleDoubleClick}/>
-                    <datalist id="datalist">
-                        { 
-                            stockSymbols.map(function(s) {
-                                return (
-                                    <option value={s}>{s}</option>
-                                )
-                            })
-                        }
-                    </datalist>
+                    <Grid container spacing={0.5} alignItems="center" alignContent='center' justifyContent='flex-end'>
+                        <Grid item ><Typography><b>Stock Symbol:</b></Typography></Grid>
+                        <Grid item >
+                            <input id="stockSymbol" type="text" size={5} disabled={false} value={stockSymbol} onChange={handleStockSymbolChange} list="datalist" onDoubleClick={handleDoubleClick}/>
+                            <datalist id="datalist">
+                                { 
+                                    stockSymbols.map(function(s) {
+                                        return (
+                                            <option value={s}>{s}</option>
+                                        )
+                                    })
+                                }
+                            </datalist>                            
+                        </Grid>
+                        <Grid item xs={2}><Button disabled={false} onClick={handleStrategize}>RUN</Button></Grid>
+                        <Grid item xs={2}><Button disabled={true}>PREDICT</Button></Grid>
+                    </Grid>
                 </Grid>
-                <Grid item><Button disabled={false} onClick={handleStrategize}>STRATEGIZE</Button></Grid>
-            </Grid>
-            <Typography variant="h6" align="center" gutterBottom>
-            Stock Market Highest Gainers <IconButton onClick={handleHighestGainersClick}><SyncIcon></SyncIcon></IconButton>
-            </Typography>
-            {highestGainerStocks.map((gainer) =>
-            (
-                <Grid key={JSON.stringify(gainer)} container direction='row' spacing={0.5} alignItems="center" justifyContent="center" alignContent='center'>
-                    <Grid item xs={2}><Typography><b>{gainer.ticker}</b></Typography></Grid>
-                    <Grid item xs={2}><Typography>${gainer.price}</Typography></Grid>
-                    <Grid item xs={2}><Typography>{prettify(gainer.changesPercentage)}%</Typography></Grid> 
-                    <Grid item xs={1}><Button disabled={false} onClick={() => handleStrategizeFrom(gainer.ticker)}>STRATEGIZE</Button></Grid>                                       
+                <Grid item>
+                    <Typography variant="h6" align="center" gutterBottom>
+                    Stock Market Highest Gainers <IconButton onClick={handleHighestGainersClick}><SyncIcon></SyncIcon></IconButton>
+                    </Typography>
+                    {highestGainerStocks.map((gainer) =>
+                    (
+                        <Grid key={JSON.stringify(gainer)} container direction='row' spacing={2.5} alignItems="center" justifyContent="center" alignContent='center'>
+                            <Grid item xs={2}><Typography><b>{gainer.ticker}</b></Typography></Grid>
+                            <Grid item xs={2}><Typography>${gainer.price}</Typography></Grid>
+                            <Grid item xs={2}><Typography>{prettify(gainer.changesPercentage)}%</Typography></Grid> 
+                            <Grid item xs={2}><Button disabled={false} onClick={() => handleStrategizeFrom(gainer.ticker)}>RUN</Button></Grid>     
+                            <Grid item xs={2}><Button disabled={true}>PREDICT</Button></Grid>                                                           
+                        </Grid>
+                    ))}
                 </Grid>
-            ))}
-            <Typography variant="h6" align="center" gutterBottom>
-                Stock Market Most Active Players <IconButton onClick={handleMostActiveClick}><SyncIcon></SyncIcon></IconButton>
-            </Typography>
-            {mostActiveStocks.map((stock) =>
-            (
-                <Grid key={JSON.stringify(stock)} container direction='row' spacing={0.5} alignItems="center" justifyContent="center" alignContent='center'>
-                    <Grid item xs={2}><Typography><b>{stock.ticker}</b></Typography></Grid>
-                    <Grid item xs={2}><Typography>${stock.price}</Typography></Grid>
-                    <Grid item xs={2}><Typography>{prettify(stock.changesPercentage)}%</Typography></Grid>
-                    <Grid item xs={1}><Button disabled={false} onClick={() => handleStrategizeFrom(stock.ticker)}>STRATEGIZE</Button></Grid>   
+                <Grid item>
+                    <Typography variant="h6" align="center" gutterBottom>
+                    Stock Market Most Active Players <IconButton onClick={handleMostActiveClick}><SyncIcon></SyncIcon></IconButton>
+                    </Typography>
+                    {mostActiveStocks.map((stock) =>
+                    (
+                        <Grid key={JSON.stringify(stock)} container direction='row' spacing={0.5} alignItems="center" justifyContent="center" alignContent='center'>
+                            <Grid item xs={2}><Typography><b>{stock.ticker}</b></Typography></Grid>
+                            <Grid item xs={2}><Typography>${stock.price}</Typography></Grid>
+                            <Grid item xs={2}><Typography>{prettify(stock.changesPercentage)}%</Typography></Grid>
+                            <Grid item xs={2}><Button disabled={false} onClick={() => handleStrategizeFrom(stock.ticker)}>RUN</Button></Grid>   
+                            <Grid item xs={2}><Button disabled={true}>PREDICT</Button></Grid>   
+                        </Grid>
+                    ))}
                 </Grid>
-            ))}
+            </Grid>                           
         </>
     );
 }

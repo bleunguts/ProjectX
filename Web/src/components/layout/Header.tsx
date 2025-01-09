@@ -31,8 +31,8 @@ export default function Header(props: HeaderProps) {
         </Typography>
         <IconButton>
           <SearchIcon />
-        </IconButton>       
-      </Toolbar>
+        </IconButton>               
+      </Toolbar>      
       <Toolbar
         component="nav"
         variant="dense"
@@ -49,7 +49,7 @@ export default function Header(props: HeaderProps) {
           >
             {section.title}
           </Link>
-        ))}
+        ))}        
       </Toolbar>
     </React.Fragment>
   );

@@ -12,7 +12,7 @@ export const featuredPosts = [
         title: 'The roadmap ahead..',
         date: 'Sep 23',
         description:
-            `Implement complex NinjaTrader support momentum strategies(RSI, Williams %R) and Pairs strategy going long on under-performer short on over performer. 
+            `Implement NinjaTrader momentum strategies(RSI, Williams %R) and Pairs strategy going long on under-performer short on over performer.  Using the latest in Deep Learning AI and training from huge data sets, predict prices and detect undervalued stocks 
             `,
         image: './signals.PNG',
         imageLabel: 'Image Text',
