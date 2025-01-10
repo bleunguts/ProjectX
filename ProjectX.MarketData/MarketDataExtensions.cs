@@ -1,7 +1,6 @@
 ﻿using MatthiWare.FinancialModelingPrep.Model.StockMarket;
 using MatthiWare.FinancialModelingPrep.Model.StockTimeSeries;
 using ProjectX.Core;
-using ProjectX.MachineLearning;
 using Skender.Stock.Indicators;
 
 namespace ProjectX.MarketData;

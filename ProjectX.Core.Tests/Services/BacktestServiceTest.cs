@@ -35,7 +35,7 @@ public class BacktestServiceTest
     [Test]
     public void WhenSignalIsLessThanNegSignalItShouldEnterAndExitLongTrade()
     {
-        var builder = new SignalBuilder(ticker);
+        var builder = new PriceSignalBuilder(ticker);
         var strategy = new TradingStrategy(TradingStrategyType.MeanReversion, false);
         var signals = new List<PriceSignal>
         {
@@ -78,7 +78,7 @@ public class BacktestServiceTest
     [Test]
     public void WhenSignalIsGreaterThanSignalItShouldEnterAndExitShortTrade()
     {
-        var builder = new SignalBuilder(ticker, startDate);
+        var builder = new PriceSignalBuilder(ticker, startDate);
         var signals = new List<PriceSignal>
         {
             builder.NewSignal(-1.5),
@@ -115,7 +115,7 @@ public class BacktestServiceTest
         var signalIn = 2.0;
         var signalOut = -3.0;
         var random = new Random();                        
-        var builder = new SignalBuilder(ticker, startDate);
+        var builder = new PriceSignalBuilder(ticker, startDate);
 
         var signals = new List<PriceSignal>
         {
@@ -194,7 +194,7 @@ public class BacktestServiceTest
     [Test]
     public void WhenGettingMatrixStrategyPnl()
     {
-        var builder = new SignalBuilder(ticker);
+        var builder = new PriceSignalBuilder(ticker);
         var strategy = new TradingStrategy(TradingStrategyType.MeanReversion, false);
         var signals = GetRandomPrices(1000);
         var pnls = _backtestService.ComputeLongShortPnlFull(signals, 10_000, strategy).ToList();

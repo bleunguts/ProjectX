@@ -1,13 +1,12 @@
-﻿using ProjectX.Core.Strategy;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProjectX.Core;
+namespace ProjectX.Core.Strategy;
 
-public class SignalBuilder
+public class PriceSignalBuilder
 {
     private const int MaxSignals = 10;
     private static readonly Random _random = new();
@@ -15,10 +14,10 @@ public class SignalBuilder
     private readonly string _ticker;
     private DateTime _currentDate;
 
-    public SignalBuilder(string ticker, DateTime? startDate = null)
+    public PriceSignalBuilder(string ticker, DateTime? startDate = null)
     {
-        this._ticker = ticker;
-        this._currentDate = startDate ?? DateTime.Now.AddDays(-90);
+        _ticker = ticker;
+        _currentDate = startDate ?? DateTime.Now.AddDays(-90);
     }
 
     public PriceSignal NewSignal(double v)
@@ -29,7 +28,7 @@ public class SignalBuilder
     public PriceSignal NewSignal(decimal signal, int low = 10, int high = 20)
     {
         var price = _random.Next(low, high) + (decimal)_random.NextDouble();
-        var pricePredicted = price + (decimal)_random.NextDouble();        
+        var pricePredicted = price + (decimal)_random.NextDouble();
         var lowerBand = low - (decimal)_random.NextDouble();
         var upperBand = high + (decimal)_random.NextDouble();
 
@@ -43,7 +42,7 @@ public class SignalBuilder
             UpperBand = upperBand,
             Signal = signal
         };
-        
+
         MoveNext();
         return entity;
     }
@@ -77,5 +76,5 @@ public class SignalBuilder
     private void MoveNext()
     {
         _currentDate = _currentDate.AddDays(1);
-    }    
+    }
 }
