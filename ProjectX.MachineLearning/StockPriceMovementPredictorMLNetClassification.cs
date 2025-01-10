@@ -7,7 +7,7 @@ namespace ProjectX.MachineLearning;
 
 public class StockPriceMovementPredictorMLNetClassification : StockPriceMovementPredictor
 { 
-    public override Task<PredictStockPriceMovementsResult> PredictStockPriceMovements(IEnumerable<ExpectedStockPriceMovement> expectedMovements)
+    public override Task<StockPriceMovementResult> PredictStockPriceMovements(IEnumerable<ExpectedStockPriceMovement> expectedMovements)
     {        
         Console.WriteLine($"Predicting Stock Price Movements, Tick Count {expectedMovements.Count()}"); 
         var context = new MLContext();
@@ -44,9 +44,7 @@ public class StockPriceMovementPredictorMLNetClassification : StockPriceMovement
             .Append(context.Regression.Trainers.LbfgsPoissonRegression());
 
         var model = pipeline.Fit(split.TrainSet);
-
         var predictions = model.Transform(split.TestSet);        
-
         var metrics = context.Regression.Evaluate(predictions);
 
         var result = predictions.Preview(5);
@@ -74,6 +72,6 @@ public class StockPriceMovementPredictorMLNetClassification : StockPriceMovement
         }
         Console.WriteLine(text.ToString());
 
-        return Task.FromResult(new PredictStockPriceMovementsResult());
+        return Task.FromResult(new StockPriceMovementResult());
     }
 }

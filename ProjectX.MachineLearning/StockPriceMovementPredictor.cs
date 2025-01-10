@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ProjectX.MachineLearning;
 
-public record PredictStockPriceMovementsResult();
+public record StockPriceMovementResult();
 
 public abstract class StockPriceMovementPredictor
 { 
@@ -52,5 +52,5 @@ public abstract class StockPriceMovementPredictor
         return expectedMovements;
     }
 
-    public abstract Task<PredictStockPriceMovementsResult> PredictStockPriceMovements(IEnumerable<ExpectedStockPriceMovement> expectedMovements);    
+    public abstract Task<StockPriceMovementResult> PredictStockPriceMovements(IEnumerable<ExpectedStockPriceMovement> expectedMovements);    
 }
