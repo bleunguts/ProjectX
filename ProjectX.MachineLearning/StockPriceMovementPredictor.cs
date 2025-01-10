@@ -1,11 +1,14 @@
-﻿using ProjectX.Core;
+﻿using Microsoft.ML;
+using Microsoft.ML.Data;
+using ProjectX.Core;
+using System.Text;
 
 namespace ProjectX.MachineLearning;
 
 public record PredictStockPriceMovementsResult();
 
 public abstract class StockPriceMovementPredictor
-{
+{ 
     public List<ExpectedStockPriceMovement> EvaluateExpectedStockPriceMovement(List<MarketPrice> marketPrices)
     {
         List<ExpectedStockPriceMovement> expectedMovements = new();
@@ -49,5 +52,5 @@ public abstract class StockPriceMovementPredictor
         return expectedMovements;
     }
 
-    public abstract PredictStockPriceMovementsResult PredictStockPriceMovements(IEnumerable<ExpectedStockPriceMovement> expectedMovements);    
+    public abstract Task<PredictStockPriceMovementsResult> PredictStockPriceMovements(IEnumerable<ExpectedStockPriceMovement> expectedMovements);    
 }

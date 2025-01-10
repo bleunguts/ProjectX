@@ -9,9 +9,21 @@ public class StockPriceMovementPredictorExternalTests
     private List<MarketPrice> _marketPrices;
 
     [SetUp]
-    public async Task BeforeTestAsync()
+    public async Task BeforeTest()
     {
         _marketPrices = (await _marketDataSource.GetPrices("AAPL", new DateTime(2015, 5, 27), new DateTime(2016, 5, 27))).ToList();
+    }
+
+    [Test]
+    public async Task TrainAutoMLWithAAplHistoricalPrices()
+    {
+        var model = new StockPriceMovementPredictorAutoML();
+
+        var expectedMovements = model.EvaluateExpectedStockPriceMovement(_marketPrices);
+
+        var predictionResults = await model.PredictStockPriceMovements(expectedMovements);
+
+        Assert.That(predictionResults, Is.Not.Null);
     }
 
     [Ignore("TODO: Implement KNN Machine Learning with Accord")]

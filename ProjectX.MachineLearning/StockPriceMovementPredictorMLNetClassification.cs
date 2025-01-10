@@ -7,7 +7,7 @@ namespace ProjectX.MachineLearning;
 
 public class StockPriceMovementPredictorMLNetClassification : StockPriceMovementPredictor
 { 
-    public override PredictStockPriceMovementsResult PredictStockPriceMovements(IEnumerable<ExpectedStockPriceMovement> expectedMovements)
+    public override Task<PredictStockPriceMovementsResult> PredictStockPriceMovements(IEnumerable<ExpectedStockPriceMovement> expectedMovements)
     {        
         Console.WriteLine($"Predicting Stock Price Movements, Tick Count {expectedMovements.Count()}"); 
         var context = new MLContext();
@@ -74,6 +74,6 @@ public class StockPriceMovementPredictorMLNetClassification : StockPriceMovement
         }
         Console.WriteLine(text.ToString());
 
-        return new PredictStockPriceMovementsResult();
+        return Task.FromResult(new PredictStockPriceMovementsResult());
     }
 }
