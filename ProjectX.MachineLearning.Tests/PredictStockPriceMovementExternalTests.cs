@@ -14,6 +14,7 @@ public class PredictStockPriceMovementExternalTests
         _marketPrices = (await _marketDataSource.GetPrices("AAPL", new DateTime(2015, 5, 27), new DateTime(2016, 5, 27))).ToList();
     }
 
+    [Ignore("As this will try out all algorithms it takes a long time to run")]
     [Test]
     public async Task PredictAppleStockPricesWithAutoML()
     {
