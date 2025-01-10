@@ -15,7 +15,7 @@ public class StockPriceMovementPredictorExternalTests
     }
 
     [Test]
-    public async Task TrainAutoMLWithAAplHistoricalPrices()
+    public async Task PredictAppleStockPricesWithAutoML()
     {
         var model = new StockPriceMovementPredictorAutoML();
 
@@ -28,7 +28,7 @@ public class StockPriceMovementPredictorExternalTests
 
     [Ignore("TODO: Implement KNN Machine Learning with Accord")]
     [Test]
-    public void TrainKnnWithAAplHistoricalPrices()
+    public void PredictAppleStockPricesUsingKnn()
     {
         var model = new StockPriceMovementPredictorKNNClassification(kNumber: 4);
         
@@ -38,7 +38,7 @@ public class StockPriceMovementPredictorExternalTests
     }
 
     [Test]
-    public async Task TrainClassifierMLNetWithAAplHistoricalPrices()
+    public async Task PredictAppleStockPricesWithMLNet()
     {                
         // ...start doing predictions using KNN
         var model = new StockPriceMovementPredictorMLNetClassification();
