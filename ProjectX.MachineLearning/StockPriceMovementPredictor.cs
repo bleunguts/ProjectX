@@ -5,26 +5,26 @@ using System.Text;
 
 namespace ProjectX.MachineLearning;
 
-public record StockPriceMovementResult();
+public record StockPriceMovementResult(long priceTicksCount = 0, float[] predictedPrices = null, int predictionsCount = 0, string[] aux = null);
 
 public abstract class StockPriceMovementPredictor
 { 
-    public List<ExpectedStockPriceMovement> EvaluateExpectedStockPriceMovement(List<MarketPrice> marketPrices)
+    public List<ExpectedStockPriceTrendDirection> EvaluateExpectedStockPriceMovement(List<MarketPrice> marketPrices)
     {
-        List<ExpectedStockPriceMovement> expectedMovements = new();
+        List<ExpectedStockPriceTrendDirection> expectedMovements = new();
         for (int i = 0; i < marketPrices.Count; i++)
         {
             var current = marketPrices[i];
             if (i == 0)
             {
-                expectedMovements.Add(new ExpectedStockPriceMovement
+                expectedMovements.Add(new ExpectedStockPriceTrendDirection
                 {
                     Date = current.Date,
                     Low = current.Low,
                     High = current.High,
                     Close = current.Close,
                     Open = current.Open,
-                    Expected = StockPriceTrend.Flat
+                    Expected = StockPriceTrendDirection.Flat
                 });
             }
             else
@@ -33,12 +33,12 @@ public abstract class StockPriceMovementPredictor
                 var currentPrice = current.Close;
                 var expected = currentPrice switch
                 {
-                    _ when currentPrice > previousPrice => StockPriceTrend.Upward,
-                    _ when currentPrice < previousPrice => StockPriceTrend.Downward,
-                    _ => StockPriceTrend.Flat
+                    _ when currentPrice > previousPrice => StockPriceTrendDirection.Upward,
+                    _ when currentPrice < previousPrice => StockPriceTrendDirection.Downward,
+                    _ => StockPriceTrendDirection.Flat
                 };
 
-                expectedMovements.Add(new ExpectedStockPriceMovement
+                expectedMovements.Add(new ExpectedStockPriceTrendDirection
                 {
                     Date = current.Date,
                     Low = current.Low,
@@ -52,5 +52,5 @@ public abstract class StockPriceMovementPredictor
         return expectedMovements;
     }
 
-    public abstract Task<StockPriceMovementResult> PredictStockPriceMovements(IEnumerable<ExpectedStockPriceMovement> expectedMovements);    
+    public abstract Task<StockPriceMovementResult> PredictStockPriceMovements(IEnumerable<ExpectedStockPriceTrendDirection> expectedMovements);    
 }

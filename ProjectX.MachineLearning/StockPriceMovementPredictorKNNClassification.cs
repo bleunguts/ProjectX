@@ -9,7 +9,7 @@ public class StockPriceMovementPredictorKNNClassification : StockPriceMovementPr
         _kNumber = kNumber;
     }
 
-    public override Task<StockPriceMovementResult> PredictStockPriceMovements(IEnumerable<ExpectedStockPriceMovement> expectedMovements)
+    public override Task<StockPriceMovementResult> PredictStockPriceMovements(IEnumerable<ExpectedStockPriceTrendDirection> expectedMovements)
     {
         //train model
         //train model with test data

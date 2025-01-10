@@ -3,7 +3,7 @@ using ProjectX.MarketData;
 using System.Security.Cryptography;
 
 namespace ProjectX.MachineLearning.Tests;
-public class StockPriceMovementPredictorExternalTests
+public class PredictStockPriceMovementExternalTests
 {
     private KaggleFileBasedStockMarketSource _marketDataSource = new KaggleFileBasedStockMarketSource();
     private List<MarketPrice> _marketPrices;
@@ -22,13 +22,14 @@ public class StockPriceMovementPredictorExternalTests
         var expectedMovements = model.EvaluateExpectedStockPriceMovement(_marketPrices);
 
         var predictionResults = await model.PredictStockPriceMovements(expectedMovements);
+        Dump(predictionResults);
 
-        Assert.That(predictionResults, Is.Not.Null);
+        Assert.That(predictionResults.predictedPrices.Count, Is.GreaterThan(0));
     }
 
     [Ignore("TODO: Implement KNN Machine Learning with Accord")]
     [Test]
-    public void PredictAppleStockPricesUsingKnn()
+    public void PredictAppleStockPriceTrendDirectionUsingKnn()
     {
         var model = new StockPriceMovementPredictorKNNClassification(kNumber: 4);
         
@@ -39,14 +40,28 @@ public class StockPriceMovementPredictorExternalTests
 
     [Test]
     public async Task PredictAppleStockPricesWithMLNet()
-    {                
+    {
         // ...start doing predictions using KNN
         var model = new StockPriceMovementPredictorMLNetClassification();
 
         // ...calculate expected price by subtracting previous price
         var expectedMovements = model.EvaluateExpectedStockPriceMovement(_marketPrices);
 
-        // ...use ML.NET classification models Poission to predict 
-        var predictionResults = model.PredictStockPriceMovements(expectedMovements);
+        // ...use ML.NET classification models Poisson to predict 
+        var predictionResults = await model.PredictStockPriceMovements(expectedMovements);
+        Dump(predictionResults);
+
+        Assert.That(predictionResults.predictedPrices.Count, Is.GreaterThan(0));
+    }
+
+    private static void Dump(StockPriceMovementResult predictionResults)
+    {
+        Console.WriteLine($"PriceTick Count: {predictionResults.priceTicksCount}");
+        Console.WriteLine(string.Join(Environment.NewLine, predictionResults.aux));
+        Console.WriteLine($"{predictionResults.predictionsCount} predictions.");
+        foreach (var item in predictionResults.predictedPrices)
+        {
+            Console.WriteLine(item.ToString());
+        }
     }
 }
