@@ -38,7 +38,7 @@ public class StockPriceMovementPredictorMLNetClassification : StockPriceMovement
 
         // ML.NET enforces that the Label Column is the column to predict
         // Predict 'Expected' values
-        var pipeline = context.Transforms.Conversion.MapKeyToValue(inputColumnName: "Expected", outputColumnName: "Label")
+        var pipeline = context.Transforms.CopyColumns("Label", "Expected")
             .Append(context.Transforms.Concatenate("Features", features))
             .Append(context.Transforms.Conversion.ConvertType("Features", outputKind: Microsoft.ML.Data.DataKind.Single))
             .Append(context.Regression.Trainers.LbfgsPoissonRegression());
