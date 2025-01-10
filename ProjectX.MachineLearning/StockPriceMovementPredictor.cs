@@ -2,7 +2,9 @@
 
 namespace ProjectX.MachineLearning;
 
-public class StockPriceMovementPredictor
+public record PredictStockPriceMovementsResult();
+
+public abstract class StockPriceMovementPredictor
 {
     public List<ExpectedStockPriceMovement> EvaluateExpectedStockPriceMovement(List<MarketPrice> marketPrices)
     {
@@ -46,4 +48,6 @@ public class StockPriceMovementPredictor
         }
         return expectedMovements;
     }
+
+    public abstract PredictStockPriceMovementsResult PredictStockPriceMovements(IEnumerable<ExpectedStockPriceMovement> expectedMovements);    
 }

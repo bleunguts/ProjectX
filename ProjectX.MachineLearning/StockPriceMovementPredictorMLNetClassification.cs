@@ -5,10 +5,9 @@ using System.Text;
 
 namespace ProjectX.MachineLearning;
 
-public record PredictStockPriceMovementsResult();
 public class StockPriceMovementPredictorMLNetClassification : StockPriceMovementPredictor
 { 
-    public PredictStockPriceMovementsResult PredictStockPriceMovements(IEnumerable<ExpectedStockPriceMovement> expectedMovements)
+    public override PredictStockPriceMovementsResult PredictStockPriceMovements(IEnumerable<ExpectedStockPriceMovement> expectedMovements)
     {        
         Console.WriteLine($"Predicting Stock Price Movements, Tick Count {expectedMovements.Count()}"); 
         var context = new MLContext();
@@ -39,7 +38,7 @@ public class StockPriceMovementPredictorMLNetClassification : StockPriceMovement
 
         // ML.NET enforces that the Label Column is the column to predict
         // Predict 'Expected' values
-        var pipeline = context.Transforms.CopyColumns("Label", "Expected")
+        var pipeline = context.Transforms.Conversion.MapKeyToValue(inputColumnName: "Expected", outputColumnName: "Label")
             .Append(context.Transforms.Concatenate("Features", features))
             .Append(context.Transforms.Conversion.ConvertType("Features", outputKind: Microsoft.ML.Data.DataKind.Single))
             .Append(context.Regression.Trainers.LbfgsPoissonRegression());
