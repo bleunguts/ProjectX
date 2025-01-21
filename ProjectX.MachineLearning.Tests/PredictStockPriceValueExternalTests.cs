@@ -3,7 +3,8 @@ using ProjectX.MarketData;
 using System.Security.Cryptography;
 
 namespace ProjectX.MachineLearning.Tests;
-public class PredictStockPriceMovementExternalTests
+
+public class PredictStockPriceValueExternalTests
 {
     private KaggleFileBasedStockMarketSource _marketDataSource = new KaggleFileBasedStockMarketSource();
     private List<MarketPrice> _marketPrices;
@@ -26,18 +27,7 @@ public class PredictStockPriceMovementExternalTests
         Dump(predictionResults);
 
         Assert.That(predictionResults.predictedPrices.Count, Is.GreaterThan(0));
-    }
-
-    [Ignore("TODO: Implement KNN Machine Learning with Accord")]
-    [Test]
-    public void PredictAppleStockPriceTrendDirectionUsingKnn()
-    {
-        var model = new StockPriceMovementPredictorKNNClassification(kNumber: 4);
-        
-        var expectedMovements = model.EvaluateExpectedStockPriceMovement(_marketPrices);
-
-        var predictionResults = model.PredictStockPriceMovements(expectedMovements);
-    }
+    }   
 
     [Test]
     public async Task PredictAppleStockPricesWithMLNet()

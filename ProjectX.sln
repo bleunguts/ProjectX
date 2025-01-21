@@ -52,6 +52,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.MachineLearning", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.MachineLearning.Tests", "ProjectX.MachineLearning.Tests\ProjectX.MachineLearning.Tests.csproj", "{831C4641-9659-4014-9E1E-632AF1965137}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.MachineLearning.Accord", "ProjectX.MachineLearning.Accord\ProjectX.MachineLearning.Accord.csproj", "{E2A2632F-3891-4744-A892-A182FA28F0BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -284,6 +286,18 @@ Global
 		{831C4641-9659-4014-9E1E-632AF1965137}.Release|x64.Build.0 = Release|Any CPU
 		{831C4641-9659-4014-9E1E-632AF1965137}.Release|x86.ActiveCfg = Release|Any CPU
 		{831C4641-9659-4014-9E1E-632AF1965137}.Release|x86.Build.0 = Release|Any CPU
+		{E2A2632F-3891-4744-A892-A182FA28F0BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2A2632F-3891-4744-A892-A182FA28F0BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2A2632F-3891-4744-A892-A182FA28F0BF}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E2A2632F-3891-4744-A892-A182FA28F0BF}.Debug|x64.Build.0 = Debug|Any CPU
+		{E2A2632F-3891-4744-A892-A182FA28F0BF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E2A2632F-3891-4744-A892-A182FA28F0BF}.Debug|x86.Build.0 = Debug|Any CPU
+		{E2A2632F-3891-4744-A892-A182FA28F0BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2A2632F-3891-4744-A892-A182FA28F0BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2A2632F-3891-4744-A892-A182FA28F0BF}.Release|x64.ActiveCfg = Release|Any CPU
+		{E2A2632F-3891-4744-A892-A182FA28F0BF}.Release|x64.Build.0 = Release|Any CPU
+		{E2A2632F-3891-4744-A892-A182FA28F0BF}.Release|x86.ActiveCfg = Release|Any CPU
+		{E2A2632F-3891-4744-A892-A182FA28F0BF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

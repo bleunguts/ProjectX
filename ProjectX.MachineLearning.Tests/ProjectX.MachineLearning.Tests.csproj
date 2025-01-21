@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ProjectX.Core\ProjectX.Core.csproj" />
+    <ProjectReference Include="..\ProjectX.MachineLearning.Accord\ProjectX.MachineLearning.Accord.csproj" />
     <ProjectReference Include="..\ProjectX.MachineLearning\ProjectX.MachineLearning.csproj" />
     <ProjectReference Include="..\ProjectX.MarketData\ProjectX.MarketData.csproj" />
   </ItemGroup>
