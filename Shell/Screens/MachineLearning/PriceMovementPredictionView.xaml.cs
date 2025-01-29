@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Shell.Screens.MarketPrices;
+namespace Shell.Screens.MachineLearning;
 
 public partial class PriceMovementPredictionView : UserControl
 {

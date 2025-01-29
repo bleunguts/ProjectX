@@ -59,6 +59,9 @@
     <Compile Update="Screens\FixedIncome\CDSView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Screens\MachineLearning\PriceMovementPredictionView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Screens\MarketPrices\EquitiesMarketView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
