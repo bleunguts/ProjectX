@@ -7,6 +7,8 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using ProjectX.Core;
 using ProjectX.Core.Services;
+using ProjectX.MarketData;
+using ProjectX.MarketData.Cache;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -45,7 +47,15 @@ namespace Shell
             batch.AddExportedValue(container);                      
             batch.AddExportedValue<ILogger<eFXTradeExecutionService>>(new NullLogger<eFXTradeExecutionService>());
             batch.AddExportedValue<ILogger<GatewayApiClient>>(new NullLogger<GatewayApiClient>());
-            
+
+            // TODO: move this logic to GatewayApi
+            var envLoader = new EnvironmentVariableLoader();
+            var stockMarketSource = new FileBackedStockMarketDataSource(
+                    new FMPStockMarketSource(Options.Create(new FMPStockMarketSourceOptions { ApiKey = envLoader.FromEnvironmentVariable("fmpapikey") })),
+                    Options.Create(new FileBackedStoreMarketDataSourceOptions() { Filename = "C:\\Dev\\projects\\GitHub\\ProjectX\\ProjectX.GatewayAPI\\bin\\Debug\\net9.0\\cache.json" })
+            );            
+            batch.AddExportedValue<IMachineLearningApiClient>(new MachineLearningApiClient(stockMarketSource));
+
             HostApplicationBuilder builder = Host.CreateApplicationBuilder();                                    
             GatewayApiClientOptions options = new();
             builder.Configuration.GetSection(nameof(GatewayApiClientOptions)).Bind(options);
@@ -54,7 +64,7 @@ namespace Shell
                 throw new Exception($"GatewayApiClientOptions config is invalid! {string.Join(", ", results)}");
 
             batch.AddExportedValue<IOptions<GatewayApiClientOptions>>(Options.Create(options));    
-            container.Compose(batch);                        
+            container.Compose(batch);                          
         }
 
         protected override object GetInstance(Type serviceType, string key)
