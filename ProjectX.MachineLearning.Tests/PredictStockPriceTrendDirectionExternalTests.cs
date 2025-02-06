@@ -65,9 +65,7 @@ public class PredictStockPriceTrendDirectionExternalTests
     {
         var model = new StockPriceMovementPredictorKNNClassification(kNumber: 4);
 
-        var expectedMovements = model.EvaluateExpectedStockPriceMovement(_marketPrices);
-
-        var predictionResults = model.PredictStockPriceMovements(expectedMovements);
+        var predictionResults = model.PredictStockPriceMovements(null, null);
 
         Assert.That(predictionResults, Is.Not.Null);
     }

@@ -1,4 +1,5 @@
-﻿using Caliburn.Micro;
+﻿using Accord.Math;
+using Caliburn.Micro;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using ProjectX.MachineLearning;
@@ -139,18 +140,18 @@ namespace Shell.Screens.MachineLearning
         }
 
         #endregion
+
+        StockTableBuilder _stockTableBuilder = new StockTableBuilder();
         public async Task Load()
         {
             try
-            {
-                var tableBuilder = new StockTableBuilder();
-
+            {              
                 // load symbol dates from market data source into tableBuilder
                 var prices = await machineLearningApiClient.LoadPrices(Ticker, FromDate, ToDate);
 
-                tableBuilder.SetRows(prices);
+                _stockTableBuilder.SetRows(prices);                
 
-                StockTable = tableBuilder.Build();                                
+                StockTable = _stockTableBuilder.Build();                                
             }
             catch (Exception ex)
             {
@@ -181,9 +182,18 @@ namespace Shell.Screens.MachineLearning
         {
             // compute from
             int K = 3;
-            var result = await this.machineLearningApiClient.Knn(K, TrainingFromDate, TrainingToDate);           
 
-            // TODO interpret Knn results and show them on the screenxx
+            // Extract inputTrain from StockTable DataTable            
+            string[] columnNames = _stockTableBuilder.GetHeaderNames();
+            DataTable dtb = StockTable.DefaultView.ToTable(false, "Close");
+            double[][] inputs = dtb.ToJagged();
+            var outputs = dtb.ToArray<StockPriceTrendDirection>("Expected");
+            
+            var result = await this.machineLearningApiClient.Knn(K, TrainingFromDate, TrainingToDate, columnNames, outputs.Select(o => (int)o).ToArray());           
+
+            // TODO interpret Knn results and show them on the screen xx
+
+
         }
     }
 }

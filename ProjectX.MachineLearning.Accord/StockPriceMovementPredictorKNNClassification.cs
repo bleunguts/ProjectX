@@ -4,7 +4,7 @@ using Accord.Statistics.Analysis;
 
 namespace ProjectX.MachineLearning.Accord;
 
-public class StockPriceMovementPredictorKNNClassification : StockPriceMovementPredictor
+public class StockPriceMovementPredictorKNNClassification 
 {
     private readonly int _kNumber;
 
@@ -13,43 +13,25 @@ public class StockPriceMovementPredictorKNNClassification : StockPriceMovementPr
         _kNumber = kNumber;
     }
 
-    public override Task<StockPriceMovementResult> PredictStockPriceMovements(IEnumerable<ExpectedStockPriceTrendDirection> expectedMovements)
+    public Task<StockPriceMovementResult> PredictStockPriceMovements(string[] inputs, int[] outputs)
     {
-        //train model
-        //train model with test data
-        //Knn.Compute(inputTrain[i]) to predict classification point
-
         // Create some sample learning data. In this data,
         // the first two instances belong to a class, the
         // four next belong to another class and the last
         // three to yet another.
 
-        string[] inputs =
-         {
-            "Car",     // class 0
-            "Bar",     // class 0
-            "Jar",     // class 0
-
-            "Charm",   // class 1
-            "Chair"    // class 1
-        };
-
-        int[] outputs =
-        {
-            0, 0, 0,  // First three are from class 0
-            1, 1,     // And next two are from class 1
-        };
-
         var knn = new KNearestNeighbors<string>(k: _kNumber, distance: new Levenshtein());
 
         // We learn the algorithm:
         knn.Learn(inputs, outputs);
-
-        // After the algorithm has been created, we can use it:
-        int answer = knn.Decide("Chars"); // answer should be 1.
+        int numberOfClasses = knn.NumberOfClasses; // should be 2 (positive or negative)
+        int numberOfInputs = knn.NumberOfInputs;  // should be 2 (1)
+        
+        // After the algorithm has been created, we can use it:        
+        int answer = knn.Decide("predict"); // answer should be 1.        
 
         //TODO: add confusion matrix/contingency table/error matrix to examine the perf of the ML algo
-        // Let's say we would like to compute the error matrix for the classifier:
+        // Let's say we would like to compute the error matrix for the classsifier:
         var cm = ConfusionMatrix.Estimate(knn, inputs, outputs);
 
         // We can use it to estimate measures such as 

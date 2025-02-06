@@ -12,7 +12,7 @@ namespace Shell;
 
 public interface IMachineLearningApiClient
 {
-    Task<StockPriceMovementResult> Knn(int k, DateTime trainingFromDate, DateTime trainingToDate);
+    Task<StockPriceMovementResult> Knn(int k, DateTime trainingFromDate, DateTime trainingToDate, string[] input, int[] outputs);
     Task<IEnumerable<MarketPrice>> LoadPrices(string ticker, DateTime from, DateTime to);
 }
 
@@ -25,10 +25,10 @@ public class MachineLearningApiClient : IMachineLearningApiClient
         _stockMarketSource = stockMarketSource;
     }
 
-    public async Task<StockPriceMovementResult> Knn(int k, DateTime trainingFromDate, DateTime trainingToDate)
+    public async Task<StockPriceMovementResult> Knn(int k, DateTime trainingFromDate, DateTime trainingToDate, string[] input, int[] outputs)
     {
         var knn = new StockPriceMovementPredictorKNNClassification(3);
-        var prices = await knn.PredictStockPriceMovements(new[] { new ExpectedStockPriceTrendDirection() });
+        var prices = await knn.PredictStockPriceMovements(input, outputs);
         return prices;
     }
 
