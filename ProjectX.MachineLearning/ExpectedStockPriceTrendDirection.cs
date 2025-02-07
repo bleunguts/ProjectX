@@ -1,5 +1,5 @@
 ﻿namespace ProjectX.MachineLearning;
-public enum StockPriceTrendDirection { Flat, Upward, Downward, Unset = -1 }
+public enum StockPriceTrendDirection { Flat = 0, Upward = 1, Downward = 2, Unset = -1 }
 
 public class ExpectedStockPriceTrendDirection
 {

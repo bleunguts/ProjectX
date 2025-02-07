@@ -4,6 +4,7 @@ using ProjectX.MachineLearning.Accord;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,8 +13,8 @@ namespace Shell;
 
 public interface IMachineLearningApiClient
 {
-    Task<StockPriceMovementResult> Knn(int k, DateTime trainingFromDate, DateTime trainingToDate, string[] input, int[] outputs);
-    Task<IEnumerable<MarketPrice>> LoadPrices(string ticker, DateTime from, DateTime to);
+    Task<StockPriceMovementResult> Svm(DateTime trainingFromDate, DateTime trainingToDate, double[][] inputs, int[] outputs);
+    Task<IEnumerable<MarketPrice>> LoadPrices(string ticker, DateTime from, DateTime to);    
 }
 
 public class MachineLearningApiClient : IMachineLearningApiClient
@@ -25,10 +26,10 @@ public class MachineLearningApiClient : IMachineLearningApiClient
         _stockMarketSource = stockMarketSource;
     }
 
-    public async Task<StockPriceMovementResult> Knn(int k, DateTime trainingFromDate, DateTime trainingToDate, string[] input, int[] outputs)
+    public async Task<StockPriceMovementResult> Svm(DateTime trainingFromDate, DateTime trainingToDate, double[][] inputs, int[] outputs)
     {
-        var knn = new StockPriceMovementPredictorKNNClassification(3);
-        var prices = await knn.PredictStockPriceMovements(input, outputs);
+        var knn = new StockPriceMovementPredictorSVMClassification();      
+        var prices = await knn.PredictStockPriceMovements(inputs, outputs, 4, 4);
         return prices;
     }
 

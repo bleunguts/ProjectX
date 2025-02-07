@@ -1,9 +1,11 @@
 ﻿using Accord.MachineLearning;
+using Accord.Math;
 using Accord.Math.Distances;
 using Accord.Statistics.Analysis;
 using ProjectX.Core;
 using ProjectX.MachineLearning.Accord;
 using ProjectX.MarketData;
+using System.Data;
 
 namespace ProjectX.MachineLearning.Tests;
 
@@ -61,12 +63,80 @@ public class PredictStockPriceTrendDirectionExternalTests
     }
 
     [Test]
-    public void PredictAppleStockPriceTrendDirectionUsingKnn()
+    public void PredictAppleStockPriceTrendDirectionUsingClassification()
     {
-        var model = new StockPriceMovementPredictorKNNClassification(kNumber: 4);
+        const string dir = @".\data\GE_010523_250923.csv";
+        var dt = ConvertCSVtoDataTable(dir);
+        // Sample input data
+        //double[][] inputs =
+        //{
+        //    new double[] { 0 },
+        //    new double[] { 3 },
+        //    new double[] { 1 },
+        //    new double[] { 2 },
+        //};
+        List<double[]> inputList = new();
+        List<int> outputsList = new();
+        foreach(DataRow row in dt.Rows)
+        {
+            var expected = (StockPriceTrendDirection) Enum.Parse(typeof(StockPriceTrendDirection), (string)row["Expected"]);
+            var expectedNumber = (int)expected;
+            
+            double[] newRow = [
+                double.Parse((string)row["Open"]),
+                double.Parse((string) row["Close"]),
+                double.Parse((string) row["High"]),
+                double.Parse((string) row["Low"])                
+            ];
 
-        var predictionResults = model.PredictStockPriceMovements(null, null);
+            inputList.Add(newRow);
+            outputsList.Add((int)expectedNumber);
+        }
+        double[][] inputs = inputList.ToArray();
+
+        // Outputs for each of the inputs
+        //int[] outputs =
+        //{
+        //    0,
+        //    3,
+        //    1,
+        //    2,
+        //};
+        int[] outputs = outputsList.ToArray();
+
+        Console.WriteLine($"Inputs lines {inputs.Length}");
+        Console.WriteLine($"Outputs length {outputs.Length}");
+
+        var model = new StockPriceMovementPredictorSVMClassification();
+        var predictionResults = model.PredictStockPriceMovements(inputs, outputs, 1, 2);
 
         Assert.That(predictionResults, Is.Not.Null);
+    }
+
+    public static DataTable ConvertCSVtoDataTable(string strFilePath)
+    {
+        DataTable dt = new DataTable();
+        using (StreamReader sr = new StreamReader(strFilePath))
+        {
+            string[] headers = sr.ReadLine()
+                                .Split(',')
+                                .Select(header => header.Trim())
+                                .ToArray();
+            foreach (string header in headers)
+            {
+                dt.Columns.Add(header);
+            }
+            while (!sr.EndOfStream)
+            {
+                string[] rows = sr.ReadLine().Split(',');
+                DataRow dr = dt.NewRow();
+                for (int i = 0; i < headers.Length; i++)
+                {
+                    dr[i] = rows[i];
+                }
+                dt.Rows.Add(dr);
+            }
+        }
+        return dt;
     }
 }
