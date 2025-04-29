@@ -4,7 +4,7 @@ using ProjectX.AnalyticsLibNativeShim;
 
 namespace ProjectX.AnalyticsLib.PerformanceTests;
 
-//[MemoryDiagnoser]
+[MemoryDiagnoser]
 //[MinInvokeCount(3), InvocationCount(16)]
 //[MinWarmupCount(3), MaxWarmupCount(5)]
 //[MinIterationCount(3), MaxIterationCount(5)]
