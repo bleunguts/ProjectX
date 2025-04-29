@@ -54,6 +54,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.MachineLearning.Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.MachineLearning.Accord", "ProjectX.MachineLearning.Accord\ProjectX.MachineLearning.Accord.csproj", "{E2A2632F-3891-4744-A892-A182FA28F0BF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectX.AnalyticsLib.PerformanceTests", "ProjectX.AnalyticsLib.PerformanceTests\ProjectX.AnalyticsLib.PerformanceTests.csproj", "{677AF0C0-8E04-4F69-8C0C-A31D19E6CC93}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -298,6 +300,18 @@ Global
 		{E2A2632F-3891-4744-A892-A182FA28F0BF}.Release|x64.Build.0 = Release|Any CPU
 		{E2A2632F-3891-4744-A892-A182FA28F0BF}.Release|x86.ActiveCfg = Release|Any CPU
 		{E2A2632F-3891-4744-A892-A182FA28F0BF}.Release|x86.Build.0 = Release|Any CPU
+		{677AF0C0-8E04-4F69-8C0C-A31D19E6CC93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{677AF0C0-8E04-4F69-8C0C-A31D19E6CC93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{677AF0C0-8E04-4F69-8C0C-A31D19E6CC93}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{677AF0C0-8E04-4F69-8C0C-A31D19E6CC93}.Debug|x64.Build.0 = Debug|Any CPU
+		{677AF0C0-8E04-4F69-8C0C-A31D19E6CC93}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{677AF0C0-8E04-4F69-8C0C-A31D19E6CC93}.Debug|x86.Build.0 = Debug|Any CPU
+		{677AF0C0-8E04-4F69-8C0C-A31D19E6CC93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{677AF0C0-8E04-4F69-8C0C-A31D19E6CC93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{677AF0C0-8E04-4F69-8C0C-A31D19E6CC93}.Release|x64.ActiveCfg = Release|Any CPU
+		{677AF0C0-8E04-4F69-8C0C-A31D19E6CC93}.Release|x64.Build.0 = Release|Any CPU
+		{677AF0C0-8E04-4F69-8C0C-A31D19E6CC93}.Release|x86.ActiveCfg = Release|Any CPU
+		{677AF0C0-8E04-4F69-8C0C-A31D19E6CC93}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -312,6 +326,7 @@ Global
 		{406DF674-C576-4678-9B50-630275B73318} = {CB887621-9DE5-49ED-BE4C-7B170A43F062}
 		{31FE4683-7334-48FC-9642-628F4FA7F821} = {291F2E1A-D783-4A45-955B-6C39A801C658}
 		{831C4641-9659-4014-9E1E-632AF1965137} = {291F2E1A-D783-4A45-955B-6C39A801C658}
+		{677AF0C0-8E04-4F69-8C0C-A31D19E6CC93} = {291F2E1A-D783-4A45-955B-6C39A801C658}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8123A31C-36EE-481E-9ED7-0EB9D36F17CD}
