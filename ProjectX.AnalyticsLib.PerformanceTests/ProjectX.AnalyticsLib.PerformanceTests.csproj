@@ -13,18 +13,15 @@
     <PackageReference Include="BenchmarkDotNet" Version="0.14.0" />
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-	<PackageReference Include="xunit" Version="2.5.3" />
-	<PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
+	<PackageReference Include="NUnit" Version="3.13.3" />
+	<PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
+	<PackageReference Include="NUnit.Analyzers" Version="3.6.1" />
   </ItemGroup>
 
   <Import Project="native.targets" />
   <ItemGroup>
     <ProjectReference Include="..\ProjectX.AnalyticsLibNativeShim\ProjectX.AnalyticsLibNativeShim.csproj" />
     <ProjectReference Include="..\ProjectX.AnalyticsLib\ProjectX.AnalyticsLib.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-	 <Using Include="Xunit" />
   </ItemGroup>
 
 </Project>
