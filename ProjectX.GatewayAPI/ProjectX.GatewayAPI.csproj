@@ -13,6 +13,10 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="8.0.0-rc.1.23421.29" />
     <PackageReference Include="Microsoft.Azure.SignalR" Version="1.21.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />    
+    <PackageReference Include="MessagePack" Version="2.5.303" />
+    <PackageReference Include="Azure.Identity" Version="1.11.4" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.7.0" />
+    <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.24" />
   </ItemGroup>
 
   <ItemGroup>
