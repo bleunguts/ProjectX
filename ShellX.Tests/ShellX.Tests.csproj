@@ -30,6 +30,7 @@
        UI-free ShellX sources under test are linked in instead. -->
   <ItemGroup>
     <Compile Include="..\ShellX\Services\GatewayApiClientOptions.cs" Link="Linked\GatewayApiClientOptions.cs" />
+    <Compile Include="..\ShellX\Services\GatewayAddress.cs" Link="Linked\GatewayAddress.cs" />
     <Compile Include="..\ShellX\Tables\*.cs" Link="Linked\Tables\%(Filename)%(Extension)" />
     <Compile Include="..\ShellX\OptionsPricing\*.cs" Link="Linked\OptionsPricing\%(Filename)%(Extension)" />
     <Compile Include="..\ShellX\Surface3D\*.cs" Link="Linked\Surface3D\%(Filename)%(Extension)" />

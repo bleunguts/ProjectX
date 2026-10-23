@@ -19,6 +19,10 @@ public class SimpleGrid : ContentView
         nameof(BodyHeight), typeof(double), typeof(SimpleGrid), 180d,
         propertyChanged: (bindable, _, _) => ((SimpleGrid)bindable).Rebuild());
 
+    public static readonly BindableProperty MinColumnWidthProperty = BindableProperty.Create(
+        nameof(MinColumnWidth), typeof(double), typeof(SimpleGrid), 0d,
+        propertyChanged: (bindable, _, _) => ((SimpleGrid)bindable).Rebuild());
+
     public TableData? Table
     {
         get => (TableData?)GetValue(TableProperty);
@@ -36,6 +40,13 @@ public class SimpleGrid : ContentView
     {
         get => (double)GetValue(BodyHeightProperty);
         set => SetValue(BodyHeightProperty, value);
+    }
+
+    /// <summary>When above zero each column is at least this wide and the grid scrolls sideways if the space is narrower, instead of truncating cell text.</summary>
+    public double MinColumnWidth
+    {
+        get => (double)GetValue(MinColumnWidthProperty);
+        set => SetValue(MinColumnWidthProperty, value);
     }
 
     public event EventHandler<string[]>? RowSelected;
@@ -83,7 +94,15 @@ public class SimpleGrid : ContentView
         var layout = new Grid { RowDefinitions = { new RowDefinition(GridLength.Auto), new RowDefinition(GridLength.Auto) } };
         layout.Add(header, 0, 0);
         layout.Add(body, 0, 1);
-        Content = layout;
+        if (MinColumnWidth > 0)
+        {
+            layout.WidthRequest = columns * MinColumnWidth;
+            Content = new ScrollView { Orientation = ScrollOrientation.Horizontal, Content = layout };
+        }
+        else
+        {
+            Content = layout;
+        }
     }
 
     private static Grid NewRow(int columns)
