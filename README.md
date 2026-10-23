@@ -50,3 +50,11 @@ _Tech Stack:_
 * Trend indicator methods: Bollinger Bands, Moving Averages
  
 .
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+_Running ShellX (.NET MAUI):_
+* Open `ShellX.sln` in Visual Studio (needs the .NET MAUI workload) and run the **Windows Machine** target. `ShellX` is deliberately not in `ProjectX.sln`, so machines without the MAUI workload can still build the rest.
+* Settings are in `ShellX/appsettings.json` (`GatewayApiClientOptions`: Gateway `BaseUrl` and `SignalRUrl`, default `https://localhost:8081`; `MarketDataOptions:CacheFile`). Plot Experimental on the Options screen needs no Gateway; the other plots do. The ML screen needs the `fmpapikey` environment variable.
+* **Android:** install the Android SDK/JDK through the Visual Studio mobile workload, then create an emulator in *Tools > Android > Android Device Manager* (a Pixel profile with a Google APIs x86_64 system image) and pick it as the run target. The emulator needs hardware acceleration (Windows Hypervisor Platform or Hyper-V, and virtualisation enabled in the BIOS). Inside the emulator `localhost` is the emulator itself, so ShellX rewrites `localhost`/`127.0.0.1` in the Gateway addresses to `10.0.2.2` (the host PC) when it runs on Android. A Gateway on an https dev certificate is not trusted by Android; use Plot Experimental, or a Gateway reachable over a trusted certificate.
+* iOS and Mac Catalyst need a Mac build host and are not enabled.
+* Below about 720 device-independent pixels wide (phones, or a narrowed desktop window) the Options screen switches to a single scrolling column.

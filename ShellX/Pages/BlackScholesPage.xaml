@@ -8,10 +8,10 @@
     x:DataType="vm:BlackScholesViewModel"
     Title="Black-Scholes (Options)">
 
-    <Grid Padding="10" ColumnDefinitions="2*,3*" ColumnSpacing="10">
+    <Grid x:Name="WideLayout" Padding="10" ColumnDefinitions="2*,3*" ColumnSpacing="10">
 
-        <ScrollView Grid.Column="0">
-            <VerticalStackLayout Spacing="10">
+        <ScrollView x:Name="LeftScroll" Grid.Column="0">
+            <VerticalStackLayout x:Name="LeftStack" Spacing="10">
 
                 <Border Style="{StaticResource Card}">
                     <VerticalStackLayout Spacing="6">
@@ -43,19 +43,19 @@
                             <Label Grid.Row="5" Grid.Column="2" Text="Volatility" FontSize="11" VerticalOptions="Center" />
                         </Grid>
 
-                        <HorizontalStackLayout Spacing="4" Margin="0,4,0,0">
-                            <Button Text="Calculate Price" Command="{Binding CalculatePriceCommand}" />
-                            <Entry Text="{Binding CalculatorType}" IsReadOnly="True" WidthRequest="150" />
-                            <Button Text="&gt;" Command="{Binding ToggleCalculatorCommand}" WidthRequest="30" />
+                        <FlexLayout Wrap="Wrap" AlignItems="Center" Margin="0,4,0,0">
+                            <Button Text="Calculate Price" Command="{Binding CalculatePriceCommand}" Margin="0,2,4,2" />
+                            <Entry Text="{Binding CalculatorType}" IsReadOnly="True" WidthRequest="150" Margin="0,2,4,2" />
+                            <Button Text="&gt;" Command="{Binding ToggleCalculatorCommand}" WidthRequest="30" Margin="0,2,4,2" />
                             <Label Text="{Binding CalculatorTypeDesc}" VerticalOptions="Center" FontSize="11" />
-                        </HorizontalStackLayout>
+                        </FlexLayout>
                     </VerticalStackLayout>
                 </Border>
 
                 <Border Style="{StaticResource Card}">
                     <VerticalStackLayout Spacing="6">
                         <Label Text="Results for option prices" Style="{StaticResource SectionHeader}" />
-                        <controls:SimpleGrid Table="{Binding OptionTable}" BodyHeight="130" />
+                        <controls:SimpleGrid x:Name="ResultsGrid" Table="{Binding OptionTable}" BodyHeight="130" />
                     </VerticalStackLayout>
                 </Border>
 
@@ -66,13 +66,13 @@
                             <Button Text="Show / hide" Command="{Binding ToggleCompareCommand}" />
                         </HorizontalStackLayout>
                         <VerticalStackLayout IsVisible="{Binding IsCompareVisible}" Spacing="6">
-                            <HorizontalStackLayout Spacing="4">
-                                <Button Text="Calculate Price" Command="{Binding CalculatePrice2Command}" />
-                                <Entry Text="{Binding CalculatorType2}" IsReadOnly="True" WidthRequest="150" />
-                                <Button Text="&gt;" Command="{Binding ToggleCalculator2Command}" WidthRequest="30" />
+                            <FlexLayout Wrap="Wrap" AlignItems="Center">
+                                <Button Text="Calculate Price" Command="{Binding CalculatePrice2Command}" Margin="0,2,4,2" />
+                                <Entry Text="{Binding CalculatorType2}" IsReadOnly="True" WidthRequest="150" Margin="0,2,4,2" />
+                                <Button Text="&gt;" Command="{Binding ToggleCalculator2Command}" WidthRequest="30" Margin="0,2,4,2" />
                                 <Label Text="{Binding CalculatorTypeDesc2}" VerticalOptions="Center" FontSize="11" />
-                            </HorizontalStackLayout>
-                            <controls:SimpleGrid Table="{Binding OptionTable2}" BodyHeight="130" />
+                            </FlexLayout>
+                            <controls:SimpleGrid x:Name="ResultsGrid2" Table="{Binding OptionTable2}" BodyHeight="130" />
                         </VerticalStackLayout>
                     </VerticalStackLayout>
                 </Border>
@@ -80,7 +80,7 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <Border Grid.Column="1" Style="{StaticResource Card}">
+        <Border x:Name="ChartCard" Grid.Column="1" Style="{StaticResource Card}">
             <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="4">
                 <Label Text="Plot price and Greeks" Style="{StaticResource SectionHeader}" HorizontalOptions="Center" />
                 <FlexLayout Grid.Row="1" Wrap="Wrap" JustifyContent="Center">

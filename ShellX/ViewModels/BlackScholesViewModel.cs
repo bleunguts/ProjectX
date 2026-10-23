@@ -60,6 +60,11 @@ public partial class BlackScholesViewModel : ObservableObject
         {
             await _dialogs.AlertAsync("You made it this far...", "Your connection string to the backend is incorrect.  Hint: it is unset by default.");
         }
+        catch (Exception ex)
+        {
+            // Timeouts, TLS failures etc. must not escape the async void OnAppearing and take the app down.
+            _status.Report($"Backend unavailable: {ex.Message}");
+        }
 
         try
         {

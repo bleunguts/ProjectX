@@ -48,6 +48,12 @@ namespace ShellX
 
             var gatewayOptions = new GatewayApiClientOptions();
             builder.Configuration.GetSection(nameof(GatewayApiClientOptions)).Bind(gatewayOptions);
+            if (DeviceInfo.Platform == DevicePlatform.Android)
+            {
+                // Inside the emulator "localhost" is the emulator itself; the Gateway runs on the host PC.
+                gatewayOptions.BaseUrl = GatewayAddress.ForAndroidEmulator(gatewayOptions.BaseUrl);
+                gatewayOptions.SignalRUrl = GatewayAddress.ForAndroidEmulator(gatewayOptions.SignalRUrl);
+            }
             var results = new List<ValidationResult>();
             if (!Validator.TryValidateObject(gatewayOptions, new ValidationContext(gatewayOptions), results, validateAllProperties: true))
                 throw new InvalidOperationException($"GatewayApiClientOptions config is invalid! {string.Join(", ", results)}");
