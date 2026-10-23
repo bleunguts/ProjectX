@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    x:Class="ShellX.Pages.BlackScholesPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:ShellX.Controls"
+    xmlns:vm="clr-namespace:ShellX.ViewModels"
+    x:DataType="vm:BlackScholesViewModel"
+    Title="Black-Scholes (Options)">
+
+    <Grid Padding="10" ColumnDefinitions="2*,3*" ColumnSpacing="10">
+
+        <ScrollView Grid.Column="0">
+            <VerticalStackLayout Spacing="10">
+
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Input parameters" Style="{StaticResource SectionHeader}" />
+
+                        <Grid ColumnDefinitions="70,100,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="1" ColumnSpacing="6">
+                            <Label Grid.Row="0" Text="OptionType" VerticalOptions="Center" />
+                            <Picker Grid.Row="0" Grid.Column="1" ItemsSource="{Binding OptionTypes}" SelectedItem="{Binding OptionType}" />
+                            <Label Grid.Row="0" Grid.Column="2" Text="Call for a call option, Put for a putoption" FontSize="11" VerticalOptions="Center" />
+
+                            <Label Grid.Row="1" Text="Spot" VerticalOptions="Center" />
+                            <Entry Grid.Row="1" Grid.Column="1" Text="{Binding Spot}" Keyboard="Numeric" />
+                            <Label Grid.Row="1" Grid.Column="2" Text="Current price of the underlying asset" FontSize="11" VerticalOptions="Center" />
+
+                            <Label Grid.Row="2" Text="Strike" VerticalOptions="Center" />
+                            <Entry Grid.Row="2" Grid.Column="1" Text="{Binding Strike}" Keyboard="Numeric" />
+                            <Label Grid.Row="2" Grid.Column="2" Text="Strike price" FontSize="11" VerticalOptions="Center" />
+
+                            <Label Grid.Row="3" Text="Rate" VerticalOptions="Center" />
+                            <Entry Grid.Row="3" Grid.Column="1" Text="{Binding Rate}" Keyboard="Numeric" />
+                            <Label Grid.Row="3" Grid.Column="2" Text="Interest rate" FontSize="11" VerticalOptions="Center" />
+
+                            <Label Grid.Row="4" Text="Carry" VerticalOptions="Center" />
+                            <Entry Grid.Row="4" Grid.Column="1" Text="{Binding Carry}" Keyboard="Numeric" />
+                            <Label Grid.Row="4" Grid.Column="2" Text="Cost of carry" FontSize="11" VerticalOptions="Center" />
+
+                            <Label Grid.Row="5" Text="Vol" VerticalOptions="Center" />
+                            <Entry Grid.Row="5" Grid.Column="1" Text="{Binding Vol}" Keyboard="Numeric" />
+                            <Label Grid.Row="5" Grid.Column="2" Text="Volatility" FontSize="11" VerticalOptions="Center" />
+                        </Grid>
+
+                        <HorizontalStackLayout Spacing="4" Margin="0,4,0,0">
+                            <Button Text="Calculate Price" Command="{Binding CalculatePriceCommand}" />
+                            <Entry Text="{Binding CalculatorType}" IsReadOnly="True" WidthRequest="150" />
+                            <Button Text="&gt;" Command="{Binding ToggleCalculatorCommand}" WidthRequest="30" />
+                            <Label Text="{Binding CalculatorTypeDesc}" VerticalOptions="Center" FontSize="11" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Results for option prices" Style="{StaticResource SectionHeader}" />
+                        <controls:SimpleGrid Table="{Binding OptionTable}" BodyHeight="130" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="6">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="Compare with.." Style="{StaticResource SectionHeader}" VerticalOptions="Center" />
+                            <Button Text="Show / hide" Command="{Binding ToggleCompareCommand}" />
+                        </HorizontalStackLayout>
+                        <VerticalStackLayout IsVisible="{Binding IsCompareVisible}" Spacing="6">
+                            <HorizontalStackLayout Spacing="4">
+                                <Button Text="Calculate Price" Command="{Binding CalculatePrice2Command}" />
+                                <Entry Text="{Binding CalculatorType2}" IsReadOnly="True" WidthRequest="150" />
+                                <Button Text="&gt;" Command="{Binding ToggleCalculator2Command}" WidthRequest="30" />
+                                <Label Text="{Binding CalculatorTypeDesc2}" VerticalOptions="Center" FontSize="11" />
+                            </HorizontalStackLayout>
+                            <controls:SimpleGrid Table="{Binding OptionTable2}" BodyHeight="130" />
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Border Grid.Column="1" Style="{StaticResource Card}">
+            <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="4">
+                <Label Text="Plot price and Greeks" Style="{StaticResource SectionHeader}" HorizontalOptions="Center" />
+                <FlexLayout Grid.Row="1" Wrap="Wrap" JustifyContent="Center">
+                    <Button Text="Plot price" Command="{Binding PlotCommand}" CommandParameter="Price" Margin="2" />
+                    <Button Text="Plot Delta" Command="{Binding PlotCommand}" CommandParameter="Delta" Margin="2" />
+                    <Button Text="Plot Gamma" Command="{Binding PlotCommand}" CommandParameter="Gamma" Margin="2" />
+                    <Button Text="Plot Theta" Command="{Binding PlotCommand}" CommandParameter="Theta" Margin="2" />
+                    <Button Text="Plot Rho" Command="{Binding PlotCommand}" CommandParameter="Rho" Margin="2" />
+                    <Button Text="Plot Vega" Command="{Binding PlotCommand}" CommandParameter="Vega" Margin="2" />
+                    <Button Text="Plot Experimental" Command="{Binding PlotExperimentalCommand}" Margin="2" />
+                </FlexLayout>
+                <controls:Surface3DView Grid.Row="2" Surface="{Binding Surface}" ZLabel="{Binding ZLabel}" MinimumHeightRequest="300" />
+                <Label Grid.Row="3" Text="Turns on its own; drag to take control" FontSize="11" HorizontalOptions="Center" />
+            </Grid>
+        </Border>
+    </Grid>
+
+</ContentPage>
