@@ -27,7 +27,7 @@ Console.WriteLine($"AZURE_SIGNALR_ConnectionString ={Environment.GetEnvironmentV
 
 var builder = WebApplication.CreateBuilder(args);
 
-var startup = new Startup(builder.Configuration);
+var startup = new Startup(builder.Configuration, builder.Environment);
 
 startup.ConfigureServices(builder.Services);
 
@@ -39,12 +39,14 @@ app.Run();
 
 public class Startup
 {
-    public Startup(IConfiguration configuration)
+    public Startup(IConfiguration configuration, IHostEnvironment environment)
     {
         Configuration = configuration;
+        Environment = environment;
     }
 
     public IConfiguration Configuration { get; }
+    public IHostEnvironment Environment { get; }
 
     public void ConfigureServices(IServiceCollection services)
     {
@@ -103,13 +105,16 @@ public class Startup
         services.AddHttpClient<IPricingResultsApiClient, PricingResultsApiClient>();
         services.AddHostedService<PricingTasksService>();
         services.AddHostedService<FXPricingService>();
-        services.AddSignalR(config => config.EnableDetailedErrors = true)
+        var signalRBuilder = services.AddSignalR(config => config.EnableDetailedErrors = true)
                         .AddMessagePackProtocol()
                         .AddJsonProtocol(options =>
                         {
                             options.PayloadSerializerOptions.Converters.Add(new Array2DConverter());
-                        })
-                        .AddAzureSignalR();
+                        });        
+        if (!Environment.IsDevelopment())
+        {
+            signalRBuilder.AddAzureSignalR();
+        }
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
