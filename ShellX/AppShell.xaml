@@ -5,7 +5,34 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:ShellX.Pages"
     Shell.FlyoutBehavior="Locked"
+    Shell.FlyoutBackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}"
     Title="ShellX">
+
+    <!-- Explicit item colours so the sidebar always follows the app theme, whatever the OS theme is. -->
+    <Shell.ItemTemplate>
+        <DataTemplate>
+            <Grid HeightRequest="40">
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="Transparent" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Selected">
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource CardStrokeLight}, Dark={StaticResource CardStrokeDark}}" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </VisualStateManager.VisualStateGroups>
+                <Label Text="{Binding Title}" Margin="14,0" VerticalOptions="Center" FontAttributes="Bold"
+                       TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource White}}" />
+            </Grid>
+        </DataTemplate>
+    </Shell.ItemTemplate>
 
     <Shell.FlyoutHeader>
         <Image Source="trading_banner.png" Aspect="AspectFit" HeightRequest="100" Margin="10" />

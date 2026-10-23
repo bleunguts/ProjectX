@@ -7,7 +7,7 @@
         public App(AppShell shell)
         {
             InitializeComponent();
-            UserAppTheme = AppTheme.Dark;
+            UserAppTheme = AppTheme.Light;
             _shell = shell;
         }
 
