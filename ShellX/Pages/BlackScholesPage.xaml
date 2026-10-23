@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    x:Class="ShellX.Pages.BlackScholesPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:ShellX.Controls"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vm="clr-namespace:ShellX.ViewModels"
+    x:DataType="vm:BlackScholesViewModel"
+    Title="Black-Scholes (Options)">
+
+    <Grid Padding="10" ColumnDefinitions="2*,3*" ColumnSpacing="10">
+
+        <ScrollView Grid.Column="0">
+            <VerticalStackLayout Spacing="6">
+                <Label Text="Input Parameters for Calculating Option Price" FontAttributes="Bold" />
+
+                <Grid ColumnDefinitions="90,130,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="2" ColumnSpacing="6">
+                    <Label Grid.Row="0" Text="OptionType" VerticalOptions="Center" />
+                    <Picker Grid.Row="0" Grid.Column="1" ItemsSource="{Binding OptionTypes}" SelectedItem="{Binding OptionType}" />
+                    <Label Grid.Row="0" Grid.Column="2" Text="Call for a call option, Put for a putoption" FontSize="12" VerticalOptions="Center" />
+
+                    <Label Grid.Row="1" Text="Spot" VerticalOptions="Center" />
+                    <Entry Grid.Row="1" Grid.Column="1" Text="{Binding Spot}" Keyboard="Numeric" />
+                    <Label Grid.Row="1" Grid.Column="2" Text="Current price of the underlying asset" FontSize="12" VerticalOptions="Center" />
+
+                    <Label Grid.Row="2" Text="Strike" VerticalOptions="Center" />
+                    <Entry Grid.Row="2" Grid.Column="1" Text="{Binding Strike}" Keyboard="Numeric" />
+                    <Label Grid.Row="2" Grid.Column="2" Text="Strike price" FontSize="12" VerticalOptions="Center" />
+
+                    <Label Grid.Row="3" Text="Rate" VerticalOptions="Center" />
+                    <Entry Grid.Row="3" Grid.Column="1" Text="{Binding Rate}" Keyboard="Numeric" />
+                    <Label Grid.Row="3" Grid.Column="2" Text="Interest rate" FontSize="12" VerticalOptions="Center" />
+
+                    <Label Grid.Row="4" Text="Carry" VerticalOptions="Center" />
+                    <Entry Grid.Row="4" Grid.Column="1" Text="{Binding Carry}" Keyboard="Numeric" />
+                    <Label Grid.Row="4" Grid.Column="2" Text="Cost of carry" FontSize="12" VerticalOptions="Center" />
+
+                    <Label Grid.Row="5" Text="Vol" VerticalOptions="Center" />
+                    <Entry Grid.Row="5" Grid.Column="1" Text="{Binding Vol}" Keyboard="Numeric" />
+                    <Label Grid.Row="5" Grid.Column="2" Text="Volatility" FontSize="12" VerticalOptions="Center" />
+                </Grid>
+
+                <HorizontalStackLayout Spacing="6" Margin="0,14,0,0">
+                    <Button Text="Calculate Price" Command="{Binding CalculatePriceCommand}" />
+                    <Entry Text="{Binding CalculatorType}" IsReadOnly="True" WidthRequest="170" />
+                    <Button Text="&gt;" Command="{Binding ToggleCalculatorCommand}" WidthRequest="40" />
+                    <Label Text="{Binding CalculatorTypeDesc}" VerticalOptions="Center" FontSize="12" />
+                </HorizontalStackLayout>
+
+                <Label Text="Results for Option Prices:" Margin="0,14,0,0" FontAttributes="Bold" />
+                <controls:SimpleGrid Table="{Binding OptionTable}" BodyHeight="150" />
+
+                <Button Text="Compare With.." Command="{Binding ToggleCompareCommand}" HorizontalOptions="Start" Margin="0,10,0,0" />
+                <VerticalStackLayout IsVisible="{Binding IsCompareVisible}" Spacing="6">
+                    <HorizontalStackLayout Spacing="6">
+                        <Button Text="Calculate Price" Command="{Binding CalculatePrice2Command}" />
+                        <Entry Text="{Binding CalculatorType2}" IsReadOnly="True" WidthRequest="170" />
+                        <Button Text="&gt;" Command="{Binding ToggleCalculator2Command}" WidthRequest="40" />
+                        <Label Text="{Binding CalculatorTypeDesc2}" VerticalOptions="Center" FontSize="12" />
+                    </HorizontalStackLayout>
+                    <Label Text="Results for Option Prices:" FontAttributes="Bold" />
+                    <controls:SimpleGrid Table="{Binding OptionTable2}" BodyHeight="150" />
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Grid Grid.Column="1" RowDefinitions="Auto,Auto,*,Auto" RowSpacing="6">
+            <Label Text="Plot Price and Greeks" HorizontalOptions="Center" FontAttributes="Bold" />
+            <FlexLayout Grid.Row="1" Wrap="Wrap" JustifyContent="Center">
+                <Button Text="Plot price" Command="{Binding PlotCommand}" CommandParameter="Price" Margin="4" />
+                <Button Text="Plot Delta" Command="{Binding PlotCommand}" CommandParameter="Delta" Margin="4" />
+                <Button Text="Plot Gamma" Command="{Binding PlotCommand}" CommandParameter="Gamma" Margin="4" />
+                <Button Text="Plot Theta" Command="{Binding PlotCommand}" CommandParameter="Theta" Margin="4" />
+                <Button Text="Plot Rho" Command="{Binding PlotCommand}" CommandParameter="Rho" Margin="4" />
+                <Button Text="Plot Vega" Command="{Binding PlotCommand}" CommandParameter="Vega" Margin="4" />
+                <Button Text="Plot Experimental" Command="{Binding PlotExperimentalCommand}" Margin="4" />
+            </FlexLayout>
+            <lvc:CartesianChart Grid.Row="2" Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}" MinimumHeightRequest="300" />
+            <Label Grid.Row="3" Text="{Binding ZSummary}" FontSize="12" HorizontalOptions="Center" />
+        </Grid>
+    </Grid>
+
+</ContentPage>

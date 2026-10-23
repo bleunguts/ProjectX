@@ -3,13 +3,46 @@
     x:Class="ShellX.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:ShellX"
-    Shell.FlyoutBehavior="Disabled"
+    xmlns:pages="clr-namespace:ShellX.Pages"
+    Shell.FlyoutBehavior="Locked"
     Title="ShellX">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <Shell.FlyoutHeader>
+        <Image Source="trading_banner.png" Aspect="AspectFit" HeightRequest="100" Margin="10" />
+    </Shell.FlyoutHeader>
+
+    <Shell.FlyoutFooter>
+        <VerticalStackLayout Padding="10" Spacing="4">
+            <ProgressBar Progress="{Binding Progress}" IsVisible="{Binding IsBusy}" />
+            <Label Text="{Binding StatusText}" FontSize="12" LineBreakMode="TailTruncation" />
+        </VerticalStackLayout>
+    </Shell.FlyoutFooter>
+
+    <FlyoutItem Title="Options">
+        <ShellContent Title="Black-Scholes" ContentTemplate="{DataTemplate pages:BlackScholesPage}" Route="OptionsBlackScholes" />
+        <ShellContent Title="Implied Volatility" ContentTemplate="{DataTemplate pages:PlaceholderPage}" Route="OptionsImpliedVol" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="TradingSignals">
+        <ShellContent Title="Mean Reversion strategy (Backtesting)" ContentTemplate="{DataTemplate pages:PlaceholderPage}" Route="TradingSignalsSingle" />
+        <ShellContent Title="Pairs Trading mean reverting strategy (Backtesting)" ContentTemplate="{DataTemplate pages:PlaceholderPage}" Route="TradingSignalsPairs" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="MachineLearning">
+        <ShellContent Title="Stock Price Direction Prediction using Classification" ContentTemplate="{DataTemplate pages:PlaceholderPage}" Route="MachineLearningPriceMovement" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="MarketPrices">
+        <ShellContent Title="Market Snapshot" ContentTemplate="{DataTemplate pages:PlaceholderPage}" Route="MarketPricesEquities" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="FX">
+        <ShellContent Title="FXPricer" ContentTemplate="{DataTemplate pages:PlaceholderPage}" Route="FXPricer" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="FixedIncome">
+        <ShellContent Title="BondPricer" ContentTemplate="{DataTemplate pages:PlaceholderPage}" Route="FixedIncomeBond" />
+        <ShellContent Title="CDSPricer" ContentTemplate="{DataTemplate pages:PlaceholderPage}" Route="FixedIncomeCds" />
+    </FlyoutItem>
 
 </Shell>

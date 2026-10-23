@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <WindowsPackageType>None</WindowsPackageType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="NUnit" Version="3.14.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+    <PackageReference Include="NUnit.Analyzers" Version="3.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="NUnit.Framework" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ProjectX.Core\ProjectX.Core.csproj" />
+    <ProjectReference Include="..\ProjectX.MachineLearning\ProjectX.MachineLearning.csproj" />
+  </ItemGroup>
+
+  <!-- Referencing the MAUI app project trips Resizetizer (duplicate icon outputs), so the plain,
+       UI-free ShellX sources under test are linked in instead. -->
+  <ItemGroup>
+    <Compile Include="..\ShellX\Services\GatewayApiClientOptions.cs" Link="Linked\GatewayApiClientOptions.cs" />
+    <Compile Include="..\ShellX\Tables\*.cs" Link="Linked\Tables\%(Filename)%(Extension)" />
+    <Compile Include="..\ShellX\OptionsPricing\*.cs" Link="Linked\OptionsPricing\%(Filename)%(Extension)" />
+  </ItemGroup>
+
+</Project>

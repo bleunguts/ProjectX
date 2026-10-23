@@ -1,10 +1,13 @@
-﻿namespace ShellX
+﻿using ShellX.Services;
+
+namespace ShellX
 {
     public partial class AppShell : Shell
     {
-        public AppShell()
+        public AppShell(StatusService status)
         {
             InitializeComponent();
+            BindingContext = status;
         }
     }
 }
