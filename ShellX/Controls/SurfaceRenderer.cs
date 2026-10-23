@@ -99,8 +99,8 @@ public static class SurfaceRenderer
         var (zx, zy) = corners.MinBy(c => projection.Project(c.Item1, c.Item2, floor).X);
         using var axis = new SKPaint { IsAntialias = true, Style = SKPaintStyle.Stroke, Color = textPaint.Color, StrokeWidth = density };
         canvas.DrawLine(screen(zx, zy, floor), screen(zx, zy, top), axis);
-        Text(Format(data.ZMin), screen(zx, zy, floor), SKTextAlign.Right, -6);
-        Text(Format(data.ZMax), screen(zx, zy, top), SKTextAlign.Right, -6);
+        Text(Format(data.ZMin), screen(zx, zy, floor), SKTextAlign.Right, -22);
+        Text(Format(data.ZMax), screen(zx, zy, top), SKTextAlign.Right, -22);
         Text(options.ZLabel, screen(zx, zy, top), SKTextAlign.Center, 0, -18);
     }
 
