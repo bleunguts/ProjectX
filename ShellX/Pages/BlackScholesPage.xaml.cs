@@ -4,14 +4,13 @@ namespace ShellX.Pages;
 
 public partial class BlackScholesPage : ContentPage
 {
-    // Below this width the two columns stack into one scrolling column (phones, or a narrowed desktop window).
+    // Below this width the two columns stack: chart on top, inputs and results scrolling underneath
+    // (phones, or a narrowed desktop window).
     private const double PhoneWidth = 720;
-    private const double PhoneChartHeight = 380;
+    private const double PhoneChartHeight = 420;
     private const double PhoneMinColumnWidth = 64;
 
     private readonly BlackScholesViewModel _viewModel;
-    private readonly VerticalStackLayout _phoneStack = new() { Spacing = 10, Padding = new Thickness(8) };
-    private ScrollView? _phoneScroll;
     private bool? _phone;
 
     public BlackScholesPage(BlackScholesViewModel viewModel)
@@ -28,6 +27,8 @@ public partial class BlackScholesPage : ContentPage
             ApplyLayout(width < PhoneWidth);
     }
 
+    // The views are never moved between parents (Android throws "child already has a parent");
+    // the one grid is redefined and the two cards are repositioned within it.
     private void ApplyLayout(bool phone)
     {
         if (_phone == phone)
@@ -36,28 +37,36 @@ public partial class BlackScholesPage : ContentPage
 
         if (phone)
         {
-            // Chart on top at a fixed height, then the inputs and results, all in one vertical scroll.
-            WideLayout.Remove(ChartCard);
-            LeftScroll.Content = null;
+            WideLayout.ColumnDefinitions = [new ColumnDefinition(GridLength.Star)];
+            WideLayout.RowDefinitions = [new RowDefinition(GridLength.Auto), new RowDefinition(GridLength.Star)];
+            WideLayout.Padding = new Thickness(8);
+            WideLayout.RowSpacing = 8;
+            WideLayout.ColumnSpacing = 0;
+            Place(ChartCard, row: 0, column: 0);
+            Place(LeftScroll, row: 1, column: 0);
             ChartCard.HeightRequest = PhoneChartHeight;
-            _phoneStack.Add(ChartCard);
-            _phoneStack.Add(LeftStack);
-            _phoneScroll ??= new ScrollView { Content = _phoneStack };
-            Content = _phoneScroll;
         }
         else
         {
-            _phoneStack.Remove(ChartCard);
-            _phoneStack.Remove(LeftStack);
+            WideLayout.ColumnDefinitions = [new ColumnDefinition(new GridLength(2, GridUnitType.Star)), new ColumnDefinition(new GridLength(3, GridUnitType.Star))];
+            WideLayout.RowDefinitions = [new RowDefinition(GridLength.Star)];
+            WideLayout.Padding = new Thickness(10);
+            WideLayout.RowSpacing = 0;
+            WideLayout.ColumnSpacing = 10;
+            Place(LeftScroll, row: 0, column: 0);
+            Place(ChartCard, row: 0, column: 1);
             ChartCard.HeightRequest = -1;
-            LeftScroll.Content = LeftStack;
-            WideLayout.Add(ChartCard);
-            Content = WideLayout;
         }
 
         var minColumnWidth = phone ? PhoneMinColumnWidth : 0;
         ResultsGrid.MinColumnWidth = minColumnWidth;
         ResultsGrid2.MinColumnWidth = minColumnWidth;
+    }
+
+    private static void Place(BindableObject view, int row, int column)
+    {
+        Grid.SetRow(view, row);
+        Grid.SetColumn(view, column);
     }
 
     protected override async void OnAppearing()
