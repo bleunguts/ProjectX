@@ -1,9 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using LiveChartsCore;
-using LiveChartsCore.Defaults;
-using LiveChartsCore.Drawing;
-using LiveChartsCore.SkiaSharpView;
 using Microsoft.AspNetCore.SignalR.Client;
 using ProjectX.Core;
 using ProjectX.Core.Requests;
@@ -47,10 +43,8 @@ public partial class BlackScholesViewModel : ObservableObject
     [ObservableProperty] private OptionsPricingCalculatorType _calculatorType2 = OptionsPricingCalculatorType.OptionsPricerCpp;
     [ObservableProperty] private string _calculatorTypeDesc2 = "Default c++ pricer";
 
-    [ObservableProperty] private ISeries[] _series = [];
-    [ObservableProperty] private Axis[] _xAxes = [new Axis { Name = "t" }];
-    [ObservableProperty] private Axis[] _yAxes = [new Axis { Name = "Spot" }];
-    [ObservableProperty] private string _zSummary = string.Empty;
+    [ObservableProperty] private HeatMapData? _surface;
+    [ObservableProperty] private string _zLabel = string.Empty;
 
     private OptionInputs Inputs => new(OptionType, Spot, Strike, Rate, Carry, Vol);
 
@@ -109,7 +103,7 @@ public partial class BlackScholesViewModel : ObservableObject
         _status.Report($"Pricing 3D Plot Result: {plot.PointArray.Length} coordinates completed. Backed completed operation in {result.AuditTrail.ElapsedMilliseconds} ms using calculator {result.AuditTrail.CalculatorType}");
 
         var data = HeatMapData.FromPlot(plot, result.Request.ZDecimalPlaces, result.Request.ZTickDecimalPlaces);
-        MainThread.BeginInvokeOnMainThread(() => ShowHeatMap(data, result.Request.ZLabel));
+        MainThread.BeginInvokeOnMainThread(() => ShowSurface(data, result.Request.ZLabel));
     }
 
     [RelayCommand]
@@ -180,21 +174,11 @@ public partial class BlackScholesViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void PlotExperimental() => ShowHeatMap(HeatMapData.Peak(), string.Empty);
+    private void PlotExperimental() => ShowSurface(HeatMapData.Peak(), string.Empty);
 
-    private void ShowHeatMap(HeatMapData data, string zLabel)
+    private void ShowSurface(HeatMapData data, string zLabel)
     {
-        Series =
-        [
-            new HeatSeries<WeightedPoint>
-            {
-                Values = data.Points.Select(p => new WeightedPoint(p.I, p.J, p.Z)).ToArray(),
-                // Jet: blue -> cyan -> green -> yellow -> red
-                HeatMap = [new LvcColor(0, 0, 255), new LvcColor(0, 255, 255), new LvcColor(0, 255, 0), new LvcColor(255, 255, 0), new LvcColor(255, 0, 0)],
-            },
-        ];
-        XAxes = [new Axis { Name = "t", Labeler = value => data.XValue(value).ToString("0.##") }];
-        YAxes = [new Axis { Name = "Spot", Labeler = value => data.YValue(value).ToString("0.##") }];
-        ZSummary = $"{zLabel} min {data.ZMin}, max {data.ZMax}, tick {data.ZTick}".Trim();
+        ZLabel = zLabel;
+        Surface = data;
     }
 }

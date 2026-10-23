@@ -4,7 +4,6 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:controls="clr-namespace:ShellX.Controls"
-    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
     xmlns:vm="clr-namespace:ShellX.ViewModels"
     x:DataType="vm:BlackScholesViewModel"
     Title="Black-Scholes (Options)">
@@ -76,8 +75,8 @@
                 <Button Text="Plot Vega" Command="{Binding PlotCommand}" CommandParameter="Vega" Margin="2" />
                 <Button Text="Plot Experimental" Command="{Binding PlotExperimentalCommand}" Margin="2" />
             </FlexLayout>
-            <lvc:CartesianChart Grid.Row="2" Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}" MinimumHeightRequest="300" />
-            <Label Grid.Row="3" Text="{Binding ZSummary}" FontSize="12" HorizontalOptions="Center" />
+            <controls:Surface3DView Grid.Row="2" Surface="{Binding Surface}" ZLabel="{Binding ZLabel}" MinimumHeightRequest="300" />
+            <Label Grid.Row="3" Text="Drag the surface to rotate it" FontSize="11" HorizontalOptions="Center" />
         </Grid>
     </Grid>
 

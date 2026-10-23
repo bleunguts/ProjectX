@@ -15,6 +15,9 @@ public class HeatMapData
     public double ZMin { get; init; }
     public double ZMax { get; init; }
     public double ZTick { get; init; }
+    /// <summary>Number of grid columns (t values) and rows (spot values); <see cref="Points"/> is column-major.</summary>
+    public int XCount { get; init; }
+    public int YCount { get; init; }
     public double XMin { get; init; }
     public double XSpacing { get; init; }
     public double YMin { get; init; }
@@ -33,6 +36,8 @@ public class HeatMapData
         return new HeatMapData
         {
             Points = points,
+            XCount = plot.PointArray.GetLength(0),
+            YCount = plot.PointArray.GetLength(1),
             ZMin = Math.Round(plot.zmin, zDecimalPlaces),
             ZMax = Math.Round(plot.zmax, zDecimalPlaces),
             ZTick = Math.Round((plot.zmax - plot.zmin) / 5.0, zTickDecimalPlaces),
@@ -63,6 +68,6 @@ public class HeatMapData
             }
         }
 
-        return new HeatMapData { Points = points, ZMin = -8, ZMax = 8, ZTick = 4, XMin = min, XSpacing = spacing, YMin = min, YSpacing = spacing };
+        return new HeatMapData { Points = points, ZMin = -8, ZMax = 8, ZTick = 4, XMin = min, XSpacing = spacing, YMin = min, YSpacing = spacing, XCount = number, YCount = number };
     }
 }
