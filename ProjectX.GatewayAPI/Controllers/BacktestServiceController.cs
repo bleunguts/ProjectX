@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Any;
 using Newtonsoft.Json;
 using ProjectX.Core;
 using ProjectX.Core.Services;

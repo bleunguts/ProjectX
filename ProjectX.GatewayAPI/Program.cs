@@ -55,7 +55,7 @@ public class Startup
         services.AddSwaggerGen();
         services.ConfigureSwaggerGen(setup =>
         {
-            setup.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+            setup.SwaggerDoc("v1", new Microsoft.OpenApi.OpenApiInfo
             {
                 Title = "GatewayAPI",
                 Version = "v1"
