@@ -5,6 +5,9 @@ namespace ShellX.Controls;
 /// <summary>A read-only table: a header row over a virtualised list of rows, with optional single-row selection.</summary>
 public class SimpleGrid : ContentView
 {
+    private const double CellFontSize = 11;
+    private static readonly Thickness CellPadding = new(3, 1);
+
     public static readonly BindableProperty TableProperty = BindableProperty.Create(
         nameof(Table), typeof(TableData), typeof(SimpleGrid), null,
         propertyChanged: (bindable, _, _) => ((SimpleGrid)bindable).Rebuild());
@@ -49,7 +52,7 @@ public class SimpleGrid : ContentView
 
         var header = NewRow(columns);
         for (int i = 0; i < columns; i++)
-            header.Add(new Label { Text = table.Headers[i], FontAttributes = FontAttributes.Bold, Padding = new Thickness(4, 2) }, i, 0);
+            header.Add(new Label { Text = table.Headers[i], FontAttributes = FontAttributes.Bold, FontSize = CellFontSize, Padding = CellPadding }, i, 0);
 
         var body = new CollectionView
         {
@@ -61,7 +64,7 @@ public class SimpleGrid : ContentView
                 var row = NewRow(columns);
                 for (int i = 0; i < columns; i++)
                 {
-                    var cell = new Label { Padding = new Thickness(4, 2), LineBreakMode = LineBreakMode.TailTruncation };
+                    var cell = new Label { FontSize = CellFontSize, Padding = CellPadding, LineBreakMode = LineBreakMode.TailTruncation };
                     cell.SetBinding(Label.TextProperty, $"[{i}]");
                     row.Add(cell, i, 0);
                 }

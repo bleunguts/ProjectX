@@ -13,7 +13,10 @@ public class OptionResultsTableBuilder : TableBuilderBase
     {
         foreach (var (maturity, greeks) in results)
         {
-            _rows.Add([maturity.ToString(), greeks.price.ToString(), greeks.delta.ToString(), greeks.gamma.ToString(), greeks.theta.ToString(), greeks.rho.ToString(), greeks.vega.ToString()]);
+            _rows.Add([Format(maturity), Format(greeks.price), Format(greeks.delta), Format(greeks.gamma), Format(greeks.theta), Format(greeks.rho), Format(greeks.vega)]);
         }
     }
+
+    // Six significant digits keeps the columns narrow; the full doubles are noise on screen.
+    private static string Format(double value) => value.ToString("G6");
 }

@@ -190,3 +190,15 @@ public class HeatMapDataTests
         Assert.That((data.ZMin, data.ZMax, data.ZTick), Is.EqualTo((-8d, 8d, 4d)));
     }
 }
+
+public class OptionResultsFormattingTests
+{
+    [Test]
+    public void Long_doubles_are_shown_to_six_significant_digits()
+    {
+        var builder = new OptionResultsTableBuilder();
+        builder.SetRows(new[] { new MaturityAndOptionGreeksResultPair(0.123456789, new OptionGreeksResult(10.987654321, 0.5, 0.0123456789, -3.14159265, 4, 20)) });
+
+        Assert.That(builder.Build().Rows.Single(), Is.EqualTo(new[] { "0.123457", "10.9877", "0.5", "0.0123457", "-3.14159", "4", "20" }));
+    }
+}
