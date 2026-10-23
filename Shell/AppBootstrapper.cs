@@ -52,7 +52,7 @@ namespace Shell
             var envLoader = new EnvironmentVariableLoader();
             var stockMarketSource = new FileBackedStockMarketDataSource(
                     new FMPStockMarketSource(Options.Create(new FMPStockMarketSourceOptions { ApiKey = envLoader.FromEnvironmentVariable("fmpapikey") })),
-                    Options.Create(new FileBackedStoreMarketDataSourceOptions() { Filename = "C:\\Dev\\projects\\GitHub\\ProjectX\\ProjectX.GatewayAPI\\bin\\Debug\\net9.0\\cache.json" })
+                    Options.Create(new FileBackedStoreMarketDataSourceOptions() { Filename = "C:\\Dev\\projects\\GitHub\\ProjectX\\ProjectX.GatewayAPI\\bin\\Debug\\net10.0\\cache.json" })
             );            
             batch.AddExportedValue<IMachineLearningApiClient>(new MachineLearningApiClient(stockMarketSource));
 
