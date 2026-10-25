@@ -33,7 +33,7 @@
 
                 <Border Style="{StaticResource Card}">
                     <VerticalStackLayout Spacing="10">
-                        <Label Text="Trade" Style="{StaticResource SectionHeader}" />
+                        <Label Text="Latest Price" Style="{StaticResource SectionHeader}" />
 
                         <!-- Price tiles: tap to trade. Handle small, the two "big figure" digits large, the last digit small (1.08 | 43 | 2). -->
                         <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
@@ -82,17 +82,19 @@
                             </Border>
                         </Grid>
 
-                        <HorizontalStackLayout Spacing="6">
-                            <Label Text="Quantity:" VerticalOptions="Center" />
-                            <Entry Text="{Binding Notional}" Keyboard="Numeric" WidthRequest="120" />
-                        </HorizontalStackLayout>
-                        <FlexLayout Wrap="Wrap" BindableLayout.ItemsSource="{Binding QuantityChips}">
-                            <BindableLayout.ItemTemplate>
-                                <DataTemplate x:DataType="fx:FxQuantityChip">
-                                    <Button Text="{Binding Label}" Margin="0,0,4,4" Padding="12,0" CornerRadius="14"
-                                            CommandParameter="{Binding Value}" Clicked="OnQuantityChipClicked" />
-                                </DataTemplate>
-                            </BindableLayout.ItemTemplate>
+                        <!-- Quantity is secondary to the price, so it sits last and small. -->
+                        <FlexLayout Wrap="Wrap" AlignItems="Center">
+                            <Label Text="Quantity:" FontSize="11" VerticalOptions="Center" Margin="0,0,6,0" />
+                            <Entry Text="{Binding Notional}" Keyboard="Numeric" FontSize="11" WidthRequest="90" MinimumHeightRequest="22" Margin="0,0,8,0" />
+                            <FlexLayout Wrap="Wrap" AlignItems="Center" BindableLayout.ItemsSource="{Binding QuantityChips}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate x:DataType="fx:FxQuantityChip">
+                                        <Button Text="{Binding Label}" Margin="0,0,4,0" Padding="8,0" CornerRadius="10" FontSize="11"
+                                                MinimumHeightRequest="22" HeightRequest="24" MinimumWidthRequest="22"
+                                                CommandParameter="{Binding Value}" Clicked="OnQuantityChipClicked" />
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </FlexLayout>
                         </FlexLayout>
                     </VerticalStackLayout>
                 </Border>
@@ -134,7 +136,7 @@
             <!-- The short latest-price bar: the full bid/ask text, direction arrow, spread, LIVE dot and time. It flashes green/red on each tick. -->
             <Border Grid.Row="1" Style="{StaticResource Card}">
                 <Grid x:Name="PriceFlash" ColumnDefinitions="Auto,Auto,Auto,*,Auto" ColumnSpacing="10" Padding="4,2">
-                    <Label Text="Latest" Style="{StaticResource SectionHeader}" VerticalOptions="Center" />
+                    <Label Text="Last tick" Style="{StaticResource SectionHeader}" VerticalOptions="Center" />
                     <Label Grid.Column="1" Text="{Binding LatestPrice}" FontSize="20" FontAttributes="Bold" VerticalOptions="Center" />
                     <Label Grid.Column="2" Text="{Binding TickArrow}" FontSize="18" VerticalOptions="Center">
                         <Label.Triggers>
