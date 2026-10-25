@@ -5,6 +5,10 @@ public static class GatewayAddress
     /// <summary>The Android emulator's address for the PC it runs on; inside the emulator "localhost" is the emulator itself.</summary>
     public const string EmulatorHostMachine = "10.0.2.2";
 
+    /// <summary>True when the URL points at the PC hosting the emulator (10.0.2.2).</summary>
+    public static bool IsEmulatorHost(string url) =>
+        Uri.TryCreate(url, UriKind.Absolute, out var uri) && uri.Host == EmulatorHostMachine;
+
     /// <summary>Points a localhost / 127.0.0.1 URL at the host PC so an emulator can reach a Gateway running locally. Anything else is returned as it is.</summary>
     public static string ForAndroidEmulator(string url)
     {

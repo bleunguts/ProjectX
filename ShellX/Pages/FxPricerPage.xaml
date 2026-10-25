@@ -10,20 +10,21 @@
     x:DataType="vm:FxPricerViewModel"
     Title="FXPricer (FX)">
 
-    <Grid Padding="10" ColumnDefinitions="*,*" ColumnSpacing="10">
+    <ScrollView x:Name="PageScroll">
+    <Grid x:Name="WideLayout" Padding="10" ColumnDefinitions="*,*" ColumnSpacing="10">
 
-        <ScrollView Grid.Column="0">
+        <ScrollView x:Name="LeftScroll" Grid.Column="0">
             <VerticalStackLayout Spacing="10">
 
                 <Border Style="{StaticResource Card}">
                     <VerticalStackLayout Spacing="6">
                         <Label Text="Client and pair" Style="{StaticResource SectionHeader}" />
-                        <Grid ColumnDefinitions="80,150,*" RowDefinitions="Auto,Auto" RowSpacing="2" ColumnSpacing="6">
+                        <Grid ColumnDefinitions="80,150,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="2" ColumnSpacing="6">
                             <Label Text="ClientName:" VerticalOptions="Center" />
                             <Entry Grid.Column="1" Text="{Binding ClientName}" IsReadOnly="True" />
                             <Label Grid.Row="1" Text="Currency:" VerticalOptions="Center" />
                             <Picker Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Currency}" SelectedItem="{Binding SelectedCurrency}" />
-                            <HorizontalStackLayout Grid.Row="1" Grid.Column="2" Spacing="4">
+                            <HorizontalStackLayout x:Name="SubscribeButtons" Grid.Row="1" Grid.Column="2" Spacing="4">
                                 <Button Text="Subscribe" Command="{Binding SubscribeCommand}" />
                                 <Button Text="Unsubscribe" Command="{Binding UnsubscribeCommand}" />
                             </HorizontalStackLayout>
@@ -56,9 +57,9 @@
                                 <VerticalStackLayout VerticalOptions="Center" Spacing="2">
                                     <Label Text="SELL" TextColor="White" FontSize="13" FontAttributes="Bold" />
                                     <HorizontalStackLayout Spacing="0">
-                                        <Label Text="{Binding BidParts.Prefix}" TextColor="White" FontSize="26" VerticalOptions="End" />
-                                        <Label Text="{Binding BidParts.Big}" TextColor="White" FontSize="64" FontAttributes="Bold" VerticalOptions="End" />
-                                        <Label Text="{Binding BidParts.Fraction}" TextColor="White" FontSize="32" VerticalOptions="End" />
+                                        <Label x:Name="SellPrefix" Text="{Binding BidParts.Prefix}" TextColor="White" FontSize="26" VerticalOptions="End" />
+                                        <Label x:Name="SellBig" Text="{Binding BidParts.Big}" TextColor="White" FontSize="64" FontAttributes="Bold" VerticalOptions="End" />
+                                        <Label x:Name="SellFraction" Text="{Binding BidParts.Fraction}" TextColor="White" FontSize="32" VerticalOptions="End" />
                                     </HorizontalStackLayout>
                                     <!-- The action pill is what says "this is a button". -->
                                     <Border HorizontalOptions="Start" Padding="14,4" Stroke="#B3FFFFFF" StrokeThickness="1" BackgroundColor="#33FFFFFF">
@@ -89,9 +90,9 @@
                                 <VerticalStackLayout VerticalOptions="Center" Spacing="2">
                                     <Label Text="BUY" TextColor="White" FontSize="13" FontAttributes="Bold" />
                                     <HorizontalStackLayout Spacing="0">
-                                        <Label Text="{Binding AskParts.Prefix}" TextColor="White" FontSize="26" VerticalOptions="End" />
-                                        <Label Text="{Binding AskParts.Big}" TextColor="White" FontSize="64" FontAttributes="Bold" VerticalOptions="End" />
-                                        <Label Text="{Binding AskParts.Fraction}" TextColor="White" FontSize="32" VerticalOptions="End" />
+                                        <Label x:Name="BuyPrefix" Text="{Binding AskParts.Prefix}" TextColor="White" FontSize="26" VerticalOptions="End" />
+                                        <Label x:Name="BuyBig" Text="{Binding AskParts.Big}" TextColor="White" FontSize="64" FontAttributes="Bold" VerticalOptions="End" />
+                                        <Label x:Name="BuyFraction" Text="{Binding AskParts.Fraction}" TextColor="White" FontSize="32" VerticalOptions="End" />
                                     </HorizontalStackLayout>
                                     <Border HorizontalOptions="Start" Padding="14,4" Stroke="#B3FFFFFF" StrokeThickness="1" BackgroundColor="#33FFFFFF">
                                         <Border.StrokeShape>
@@ -137,7 +138,7 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <Grid Grid.Column="1" RowDefinitions="Auto,Auto,2*,*,Auto" RowSpacing="10">
+        <Grid x:Name="RightGrid" Grid.Column="1" RowDefinitions="Auto,Auto,2*,*,Auto" RowSpacing="10">
 
             <Border Style="{StaticResource Card}">
                 <VerticalStackLayout Spacing="4">
@@ -145,7 +146,7 @@
                         <Label Text="Live Stream:" Style="{StaticResource SectionHeader}" />
                         <Label Text="{Binding PriceStream}" FontAttributes="Bold" />
                     </HorizontalStackLayout>
-                    <Grid ColumnDefinitions="*,200" ColumnSpacing="8">
+                    <Grid x:Name="ChartRow" ColumnDefinitions="*,200" ColumnSpacing="8">
                         <lvc:CartesianChart Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}"
                                             Sections="{Binding Sections}" HeightRequest="220" />
                         <controls:SpreadLadderView Grid.Column="1" HeightRequest="220" HasPrice="{Binding HasPrice}"
@@ -158,7 +159,7 @@
             <Border Grid.Row="1" Style="{StaticResource Card}">
                 <Grid x:Name="PriceFlash" ColumnDefinitions="Auto,Auto,Auto,*,Auto" ColumnSpacing="10" Padding="4,2">
                     <Label Text="Last tick" Style="{StaticResource SectionHeader}" VerticalOptions="Center" />
-                    <Label Grid.Column="1" Text="{Binding LatestPrice}" FontSize="20" FontAttributes="Bold" VerticalOptions="Center" />
+                    <Label x:Name="LastTickPrice" Grid.Column="1" Text="{Binding LatestPrice}" FontSize="20" FontAttributes="Bold" VerticalOptions="Center" />
                     <Label Grid.Column="2" Text="{Binding TickArrow}" FontSize="18" VerticalOptions="Center">
                         <Label.Triggers>
                             <DataTrigger TargetType="Label" Binding="{Binding TickDirection}" Value="Up">
@@ -171,7 +172,7 @@
                     </Label>
                     <Label Grid.Column="3" Text="{Binding SpreadInPips}" FontSize="11" VerticalOptions="Center" />
                     <HorizontalStackLayout Grid.Column="4" Spacing="5" VerticalOptions="Center">
-                        <Label Text="{Binding LatestPriceTimeStamp}" FontSize="11" FontAttributes="Italic" TextColor="{StaticResource Gray500}" VerticalOptions="Center" />
+                        <Label x:Name="LastTickTime" Text="{Binding LatestPriceTimeStamp}" FontSize="11" FontAttributes="Italic" TextColor="{StaticResource Gray500}" VerticalOptions="Center" />
                         <BoxView WidthRequest="10" HeightRequest="10" CornerRadius="5" Color="Gray" VerticalOptions="Center">
                             <BoxView.Triggers>
                                 <DataTrigger TargetType="BoxView" Binding="{Binding IsLive}" Value="True">
@@ -184,7 +185,7 @@
                 </Grid>
             </Border>
 
-            <Border Grid.Row="2" Style="{StaticResource Card}">
+            <Border x:Name="HistoryCard" Grid.Row="2" Style="{StaticResource Card}">
                 <Grid RowDefinitions="Auto,*" RowSpacing="4">
                     <Label Text="Price history (newest first)" Style="{StaticResource SectionHeader}" />
                     <CollectionView Grid.Row="1" ItemsSource="{Binding Prices}">
@@ -197,7 +198,7 @@
                 </Grid>
             </Border>
 
-            <Border Grid.Row="3" Style="{StaticResource Card}">
+            <Border x:Name="TailCard" Grid.Row="3" Style="{StaticResource Card}">
                 <Grid RowDefinitions="Auto,*" RowSpacing="4">
                     <Label Text="Tail:" Style="{StaticResource SectionHeader}" />
                     <Editor Grid.Row="1" Text="{Binding StatusLog, Mode=OneWay}" IsReadOnly="True" FontSize="11" />
@@ -207,5 +208,6 @@
             <Button Grid.Row="4" Text="Clear History" Command="{Binding ClearHistoryCommand}" HorizontalOptions="Start" />
         </Grid>
     </Grid>
+    </ScrollView>
 
 </ContentPage>

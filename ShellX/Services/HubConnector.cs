@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.Connections.Client;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -48,10 +49,22 @@ namespace ShellX.Services
         private HubConnection Connect(string baseUri)
         {
             return new HubConnectionBuilder()                
-                .WithUrl(new Uri(baseUri))
+                .WithUrl(new Uri(baseUri), ConfigureTransport)
                 .AddMessagePackProtocol()
                 .WithAutomaticReconnect()
                 .Build();
+        }
+
+        private static void ConfigureTransport(HttpConnectionOptions options)
+        {
+#if ANDROID && DEBUG
+            // Same dev-certificate allowance as GatewayApiClient: debug builds, emulator host only.
+            if (options.Url is { } url && GatewayAddress.IsEmulatorHost(url.ToString()))
+            {
+                options.HttpMessageHandlerFactory = _ => new HttpClientHandler { ServerCertificateCustomValidationCallback = (_, _, _, _) => true };
+                options.WebSocketConfiguration = socket => socket.RemoteCertificateValidationCallback = (_, _, _, _) => true;
+            }
+#endif
         }
 
         public async Task Stop()
