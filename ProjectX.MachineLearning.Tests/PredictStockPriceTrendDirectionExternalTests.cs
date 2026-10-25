@@ -61,8 +61,7 @@ public class PredictStockPriceTrendDirectionExternalTests
         Console.WriteLine($"acc is {acc}");
         Console.WriteLine($"kappa is {kappa}");
     }
-
-    [Ignore("WIP need to fix error due to input vector training data shape is not what it should be")]
+    
     [Test]
     public void PredictAppleStockPriceTrendDirectionUsingClassification()
     {
@@ -109,7 +108,7 @@ public class PredictStockPriceTrendDirectionExternalTests
         Console.WriteLine($"Outputs length {outputs.Length}");
 
         var model = new StockPriceMovementPredictorSVMClassification();
-        var predictionResults = model.PredictStockPriceMovements(inputs, outputs, 1, 2);
+        var predictionResults = model.PredictStockPriceMovements(inputs, outputs, numberOfInputs: 4, numberOfClasses: 2);
 
         Assert.That(predictionResults, Is.Not.Null);
     }
