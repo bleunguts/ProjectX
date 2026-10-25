@@ -32,73 +32,56 @@
                 </Border>
 
                 <Border Style="{StaticResource Card}">
-                    <Grid x:Name="PriceFlash" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="4" Padding="4">
-                        <Grid ColumnDefinitions="Auto,Auto,*,Auto" ColumnSpacing="8">
-                            <Label Text="Latest price" Style="{StaticResource SectionHeader}" VerticalOptions="Center" />
-                            <Label Grid.Column="1" Text="{Binding TickArrow}" FontSize="16" VerticalOptions="Center">
-                                <Label.Triggers>
-                                    <DataTrigger TargetType="Label" Binding="{Binding TickDirection}" Value="Up">
-                                        <Setter Property="TextColor" Value="{StaticResource Positive}" />
-                                    </DataTrigger>
-                                    <DataTrigger TargetType="Label" Binding="{Binding TickDirection}" Value="Down">
-                                        <Setter Property="TextColor" Value="{StaticResource Negative}" />
-                                    </DataTrigger>
-                                </Label.Triggers>
-                            </Label>
-                            <HorizontalStackLayout Grid.Column="3" Spacing="5" VerticalOptions="Center">
-                                <BoxView WidthRequest="10" HeightRequest="10" CornerRadius="5" Color="Gray" VerticalOptions="Center">
-                                    <BoxView.Triggers>
-                                        <DataTrigger TargetType="BoxView" Binding="{Binding IsLive}" Value="True">
-                                            <Setter Property="Color" Value="{StaticResource Positive}" />
-                                        </DataTrigger>
-                                    </BoxView.Triggers>
-                                </BoxView>
-                                <Label Text="LIVE" FontSize="11" FontAttributes="Bold" VerticalOptions="Center" />
-                            </HorizontalStackLayout>
-                        </Grid>
-
-                        <Grid Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="12">
-                            <VerticalStackLayout>
-                                <Label Text="BID" FontSize="11" TextColor="{StaticResource Gray500}" />
-                                <Label>
-                                    <Label.FormattedString>
-                                        <FormattedString>
-                                            <Span Text="{Binding BidParts.Prefix}" FontSize="20" />
-                                            <Span Text="{Binding BidParts.Big}" FontSize="42" FontAttributes="Bold" />
-                                            <Span Text="{Binding BidParts.Fraction}" FontSize="22" />
-                                        </FormattedString>
-                                    </Label.FormattedString>
-                                </Label>
-                            </VerticalStackLayout>
-                            <VerticalStackLayout Grid.Column="1">
-                                <Label Text="ASK" FontSize="11" TextColor="{StaticResource Gray500}" />
-                                <Label>
-                                    <Label.FormattedString>
-                                        <FormattedString>
-                                            <Span Text="{Binding AskParts.Prefix}" FontSize="20" />
-                                            <Span Text="{Binding AskParts.Big}" FontSize="42" FontAttributes="Bold" />
-                                            <Span Text="{Binding AskParts.Fraction}" FontSize="22" />
-                                        </FormattedString>
-                                    </Label.FormattedString>
-                                </Label>
-                            </VerticalStackLayout>
-                        </Grid>
-
-                        <Border Grid.Row="2" HorizontalOptions="Start" Padding="10,2" StrokeThickness="0"
-                                BackgroundColor="{AppThemeBinding Light={StaticResource CardStrokeLight}, Dark={StaticResource CardStrokeDark}}">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="10" />
-                            </Border.StrokeShape>
-                            <Label Text="{Binding SpreadInPips}" FontSize="11" />
-                        </Border>
-
-                        <Label Grid.Row="3" Text="{Binding LatestPriceTimeStamp}" FontSize="11" FontAttributes="Italic" TextColor="{StaticResource Gray500}" />
-                    </Grid>
-                </Border>
-
-                <Border Style="{StaticResource Card}">
-                    <VerticalStackLayout Spacing="8">
+                    <VerticalStackLayout Spacing="10">
                         <Label Text="Trade" Style="{StaticResource SectionHeader}" />
+
+                        <!-- Price tiles: tap to trade. Handle small, the two "big figure" digits large, the last digit small (1.08 | 43 | 2). -->
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                            <Border BackgroundColor="{StaticResource Sell}" StrokeThickness="0" HeightRequest="130" Padding="14,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="14" />
+                                </Border.StrokeShape>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SellTradeCommand}" />
+                                </Border.GestureRecognizers>
+                                <Border.Triggers>
+                                    <DataTrigger TargetType="Border" Binding="{Binding HasPrice}" Value="False">
+                                        <Setter Property="Opacity" Value="0.4" />
+                                    </DataTrigger>
+                                </Border.Triggers>
+                                <VerticalStackLayout VerticalOptions="Center" Spacing="0">
+                                    <Label Text="SELL" TextColor="White" FontSize="13" FontAttributes="Bold" />
+                                    <HorizontalStackLayout Spacing="0">
+                                        <Label Text="{Binding BidParts.Prefix}" TextColor="White" FontSize="26" VerticalOptions="End" />
+                                        <Label Text="{Binding BidParts.Big}" TextColor="White" FontSize="64" FontAttributes="Bold" VerticalOptions="End" />
+                                        <Label Text="{Binding BidParts.Fraction}" TextColor="White" FontSize="32" VerticalOptions="End" />
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <Border Grid.Column="1" BackgroundColor="{StaticResource Buy}" StrokeThickness="0" HeightRequest="130" Padding="14,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="14" />
+                                </Border.StrokeShape>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding BuyTradeCommand}" />
+                                </Border.GestureRecognizers>
+                                <Border.Triggers>
+                                    <DataTrigger TargetType="Border" Binding="{Binding HasPrice}" Value="False">
+                                        <Setter Property="Opacity" Value="0.4" />
+                                    </DataTrigger>
+                                </Border.Triggers>
+                                <VerticalStackLayout VerticalOptions="Center" Spacing="0">
+                                    <Label Text="BUY" TextColor="White" FontSize="13" FontAttributes="Bold" />
+                                    <HorizontalStackLayout Spacing="0">
+                                        <Label Text="{Binding AskParts.Prefix}" TextColor="White" FontSize="26" VerticalOptions="End" />
+                                        <Label Text="{Binding AskParts.Big}" TextColor="White" FontSize="64" FontAttributes="Bold" VerticalOptions="End" />
+                                        <Label Text="{Binding AskParts.Fraction}" TextColor="White" FontSize="32" VerticalOptions="End" />
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                            </Border>
+                        </Grid>
+
                         <HorizontalStackLayout Spacing="6">
                             <Label Text="Quantity:" VerticalOptions="Center" />
                             <Entry Text="{Binding Notional}" Keyboard="Numeric" WidthRequest="120" />
@@ -111,12 +94,6 @@
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
                         </FlexLayout>
-                        <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
-                            <Button Text="{Binding SellLabel}" Command="{Binding SellTradeCommand}" IsEnabled="{Binding HasPrice}"
-                                    BackgroundColor="{StaticResource Sell}" TextColor="White" FontAttributes="Bold" HeightRequest="44" />
-                            <Button Grid.Column="1" Text="{Binding BuyLabel}" Command="{Binding BuyTradeCommand}" IsEnabled="{Binding HasPrice}"
-                                    BackgroundColor="{StaticResource Buy}" TextColor="White" FontAttributes="Bold" HeightRequest="44" />
-                        </Grid>
                     </VerticalStackLayout>
                 </Border>
 
@@ -137,7 +114,7 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <Grid Grid.Column="1" RowDefinitions="Auto,2*,*,Auto" RowSpacing="10">
+        <Grid Grid.Column="1" RowDefinitions="Auto,Auto,2*,*,Auto" RowSpacing="10">
 
             <Border Style="{StaticResource Card}">
                 <VerticalStackLayout Spacing="4">
@@ -154,7 +131,37 @@
                 </VerticalStackLayout>
             </Border>
 
+            <!-- The short latest-price bar: the full bid/ask text, direction arrow, spread, LIVE dot and time. It flashes green/red on each tick. -->
             <Border Grid.Row="1" Style="{StaticResource Card}">
+                <Grid x:Name="PriceFlash" ColumnDefinitions="Auto,Auto,Auto,*,Auto" ColumnSpacing="10" Padding="4,2">
+                    <Label Text="Latest" Style="{StaticResource SectionHeader}" VerticalOptions="Center" />
+                    <Label Grid.Column="1" Text="{Binding LatestPrice}" FontSize="20" FontAttributes="Bold" VerticalOptions="Center" />
+                    <Label Grid.Column="2" Text="{Binding TickArrow}" FontSize="18" VerticalOptions="Center">
+                        <Label.Triggers>
+                            <DataTrigger TargetType="Label" Binding="{Binding TickDirection}" Value="Up">
+                                <Setter Property="TextColor" Value="{StaticResource Positive}" />
+                            </DataTrigger>
+                            <DataTrigger TargetType="Label" Binding="{Binding TickDirection}" Value="Down">
+                                <Setter Property="TextColor" Value="{StaticResource Negative}" />
+                            </DataTrigger>
+                        </Label.Triggers>
+                    </Label>
+                    <Label Grid.Column="3" Text="{Binding SpreadInPips}" FontSize="11" VerticalOptions="Center" />
+                    <HorizontalStackLayout Grid.Column="4" Spacing="5" VerticalOptions="Center">
+                        <Label Text="{Binding LatestPriceTimeStamp}" FontSize="11" FontAttributes="Italic" TextColor="{StaticResource Gray500}" VerticalOptions="Center" />
+                        <BoxView WidthRequest="10" HeightRequest="10" CornerRadius="5" Color="Gray" VerticalOptions="Center">
+                            <BoxView.Triggers>
+                                <DataTrigger TargetType="BoxView" Binding="{Binding IsLive}" Value="True">
+                                    <Setter Property="Color" Value="{StaticResource Positive}" />
+                                </DataTrigger>
+                            </BoxView.Triggers>
+                        </BoxView>
+                        <Label Text="LIVE" FontSize="11" FontAttributes="Bold" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="2" Style="{StaticResource Card}">
                 <Grid RowDefinitions="Auto,*" RowSpacing="4">
                     <Label Text="Price history (newest first)" Style="{StaticResource SectionHeader}" />
                     <CollectionView Grid.Row="1" ItemsSource="{Binding Prices}">
@@ -167,14 +174,14 @@
                 </Grid>
             </Border>
 
-            <Border Grid.Row="2" Style="{StaticResource Card}">
+            <Border Grid.Row="3" Style="{StaticResource Card}">
                 <Grid RowDefinitions="Auto,*" RowSpacing="4">
                     <Label Text="Tail:" Style="{StaticResource SectionHeader}" />
                     <Editor Grid.Row="1" Text="{Binding StatusLog, Mode=OneWay}" IsReadOnly="True" FontSize="11" />
                 </Grid>
             </Border>
 
-            <Button Grid.Row="3" Text="Clear History" Command="{Binding ClearHistoryCommand}" HorizontalOptions="Start" />
+            <Button Grid.Row="4" Text="Clear History" Command="{Binding ClearHistoryCommand}" HorizontalOptions="Start" />
         </Grid>
     </Grid>
 
