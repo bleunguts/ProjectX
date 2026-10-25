@@ -3,6 +3,7 @@ using ProjectX.Core.Requests;
 using ProjectX.Core.Services;
 using ProjectX.GatewayAPI.ExternalServices;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Reflection.Metadata.Ecma335;
 
 namespace ProjectX.GatewayAPI.Processors
@@ -26,18 +27,8 @@ namespace ProjectX.GatewayAPI.Processors
         {
             _logger.LogInformation($"Spin off calculator to price RequestId=[{pricingRequest.Id}]");
 
-            return Task.Run<object>(() =>
-            {
-                if (pricingRequest is OptionsPricingByMaturitiesRequest)
-                {
-                    return _pricingModel.Price((OptionsPricingByMaturitiesRequest) pricingRequest);
-                }
-                if (pricingRequest is PlotOptionsPricingRequest)
-                {
-                    return _pricingModel.PlotGreeks((PlotOptionsPricingRequest)pricingRequest);
-                }                                          
-                throw new NotSupportedException($"type {pricingRequest.GetType()} is not supported.");
-            }).ContinueWith(r =>
+            return Task.Run<object>(() => PriceWithTelemetry(pricingRequest)
+            ).ContinueWith(r =>
             {
                 ThrowIfTaskFailed(r.IsFaulted, r.Exception);
 
@@ -54,6 +45,30 @@ namespace ProjectX.GatewayAPI.Processors
                 }
                 throw new NotSupportedException($"type {pricingResult.GetType()} is not supported.");
             }, cancellationToken);
+        }
+
+        private object PriceWithTelemetry(IRequest pricingRequest)
+        {
+            var requestType = pricingRequest.GetType().Name;
+            using var activity = Telemetry.Source.StartActivity("pricing.process");
+            activity?.SetTag("request.type", requestType);
+            var started = Stopwatch.GetTimestamp();
+            try
+            {
+                if (pricingRequest is OptionsPricingByMaturitiesRequest)
+                {
+                    return _pricingModel.Price((OptionsPricingByMaturitiesRequest)pricingRequest);
+                }
+                if (pricingRequest is PlotOptionsPricingRequest)
+                {
+                    return _pricingModel.PlotGreeks((PlotOptionsPricingRequest)pricingRequest);
+                }
+                throw new NotSupportedException($"type {pricingRequest.GetType()} is not supported.");
+            }
+            finally
+            {
+                Telemetry.PricingDuration.Record(Stopwatch.GetElapsedTime(started).TotalMilliseconds, new KeyValuePair<string, object?>("request.type", requestType));
+            }
         }
 
         private void ThrowIfResultIsInvalid(object? pricingResult)

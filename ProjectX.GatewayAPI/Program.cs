@@ -1,15 +1,21 @@
+using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Converters;
+using OpenTelemetry;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using ProjectX.AnalyticsLib;
 using ProjectX.AnalyticsLib.OptionsCalculators;
 using ProjectX.AnalyticsLib.Shared;
 using ProjectX.AnalyticsLibNativeShim;
 using ProjectX.Core;
 using ProjectX.Core.Services;
+using ProjectX.GatewayAPI;
 using ProjectX.GatewayAPI.BackgroundServices;
 using ProjectX.GatewayAPI.ExternalServices;
 using ProjectX.GatewayAPI.Processors;
@@ -61,6 +67,25 @@ public class Startup
                 Version = "v1"
             });
         });
+        // Telemetry: always instrumented; exporters only switch on when their env var is present
+        var otel = services.AddOpenTelemetry()
+            .ConfigureResource(r => r.AddService("ProjectX.GatewayAPI"))
+            .WithTracing(t => t.AddAspNetCoreInstrumentation()
+                               .AddHttpClientInstrumentation()
+                               .AddSource(Telemetry.Name, "Microsoft.AspNetCore.SignalR.Server"))
+            .WithMetrics(m => m.AddAspNetCoreInstrumentation()
+                               .AddHttpClientInstrumentation()
+                               .AddRuntimeInstrumentation()
+                               .AddMeter(Telemetry.Name));
+        if (!string.IsNullOrEmpty(Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]))
+        {
+            otel.UseOtlpExporter();                 // local: Aspire Dashboard, Jaeger, any OTLP collector
+        }
+        if (!string.IsNullOrEmpty(Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
+        {
+            otel.UseAzureMonitor(o => o.SamplingRatio = 0.1f);   // Azure: Application Insights, 10% of traces
+        }
+
         // Add services to the container.
         services.AddControllers().AddJsonOptions(options =>
         {
