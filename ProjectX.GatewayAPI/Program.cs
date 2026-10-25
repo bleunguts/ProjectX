@@ -111,7 +111,7 @@ public class Startup
                         {
                             options.PayloadSerializerOptions.Converters.Add(new Array2DConverter());
                         });        
-        if (!Environment.IsDevelopment())
+        if (Configuration.GetValue<bool>("Azure:SignalR:Enabled"))
         {
             signalRBuilder.AddAzureSignalR();
         }
