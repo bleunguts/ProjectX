@@ -34,6 +34,7 @@
     <Compile Include="..\ShellX\Tables\*.cs" Link="Linked\Tables\%(Filename)%(Extension)" />
     <Compile Include="..\ShellX\OptionsPricing\*.cs" Link="Linked\OptionsPricing\%(Filename)%(Extension)" />
     <Compile Include="..\ShellX\Surface3D\*.cs" Link="Linked\Surface3D\%(Filename)%(Extension)" />
+    <Compile Include="..\ShellX\Fx\*.cs" Link="Linked\Fx\%(Filename)%(Extension)" />
   </ItemGroup>
 
 </Project>
