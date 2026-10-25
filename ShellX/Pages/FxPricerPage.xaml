@@ -83,18 +83,18 @@
                         </Grid>
 
                         <!-- Quantity is secondary to the price, so it sits last and small. -->
-                        <FlexLayout Wrap="Wrap" AlignItems="Center">
-                            <Label Text="Quantity:" FontSize="11" VerticalOptions="Center" Margin="0,0,6,0" />
-                            <Entry Text="{Binding Notional}" Keyboard="Numeric" FontSize="11" WidthRequest="90" MinimumHeightRequest="22" Margin="0,0,8,0" />
-                            <FlexLayout Wrap="Wrap" AlignItems="Center" BindableLayout.ItemsSource="{Binding QuantityChips}">
-                                <BindableLayout.ItemTemplate>
-                                    <DataTemplate x:DataType="fx:FxQuantityChip">
-                                        <Button Text="{Binding Label}" Margin="0,0,4,0" Padding="8,0" CornerRadius="10" FontSize="11"
-                                                MinimumHeightRequest="22" HeightRequest="24" MinimumWidthRequest="22"
-                                                CommandParameter="{Binding Value}" Clicked="OnQuantityChipClicked" />
-                                    </DataTemplate>
-                                </BindableLayout.ItemTemplate>
-                            </FlexLayout>
+                        <HorizontalStackLayout Spacing="6">
+                            <Label Text="Quantity:" FontSize="11" VerticalOptions="Center" />
+                            <Entry Text="{Binding Notional}" Keyboard="Numeric" FontSize="11" WidthRequest="90" MinimumHeightRequest="22" />
+                        </HorizontalStackLayout>
+                        <FlexLayout Wrap="Wrap" BindableLayout.ItemsSource="{Binding QuantityChips}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="fx:FxQuantityChip">
+                                    <Button Text="{Binding Label}" Margin="0,0,4,4" Padding="8,0" CornerRadius="10" FontSize="11"
+                                            MinimumHeightRequest="22" HeightRequest="24" MinimumWidthRequest="22"
+                                            CommandParameter="{Binding Value}" Clicked="OnQuantityChipClicked" />
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
                         </FlexLayout>
                     </VerticalStackLayout>
                 </Border>
