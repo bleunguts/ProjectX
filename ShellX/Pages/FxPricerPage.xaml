@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    x:Class="ShellX.Pages.FxPricerPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:ShellX.Controls"
+    xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+    xmlns:vm="clr-namespace:ShellX.ViewModels"
+    x:DataType="vm:FxPricerViewModel"
+    Title="FXPricer (FX)">
+
+    <Grid Padding="10" ColumnDefinitions="*,*" ColumnSpacing="10">
+
+        <ScrollView Grid.Column="0">
+            <VerticalStackLayout Spacing="10">
+
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Client and pair" Style="{StaticResource SectionHeader}" />
+                        <Grid ColumnDefinitions="80,150,*" RowDefinitions="Auto,Auto" RowSpacing="2" ColumnSpacing="6">
+                            <Label Text="ClientName:" VerticalOptions="Center" />
+                            <Entry Grid.Column="1" Text="{Binding ClientName}" IsReadOnly="True" />
+                            <Label Grid.Row="1" Text="Currency:" VerticalOptions="Center" />
+                            <Picker Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Currency}" SelectedItem="{Binding SelectedCurrency}" />
+                            <HorizontalStackLayout Grid.Row="1" Grid.Column="2" Spacing="4">
+                                <Button Text="Subscribe" Command="{Binding SubscribeCommand}" />
+                                <Button Text="Unsubscribe" Command="{Binding UnsubscribeCommand}" />
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="2">
+                        <Label Text="Latest price" Style="{StaticResource SectionHeader}" />
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="{Binding LatestPrice}" FontSize="24" FontAttributes="Bold" />
+                            <Label Text="{Binding SpreadInPips}" FontSize="11" TextColor="Magenta" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                        <Label Text="{Binding LatestPriceTimeStamp}" FontSize="11" FontAttributes="Italic" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Trade" Style="{StaticResource SectionHeader}" />
+                        <HorizontalStackLayout Spacing="6">
+                            <Label Text="Quantity:" VerticalOptions="Center" />
+                            <Entry Text="{Binding Notional}" Keyboard="Numeric" WidthRequest="120" />
+                            <Button Text="Buy" Command="{Binding BuyTradeCommand}" />
+                            <Button Text="Sell" Command="{Binding SellTradeCommand}" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="6">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="Positions" Style="{StaticResource SectionHeader}" VerticalOptions="Center" />
+                            <Button Text="Show Positions" Command="{Binding ShowPositionsCommand}" />
+                        </HorizontalStackLayout>
+                        <controls:SimpleGrid Table="{Binding PositionsTable}" BodyHeight="130" />
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Grid Grid.Column="1" RowDefinitions="Auto,2*,*,Auto" RowSpacing="10">
+
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="4">
+                    <HorizontalStackLayout Spacing="6">
+                        <Label Text="Live Stream:" Style="{StaticResource SectionHeader}" />
+                        <Label Text="{Binding PriceStream}" FontAttributes="Bold" />
+                    </HorizontalStackLayout>
+                    <lvc:CartesianChart Series="{Binding Series}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}" HeightRequest="180" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Grid.Row="1" Style="{StaticResource Card}">
+                <Grid RowDefinitions="Auto,*" RowSpacing="4">
+                    <Label Text="Price history (newest first)" Style="{StaticResource SectionHeader}" />
+                    <CollectionView Grid.Row="1" ItemsSource="{Binding Prices}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <Label Text="{Binding .}" FontSize="12" />
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Grid>
+            </Border>
+
+            <Border Grid.Row="2" Style="{StaticResource Card}">
+                <Grid RowDefinitions="Auto,*" RowSpacing="4">
+                    <Label Text="Tail:" Style="{StaticResource SectionHeader}" />
+                    <Editor Grid.Row="1" Text="{Binding StatusLog, Mode=OneWay}" IsReadOnly="True" FontSize="11" />
+                </Grid>
+            </Border>
+
+            <Button Grid.Row="3" Text="Clear History" Command="{Binding ClearHistoryCommand}" HorizontalOptions="Start" />
+        </Grid>
+    </Grid>
+
+</ContentPage>

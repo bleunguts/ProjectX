@@ -64,7 +64,7 @@
     </FlyoutItem>
 
     <FlyoutItem Title="FX">
-        <ShellContent Title="FXPricer" ContentTemplate="{DataTemplate pages:PlaceholderPage}" Route="FXPricer" />
+        <ShellContent Title="FXPricer" ContentTemplate="{DataTemplate pages:FxPricerPage}" Route="FXPricer" />
     </FlyoutItem>
 
     <FlyoutItem Title="FixedIncome">

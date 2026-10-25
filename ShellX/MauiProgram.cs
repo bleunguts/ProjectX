@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ProjectX.Core;
+using ProjectX.Core.Services;
 using ProjectX.MarketData;
 using ProjectX.MarketData.Cache;
 using ShellX.Pages;
@@ -86,6 +87,9 @@ namespace ShellX
             services.AddSingleton<AppShell>();
             services.AddTransient<BlackScholesViewModel>();
             services.AddTransient<BlackScholesPage>();
+            services.AddSingleton<IFXTradeExecutionService, eFXTradeExecutionService>();
+            services.AddTransient<FxPricerViewModel>();
+            services.AddTransient<FxPricerPage>();
         }
     }
 }
