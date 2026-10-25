@@ -26,8 +26,8 @@
     <Color x:Key="AccentLight">#2563EB</Color>
     <Color x:Key="AccentDark">#7DB3FF</Color>
 
-    <Color x:Key="Buy">#16A34A</Color>
-    <Color x:Key="Sell">#DC2626</Color>
+    <Color x:Key="Bid">#2563EB</Color>
+    <Color x:Key="Ask">#D97706</Color>
     <Color x:Key="Positive">#16A34A</Color>
     <Color x:Key="Negative">#DC2626</Color>
 

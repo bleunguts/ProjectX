@@ -37,47 +37,68 @@
 
                         <!-- Price tiles: tap to trade. Handle small, the two "big figure" digits large, the last digit small (1.08 | 43 | 2). -->
                         <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
-                            <Border BackgroundColor="{StaticResource Sell}" StrokeThickness="0" HeightRequest="130" Padding="14,10">
+                            <Border BackgroundColor="{StaticResource Bid}" StrokeThickness="0" HeightRequest="160" Padding="14,10">
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="14" />
                                 </Border.StrokeShape>
+                                <Border.Shadow>
+                                    <Shadow Brush="Black" Offset="0,5" Radius="9" Opacity="0.35" />
+                                </Border.Shadow>
                                 <Border.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding SellTradeCommand}" />
+                                    <TapGestureRecognizer Command="{Binding SellTradeCommand}" Tapped="OnTileTapped" />
+                                    <PointerGestureRecognizer PointerEntered="OnTilePointerEntered" PointerExited="OnTilePointerExited" />
                                 </Border.GestureRecognizers>
                                 <Border.Triggers>
                                     <DataTrigger TargetType="Border" Binding="{Binding HasPrice}" Value="False">
                                         <Setter Property="Opacity" Value="0.4" />
                                     </DataTrigger>
                                 </Border.Triggers>
-                                <VerticalStackLayout VerticalOptions="Center" Spacing="0">
+                                <VerticalStackLayout VerticalOptions="Center" Spacing="2">
                                     <Label Text="SELL" TextColor="White" FontSize="13" FontAttributes="Bold" />
                                     <HorizontalStackLayout Spacing="0">
                                         <Label Text="{Binding BidParts.Prefix}" TextColor="White" FontSize="26" VerticalOptions="End" />
                                         <Label Text="{Binding BidParts.Big}" TextColor="White" FontSize="64" FontAttributes="Bold" VerticalOptions="End" />
                                         <Label Text="{Binding BidParts.Fraction}" TextColor="White" FontSize="32" VerticalOptions="End" />
                                     </HorizontalStackLayout>
+                                    <!-- The action pill is what says "this is a button". -->
+                                    <Border HorizontalOptions="Start" Padding="14,4" Stroke="#B3FFFFFF" StrokeThickness="1" BackgroundColor="#33FFFFFF">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="13" />
+                                        </Border.StrokeShape>
+                                        <Label Text="{Binding Notional, StringFormat='Sell {0}  ›'}" TextColor="White" FontSize="13" FontAttributes="Bold" />
+                                    </Border>
                                 </VerticalStackLayout>
                             </Border>
 
-                            <Border Grid.Column="1" BackgroundColor="{StaticResource Buy}" StrokeThickness="0" HeightRequest="130" Padding="14,10">
+                            <Border Grid.Column="1" BackgroundColor="{StaticResource Ask}" StrokeThickness="0" HeightRequest="160" Padding="14,10">
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="14" />
                                 </Border.StrokeShape>
+                                <Border.Shadow>
+                                    <Shadow Brush="Black" Offset="0,5" Radius="9" Opacity="0.35" />
+                                </Border.Shadow>
                                 <Border.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding BuyTradeCommand}" />
+                                    <TapGestureRecognizer Command="{Binding BuyTradeCommand}" Tapped="OnTileTapped" />
+                                    <PointerGestureRecognizer PointerEntered="OnTilePointerEntered" PointerExited="OnTilePointerExited" />
                                 </Border.GestureRecognizers>
                                 <Border.Triggers>
                                     <DataTrigger TargetType="Border" Binding="{Binding HasPrice}" Value="False">
                                         <Setter Property="Opacity" Value="0.4" />
                                     </DataTrigger>
                                 </Border.Triggers>
-                                <VerticalStackLayout VerticalOptions="Center" Spacing="0">
+                                <VerticalStackLayout VerticalOptions="Center" Spacing="2">
                                     <Label Text="BUY" TextColor="White" FontSize="13" FontAttributes="Bold" />
                                     <HorizontalStackLayout Spacing="0">
                                         <Label Text="{Binding AskParts.Prefix}" TextColor="White" FontSize="26" VerticalOptions="End" />
                                         <Label Text="{Binding AskParts.Big}" TextColor="White" FontSize="64" FontAttributes="Bold" VerticalOptions="End" />
                                         <Label Text="{Binding AskParts.Fraction}" TextColor="White" FontSize="32" VerticalOptions="End" />
                                     </HorizontalStackLayout>
+                                    <Border HorizontalOptions="Start" Padding="14,4" Stroke="#B3FFFFFF" StrokeThickness="1" BackgroundColor="#33FFFFFF">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="13" />
+                                        </Border.StrokeShape>
+                                        <Label Text="{Binding Notional, StringFormat='Buy {0}  ›'}" TextColor="White" FontSize="13" FontAttributes="Bold" />
+                                    </Border>
                                 </VerticalStackLayout>
                             </Border>
                         </Grid>

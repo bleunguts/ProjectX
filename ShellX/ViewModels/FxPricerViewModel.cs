@@ -21,7 +21,7 @@ public partial class FxPricerViewModel : ObservableObject
     private const int LadderTrailLength = 40;
 
     private static readonly SKColor BidColor = SKColor.Parse("#2563EB");
-    private static readonly SKColor AskColor = SKColor.Parse("#F59E0B");
+    private static readonly SKColor AskColor = SKColor.Parse("#D97706");
     private static readonly SKColor AxisColor = SKColor.Parse("#8A8F98");
 
     private readonly IGatewayApiClient _gatewayApiClient;

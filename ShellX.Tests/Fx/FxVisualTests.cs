@@ -289,3 +289,39 @@ public class CountUpTests
         Assert.That(CountUp.Value(0, 10, -1), Is.EqualTo(0));
     }
 }
+
+public class SpreadLadderStepTests
+{
+    [Test]
+    public void A_normal_span_keeps_the_pip_step()
+    {
+        Assert.That(SpreadLadderScale.NiceStep(0.0006), Is.EqualTo(0.0001).Within(1e-12));
+    }
+
+    [Test]
+    public void A_wide_span_gets_a_coarser_step_so_the_labels_do_not_pile_up()
+    {
+        var step = SpreadLadderScale.NiceStep(0.0162);
+
+        Assert.That(step, Is.EqualTo(0.005).Within(1e-12));
+        Assert.That(new SpreadLadderScale(1.0580, 0.0162).Rungs(step).Count, Is.LessThanOrEqualTo(8));
+    }
+
+    [Test]
+    public void The_rung_limit_can_be_tightened()
+    {
+        Assert.That(SpreadLadderScale.NiceStep(0.0006, maxRungs: 4), Is.EqualTo(0.0002).Within(1e-12));
+    }
+
+    [Test]
+    public void A_tiny_span_gets_a_finer_step()
+    {
+        Assert.That(SpreadLadderScale.NiceStep(0.00004), Is.EqualTo(0.00001).Within(1e-12));
+    }
+
+    [Test]
+    public void An_enormous_span_falls_back_to_the_coarsest_step()
+    {
+        Assert.That(SpreadLadderScale.NiceStep(50), Is.EqualTo(0.1).Within(1e-12));
+    }
+}

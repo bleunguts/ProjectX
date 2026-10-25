@@ -14,7 +14,7 @@ public static class SpreadLadderRenderer
     private const int TrailSpacingDips = 6;
 
     private static readonly SKColor BidColor = SKColor.Parse("#2563EB");
-    private static readonly SKColor AskColor = SKColor.Parse("#F59E0B");
+    private static readonly SKColor AskColor = SKColor.Parse("#D97706");
 
     public record Options(double Bid, double Ask, IReadOnlyList<LadderTick> Trail, bool HasPrice, SKColor TextColor, SKColor Background);
 
@@ -35,7 +35,7 @@ public static class SpreadLadderRenderer
         var mid = (options.Bid + options.Ask) / 2;
         var spread = options.Ask - options.Bid;
         var span = Math.Max(0.0006, spread * 6);
-        var step = span <= 0.0012 ? 0.0001 : 0.0005;
+        var step = SpreadLadderScale.NiceStep(span);
         var scale = new SpreadLadderScale(mid, span);
 
         float left = LabelColumnDips * density;
@@ -46,7 +46,7 @@ public static class SpreadLadderRenderer
         {
             var y = Y(rung);
             canvas.DrawLine(left, y, width, y, grid);
-            canvas.DrawText(rung.ToString("0.0000"), left - 4 * density, y + font.Size / 3, SKTextAlign.Right, font, text);
+            canvas.DrawText(rung.ToString(step < 0.0001 ? "0.00000" : "0.0000"), left - 4 * density, y + font.Size / 3, SKTextAlign.Right, font, text);
         }
 
         using var band = new SKPaint { Color = BidColor.WithAlpha(40), Style = SKPaintStyle.Fill };

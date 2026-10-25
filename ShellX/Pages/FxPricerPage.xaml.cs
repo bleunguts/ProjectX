@@ -44,6 +44,30 @@ public partial class FxPricerPage : ContentPage
                     finished: (_, _) => PriceFlash.BackgroundColor = Colors.Transparent);
     }
 
+    // The price tiles are buttons: lift slightly under the pointer, dip when pressed.
+    private async void OnTileTapped(object? sender, TappedEventArgs e)
+    {
+        if (!_viewModel.HasPrice || ViewOf(sender) is not { } tile)
+            return;
+
+        await tile.ScaleToAsync(0.96, 60);
+        await tile.ScaleToAsync(1, 90);
+    }
+
+    private async void OnTilePointerEntered(object? sender, PointerEventArgs e)
+    {
+        if (_viewModel.HasPrice && ViewOf(sender) is { } tile)
+            await tile.ScaleToAsync(1.02, 90);
+    }
+
+    private async void OnTilePointerExited(object? sender, PointerEventArgs e)
+    {
+        if (ViewOf(sender) is { } tile)
+            await tile.ScaleToAsync(1, 90);
+    }
+
+    private static VisualElement? ViewOf(object? sender) => sender as VisualElement ?? (sender as Element)?.Parent as VisualElement;
+
     private void OnQuantityChipClicked(object? sender, EventArgs e)
     {
         if (sender is Button { CommandParameter: int quantity })
