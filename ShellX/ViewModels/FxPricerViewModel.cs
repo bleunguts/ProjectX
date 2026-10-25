@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
 using Microsoft.AspNetCore.SignalR.Client;
 using ProjectX.Core;
 using ProjectX.Core.Requests;
@@ -10,12 +11,18 @@ using ProjectX.Core.Services;
 using ShellX.Fx;
 using ShellX.Services;
 using ShellX.Tables;
+using SkiaSharp;
 
 namespace ShellX.ViewModels;
 
 public partial class FxPricerViewModel : ObservableObject
 {
     private const int MaxLogLines = 200;
+    private const int LadderTrailLength = 40;
+
+    private static readonly SKColor BidColor = SKColor.Parse("#2563EB");
+    private static readonly SKColor AskColor = SKColor.Parse("#F59E0B");
+    private static readonly SKColor AxisColor = SKColor.Parse("#8A8F98");
 
     private readonly IGatewayApiClient _gatewayApiClient;
     private readonly IFXTradeExecutionService _fxTrader;
@@ -23,11 +30,12 @@ public partial class FxPricerViewModel : ObservableObject
     private readonly IDialogService _dialogs;
     private readonly FxTickBuffer _ticks = new();
     private readonly LinkedList<string> _log = new();
-    private readonly LineSeries<double> _bid = new() { Name = "Bid", GeometrySize = 0, Fill = null, LineSmoothness = 0, Values = Array.Empty<double>() };
-    private readonly LineSeries<double> _ask = new() { Name = "Ask", GeometrySize = 0, Fill = null, LineSmoothness = 0, Values = Array.Empty<double>() };
+    private readonly LineSeries<double> _bid = new() { Name = "Bid", GeometrySize = 0, Fill = null, LineSmoothness = 0, Values = Array.Empty<double>(), Stroke = new SolidColorPaint(BidColor, 2) };
+    private readonly LineSeries<double> _ask = new() { Name = "Ask", GeometrySize = 0, Fill = null, LineSmoothness = 0, Values = Array.Empty<double>(), Stroke = new SolidColorPaint(AskColor, 2) };
     private CancellationTokenSource _cts = new();
     private SpotPrice? _latestSpotPrice;
     private DateTimeOffset _latestTimestamp;
+    private DateTimeOffset? _lastTickAt;
 
     public FxPricerViewModel(IGatewayApiClient gatewayApiClient, IFXTradeExecutionService fxTrader, StatusService status, IDialogService dialogs)
     {
@@ -36,14 +44,25 @@ public partial class FxPricerViewModel : ObservableObject
         _status = status;
         _dialogs = dialogs;
         Series = [_bid, _ask];
+        YAxes =
+        [
+            new Axis
+            {
+                Labeler = value => value.ToString("0.0000"),
+                TextSize = 11,
+                LabelsPaint = new SolidColorPaint(AxisColor),
+                SeparatorsPaint = new SolidColorPaint(AxisColor.WithAlpha(40), 1),
+            },
+        ];
         PositionsTable = new FxPositionsTableBuilder().Build();
     }
 
     public string[] Currency { get; } = ["GBPUSD", "EURUSD"];
+    public IReadOnlyList<FxQuantityChip> QuantityChips => FxQuantity.Chips;
 
     public ISeries[] Series { get; }
     public Axis[] XAxes { get; } = [new Axis { IsVisible = false }];
-    public Axis[] YAxes { get; } = [new Axis { Labeler = value => value.ToString("0.0000") }];
+    public Axis[] YAxes { get; }
 
     [ObservableProperty] private string _selectedCurrency = "EURUSD";
     [ObservableProperty] private string _clientName = "ProjectX Trader";
@@ -55,6 +74,21 @@ public partial class FxPricerViewModel : ObservableObject
     [ObservableProperty] private string _statusLog = "Ready.";
     [ObservableProperty] private IReadOnlyList<string> _prices = [];
     [ObservableProperty] private TableData _positionsTable;
+
+    [ObservableProperty] private FxPriceParts _bidParts = FxPriceFormatter.Split(null);
+    [ObservableProperty] private FxPriceParts _askParts = FxPriceFormatter.Split(null);
+    [ObservableProperty] private string _sellLabel = FxPriceFormatter.SellLabel(null);
+    [ObservableProperty] private string _buyLabel = FxPriceFormatter.BuyLabel(null);
+    [ObservableProperty] private bool _hasPrice;
+    [ObservableProperty] private string _tickArrow = string.Empty;
+    [ObservableProperty] private FxTickDirection _tickDirection;
+    [ObservableProperty] private int _tickCount;
+    [ObservableProperty] private bool _isLive;
+    [ObservableProperty] private double _totalPnl;
+    [ObservableProperty] private double _ladderBid;
+    [ObservableProperty] private double _ladderAsk;
+    [ObservableProperty] private IReadOnlyList<LadderTick> _ladderTrail = [];
+    [ObservableProperty] private RectangularSection[] _sections = [];
 
     public async Task ActivateAsync()
     {
@@ -92,18 +126,34 @@ public partial class FxPricerViewModel : ObservableObject
         await _gatewayApiClient.StopHubAsync();
     }
 
+    /// <summary>Called about once a second by the page so the LIVE dot goes grey when ticks stop.</summary>
+    public void RefreshLiveness() => IsLive = FxLiveness.IsLive(_lastTickAt, DateTimeOffset.UtcNow);
+
     private void OnPrice(SpotPrice price, DateTimeOffset timestamp)
     {
         // The Gateway broadcasts every tick to every client; show only the selected pair.
         if (!FxPriceFormatter.IsForPair(price, SelectedCurrency))
             return;
 
+        var direction = FxTickDirections.Between(_latestSpotPrice, price);
+
         _latestSpotPrice = price;
         _latestTimestamp = timestamp;
+        _lastTickAt = DateTimeOffset.UtcNow;
         LatestPrice = FxPriceFormatter.LatestPrice(price);
         LatestPriceTimeStamp = timestamp.ToLocalTime().ToString();
         PriceStream = price.CurrencyPair;
         SpreadInPips = FxPriceFormatter.SpreadText(price);
+
+        BidParts = FxPriceFormatter.Split(price.BidPrice);
+        AskParts = FxPriceFormatter.Split(price.AskPrice);
+        SellLabel = FxPriceFormatter.SellLabel(price);
+        BuyLabel = FxPriceFormatter.BuyLabel(price);
+        HasPrice = true;
+        IsLive = true;
+        TickArrow = FxTickDirections.Arrow(direction);
+        TickDirection = direction;
+        TickCount++;
 
         _ticks.Add(new FxTick(timestamp, price));
         RefreshHistory();
@@ -112,9 +162,38 @@ public partial class FxPricerViewModel : ObservableObject
 
     private void RefreshHistory()
     {
+        var oldestFirst = _ticks.OldestFirst.ToList();
+        var bids = oldestFirst.Select(t => (double)t.Price.BidPrice).ToArray();
+        var asks = oldestFirst.Select(t => (double)t.Price.AskPrice).ToArray();
+
         Prices = _ticks.NewestFirst.Select(t => FxPriceFormatter.LatestPrice(t.Price)).ToList();
-        _bid.Values = _ticks.OldestFirst.Select(t => (double)t.Price.BidPrice).ToArray();
-        _ask.Values = _ticks.OldestFirst.Select(t => (double)t.Price.AskPrice).ToArray();
+        _bid.Values = bids;
+        _ask.Values = asks;
+
+        if (FxChartRange.Padded(bids.Concat(asks)) is { } range)
+        {
+            YAxes[0].MinLimit = range.Min;
+            YAxes[0].MaxLimit = range.Max;
+        }
+        else
+        {
+            YAxes[0].MinLimit = null;
+            YAxes[0].MaxLimit = null;
+        }
+
+        if (oldestFirst.Count > 0)
+        {
+            var last = oldestFirst[^1].Price;
+            LadderBid = (double)last.BidPrice;
+            LadderAsk = (double)last.AskPrice;
+            var mid = (LadderBid + LadderAsk) / 2;
+            Sections = [new RectangularSection { Yi = mid, Yj = mid, Stroke = new SolidColorPaint(AxisColor, 1) }];
+        }
+        else
+        {
+            Sections = [];
+        }
+        LadderTrail = oldestFirst.TakeLast(LadderTrailLength).Select(t => new LadderTick((double)t.Price.BidPrice, (double)t.Price.AskPrice)).ToList();
     }
 
     // Newest line first, as in the WPF tail; capped so a long stream does not grow the text without bound.
@@ -176,11 +255,15 @@ public partial class FxPricerViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void SetQuantity(int quantity) => Notional = quantity.ToString();
+
+    [RelayCommand]
     private void ShowPositions()
     {
         var builder = new FxPositionsTableBuilder();
         builder.SetRows(_fxTrader.PositionsFor(ClientName));
         PositionsTable = builder.Build();
+        TotalPnl = (double)builder.Total;
     }
 
     [RelayCommand]

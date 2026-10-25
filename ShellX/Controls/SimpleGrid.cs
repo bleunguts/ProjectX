@@ -19,6 +19,10 @@ public class SimpleGrid : ContentView
         nameof(BodyHeight), typeof(double), typeof(SimpleGrid), 180d,
         propertyChanged: (bindable, _, _) => ((SimpleGrid)bindable).Rebuild());
 
+    public static readonly BindableProperty SignColorColumnProperty = BindableProperty.Create(
+        nameof(SignColorColumn), typeof(string), typeof(SimpleGrid), null,
+        propertyChanged: (bindable, _, _) => ((SimpleGrid)bindable).Rebuild());
+
     public static readonly BindableProperty MinColumnWidthProperty = BindableProperty.Create(
         nameof(MinColumnWidth), typeof(double), typeof(SimpleGrid), 0d,
         propertyChanged: (bindable, _, _) => ((SimpleGrid)bindable).Rebuild());
@@ -49,6 +53,13 @@ public class SimpleGrid : ContentView
         set => SetValue(MinColumnWidthProperty, value);
     }
 
+    /// <summary>Header of a column whose cells turn green when positive and red when negative (for PnL).</summary>
+    public string? SignColorColumn
+    {
+        get => (string?)GetValue(SignColorColumnProperty);
+        set => SetValue(SignColorColumnProperty, value);
+    }
+
     public event EventHandler<string[]>? RowSelected;
 
     private void Rebuild()
@@ -77,6 +88,8 @@ public class SimpleGrid : ContentView
                 {
                     var cell = new Label { FontSize = CellFontSize, Padding = CellPadding, LineBreakMode = LineBreakMode.TailTruncation };
                     cell.SetBinding(Label.TextProperty, $"[{i}]");
+                    if (table.Headers[i] == SignColorColumn)
+                        cell.SetBinding(Label.TextColorProperty, $"[{i}]", converter: SignColorConverter.Instance);
                     row.Add(cell, i, 0);
                 }
                 return row;

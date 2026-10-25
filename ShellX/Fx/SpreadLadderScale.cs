@@ -19,3 +19,6 @@ public record SpreadLadderScale(double Center, double Span)
         return rungs;
     }
 }
+
+/// <summary>One recent bid/ask pair for the ladder trail.</summary>
+public record LadderTick(double Bid, double Ask);
