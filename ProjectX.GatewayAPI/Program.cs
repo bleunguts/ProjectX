@@ -51,16 +51,7 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         // Open API support mandatory for Azure
-        services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
-        services.ConfigureSwaggerGen(setup =>
-        {
-            setup.SwaggerDoc("v1", new Microsoft.OpenApi.OpenApiInfo
-            {
-                Title = "GatewayAPI",
-                Version = "v1"
-            });
-        });
+        services.AddOpenApi();
         // Add services to the container.
         services.AddControllers().AddJsonOptions(options =>
         {
@@ -119,11 +110,9 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        app.UseSwagger();
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
-            app.UseSwaggerUI();
         }
 
         // Configure the HTTP request pipeline.
@@ -138,6 +127,7 @@ public class Startup
         {
             string theEnv = env.IsProduction() ? "Azure App Container" : "Dev";
             endpoints.Map("/", () => $"Health OK. Running on {theEnv}");
+            endpoints.MapOpenApi();
             endpoints.MapControllers();
             if (env.IsProduction()) 
             {
