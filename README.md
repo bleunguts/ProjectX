@@ -31,7 +31,7 @@ ProjectX provides the following highly customizable and optimizable toolkit
 * Simple Bonds Pricer (in concept development phase, explore value add)
 * CDS Pricer (in concept development phase,  explore value add)
 * Implied Vol Pricer to help understand market sentiment (in concept development phase,  explore value add)
-* Luxious Maui mobile iOS/Android RFQ spread adjustment with real-time updates to Windows/Mac desktop Maui driven real-time instrument quotes bloter (in concept development phase)
+* .NET MAUI app (ShellX) running on Windows desktop and Android: BS Option pricing, FX pricer and real-time plots against the Gateway API; iOS/Mac Catalyst planned (needs a Mac build host); RFQ spread adjustment blotter in concept development phase
 
 _Desktop App BS Option Pricing:_
 ![Options](Options.jpg)
@@ -58,3 +58,8 @@ _Running ShellX (.NET MAUI):_
 * **Android:** install the Android SDK/JDK through the Visual Studio mobile workload, then create an emulator in *Tools > Android > Android Device Manager* (a Pixel profile with a Google APIs x86_64 system image) and pick it as the run target. The emulator needs hardware acceleration (Windows Hypervisor Platform or Hyper-V, and virtualisation enabled in the BIOS). Inside the emulator `localhost` is the emulator itself, so ShellX rewrites `localhost`/`127.0.0.1` in the Gateway addresses to `10.0.2.2` (the host PC) when it runs on Android. A Gateway on an https dev certificate is not trusted by Android; use Plot Experimental, or a Gateway reachable over a trusted certificate.
 * iOS and Mac Catalyst need a Mac build host and are not enabled.
 * Below about 720 device-independent pixels wide (phones, or a narrowed desktop window) the Options screen switches to a single scrolling column.
+
+_ShellX (.NET MAUI) screenshots:_
+![Options on desktop](Options_MAUI.png)
+![FXOMS on desktop](FXOMS_MAUI.png)
+![Options on Android](Options_MAUI_Android.png)
