@@ -90,8 +90,12 @@ public partial class BlackScholesHeroPage : ContentPage
     // New results: a quick pulse on the price card.
     private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(BlackScholesViewModel.ResultsVersion))
-            _ = PulseHeroAsync();
+        if (e.PropertyName != nameof(BlackScholesViewModel.ResultsVersion))
+            return;
+
+        // Open on the middle maturity: at the shortest one most Greeks sit at the low end of their dials.
+        _viewModel.SelectMaturityCommand.Execute((int)Math.Round(_viewModel.MaxMaturityIndex / 2));
+        _ = PulseHeroAsync();
     }
 
     private async Task PulseHeroAsync()
