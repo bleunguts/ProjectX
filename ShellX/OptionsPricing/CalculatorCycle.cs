@@ -4,6 +4,14 @@ namespace ShellX.OptionsPricing;
 
 public static class CalculatorCycle
 {
+    public static string Describe(OptionsPricingCalculatorType type) => type switch
+    {
+        OptionsPricingCalculatorType.OptionsPricer => "Vanilla BlackScholes Options Pricer C#",
+        OptionsPricingCalculatorType.OptionsPricerCpp => "BlackScholes Options Pricer native C++",
+        OptionsPricingCalculatorType.MonteCarloCppPricer => "MonteCarlo Pricing native C++ (1e8 MC Paths)",
+        _ => throw new NotImplementedException(),
+    };
+
     public static (OptionsPricingCalculatorType Type, string Description) Next(OptionsPricingCalculatorType current) => current switch
     {
         OptionsPricingCalculatorType.OptionsPricer => (OptionsPricingCalculatorType.OptionsPricerCpp, "BlackScholes Options Pricer native C++"),

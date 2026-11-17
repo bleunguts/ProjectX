@@ -13,6 +13,10 @@ public class CountUpLabel : Label
         nameof(Value), typeof(double), typeof(CountUpLabel), 0d,
         propertyChanged: (bindable, oldValue, newValue) => ((CountUpLabel)bindable).Animate((double)oldValue, (double)newValue));
 
+    public static readonly BindableProperty UseSignColorProperty = BindableProperty.Create(
+        nameof(UseSignColor), typeof(bool), typeof(CountUpLabel), true,
+        propertyChanged: (bindable, _, _) => ((CountUpLabel)bindable).Show(((CountUpLabel)bindable).Value));
+
     public static readonly BindableProperty FormatProperty = BindableProperty.Create(
         nameof(Format), typeof(string), typeof(CountUpLabel), "#,#0",
         propertyChanged: (bindable, _, _) => ((CountUpLabel)bindable).Show(((CountUpLabel)bindable).Value));
@@ -21,6 +25,9 @@ public class CountUpLabel : Label
 
     public double Value { get => (double)GetValue(ValueProperty); set => SetValue(ValueProperty, value); }
     public string Format { get => (string)GetValue(FormatProperty); set => SetValue(FormatProperty, value); }
+
+    /// <summary>Colour the number green or red by sign (default); switch off to keep the text colour from the style.</summary>
+    public bool UseSignColor { get => (bool)GetValue(UseSignColorProperty); set => SetValue(UseSignColorProperty, value); }
 
     private void Animate(double from, double to)
     {
@@ -32,6 +39,7 @@ public class CountUpLabel : Label
     private void Show(double value)
     {
         Text = value.ToString(Format, CultureInfo.CurrentCulture);
-        TextColor = (SignColorConverter.Instance.Convert(Text, typeof(Color), null, CultureInfo.CurrentCulture) as Color)!;
+        if (UseSignColor)
+            TextColor = (SignColorConverter.Instance.Convert(Text, typeof(Color), null, CultureInfo.CurrentCulture) as Color)!;
     }
 }
