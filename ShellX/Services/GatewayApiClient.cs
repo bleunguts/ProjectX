@@ -46,15 +46,25 @@ namespace ShellX.Services
         {
             _logger = logger;
             _hubConnector = hubConnector;                    
-            _httpClient = new HttpClient();
-
             var endpointAddress = options?.Value?.BaseUrl ?? string.Empty;
+            _httpClient = CreateHttpClient(endpointAddress);
 
             if (string.IsNullOrEmpty(endpointAddress))
                 throw new Exception("Invalid API base address");
 
             _httpClient.BaseAddress = new Uri(endpointAddress);
         }
+        private static HttpClient CreateHttpClient(string endpointAddress)
+        {
+#if ANDROID && DEBUG
+            // The Gateway's dev certificate is not trusted by Android and is issued for localhost, not 10.0.2.2.
+            // Debug builds only, and only when talking to the emulator's host PC.
+            if (GatewayAddress.IsEmulatorHost(endpointAddress))
+                return new HttpClient(new HttpClientHandler { ServerCertificateCustomValidationCallback = (_, _, _, _) => true });
+#endif
+            return new HttpClient();
+        }
+
         public HubConnection HubConnection => _hubConnector.Connection;
         public async Task<IEnumerable<double?>> GetHurst(string ticker, DateTime fromDate, DateTime toDate)
         {

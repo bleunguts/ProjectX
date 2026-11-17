@@ -28,3 +28,19 @@ public class GatewayAddressTests
         Assert.That(GatewayAddress.ForAndroidEmulator(value), Is.EqualTo(value));
     }
 }
+
+public class EmulatorHostTests
+{
+    [TestCase("https://10.0.2.2:8081", true)]
+    [TestCase("https://10.0.2.2:8081/streamHub", true)]
+    [TestCase("http://10.0.2.2:8080/", true)]
+    [TestCase("https://localhost:8081", false)]
+    [TestCase("https://10.0.2.20:8081", false)]
+    [TestCase("https://projectx.example.com", false)]
+    [TestCase("", false)]
+    [TestCase("not a url", false)]
+    public void Only_the_emulator_host_machine_counts_as_the_emulator_host(string url, bool expected)
+    {
+        Assert.That(GatewayAddress.IsEmulatorHost(url), Is.EqualTo(expected));
+    }
+}

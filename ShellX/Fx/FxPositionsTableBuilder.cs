@@ -8,6 +8,9 @@ public class FxPositionsTableBuilder : TableBuilderBase
 
     protected override string[] Headers => ["CcyPair", "Notional", "PnL", "Breakdown"];
 
+    /// <summary>The figure in the total row, as a number (for colour and the count-up).</summary>
+    public decimal Total => _total;
+
     public void SetRows(Dictionary<string, (int netQuantity, int totalTrades, decimal PnL, string debug)> positions)
     {
         foreach (var (ccyPair, position) in positions)
