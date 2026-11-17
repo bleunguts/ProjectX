@@ -87,6 +87,7 @@ namespace ShellX
             services.AddSingleton<AppShell>();
             services.AddTransient<BlackScholesViewModel>();
             services.AddTransient<BlackScholesPage>();
+            services.AddTransient<BlackScholesHeroPage>();
             services.AddSingleton<IFXTradeExecutionService, eFXTradeExecutionService>();
             services.AddTransient<FxPricerViewModel>();
             services.AddTransient<FxPricerPage>();

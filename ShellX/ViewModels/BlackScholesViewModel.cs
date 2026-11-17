@@ -73,6 +73,16 @@ public partial class BlackScholesViewModel : ObservableObject
     [ObservableProperty] private double _rho;
     [ObservableProperty] private double _vega;
 
+    public IReadOnlyList<GreekGauge> Gauges { get; } = [new("Delta"), new("Gamma"), new("Theta"), new("Rho"), new("Vega")];
+
+    /// <summary>The maturity chosen with the slider on the hero page (a row index, as a double for the Slider).</summary>
+    [ObservableProperty] private double _selectedIndex;
+
+    /// <summary>Slider maximum: the last results row (at least 1 so the slider has a range).</summary>
+    [ObservableProperty] private double _maxMaturityIndex = 1;
+
+    private bool _updatingIndex;
+
     /// <summary>Changes every time new results arrive, so the page can pulse the hero card.</summary>
     [ObservableProperty] private int _resultsVersion;
 
@@ -150,6 +160,21 @@ public partial class BlackScholesViewModel : ObservableObject
     [RelayCommand]
     private void SelectMaturity(int index)
     {
+        _updatingIndex = true;
+        try
+        {
+            SelectedIndex = Math.Clamp(index, 0, Math.Max(_results.Count - 1, 0));
+            MaxMaturityIndex = Math.Max(_results.Count - 1, 1);
+        }
+        finally
+        {
+            _updatingIndex = false;
+        }
+
+        var readings = GreekGaugeSet.From(_results, index);
+        for (var i = 0; i < Gauges.Count; i++)
+            Gauges[i].Apply(readings[i]);
+
         if (SelectedMaturity.Pick(_results, index) is not { } pair)
         {
             HasResults = false;
@@ -170,6 +195,12 @@ public partial class BlackScholesViewModel : ObservableObject
         Theta = pair.OptionGreeks.theta;
         Rho = pair.OptionGreeks.rho;
         Vega = pair.OptionGreeks.vega;
+    }
+
+    partial void OnSelectedIndexChanged(double value)
+    {
+        if (!_updatingIndex)
+            SelectMaturity((int)Math.Round(value));
     }
 
     [RelayCommand]
