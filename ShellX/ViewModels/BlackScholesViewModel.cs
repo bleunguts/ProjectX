@@ -17,15 +17,31 @@ public partial class BlackScholesViewModel : ObservableObject
     private readonly StatusService _status;
     private readonly IDialogService _dialogs;
     private CancellationTokenSource _cts = new();
+    private IReadOnlyList<MaturityAndOptionGreeksResultPair> _results = [];
 
     public BlackScholesViewModel(IGatewayApiClient gatewayApiClient, StatusService status, IDialogService dialogs)
     {
         _gatewayApiClient = gatewayApiClient;
         _status = status;
         _dialogs = dialogs;
+        CalculatorTypeDesc = CalculatorCycle.Describe(CalculatorType);
+        MarkSelectedCalculator();
     }
 
     public string[] OptionTypes { get; } = ["Call", "Put"];
+
+    public IReadOnlyList<ChoiceChip> CalculatorChips { get; } =
+    [
+        new("C#", nameof(OptionsPricingCalculatorType.OptionsPricer)),
+        new("C++", nameof(OptionsPricingCalculatorType.OptionsPricerCpp)),
+        new("Monte Carlo", nameof(OptionsPricingCalculatorType.MonteCarloCppPricer)),
+    ];
+
+    public IReadOnlyList<ChoiceChip> PlotChips { get; } =
+    [
+        new("Price", "Price"), new("Delta", "Delta"), new("Gamma", "Gamma"), new("Theta", "Theta"),
+        new("Rho", "Rho"), new("Vega", "Vega"), new("Experimental", "Experimental"),
+    ];
 
     [ObservableProperty] private string _optionType = "Call";
     [ObservableProperty] private string _spot = "100";
@@ -36,7 +52,7 @@ public partial class BlackScholesViewModel : ObservableObject
 
     [ObservableProperty] private TableData _optionTable = EmptyResults;
     [ObservableProperty] private OptionsPricingCalculatorType _calculatorType = OptionsPricingCalculatorType.OptionsPricer;
-    [ObservableProperty] private string _calculatorTypeDesc = "Default pricer";
+    [ObservableProperty] private string _calculatorTypeDesc = string.Empty;
 
     [ObservableProperty] private bool _isCompareVisible;
     [ObservableProperty] private TableData _optionTable2 = EmptyResults;
@@ -45,6 +61,30 @@ public partial class BlackScholesViewModel : ObservableObject
 
     [ObservableProperty] private HeatMapData? _surface;
     [ObservableProperty] private string _zLabel = string.Empty;
+
+    // The selected maturity (a row of the results) drives the hero price and the Greek tiles.
+    [ObservableProperty] private string _heroBig = "--";
+    [ObservableProperty] private string _heroSmall = string.Empty;
+    [ObservableProperty] private string _heroMaturity = "no results yet";
+    [ObservableProperty] private bool _hasResults;
+    [ObservableProperty] private double _delta;
+    [ObservableProperty] private double _gamma;
+    [ObservableProperty] private double _theta;
+    [ObservableProperty] private double _rho;
+    [ObservableProperty] private double _vega;
+
+    public IReadOnlyList<GreekGauge> Gauges { get; } = [new("Delta"), new("Gamma"), new("Theta"), new("Rho"), new("Vega")];
+
+    /// <summary>The maturity chosen with the slider on the hero page (a row index, as a double for the Slider).</summary>
+    [ObservableProperty] private double _selectedIndex;
+
+    /// <summary>Slider maximum: the last results row (at least 1 so the slider has a range).</summary>
+    [ObservableProperty] private double _maxMaturityIndex = 1;
+
+    private bool _updatingIndex;
+
+    /// <summary>Changes every time new results arrive, so the page can pulse the hero card.</summary>
+    [ObservableProperty] private int _resultsVersion;
 
     private OptionInputs Inputs => new(OptionType, Spot, Strike, Rate, Carry, Vol);
 
@@ -94,7 +134,12 @@ public partial class BlackScholesViewModel : ObservableObject
         MainThread.BeginInvokeOnMainThread(() =>
         {
             if (result.AuditTrail.CalculatorType == CalculatorType)
+            {
                 OptionTable = table;
+                _results = result.Results;
+                SelectMaturity(0);
+                ResultsVersion++;
+            }
             else if (result.AuditTrail.CalculatorType == CalculatorType2)
                 OptionTable2 = table;
             else
@@ -111,10 +156,59 @@ public partial class BlackScholesViewModel : ObservableObject
         MainThread.BeginInvokeOnMainThread(() => ShowSurface(data, result.Request.ZLabel));
     }
 
+    /// <summary>Show the hero price and Greeks for the results row at <paramref name="index"/>.</summary>
+    [RelayCommand]
+    private void SelectMaturity(int index)
+    {
+        _updatingIndex = true;
+        try
+        {
+            SelectedIndex = Math.Clamp(index, 0, Math.Max(_results.Count - 1, 0));
+            MaxMaturityIndex = Math.Max(_results.Count - 1, 1);
+        }
+        finally
+        {
+            _updatingIndex = false;
+        }
+
+        var readings = GreekGaugeSet.From(_results, index);
+        for (var i = 0; i < Gauges.Count; i++)
+            Gauges[i].Apply(readings[i]);
+
+        if (SelectedMaturity.Pick(_results, index) is not { } pair)
+        {
+            HasResults = false;
+            HeroBig = "--";
+            HeroSmall = string.Empty;
+            HeroMaturity = "no results yet";
+            Delta = Gamma = Theta = Rho = Vega = 0;
+            return;
+        }
+
+        var figure = OptionFigure.Split(pair.OptionGreeks.price);
+        HasResults = true;
+        HeroBig = figure.Big;
+        HeroSmall = figure.Small;
+        HeroMaturity = $"t = {pair.Maturity:0.##}";
+        Delta = pair.OptionGreeks.delta;
+        Gamma = pair.OptionGreeks.gamma;
+        Theta = pair.OptionGreeks.theta;
+        Rho = pair.OptionGreeks.rho;
+        Vega = pair.OptionGreeks.vega;
+    }
+
+    partial void OnSelectedIndexChanged(double value)
+    {
+        if (!_updatingIndex)
+            SelectMaturity((int)Math.Round(value));
+    }
+
     [RelayCommand]
     private async Task CalculatePriceAsync()
     {
         OptionTable = EmptyResults;
+        _results = [];
+        SelectMaturity(0);
         await SubmitPricingAsync(CalculatorType);
     }
 
@@ -144,6 +238,23 @@ public partial class BlackScholesViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void SelectCalculator(string key)
+    {
+        if (!Enum.TryParse<OptionsPricingCalculatorType>(key, out var type))
+            return;
+
+        CalculatorType = type;
+        CalculatorTypeDesc = CalculatorCycle.Describe(type);
+        MarkSelectedCalculator();
+    }
+
+    private void MarkSelectedCalculator()
+    {
+        foreach (var chip in CalculatorChips)
+            chip.IsSelected = chip.Key == CalculatorType.ToString();
+    }
+
+    [RelayCommand]
     private void ToggleCalculator() => (CalculatorType, CalculatorTypeDesc) = CalculatorCycle.Next(CalculatorType);
 
     [RelayCommand]
@@ -166,6 +277,7 @@ public partial class BlackScholesViewModel : ObservableObject
             _ => throw new ArgumentException($"Unknown greek '{greek}'", nameof(greek)),
         };
 
+        MarkSelectedPlot(greek);
         try
         {
             var request = Inputs.ToPlotRequest(greekType, greek, decimalPlaces, tickDecimalPlaces, CalculatorType);
@@ -179,7 +291,17 @@ public partial class BlackScholesViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void PlotExperimental() => ShowSurface(HeatMapData.Peak(), string.Empty);
+    private void PlotExperimental()
+    {
+        MarkSelectedPlot("Experimental");
+        ShowSurface(HeatMapData.Peak(), string.Empty);
+    }
+
+    private void MarkSelectedPlot(string key)
+    {
+        foreach (var chip in PlotChips)
+            chip.IsSelected = chip.Key == key;
+    }
 
     private void ShowSurface(HeatMapData data, string zLabel)
     {

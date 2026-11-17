@@ -13,6 +13,66 @@
         <ScrollView x:Name="LeftScroll" Grid.Column="0">
             <VerticalStackLayout x:Name="LeftStack" Spacing="10">
 
+                <!-- Hero: the selected maturity's price, big figure and small digits like the FX tiles. -->
+                <Border x:Name="HeroCard" StrokeThickness="0" Padding="18,14">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#2563EB" Offset="0" />
+                            <GradientStop Color="#1E3A8A" Offset="1" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="16" />
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="Black" Offset="0,6" Radius="12" Opacity="0.35" />
+                    </Border.Shadow>
+                    <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="2">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="OPTION PRICE" TextColor="White" FontSize="12" FontAttributes="Bold" Opacity="0.85" VerticalOptions="Center" />
+                            <Border Grid.Column="1" Padding="12,3" Stroke="#B3FFFFFF" StrokeThickness="1" BackgroundColor="#33FFFFFF">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="12" />
+                                </Border.StrokeShape>
+                                <Label Text="{Binding HeroMaturity}" TextColor="White" FontSize="12" FontAttributes="Bold" />
+                            </Border>
+                        </Grid>
+                        <HorizontalStackLayout Grid.Row="1" Spacing="2">
+                            <Label Text="{Binding HeroBig}" TextColor="White" FontSize="60" FontAttributes="Bold" VerticalOptions="End" />
+                            <Label Text="{Binding HeroSmall}" TextColor="White" FontSize="30" VerticalOptions="End" Margin="0,0,0,6" />
+                        </HorizontalStackLayout>
+                        <Label Grid.Row="2" Text="{Binding CalculatorTypeDesc}" TextColor="White" FontSize="11" Opacity="0.8" />
+                    </Grid>
+                </Border>
+
+                <Border Style="{StaticResource Card}">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="Greeks" Style="{StaticResource SectionHeader}" />
+                        <Grid ColumnDefinitions="*,*,*,*,*" ColumnSpacing="4">
+                            <VerticalStackLayout HorizontalOptions="Center">
+                                <Label Text="DELTA" FontSize="10" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                                <controls:CountUpLabel Value="{Binding Delta}" Format="0.000" FontSize="18" FontAttributes="Bold" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
+                                <Label Text="GAMMA" FontSize="10" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                                <controls:CountUpLabel Value="{Binding Gamma}" Format="0.0000" FontSize="18" FontAttributes="Bold" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center">
+                                <Label Text="THETA" FontSize="10" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                                <controls:CountUpLabel Value="{Binding Theta}" Format="0.00" FontSize="18" FontAttributes="Bold" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="3" HorizontalOptions="Center">
+                                <Label Text="RHO" FontSize="10" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                                <controls:CountUpLabel Value="{Binding Rho}" Format="0.00" FontSize="18" FontAttributes="Bold" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="4" HorizontalOptions="Center">
+                                <Label Text="VEGA" FontSize="10" TextColor="{StaticResource Gray500}" HorizontalOptions="Center" />
+                                <controls:CountUpLabel Value="{Binding Vega}" Format="0.00" FontSize="18" FontAttributes="Bold" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
                 <Border Style="{StaticResource Card}">
                     <VerticalStackLayout Spacing="6">
                         <Label Text="Input parameters" Style="{StaticResource SectionHeader}" />
@@ -43,19 +103,48 @@
                             <Label Grid.Row="5" Grid.Column="2" Text="Volatility" FontSize="11" VerticalOptions="Center" />
                         </Grid>
 
-                        <FlexLayout Wrap="Wrap" AlignItems="Center" Margin="0,4,0,0">
-                            <Button Text="Calculate Price" Command="{Binding CalculatePriceCommand}" Margin="0,2,4,2" />
-                            <Entry Text="{Binding CalculatorType}" IsReadOnly="True" WidthRequest="150" Margin="0,2,4,2" />
-                            <Button Text="&gt;" Command="{Binding ToggleCalculatorCommand}" WidthRequest="30" Margin="0,2,4,2" />
-                            <Label Text="{Binding CalculatorTypeDesc}" VerticalOptions="Center" FontSize="11" />
+                        <Label Text="Calculator" FontSize="11" TextColor="{StaticResource Gray500}" Margin="0,6,0,0" />
+                        <FlexLayout Wrap="Wrap" BindableLayout.ItemsSource="{Binding CalculatorChips}">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate x:DataType="vm:ChoiceChip">
+                                    <Button Text="{Binding Label}" Style="{StaticResource ChipButton}" Margin="0,0,6,4"
+                                            CommandParameter="{Binding Key}" Clicked="OnCalculatorChipClicked">
+                                        <Button.Triggers>
+                                            <DataTrigger TargetType="Button" Binding="{Binding IsSelected}" Value="True">
+                                                <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                                <Setter Property="TextColor" Value="White" />
+                                            </DataTrigger>
+                                        </Button.Triggers>
+                                    </Button>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
                         </FlexLayout>
+
+                        <!-- A raised action tile, like the FX Sell/Buy tiles. -->
+                        <Border BackgroundColor="{StaticResource Primary}" StrokeThickness="0" Padding="16,12" Margin="0,4,0,0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12" />
+                            </Border.StrokeShape>
+                            <Border.Shadow>
+                                <Shadow Brush="Black" Offset="0,4" Radius="8" Opacity="0.3" />
+                            </Border.Shadow>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding CalculatePriceCommand}" Tapped="OnTileTapped" />
+                                <PointerGestureRecognizer PointerEntered="OnTilePointerEntered" PointerExited="OnTilePointerExited" />
+                            </Border.GestureRecognizers>
+                            <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+                                <Label Text="Calculate Price" TextColor="White" FontSize="16" FontAttributes="Bold" VerticalOptions="Center" />
+                                <Label Text="›" TextColor="White" FontSize="22" FontAttributes="Bold" VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </Border>
                     </VerticalStackLayout>
                 </Border>
 
                 <Border Style="{StaticResource Card}">
                     <VerticalStackLayout Spacing="6">
-                        <Label Text="Results for option prices" Style="{StaticResource SectionHeader}" />
-                        <controls:SimpleGrid x:Name="ResultsGrid" Table="{Binding OptionTable}" BodyHeight="130" />
+                        <Label Text="Results by maturity" Style="{StaticResource SectionHeader}" />
+                        <Label Text="Tap a row to see its price and Greeks above." FontSize="11" TextColor="{StaticResource Gray500}" />
+                        <controls:SimpleGrid x:Name="ResultsGrid" Table="{Binding OptionTable}" BodyHeight="130" RowSelected="OnResultRowSelected" />
                     </VerticalStackLayout>
                 </Border>
 
@@ -83,14 +172,20 @@
         <Border x:Name="ChartCard" Grid.Column="1" Style="{StaticResource Card}">
             <Grid RowDefinitions="Auto,Auto,*,Auto" RowSpacing="4">
                 <Label Text="Plot price and Greeks" Style="{StaticResource SectionHeader}" HorizontalOptions="Center" />
-                <FlexLayout Grid.Row="1" Wrap="Wrap" JustifyContent="Center">
-                    <Button Text="Plot price" Command="{Binding PlotCommand}" CommandParameter="Price" Margin="2" />
-                    <Button Text="Plot Delta" Command="{Binding PlotCommand}" CommandParameter="Delta" Margin="2" />
-                    <Button Text="Plot Gamma" Command="{Binding PlotCommand}" CommandParameter="Gamma" Margin="2" />
-                    <Button Text="Plot Theta" Command="{Binding PlotCommand}" CommandParameter="Theta" Margin="2" />
-                    <Button Text="Plot Rho" Command="{Binding PlotCommand}" CommandParameter="Rho" Margin="2" />
-                    <Button Text="Plot Vega" Command="{Binding PlotCommand}" CommandParameter="Vega" Margin="2" />
-                    <Button Text="Plot Experimental" Command="{Binding PlotExperimentalCommand}" Margin="2" />
+                <FlexLayout Grid.Row="1" Wrap="Wrap" JustifyContent="Center" BindableLayout.ItemsSource="{Binding PlotChips}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="vm:ChoiceChip">
+                            <Button Text="{Binding Label}" Style="{StaticResource ChipButton}" Margin="3,2"
+                                    CommandParameter="{Binding Key}" Clicked="OnPlotChipClicked">
+                                <Button.Triggers>
+                                    <DataTrigger TargetType="Button" Binding="{Binding IsSelected}" Value="True">
+                                        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                        <Setter Property="TextColor" Value="White" />
+                                    </DataTrigger>
+                                </Button.Triggers>
+                            </Button>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
                 </FlexLayout>
                 <controls:Surface3DView Grid.Row="2" Surface="{Binding Surface}" ZLabel="{Binding ZLabel}" MinimumHeightRequest="300" />
                 <Label Grid.Row="3" Text="Turns on its own; drag to take control" FontSize="11" HorizontalOptions="Center" />
