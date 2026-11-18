@@ -16,7 +16,6 @@ public class Surface3DView : ContentView
     public static readonly BindableProperty YLabelProperty = Property(nameof(YLabel), "Spot");
     public static readonly BindableProperty AzimuthProperty = Property(nameof(Azimuth), -50d);
     public static readonly BindableProperty ElevationProperty = Property(nameof(Elevation), 40d);
-    public static readonly BindableProperty OnDarkProperty = Property(nameof(OnDark), false);
     public static readonly BindableProperty AutoRotateProperty = BindableProperty.Create(
         nameof(AutoRotate), typeof(bool), typeof(Surface3DView), true,
         propertyChanged: (bindable, _, _) => ((Surface3DView)bindable).UpdateTimer());
@@ -47,9 +46,6 @@ public class Surface3DView : ContentView
     public string YLabel { get => (string)GetValue(YLabelProperty); set => SetValue(YLabelProperty, value); }
     public double Azimuth { get => (double)GetValue(AzimuthProperty); set => SetValue(AzimuthProperty, value); }
     public double Elevation { get => (double)GetValue(ElevationProperty); set => SetValue(ElevationProperty, value); }
-
-    /// <summary>Draw the axis labels in white, for use over a dark backdrop whatever the app theme is.</summary>
-    public bool OnDark { get => (bool)GetValue(OnDarkProperty); set => SetValue(OnDarkProperty, value); }
 
     /// <summary>Slowly turns the surface (about 20 degrees a second) until the user drags it, resuming a moment after release.</summary>
     public bool AutoRotate { get => (bool)GetValue(AutoRotateProperty); set => SetValue(AutoRotateProperty, value); }
@@ -125,7 +121,7 @@ public class Surface3DView : ContentView
     private void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs e)
     {
         float density = Width > 0 ? e.Info.Width / (float)Width : 1;
-        var textColor = OnDark || Application.Current?.RequestedTheme == AppTheme.Dark ? SKColors.White : SKColors.Black;
+        var textColor = Application.Current?.RequestedTheme == AppTheme.Dark ? SKColors.White : SKColors.Black;
 
         SurfaceRenderer.Draw(e.Surface.Canvas, e.Info.Width, e.Info.Height, density,
             new SurfaceRenderer.Options(Surface, Azimuth, Elevation, XLabel, YLabel, ZLabel, textColor));
