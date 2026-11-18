@@ -47,7 +47,6 @@
 
     <FlyoutItem Title="Options">
         <ShellContent Title="Black-Scholes" ContentTemplate="{DataTemplate pages:BlackScholesPage}" Route="OptionsBlackScholes" />
-        <ShellContent Title="Black-Scholes (Hero)" ContentTemplate="{DataTemplate pages:BlackScholesHeroPage}" Route="OptionsBlackScholesHero" />
         <ShellContent Title="Implied Volatility" ContentTemplate="{DataTemplate pages:PlaceholderPage}" Route="OptionsImpliedVol" />
     </FlyoutItem>
 
